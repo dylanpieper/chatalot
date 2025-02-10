@@ -132,7 +132,7 @@ Control verbosity with the `echo` parameter:
 ``` r
 chat <- chat_batch(
   chat_claude("You reply concisely"), 
-  echo = "none",
+  echo = "none"
 )
 ```
 
