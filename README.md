@@ -69,7 +69,11 @@ chat <- chat_batch(
 )
 ```
 
-If a request fails, the system will: 1. Wait for the initial delay 2. Retry the request 3. If it fails again, wait for (delay × `backoff_factor`) 4. Continue until success or `max_retries` is reached
+If a request fails, the system will: 
+1. Wait for the initial delay
+2. Retry the request 
+3. If it fails again, wait for (delay × `backoff_factor`) 
+4. Continue until success or `max_retries` is reached
 
 ⚠️ The retry function is not smart and will retry for any error including an invalid API key.
 
