@@ -111,7 +111,7 @@ Control verbosity with the `echo` parameter:
 -   `"text"`: Show chat responses only
 -   `"all"`: Show both prompts and responses
 
-## API Reference
+## References
 
 ### chat_batch()
 
