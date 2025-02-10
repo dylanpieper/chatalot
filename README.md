@@ -75,7 +75,7 @@ If a request fails, the system will:
 3. If it fails again, wait for (delay × `backoff_factor`)
 4. Continue until success or `max_retries` is reached
 
-⚠️ The retry function is not smart and will retry even if over something dumb like an invalid API key.
+⚠️ The retry function is not smart and will retry for any error including an invalid API key.
 
 ### Sound Notifications
 
