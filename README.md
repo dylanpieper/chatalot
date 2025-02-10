@@ -1,8 +1,8 @@
 # hellmer <img src="man/figures/hellmer.png" align="right" height="140"/>
 
-**Take the helm of [ellmer](https://github.com/tidyverse/ellmer)!**
+**Take the helm of [ellmer](https://github.com/tidyverse/ellmer)!** 🚢
 
-This package implements batch processing for chat models from the ellmer package. This is a sequential processing implementation that serves as an interim solution until parallel processing is integrated into ellmer using [httr2](https://httr2.r-lib.org) which will significantly boost performance.
+This package implements batch processing for chat models from the ellmer package. It uses sequential processing that serves as an interim solution until parallel processing is integrated into ellmer using [httr2](https://httr2.r-lib.org) which will significantly boost performance.
 
 ## Installation
 
