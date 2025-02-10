@@ -20,3 +20,5 @@ batched <- chat$batch(prompts) # resumes if interrupted
 batched$texts()
 
 batched$chats()
+
+batched$progress()

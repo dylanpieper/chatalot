@@ -336,3 +336,18 @@ chat_batch <- function(chat_model = chat_openai(), echo = "text", ...) {
   
   structure(chat_env, class = class(original_chat))
 }
+
+#' Extract progress information from a batch
+#' @name progress.batch
+#' @param x A batch object
+#' @return A list containing progress details
+#' @importFrom cli cli_alert_warning
+S7::method(progress, batch) <- function(x) {
+  list(
+    total_prompts = length(x@prompts),
+    completed_prompts = x@completed,
+    completion_percentage = (x@completed / length(x@prompts)) * 100,
+    remaining_prompts = length(x@prompts) - x@completed,
+    state_path = x@state_path
+  )
+}
