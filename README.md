@@ -2,7 +2,7 @@
 
 **Take the helm of [ellmer](https://github.com/tidyverse/ellmer)!**
 
-Provides batch processing capabilities for chat models from the ellmer package. Implements safe state handling and efficient batch operations using S7 classes. This sequential processing implementation serves as an interim solution until parallel processing is integrated into ellmer using [httr2](https://httr2.r-lib.org).
+Provides batch processing capabilities for chat models from the ellmer package. Implements safe state handling and efficient batch operations using S7 classes. This sequential processing implementation serves as an interim solution until parallel processing is integrated into ellmer using [httr2](https://httr2.r-lib.org) which will significantly boost performance.
 
 ## Installation
 
