@@ -10,7 +10,9 @@ batch(
   completed = integer(0),
   state_path = character(0),
   type_spec = NULL,
-  echo = character(0)
+  echo = character(0),
+  progress_bar = NULL,
+  input_type = character(0)
 )
 }
 \description{

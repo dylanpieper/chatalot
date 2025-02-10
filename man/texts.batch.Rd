@@ -7,7 +7,8 @@
 \item{x}{A batch object}
 }
 \value{
-Character vector of response texts
+A character vector (if original prompts were supplied as a vector) or
+a list of response texts (if original prompts were supplied as a list)
 }
 \description{
 Extract text responses from a batch

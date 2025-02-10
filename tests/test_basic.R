@@ -1,6 +1,6 @@
 chat <- chat_batch(chat_claude("You reply concisely"), echo = "none") # "text" or "all"
 
-prompts <- list(
+prompts <- c(
   "What is 2+2?",
   "Name one planet.",
   "Is water wet?",
@@ -12,6 +12,8 @@ prompts <- list(
   "True or false: Birds can fly.",
   "What day comes after Monday?"
 )
+
+prompts <- as.list(prompts) # works with list or vector
 
 batched <- chat$batch(prompts) # resumes if interrupted
 

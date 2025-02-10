@@ -2,7 +2,7 @@
 
 **Take the helm of [ellmer](https://github.com/tidyverse/ellmer)!**
 
-This package implements batch processing  for chat models from the ellmer package. This is a sequential processing implementation that serves as an interim solution until parallel processing is integrated into ellmer using [httr2](https://httr2.r-lib.org) which will significantly boost performance.
+This package implements batch processing for chat models from the ellmer package. This is a sequential processing implementation that serves as an interim solution until parallel processing is integrated into ellmer using [httr2](https://httr2.r-lib.org) which will significantly boost performance.
 
 ## Installation
 
@@ -138,12 +138,12 @@ batch(
 
 ### Results Methods
 
--   `texts()`: Returns vector of response texts
--   `chats()`: Returns list of chat objects
--   `progress()`: Returns processing statistics
--   `structured_data()`: Returns extracted structured data (if type_spec provided)
+- `texts()`: Returns response texts in the same format as the input prompts (i.e., a character vector if prompts were provided as a vector, or a list if prompts were provided as a list).
+- `chats()`: Returns a list of chat objects.
+- `progress()`: Returns processing statistics.
+- `structured_data()`: Returns extracted structured data (if a type_spec is provided).
 
 ### Todo
 
--   Change 'texts()' to return a list matching the input class
 -   Add auto-retry if the connection is closed unexpectedly
+-   [DONE!] Change `texts()` to return a list or vector matching the input class

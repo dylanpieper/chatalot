@@ -21,7 +21,7 @@ process(
 
 \item{state_path}{Path for saving state}
 
-\item{echo}{Echo level}
+\item{echo}{Echo level ("none", "text", or "all")}
 }
 \value{
 Batch results object
