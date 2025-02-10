@@ -146,4 +146,4 @@ batch(
 ### Todo
 
 -   Add auto-retry if the connection is closed unexpectedly
--   [DONE!] Change `texts()` to return a list or vector matching the input class
+-   [DONE!] Change `texts()` to return a list or vector matching the input
