@@ -1,0 +1,22 @@
+Package: hellmer
+Title: Batch Processing for 'ellmer' Chat Models
+Version: 0.0.0.9000
+Authors@R: 
+    person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
+Description: Provides batch processing capabilities for chat models from the 'ellmer' 
+    package. Implements safe state handling and efficient batch operations using 'S7' 
+    for object-oriented programming. Includes progress tracking, structured data 
+    extraction, and flexible output control.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    cli,
+    ellmer,
+    purrr,
+    rlang,
+    S7 (>= 0.1.0)
