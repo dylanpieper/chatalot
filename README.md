@@ -25,29 +25,23 @@ Process multiple chat interactions in sequence with:
 ``` r
 library(hellmer)
 
-# Initialize a batch-enabled chat
 chat <- chat_batch(
   chat_claude("You reply concisely"), 
   echo = "none"  # Options: "none", "text", "all"
 )
 
-# Define prompts
 prompts <- list(
   "What is 2+2?",
   "Name one planet.",
   "Is water wet?"
 )
 
-# Process batch
 result <- chat$batch(prompts)
 
-# Get text responses
 result$texts()
 
-# Get full chat objects
 result$chats()
 
-# Check progress
 result$progress()
 ```
 
@@ -58,7 +52,6 @@ result$progress()
 Batch processing automatically saves state and can resume interrupted operations:
 
 ``` r
-# Specify a state file
 result <- chat$batch(prompts, state_path = "chat_state.rds")
 ```
 
@@ -67,7 +60,6 @@ result <- chat$batch(prompts, state_path = "chat_state.rds")
 Extract structured data using type specifications:
 
 ``` r
-# Define data structure
 type_sentiment <- type_object(
   "Extract sentiment scores",
   positive_score = type_number("Positive sentiment score, 0.0 to 1.0"),
@@ -75,10 +67,8 @@ type_sentiment <- type_object(
   neutral_score = type_number("Neutral sentiment score, 0.0 to 1.0")
 )
 
-# Process with type specification
 result <- chat$batch(prompts, type_spec = type_sentiment)
 
-# Get structured data
 structured_data <- result$structured_data()
 ```
 
@@ -87,7 +77,6 @@ structured_data <- result$structured_data()
 Register and use tools in batch processing:
 
 ``` r
-# Define and register a tool
 square_number <- function(num) num^2
 
 chat$register_tool(tool(
@@ -96,7 +85,6 @@ chat$register_tool(tool(
   num = type_integer("The number to square")
 ))
 
-# Use tool in prompts
 prompts <- list(
   "What is the square of 3?",
   "Calculate the square of 5."
