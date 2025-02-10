@@ -12,7 +12,11 @@ batch(
   type_spec = NULL,
   echo = character(0),
   progress_bar = NULL,
-  input_type = character(0)
+  input_type = character(0),
+  max_retries = integer(0),
+  initial_delay = integer(0),
+  max_delay = integer(0),
+  backoff_factor = integer(0)
 )
 }
 \description{

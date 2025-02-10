@@ -4,7 +4,7 @@
 \alias{chat_batch}
 \title{Process batch of prompts}
 \usage{
-chat_batch(chat_model = chat_openai(), echo = "text", ...)
+chat_batch(chat_model = chat_openai(), echo = "text", beep = TRUE, ...)
 }
 \arguments{
 \item{echo}{Echo level}

@@ -4,9 +4,9 @@
 \name{hellmer-package}
 \alias{hellmer}
 \alias{hellmer-package}
-\title{hellmer: Batch Processing for 'ellmer' Chat Models}
+\title{hellmer: Batch Processing for Chat Models}
 \description{
-Provides batch processing capabilities for chat models from the 'ellmer' package. Implements safe state handling and efficient batch operations using 'S7' for object-oriented programming. Includes progress tracking, structured data extraction, and flexible output control.
+This package implements batch processing for chat models from the 'ellmer' package (\url{https://github.com/tidyverse/ellmer}).
 }
 \author{
 \strong{Maintainer}: Dylan Pieper \email{dylanpieper@gmail.com}

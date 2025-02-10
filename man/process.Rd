@@ -2,14 +2,19 @@
 % Please edit documentation in R/hellmer.R
 \name{process}
 \alias{process}
-\title{Process batch of prompts with progress tracking}
+\title{Process batch of prompts with progress tracking and retries}
 \usage{
 process(
   chat_obj,
   prompts,
   type_spec = NULL,
   state_path = tempfile("chat_batch_", fileext = ".rds"),
-  echo = "text"
+  echo = "text",
+  max_retries = 3L,
+  initial_delay = 1,
+  max_delay = 32,
+  backoff_factor = 2,
+  beep = TRUE
 )
 }
 \arguments{
@@ -22,10 +27,18 @@ process(
 \item{state_path}{Path for saving state}
 
 \item{echo}{Echo level ("none", "text", or "all")}
+
+\item{max_retries}{Maximum number of retry attempts per prompt}
+
+\item{initial_delay}{Initial delay in seconds before first retry}
+
+\item{max_delay}{Maximum delay in seconds between retries}
+
+\item{backoff_factor}{Factor to multiply delay by after each retry}
 }
 \value{
 Batch results object
 }
 \description{
-Process batch of prompts with progress tracking
+Process batch of prompts with progress tracking and retries
 }
