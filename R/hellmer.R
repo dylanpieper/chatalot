@@ -80,6 +80,54 @@ batch <- S7::new_class(
           NULL
         }
       }
+    ),
+    max_retries = S7::new_property(
+      class = S7::class_integer,
+      validator = function(value) {
+        if (length(value) != 1) {
+          "@max_retries must be a single integer"
+        }
+        if (value < 0) {
+          "@max_retries must be non-negative"
+        }
+        NULL
+      }
+    ),
+    initial_delay = S7::new_property(
+      class = S7::class_numeric,
+      validator = function(value) {
+        if (length(value) != 1) {
+          "@initial_delay must be a single numeric"
+        }
+        if (value < 0) {
+          "@initial_delay must be non-negative"
+        }
+        NULL
+      }
+    ),
+    max_delay = S7::new_property(
+      class = S7::class_numeric,
+      validator = function(value) {
+        if (length(value) != 1) {
+          "@max_delay must be a single numeric"
+        }
+        if (value < 0) {
+          "@max_delay must be non-negative"
+        }
+        NULL
+      }
+    ),
+    backoff_factor = S7::new_property(
+      class = S7::class_numeric,
+      validator = function(value) {
+        if (length(value) != 1) {
+          "@backoff_factor must be a single numeric"
+        }
+        if (value <= 1) {
+          "@backoff_factor must be greater than 1"
+        }
+        NULL
+      }
     )
   ),
   validator = function(self) {
@@ -177,17 +225,70 @@ capture <- function(original_chat, prompt, type_spec = NULL, echo = "text") {
   )
 }
 
-#' Process batch of prompts with progress tracking
+#' Capture chat model response with proper handling and retries
+#' @param original_chat Original chat model object
+#' @param prompt Prompt text
+#' @param type_spec Type specification for structured data
+#' @param echo Echo level ("none", "text", "all")
+#' @param max_retries Maximum number of retry attempts
+#' @param initial_delay Initial delay in seconds before first retry
+#' @param max_delay Maximum delay in seconds between retries
+#' @param backoff_factor Factor to multiply delay by after each retry
+#' @return List containing response information
+#' @keywords internal
+capture_with_retry <- function(original_chat, prompt, type_spec = NULL, echo = "text",
+                               max_retries = 3L, initial_delay = 1, max_delay = 32, 
+                               backoff_factor = 2) {
+  
+  retry_with_delay <- function(attempt = 1, delay = initial_delay) {
+    if (attempt > max_retries + 1) {
+      stop("Max retries exceeded")
+    }
+    
+    result <- tryCatch({
+      capture(original_chat, prompt, type_spec, echo)
+    }, error = function(e) {
+      if (inherits(e, "interrupt")) {
+        stop(e)
+      }
+      
+      if (attempt > max_retries) {
+        stop("Max retries exceeded: ", e$message)
+      }
+      
+      cli::cli_alert_warning(sprintf(
+        "Attempt %d failed: %s. Retrying in %.1f seconds...",
+        attempt, e$message, delay
+      ))
+      
+      Sys.sleep(delay)
+      next_delay <- min(delay * backoff_factor, max_delay)
+      retry_with_delay(attempt + 1, next_delay)
+    })
+    
+    result
+  }
+  
+  retry_with_delay()
+}
+
+#' Process batch of prompts with progress tracking and retries
 #' @param chat_obj Chat model object
 #' @param prompts List of prompts
 #' @param type_spec Type specification for structured data
 #' @param state_path Path for saving state
 #' @param echo Echo level ("none", "text", or "all")
+#' @param max_retries Maximum number of retry attempts per prompt
+#' @param initial_delay Initial delay in seconds before first retry
+#' @param max_delay Maximum delay in seconds between retries
+#' @param backoff_factor Factor to multiply delay by after each retry
 #' @return Batch results object
 #' @export
 process <- function(chat_obj, prompts, type_spec = NULL,
                     state_path = tempfile("chat_batch_", fileext = ".rds"),
-                    echo = "text") {
+                    echo = "text", max_retries = 3L, initial_delay = 1,
+                    max_delay = 32, backoff_factor = 2,
+                    beep = TRUE) {
   
   if (file.exists(state_path)) {
     result <- readRDS(state_path)
@@ -209,7 +310,11 @@ process <- function(chat_obj, prompts, type_spec = NULL,
       state_path = state_path,
       type_spec = type_spec,
       echo = echo,
-      input_type = orig_type
+      input_type = orig_type,
+      max_retries = as.integer(max_retries),
+      initial_delay = initial_delay,
+      max_delay = max_delay,
+      backoff_factor = backoff_factor
     )
   }
   
@@ -242,7 +347,7 @@ process <- function(chat_obj, prompts, type_spec = NULL,
         cli::cli_h3(cli::col_green(sprintf("Processing chats [%d/%d]", i, total_prompts)))
       }
       
-      response <- capture(chat_obj, prompts[[i]], type_spec, echo)
+      response <- capture_with_retry(chat_obj, prompts[[i]], type_spec, echo)
       result@responses[[i]] <- response
       result@completed <- i
       saveRDS(result, state_path)
@@ -252,19 +357,26 @@ process <- function(chat_obj, prompts, type_spec = NULL,
       }
     }
     
+    cli::cli_alert_success("Complete")
     if (echo == "none") {
-      cli::cli_alert_success("Complete")
       cli::cli_progress_done(id = progress_bar)
+    }
+    
+    if (beep) {
+      beepr::beep("ping")
     }
     
   }, error = function(e) {
     saveRDS(result, state_path)
     if (echo == "none") {
       cli::cli_progress_done(id = progress_bar)
-      cli::cli_alert_warning(
-        paste0("Interrupted at ", result@completed, " of ", total_prompts, " prompts")
-      )
     }
+    if (beep) {
+      beepr::beep("wilhelm")
+    }
+    cli::cli_alert_warning(
+      paste0("Interrupted at chat ", result@completed, " of ", total_prompts)
+    )
     if (!inherits(e, "interrupt")) {
       stop(e)
     }
@@ -272,10 +384,13 @@ process <- function(chat_obj, prompts, type_spec = NULL,
     saveRDS(result, state_path)
     if (echo == "none") {
       cli::cli_progress_done(id = progress_bar)
-      cli::cli_alert_warning(
-        paste0("Interrupted at ", result@completed, " of ", total_prompts, " prompts")
-      )
     }
+    if (beep) {
+      beepr::beep("coin")
+    }
+    cli::cli_alert_warning(
+      paste0("Interrupted at chat ", result@completed, " of ", total_prompts)
+    )
   })
   
   create_results(result)
@@ -310,7 +425,7 @@ create_results <- function(result) {
 #' @param echo Echo level
 #' @return Batch results object
 #' @export
-chat_batch <- function(chat_model = chat_openai(), echo = "text", ...) {
+chat_batch <- function(chat_model = chat_openai(), echo = "text", beep = TRUE, ...) {
   original_chat <- chat_model
   
   chat_env <- new.env(parent = emptyenv())
@@ -331,7 +446,7 @@ chat_batch <- function(chat_model = chat_openai(), echo = "text", ...) {
       state_path <- chat_env$last_state_path
     }
     
-    process(original_chat, prompts, type_spec, state_path, echo)
+    process(original_chat, prompts, type_spec, state_path, echo, beep)
   }
   
   structure(chat_env, class = class(original_chat))

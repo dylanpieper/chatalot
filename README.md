@@ -19,6 +19,8 @@ Process multiple chat interactions in sequence with:
 -   Structured data extraction
 -   Tool integration
 -   Configurable output verbosity
+-   Automatic retry with exponential backoff
+-   Completion sound notifications
 
 ## Basic Usage
 
@@ -27,7 +29,8 @@ library(hellmer)
 
 chat <- chat_batch(
   chat_claude("You reply concisely"), 
-  echo = "none"  # Options: "none", "text", "all"
+  echo = "none",  # Options: "none", "text", "all"
+  beep = TRUE    # Play sound on completion/error
 )
 
 prompts <- list(
@@ -39,9 +42,7 @@ prompts <- list(
 result <- chat$batch(prompts)
 
 result$texts()
-
 result$chats()
-
 result$progress()
 ```
 
@@ -54,6 +55,36 @@ Batch processing automatically saves state and can resume interrupted operations
 ``` r
 result <- chat$batch(prompts, state_path = "chat_state.rds")
 ```
+
+### Automatic Retry
+
+The system automatically retries failed requests with exponential backoff:
+
+``` r
+chat <- chat_batch(
+  chat_claude(),
+  max_retries = 3,        # Maximum number of retry attempts
+  initial_delay = 1,      # Initial delay in seconds
+  max_delay = 32,         # Maximum delay between retries
+  backoff_factor = 2      # Multiply delay by this factor after each retry
+)
+```
+
+If a request fails, the system will: 1. Wait for the initial delay 2. Retry the request 3. If it fails again, wait for (delay × backoff_factor) 4. Continue until success or max_retries is reached
+
+### Sound Notifications
+
+Enable sound notifications for batch completion or errors:
+
+``` r
+chat <- chat_batch(
+  chat_claude(),
+  beep = TRUE  # Play sounds on completion/error
+)
+```
+
+-   Success: Plays a completion sound when all prompts are processed
+-   Error/Interrupt: Plays an error sound if processing is interrupted or fails
 
 ### Structured Data Extraction
 
@@ -68,7 +99,6 @@ type_sentiment <- type_object(
 )
 
 result <- chat$batch(prompts, type_spec = type_sentiment)
-
 structured_data <- result$structured_data()
 ```
 
@@ -108,7 +138,12 @@ Creates a batch-enabled chat instance.
 ``` r
 chat_batch(
   chat_model = chat_openai(),  # Base chat model
-  echo = "text"                # Output verbosity
+  echo = "text",               # Output verbosity
+  beep = TRUE,                 # Enable sound notifications
+  max_retries = 3,            # Maximum retry attempts
+  initial_delay = 1,          # Initial retry delay in seconds
+  max_delay = 32,             # Maximum delay between retries
+  backoff_factor = 2          # Exponential backoff multiplier
 )
 ```
 
@@ -126,12 +161,13 @@ batch(
 
 ### Results Methods
 
-- `texts()`: Returns response texts in the same format as the input prompts (i.e., a character vector if prompts were provided as a vector, or a list if prompts were provided as a list).
-- `chats()`: Returns a list of chat objects.
-- `progress()`: Returns processing statistics.
-- `structured_data()`: Returns extracted structured data (if a type_spec is provided).
+-   `texts()`: Returns response texts in the same format as the input prompts (i.e., a character vector if prompts were provided as a vector, or a list if prompts were provided as a list)
+-   `chats()`: Returns a list of chat objects
+-   `progress()`: Returns processing statistics
+-   `structured_data()`: Returns extracted structured data (if a type_spec is provided)
 
 ### Todo
 
--   Add auto-retry if the connection is closed unexpectedly
+-   ✅ Add retries for API or connection errors
 -   ✅ Change `texts()` to return a list or vector matching the input
+-   ✅ Add sound notifications for completion and errors
