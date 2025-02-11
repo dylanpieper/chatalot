@@ -53,39 +53,6 @@ result <- chat$batch(prompts, state_path = "chat_state.rds")
 
 If `state_path` is not defined, a temp file will be created by default.
 
-### Automatic Retry
-
-The system automatically retries failed requests with exponential backoff:
-
-``` r
-chat <- chat_batch(
-  chat_claude(),
-  max_retries = 3,        # Maximum number of retry attempts
-  initial_delay = 1,      # Initial delay in seconds
-  max_delay = 32,         # Maximum delay between retries
-  backoff_factor = 2      # Multiply delay by this factor after each retry
-)
-```
-
-If a request fails, the system will: 
-1. Wait for the `initial_delay`
-2. Retry the request 
-3. If it fails again, wait for (delay × `backoff_factor`) 
-4. Continue until success or `max_retries` is reached
-
-⚠️ The retry function is not smart and will retry for any error including an invalid API key.
-
-### Sound Notifications
-
-Toggle sound notifications on batch completion, interruption, and error:
-
-``` r
-chat <- chat_batch(
-  chat_claude(),
-  beep = FALSE
-)
-```
-
 ### Structured Data Extraction
 
 Extract structured data using type specifications:
@@ -133,6 +100,39 @@ Control verbosity with the `echo` parameter:
 chat <- chat_batch(
   chat_claude("You reply concisely"), 
   echo = "none"
+)
+```
+
+### Automatic Retry
+
+The system automatically retries failed requests with exponential backoff:
+
+``` r
+chat <- chat_batch(
+  chat_claude(),
+  max_retries = 3,        # Maximum number of retry attempts
+  initial_delay = 1,      # Initial delay in seconds
+  max_delay = 32,         # Maximum delay between retries
+  backoff_factor = 2      # Multiply delay by this factor after each retry
+)
+```
+
+If a request fails, the system will: 
+1. Wait for the `initial_delay`
+2. Retry the request 
+3. If it fails again, wait for (delay × `backoff_factor`) 
+4. Continue until success or `max_retries` is reached
+
+⚠️ The retry is not smart and will retry for any error including an invalid API key.
+
+### Sound Notifications
+
+Toggle sound notifications on batch completion, interruption, and error:
+
+``` r
+chat <- chat_batch(
+  chat_claude(),
+  beep = FALSE
 )
 ```
 
