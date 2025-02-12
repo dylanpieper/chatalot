@@ -132,7 +132,7 @@ chat <- chat_batch(
 
 ### Automatic Retry
 
-The system automatically retries failed requests with exponential backoff:
+Automatically retry failed requests with exponential backoff:
 
 ``` r
 chat <- chat_batch(
@@ -144,12 +144,14 @@ chat <- chat_batch(
 )
 ```
 
-If a request fails, the system will:
+If a request fails, the code will:
 
 1.  Wait for the `initial_delay`
 2.  Retry the request 3
 3.  If it fails again, wait for (delay × `backoff_factor`)
 4.  Continue until success or `max_retries` is reached
+
+If the code detects an authorization or API key issue, it will stop immediately.
 
 ### Sound Notifications
 
