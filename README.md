@@ -23,7 +23,7 @@ Process multiple chat interactions with:
 
 ## Installation
 
-```r
+``` r
 devtools::install_github("dylanpieper/hellmer")
 ```
 
@@ -56,17 +56,10 @@ result$chats()
 
 ### Parallel Processing
 
-``` r
-chat <- chat_parallel(
-  chat_claude(),
-  plan = "multisession",
-  workers = 4,
-)
+Simply swap `chat_batch()` for `chat_parallel()` to enable parallel processing.
 
-result <- chat$batch(
-  prompts,
-  chunk_size = 4
-)
+``` r
+chat <- chat_parallel(chat_claude("You reply concisely"))
 ```
 
 ## Features
