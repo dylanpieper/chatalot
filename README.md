@@ -158,8 +158,6 @@ If a request fails, the system will:
 3.  If it fails again, wait for (delay × `backoff_factor`)
 4.  Continue until success or `max_retries` is reached
 
-**Warning**: The retry is not smart and will retry for any error including an invalid API key.
-
 ### Sound Notifications
 
 Toggle sound notifications on batch completion, interruption, and error:
