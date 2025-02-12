@@ -1,0 +1,8 @@
+pandoc: 3.1.11
+pkgdown: 2.1.1
+pkgdown_sha: ~
+articles: {}
+last_built: 2025-02-12T19:33Z
+urls:
+  reference: https://dylanpieper.github.io/hellmer/reference
+  article: https://dylanpieper.github.io/hellmer/articles
