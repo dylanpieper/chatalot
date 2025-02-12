@@ -208,7 +208,7 @@
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_batch.html">chat_batch</a></span><span class="op">(</span></span>
 <span>  <span class="fu">chat_claude</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  beep <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  beep <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -223,7 +223,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="reference/chat_batch.html">chat_batch</a></span><span class="op">(</span></span>
 <span>  chat_model <span class="op">=</span> <span class="fu">chat_openai</span><span class="op">(</span><span class="op">)</span>,  <span class="co"># Base chat model</span></span>
 <span>  echo <span class="op">=</span> <span class="st">"text"</span>,               <span class="co"># Output verbosity (sequential only)</span></span>
-<span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,                 <span class="co"># Enable sound notifications</span></span>
+<span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,                 <span class="co"># Toggle sound notifications</span></span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3</span>,             <span class="co"># Maximum retry attempts</span></span>
 <span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,           <span class="co"># Initial retry delay in seconds</span></span>
 <span>  max_delay <span class="op">=</span> <span class="fl">32</span>,              <span class="co"># Maximum delay between retries</span></span>
@@ -245,7 +245,7 @@
 <div class="section level3">
 <h3 id="batchbatch">batch$batch()<a class="anchor" aria-label="anchor" href="#batchbatch"></a>
 </h3>
-<p>Processes a list of prompts.</p>
+<p>Processes a vector or list of prompts.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/batch.html">batch</a></span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>,            <span class="co"># List of prompts to process</span></span>
