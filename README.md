@@ -57,7 +57,7 @@ result$chats()
 ### Parallel Processing
 
 ``` r
-chat <- chat_batch_parallel(
+chat <- chat_parallel(
   chat_claude(),
   workers = 4,
   parallel_plan = "multisession"
@@ -187,12 +187,12 @@ chat_batch(
 )
 ```
 
-### chat_batch_parallel()
+### chat_parallel()
 
 Creates a parallel batch processor.
 
 ``` r
-chat_batch_parallel(
+chat_parallel(
   chat_model = chat_openai(),     # Base chat model
   beep = TRUE,                    # Enable sound notifications
   workers = 4,                    # Number of parallel workers
