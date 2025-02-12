@@ -183,7 +183,7 @@
 <div class="section level3">
 <h3 id="automatic-retry">Automatic Retry<a class="anchor" aria-label="anchor" href="#automatic-retry"></a>
 </h3>
-<p>The system automatically retries failed requests with exponential backoff:</p>
+<p>Automatically retry failed requests with exponential backoff:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_batch.html">chat_batch</a></span><span class="op">(</span></span>
 <span>  <span class="fu">chat_claude</span><span class="op">(</span><span class="op">)</span>,</span>
@@ -192,7 +192,7 @@
 <span>  max_delay <span class="op">=</span> <span class="fl">32</span>,     <span class="co"># Maximum delay between retries</span></span>
 <span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>  <span class="co"># Multiply delay by this factor after each retry</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>If a request fails, the system will:</p>
+<p>If a request fails, the code will:</p>
 <ol style="list-style-type: decimal">
 <li>Wait for the <code>initial_delay</code>
 </li>
@@ -200,6 +200,7 @@
 <li>If it fails again, wait for (delay × <code>backoff_factor</code>)</li>
 <li>Continue until success or <code>max_retries</code> is reached</li>
 </ol>
+<p>If the code detects an authorization or API key issue, it will stop immediately.</p>
 </div>
 <div class="section level3">
 <h3 id="sound-notifications">Sound Notifications<a class="anchor" aria-label="anchor" href="#sound-notifications"></a>
