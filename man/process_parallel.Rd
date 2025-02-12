@@ -11,9 +11,8 @@ process_parallel(
   state_path = tempfile("chat_batch_", fileext = ".rds"),
   chunk_size = 4,
   workers = 4,
-  echo = "none",
   beep = TRUE,
-  parallel_plan = "multisession"
+  plan = "multisession"
 )
 }
 \description{

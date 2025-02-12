@@ -59,8 +59,8 @@ result$chats()
 ``` r
 chat <- chat_parallel(
   chat_claude(),
+  plan = "multisession",
   workers = 4,
-  parallel_plan = "multisession"
 )
 
 result <- chat$batch(
@@ -124,7 +124,7 @@ prompts <- list(
 
 ### Output Control
 
-Control verbosity with the `echo` parameter:
+Control verbosity with the `echo` parameter (sequential only):
 
 -   `"none"`: Silent operation with progress bar
 -   `"text"`: Show chat responses only
@@ -178,7 +178,7 @@ Creates a sequential batch processor.
 ``` r
 chat_batch(
   chat_model = chat_openai(),  # Base chat model
-  echo = "text",               # Output verbosity
+  echo = "text",               # Output verbosity (sequential only)
   beep = TRUE,                 # Enable sound notifications
   max_retries = 3,             # Maximum retry attempts
   initial_delay = 1,           # Initial retry delay in seconds
@@ -193,10 +193,10 @@ Creates a parallel batch processor.
 
 ``` r
 chat_parallel(
-  chat_model = chat_openai(),     # Base chat model
-  beep = TRUE,                    # Enable sound notifications
-  workers = 4,                    # Number of parallel workers
-  parallel_plan = "multisession"  # "multisession" or "multicore"
+  chat_model = chat_openai(),  # Base chat model
+  beep = TRUE,                 # Enable sound notifications
+  plan = "multisession",       # "multisession" or "multicore"
+  workers = 4                  # Number of parallel workers
 )
 ```
 

@@ -7,7 +7,7 @@
 chat_parallel(
   chat_model = chat_claude(),
   workers = 4,
-  parallel_plan = "multisession",
+  plan = "multisession",
   beep = TRUE,
   ...
 )
@@ -17,7 +17,7 @@ chat_parallel(
 
 \item{workers}{Number of parallel workers to use (default: 4)}
 
-\item{parallel_plan}{Processing strategy to use: "multisession" for separate R sessions
+\item{plan}{Processing strategy to use: "multisession" for separate R sessions
 or "multicore" for forked processes (default: "multisession")}
 
 \item{beep}{Logical indicating whether to play sound on completion (default: TRUE)}

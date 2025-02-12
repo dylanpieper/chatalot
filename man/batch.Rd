@@ -19,8 +19,8 @@ batch(
   backoff_factor = integer(0),
   chunk_size = integer(0),
   workers = integer(0),
-  parallel_plan = character(0),
-  parallel_state = list()
+  plan = character(0),
+  state = list()
 )
 }
 \description{
