@@ -144,10 +144,10 @@ The system automatically retries failed requests with exponential backoff:
 ``` r
 chat <- chat_batch(
   chat_claude(),
-  max_retries = 3,        # Maximum number of retry attempts
-  initial_delay = 1,      # Initial delay in seconds
-  max_delay = 32,         # Maximum delay between retries
-  backoff_factor = 2      # Multiply delay by this factor after each retry
+  max_retries = 3,    # Maximum number of retry attempts
+  initial_delay = 1,  # Initial delay in seconds
+  max_delay = 32,     # Maximum delay between retries
+  backoff_factor = 2  # Multiply delay by this factor after each retry
 )
 ```
 
@@ -193,10 +193,10 @@ Creates a parallel batch processor.
 
 ``` r
 chat_batch_parallel(
-  chat_model = chat_openai(),             # Base chat model
-  beep = TRUE,                            # Enable sound notifications
-  workers = 4,                            # Number of parallel workers
-  parallel_plan = "multisession"          # "multisession" or "multicore"
+  chat_model = chat_openai(),     # Base chat model
+  beep = TRUE,                    # Enable sound notifications
+  workers = 4,                    # Number of parallel workers
+  parallel_plan = "multisession"  # "multisession" or "multicore"
 )
 ```
 
@@ -206,10 +206,10 @@ Processes a list of prompts.
 
 ``` r
 batch(
-  prompts,                # List of prompts to process
-  type_spec = NULL,       # Optional type specification for structured data
-  state_path = NULL,      # Optional path for state persistence
-  chunk_size = 4          # Number of prompts per chunk (parallel only)
+  prompts,            # List of prompts to process
+  type_spec = NULL,   # Optional type specification for structured data
+  state_path = NULL,  # Optional path for state persistence
+  chunk_size = 4      # Number of prompts per chunk (parallel only)
 )
 ```
 
