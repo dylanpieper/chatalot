@@ -802,13 +802,15 @@ create_results <- function(result) {
 #' Maintains state between runs and can resume interrupted processing.
 #' For parallel processing, use `chat_parallel()`.
 #'
-#' @param chat_obj Chat model object to use for processing
+#' @param chat_model Chat model object to use for processing (default: chat_claude())
 #' @param prompts List or vector of prompts to process sequentially
-#' @param type_spec Type specification for structured data extraction (optional)
+#' @param type_spec Type specification for structured data extraction (default: NULL)
 #' @param state_path Path for saving intermediate state. Enables resuming
-#'        interrupted batches from the last successful prompt.
+#'        interrupted batches from the last successful prompt. (default: tempfile("chat_batch_", fileext = ".rds"))
 #' @param echo Level of output to display: "none" for silent operation,
-#'        "text" for response text only, or "all" for full interaction
+#'        "text" for response text only, or "all" for full interaction (default: "none")
+#' @param beep Logical indicating whether to play a sound when batch processing completes (default: TRUE)
+#' @param ... Additional arguments passed to the underlying chat model
 #' @return A batch results object containing:
 #'   \itemize{
 #'     \item prompts: Original input prompts
@@ -822,7 +824,7 @@ create_results <- function(result) {
 #'     \item structured_data(): Function to extract structured data if type_spec was provided
 #'   }
 #' @export
-chat_batch <- function(chat_model = chat_openai(), echo = "text", beep = TRUE, ...) {
+chat_batch <- function(chat_model = chat_claude(), echo = "none", beep = TRUE, ...) {
   original_chat <- chat_model
   chat_env <- new.env(parent = emptyenv())
 
@@ -861,7 +863,7 @@ chat_batch <- function(chat_model = chat_openai(), echo = "text", beep = TRUE, .
 #' Splits prompts into chunks for processing while maintaining state.
 #' For sequential processing, use `chat_batch()`.
 #'
-#' @param chat_model A chat model object (default: chat_openai())
+#' @param chat_model A chat model object (default: chat_claude())
 #' @param beep Logical indicating whether to play sound on completion (default: TRUE)
 #' @param workers Number of parallel workers to use (default: 4)
 #' @param parallel_plan Processing strategy to use: "multisession" for separate R sessions
@@ -880,7 +882,7 @@ chat_batch <- function(chat_model = chat_openai(), echo = "text", beep = TRUE, .
 #'     \item structured_data(): Function to extract structured data if type_spec was provided
 #'   }
 #' @export
-chat_parallel <- function(chat_model = chat_openai(), workers = 4,
+chat_parallel <- function(chat_model = chat_claude(), workers = 4,
                           parallel_plan = "multisession", beep = TRUE, ...) {
   parallel_plan <- match.arg(parallel_plan, choices = c("multisession", "multicore"))
   original_chat <- chat_model

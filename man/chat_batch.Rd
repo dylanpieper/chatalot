@@ -4,20 +4,24 @@
 \alias{chat_batch}
 \title{Process a batch of prompts sequentially}
 \usage{
-chat_batch(chat_model = chat_openai(), echo = "text", beep = TRUE, ...)
+chat_batch(chat_model = chat_claude(), echo = "none", beep = TRUE, ...)
 }
 \arguments{
-\item{echo}{Level of output to display: "none" for silent operation,
-"text" for response text only, or "all" for full interaction}
+\item{chat_model}{Chat model object to use for processing (default: chat_claude())}
 
-\item{chat_obj}{Chat model object to use for processing}
+\item{echo}{Level of output to display: "none" for silent operation,
+"text" for response text only, or "all" for full interaction (default: "none")}
+
+\item{beep}{Logical indicating whether to play a sound when batch processing completes (default: TRUE)}
+
+\item{...}{Additional arguments passed to the underlying chat model}
 
 \item{prompts}{List or vector of prompts to process sequentially}
 
-\item{type_spec}{Type specification for structured data extraction (optional)}
+\item{type_spec}{Type specification for structured data extraction (default: NULL)}
 
 \item{state_path}{Path for saving intermediate state. Enables resuming
-interrupted batches from the last successful prompt.}
+interrupted batches from the last successful prompt. (default: tempfile("chat_batch_", fileext = ".rds"))}
 }
 \value{
 A batch results object containing:

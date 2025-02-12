@@ -5,7 +5,7 @@
 \title{Process a batch of prompts in parallel}
 \usage{
 chat_parallel(
-  chat_model = chat_openai(),
+  chat_model = chat_claude(),
   workers = 4,
   parallel_plan = "multisession",
   beep = TRUE,
@@ -13,7 +13,7 @@ chat_parallel(
 )
 }
 \arguments{
-\item{chat_model}{A chat model object (default: chat_openai())}
+\item{chat_model}{A chat model object (default: chat_claude())}
 
 \item{workers}{Number of parallel workers to use (default: 4)}
 
