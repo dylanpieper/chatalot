@@ -16,6 +16,8 @@ Imports:
     cli,
     ellmer,
     purrr,
+    future,
+    furrr,
     rlang,
     S7 (>= 0.1.0)
 URL: https://dylanpieper.github.io/hellmer/
