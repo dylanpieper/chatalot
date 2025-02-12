@@ -1,0 +1,8 @@
+url: https://dylanpieper.github.io/hellmer/
+repo:
+  url:
+    home: https://github.com/dylanpieper/hellmer
+template:
+  bootstrap: 5
+figures:
+  dev: grfx

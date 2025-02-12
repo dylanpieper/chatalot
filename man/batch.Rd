@@ -16,7 +16,11 @@ batch(
   max_retries = integer(0),
   initial_delay = integer(0),
   max_delay = integer(0),
-  backoff_factor = integer(0)
+  backoff_factor = integer(0),
+  chunk_size = integer(0),
+  workers = integer(0),
+  parallel_plan = character(0),
+  parallel_state = list()
 )
 }
 \description{

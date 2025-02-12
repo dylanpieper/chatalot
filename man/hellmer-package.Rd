@@ -6,7 +6,14 @@
 \alias{hellmer-package}
 \title{hellmer: Batch Processing for Chat Models}
 \description{
-This package implements batch processing for chat models from the 'ellmer' package (\url{https://github.com/tidyverse/ellmer}).
+This package enables batch processing of chat models from 'ellmer' (\url{https://github.com/tidyverse/ellmer}) supporting sequential or parallel processing.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://dylanpieper.github.io/hellmer/}
+}
+
 }
 \author{
 \strong{Maintainer}: Dylan Pieper \email{dylanpieper@gmail.com}

@@ -1,6 +1,6 @@
-# hellmer <img src="man/figures/hellmer-hex.png" align="right" height="140"/>
+# hellmer <img src="man/figures/hellmer-hex.png" align="right" width="140"/>
 
-This package enables batch processing of chat model requests in [ellmer](https://github.com/tidyverse/ellmer). It currently processes requests sequentially, with parallel processing via [httr2](https://httr2.r-lib.org) planned for a future release to improve performance ([#143](https://github.com/tidyverse/ellmer/issues/143)).
+This package enables batch processing of chat models from [ellmer](https://github.com/tidyverse/ellmer) supporting sequential or parallel processing.
 
 ## Installation
 
@@ -10,8 +10,9 @@ devtools::install_github("dylanpieper/hellmer")
 
 ## Overview
 
-Process multiple chat interactions in sequence with:
+Process multiple chat interactions with:
 
+-   Sequential or parallel processing
 -   State persistence and recovery
 -   Progress tracking
 -   Structured data extraction
@@ -20,25 +21,52 @@ Process multiple chat interactions in sequence with:
 -   Automatic retry with exponential backoff
 -   Sound notifications
 
+## Installation
+
+```r
+devtools::install_github("dylanpieper/hellmer")
+```
+
 ## Basic Usage
 
-``` r
-library(hellmer)
+### Sequential Processing
 
+``` r
 chat <- chat_batch(chat_claude("You reply concisely"))
 
 prompts <- list(
   "What is 2+2?",
   "Name one planet.",
-  "Is water wet?"
+  "Is water wet?",
+  "What color is the sky?",
+  "Count to 3.",
+  "Say hello.",
+  "Name a primary color.",
+  "What is 5x5?",
+  "True or false: Birds can fly.",
+  "What day comes after Monday?"
 )
 
 result <- chat$batch(prompts)
 
 result$progress()
-
 result$texts()
 result$chats()
+```
+
+### Parallel Processing
+
+``` r
+chat <- chat_batch_parallel(
+  chat_claude(),
+  workers = 4,
+  parallel_plan = "multisession"
+)
+
+result <- chat$batch(
+  prompts,
+  chunk_size = 2
+)
 ```
 
 ## Features
@@ -51,7 +79,7 @@ Batch processing automatically saves state and can resume interrupted operations
 result <- chat$batch(prompts, state_path = "chat_state.rds")
 ```
 
-If `state_path` is not defined, a temp file will be created by default.
+If `state_path` is not defined, a temporary file will be created by default.
 
 ### Structured Data Extraction
 
@@ -63,6 +91,12 @@ type_sentiment <- type_object(
   positive_score = type_number("Positive sentiment score, 0.0 to 1.0"),
   negative_score = type_number("Negative sentiment score, 0.0 to 1.0"),
   neutral_score = type_number("Neutral sentiment score, 0.0 to 1.0")
+)
+
+prompts <- list(
+  "I love this product! It's amazing!",
+  "This is okay, nothing special.",
+  "Terrible experience, very disappointed."
 )
 
 result <- chat$batch(prompts, type_spec = type_sentiment)
@@ -117,13 +151,14 @@ chat <- chat_batch(
 )
 ```
 
-If a request fails, the system will: 
-1. Wait for the `initial_delay`
-2. Retry the request 
-3. If it fails again, wait for (delay × `backoff_factor`) 
-4. Continue until success or `max_retries` is reached
+If a request fails, the system will:
 
-⚠️ The retry is not smart and will retry for any error including an invalid API key.
+1.  Wait for the `initial_delay`
+2.  Retry the request 3
+3.  If it fails again, wait for (delay × `backoff_factor`)
+4.  Continue until success or `max_retries` is reached
+
+**Warning**: The retry is not smart and will retry for any error including an invalid API key.
 
 ### Sound Notifications
 
@@ -136,11 +171,11 @@ chat <- chat_batch(
 )
 ```
 
-## References
+## Quick References
 
 ### chat_batch()
 
-Creates a batch-enabled chat instance.
+Creates a sequential batch processor.
 
 ``` r
 chat_batch(
@@ -154,6 +189,19 @@ chat_batch(
 )
 ```
 
+### chat_batch_parallel()
+
+Creates a parallel batch processor.
+
+``` r
+chat_batch_parallel(
+  chat_model = chat_openai(),             # Base chat model
+  beep = TRUE,                            # Enable sound notifications
+  workers = 4,                            # Number of parallel workers
+  parallel_plan = "multisession"          # "multisession" or "multicore"
+)
+```
+
 ### batch\$batch()
 
 Processes a list of prompts.
@@ -162,7 +210,8 @@ Processes a list of prompts.
 batch(
   prompts,                # List of prompts to process
   type_spec = NULL,       # Optional type specification for structured data
-  state_path = NULL       # Optional path for state persistence
+  state_path = NULL,      # Optional path for state persistence
+  chunk_size = 4          # Number of prompts per chunk (parallel only)
 )
 ```
 
@@ -178,3 +227,4 @@ batch(
 -   ✅ Add retries on error
 -   ✅ Change `texts()` to return a list or vector matching the input
 -   ✅ Add sound notifications on completion, interruption, and error
+-   ✅ Add parallel processing support

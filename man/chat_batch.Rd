@@ -2,24 +2,39 @@
 % Please edit documentation in R/hellmer.R
 \name{chat_batch}
 \alias{chat_batch}
-\title{Process batch of prompts}
+\title{Process a batch of prompts sequentially}
 \usage{
 chat_batch(chat_model = chat_openai(), echo = "text", beep = TRUE, ...)
 }
 \arguments{
-\item{echo}{Echo level}
+\item{echo}{Level of output to display: "none" for silent operation,
+"text" for response text only, or "all" for full interaction}
 
-\item{chat_obj}{Chat model object}
+\item{chat_obj}{Chat model object to use for processing}
 
-\item{prompts}{List of prompts}
+\item{prompts}{List or vector of prompts to process sequentially}
 
-\item{type_spec}{Type specification for structured data}
+\item{type_spec}{Type specification for structured data extraction (optional)}
 
-\item{state_path}{Path for saving state}
+\item{state_path}{Path for saving intermediate state. Enables resuming
+interrupted batches from the last successful prompt.}
 }
 \value{
-Batch results object
+A batch results object containing:
+\itemize{
+\item prompts: Original input prompts
+\item responses: Raw response data for completed prompts
+\item completed: Number of successfully processed prompts
+\item state_path: Path where batch state is saved
+\item type_spec: Type specification used for structured data
+\item texts(): Function to extract text responses
+\item chats(): Function to extract chat objects
+\item progress(): Function to get processing status
+\item structured_data(): Function to extract structured data if type_spec was provided
+}
 }
 \description{
-Process batch of prompts
+Processes a batch of chat prompts one at a time in sequential order.
+Maintains state between runs and can resume interrupted processing.
+For parallel processing, use \code{chat_parallel()}.
 }

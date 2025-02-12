@@ -42,3 +42,4 @@ Batch results object
 \description{
 Process batch of prompts with progress tracking and retries
 }
+\keyword{internal}
