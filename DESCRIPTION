@@ -3,8 +3,7 @@ Title: Batch Processing for Chat Models
 Version: 0.0.0.9000
 Authors@R: 
     person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
-Description: This package implements batch processing for chat models from the 
-    'ellmer' package (<https://github.com/tidyverse/ellmer>).
+Description: This package enables batch processing of chat model requests in 'ellmer' (<https://github.com/tidyverse/ellmer>).
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
