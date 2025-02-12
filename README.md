@@ -158,7 +158,7 @@ Toggle sound notifications on batch completion, interruption, and error:
 ``` r
 chat <- chat_batch(
   chat_claude(),
-  beep = FALSE
+  beep = TRUE
 )
 ```
 
@@ -172,7 +172,7 @@ Creates a sequential batch processor.
 chat_batch(
   chat_model = chat_openai(),  # Base chat model
   echo = "text",               # Output verbosity (sequential only)
-  beep = TRUE,                 # Enable sound notifications
+  beep = TRUE,                 # Toggle sound notifications
   max_retries = 3,             # Maximum retry attempts
   initial_delay = 1,           # Initial retry delay in seconds
   max_delay = 32,              # Maximum delay between retries
@@ -195,7 +195,7 @@ chat_parallel(
 
 ### batch\$batch()
 
-Processes a list of prompts.
+Processes a vector or list of prompts.
 
 ``` r
 batch(
