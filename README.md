@@ -65,7 +65,7 @@ chat <- chat_parallel(
 
 result <- chat$batch(
   prompts,
-  chunk_size = 2
+  chunk_size = 4
 )
 ```
 
