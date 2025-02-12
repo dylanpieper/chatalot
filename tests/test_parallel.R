@@ -1,4 +1,4 @@
-chat <- chat_parallel(chat_claude("You reply concisely"), echo = "none") # "text" or "all"
+chat <- chat_parallel(chat_claude())
 
 prompts <- list(
   "What is 2+2?",
