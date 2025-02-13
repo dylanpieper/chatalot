@@ -269,7 +269,7 @@ create_auth_error <- function(original_error) {
     list(
       success = FALSE,
       error = "auth",
-      message = paste("Authentication error - check your API key:", msg)
+      message = msg
     ),
     class = c("chat_auth_error", "error", "condition")
   )
