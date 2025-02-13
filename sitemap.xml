@@ -10,11 +10,13 @@
 <url><loc>https://dylanpieper.github.io/hellmer/reference/chat_batch.html</loc></url>
 <url><loc>https://dylanpieper.github.io/hellmer/reference/chat_parallel.html</loc></url>
 <url><loc>https://dylanpieper.github.io/hellmer/reference/chats.batch.html</loc></url>
+<url><loc>https://dylanpieper.github.io/hellmer/reference/create_auth_error.html</loc></url>
 <url><loc>https://dylanpieper.github.io/hellmer/reference/create_results.html</loc></url>
 <url><loc>https://dylanpieper.github.io/hellmer/reference/finish_successful_batch.html</loc></url>
 <url><loc>https://dylanpieper.github.io/hellmer/reference/handle_batch_interrupt.html</loc></url>
 <url><loc>https://dylanpieper.github.io/hellmer/reference/hellmer-package.html</loc></url>
 <url><loc>https://dylanpieper.github.io/hellmer/reference/index.html</loc></url>
+<url><loc>https://dylanpieper.github.io/hellmer/reference/is_auth_error.html</loc></url>
 <url><loc>https://dylanpieper.github.io/hellmer/reference/process.html</loc></url>
 <url><loc>https://dylanpieper.github.io/hellmer/reference/process_chunks.html</loc></url>
 <url><loc>https://dylanpieper.github.io/hellmer/reference/process_parallel.html</loc></url>
