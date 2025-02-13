@@ -1,6 +1,6 @@
 chat <- chat_parallel()
 
-prompts <- list(
+prompts <- c(
   "What is 2+2?",
   "Name one planet.",
   "Is water wet?",

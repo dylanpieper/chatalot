@@ -1,4 +1,4 @@
-chat <- chat_batch(echo = "all") # or "all"
+chat <- chat_batch(echo = "text") # or "all"
 
 prompts <- c(
   "What is 2+2?",
