@@ -305,7 +305,7 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL, echo = "
                                backoff_factor = 2) {
   retry_with_delay <- function(attempt = 1, delay = initial_delay) {
     if (attempt > max_retries + 1) {
-      stop("Max retries exceeded")
+      stop("Warning 1:")
     }
 
     result <- tryCatch(
@@ -327,7 +327,7 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL, echo = "
         }
 
         if (attempt > max_retries) {
-          stop("Max retries exceeded: ", e$message)
+          stop("Warning 2: ", e$message)
         }
 
         cli::cli_alert_warning(sprintf(
