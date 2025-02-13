@@ -14,9 +14,9 @@ prompts <- list(
 )
 
 benchmark_test <- function() {
-  chat1 <- chat_parallel(chat_claude())
+  chat1 <- chat_parallel()
   
-  chat2 <- chat_batch(chat_claude("You reply concisely"), echo = "none")
+  chat2 <- chat_batch()
   
   results <- microbenchmark(
     parallel = chat1$batch(prompts, chunk_size = 1),

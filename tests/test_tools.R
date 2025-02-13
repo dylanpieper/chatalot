@@ -2,7 +2,8 @@ square_number <- function(num) {
   num^2
 }
 
-chat <- chat_batch(chat_claude("You reply concisely"), echo = "all") # "text" or "all"
+chat <- chat_batch(ellmer::chat_claude("You reply concisely"), 
+                   echo = "all") # "text" or "all"
 
 chat$register_tool(tool(
   square_number,

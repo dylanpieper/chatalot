@@ -1,6 +1,10 @@
-chat <- chat_parallel(chat_ollama(model = "deepseek-r1:8b", 
-                                  system_prompt = "You reply in one sentence or less"), 
-                      echo = "none") # "text" or "all"
+chat <- chat_parallel(
+  ellmer::chat_ollama(
+    model = "deepseek-r1:8b",
+    system_prompt = "You reply in one sentence or less"
+  ),
+  echo = "none"
+) # "text" or "all"
 
 prompts <- c(
   "What is 2+2?",

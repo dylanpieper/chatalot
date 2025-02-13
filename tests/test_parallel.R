@@ -1,4 +1,4 @@
-chat <- chat_parallel(chat_claude())
+chat <- chat_parallel()
 
 prompts <- list(
   "What is 2+2?",
