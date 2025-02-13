@@ -820,7 +820,7 @@ create_results <- function(result) {
 #'     \item structured_data(): Function to extract structured data if type_spec was provided
 #'   }
 #' @export
-chat_batch <- function(chat_model = chat_claude(), echo = "none", beep = TRUE, ...) {
+chat_batch <- function(chat_model = ellmer::chat_claude(), echo = "none", beep = TRUE, ...) {
   original_chat <- chat_model
   chat_env <- new.env(parent = emptyenv())
 
@@ -878,7 +878,7 @@ chat_batch <- function(chat_model = chat_claude(), echo = "none", beep = TRUE, .
 #'     \item structured_data(): Function to extract structured data if type_spec was provided
 #'   }
 #' @export
-chat_parallel <- function(chat_model = chat_claude(), workers = 4,
+chat_parallel <- function(chat_model = ellmer::chat_claude(), workers = 4,
                           plan = "multisession", beep = TRUE, ...) {
   plan <- match.arg(plan, choices = c("multisession", "multicore"))
   original_chat <- chat_model
