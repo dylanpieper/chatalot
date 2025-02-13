@@ -543,7 +543,7 @@ process <- function(
     prompts,
     type_spec = NULL,
     state_path = tempfile("chat_batch_", fileext = ".rds"),
-    echo = "text",
+    echo = "none",
     beep = TRUE,
     max_retries = 3L,
     initial_delay = 1,
