@@ -66,7 +66,7 @@
 <li>Structured data extraction</li>
 <li>Tool integration</li>
 <li>Configurable output verbosity</li>
-<li>Automatic retry with exponential backoff</li>
+<li>Automatic retry with backoff</li>
 <li>Sound notifications</li>
 </ul>
 </div>
@@ -147,7 +147,7 @@
 <div class="section level3">
 <h3 id="tool-integration">Tool Integration<a class="anchor" aria-label="anchor" href="#tool-integration"></a>
 </h3>
-<p>Register and use tools in batch processing:</p>
+<p>Register and use tools (R functions):</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">square_number</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">num</span><span class="op">)</span> <span class="va">num</span><span class="op">^</span><span class="fl">2</span></span>
 <span></span>
@@ -183,7 +183,7 @@
 <div class="section level3">
 <h3 id="automatic-retry">Automatic Retry<a class="anchor" aria-label="anchor" href="#automatic-retry"></a>
 </h3>
-<p>Automatically retry failed requests with exponential backoff:</p>
+<p>Automatically retry failed requests with backoff:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_batch.html">chat_batch</a></span><span class="op">(</span></span>
 <span>  <span class="fu">chat_claude</span><span class="op">(</span><span class="op">)</span>,</span>
@@ -222,7 +222,7 @@
 <p>Creates a sequential batch processor.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/chat_batch.html">chat_batch</a></span><span class="op">(</span></span>
-<span>  chat_model <span class="op">=</span> <span class="fu">chat_openai</span><span class="op">(</span><span class="op">)</span>,  <span class="co"># Base chat model</span></span>
+<span>  chat_model <span class="op">=</span> <span class="fu">chat_claude</span><span class="op">(</span><span class="op">)</span>,  <span class="co"># Base chat model</span></span>
 <span>  echo <span class="op">=</span> <span class="st">"text"</span>,               <span class="co"># Output verbosity (sequential only)</span></span>
 <span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,                 <span class="co"># Toggle sound notifications</span></span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3</span>,             <span class="co"># Maximum retry attempts</span></span>
@@ -237,7 +237,7 @@
 <p>Creates a parallel batch processor.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/chat_parallel.html">chat_parallel</a></span><span class="op">(</span></span>
-<span>  chat_model <span class="op">=</span> <span class="fu">chat_openai</span><span class="op">(</span><span class="op">)</span>,  <span class="co"># Base chat model</span></span>
+<span>  chat_model <span class="op">=</span> <span class="fu">chat_claude</span><span class="op">(</span><span class="op">)</span>,  <span class="co"># Base chat model</span></span>
 <span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,                 <span class="co"># Enable sound notifications</span></span>
 <span>  plan <span class="op">=</span> <span class="st">"multisession"</span>,       <span class="co"># "multisession" or "multicore"</span></span>
 <span>  workers <span class="op">=</span> <span class="fl">4</span>                  <span class="co"># Number of parallel workers</span></span>
@@ -246,7 +246,7 @@
 <div class="section level3">
 <h3 id="batchbatch">batch$batch()<a class="anchor" aria-label="anchor" href="#batchbatch"></a>
 </h3>
-<p>Processes a vector or list of prompts.</p>
+<p>Processes a list or vector of prompts.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/batch.html">batch</a></span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>,            <span class="co"># List of prompts to process</span></span>
@@ -261,23 +261,13 @@
 </h3>
 <ul>
 <li>
-<code>texts()</code>: Returns response texts in the same format as the input prompts (i.e., a character vector if prompts were provided as a vector, or a list if prompts were provided as a list)</li>
+<code>texts()</code>: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector)</li>
 <li>
 <code>chats()</code>: Returns a list of chat objects</li>
 <li>
 <code>progress()</code>: Returns processing statistics</li>
 <li>
 <code>structured_data()</code>: Returns extracted structured data (if <code>type_spec</code> is provided)</li>
-</ul>
-</div>
-<div class="section level3">
-<h3 id="todo">Todo<a class="anchor" aria-label="anchor" href="#todo"></a>
-</h3>
-<ul>
-<li>✅ Add retries on error</li>
-<li>✅ Change <code>texts()</code> to return a list or vector matching the input</li>
-<li>✅ Add sound notifications on completion, interruption, and error</li>
-<li>✅ Add parallel processing support</li>
 </ul>
 </div>
 </div>
