@@ -19,6 +19,7 @@ Process multiple chat interactions with:
 -   Tool integration
 -   Configurable output verbosity
 -   Automatic retry with backoff
+-   Timeout handling
 -   Sound notifications
 
 ## Installation
@@ -152,6 +153,21 @@ If a request fails, the code will:
 4.  Continue until success or `max_retries` is reached
 
 If the code detects an authorization or API key issue, it will stop immediately.
+
+### Timeout Handling
+
+The timeout parameter specifies the maximum time (in seconds) to wait for a response from the chat model for each prompt. This prevents the batch process from stalling on an unresponsive prompt.
+
+```r
+chat <- chat_parallel(
+  ellmer::chat_ollama(
+    model = "deepseek-r1:8b",
+    system_prompt = "You reply in one sentence or less",
+    echo = "none" # required for ollama to suppress output
+  ),
+  timeout = 300
+)
+```
 
 ### Sound Notifications
 
