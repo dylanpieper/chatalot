@@ -304,9 +304,6 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL, echo = "
                                max_retries = 3L, initial_delay = 1, max_delay = 32,
                                backoff_factor = 2) {
   retry_with_delay <- function(attempt = 1, delay = initial_delay) {
-    if (attempt > max_retries + 1) {
-      stop("Warning 1:")
-    }
 
     result <- tryCatch(
       {
@@ -327,7 +324,7 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL, echo = "
         }
 
         if (attempt > max_retries) {
-          stop("Warning 2: ", e$message)
+          stop(e$message)
         }
 
         cli::cli_alert_warning(sprintf(
@@ -479,9 +476,16 @@ process <- function(chat_obj, prompts, type_spec = NULL,
   create_results(result)
 }
 
-#' Process batch of prompts in parallel
-#' @description Processes a batch of chat prompts using parallel workers.
-#' @inheritParams process_parallel
+#' Process a batch of prompts in parallel
+#' @param chat_obj Chat model object for making API calls
+#' @param prompts Vector or list of prompts to process
+#' @param type_spec Type specification for structured data extraction
+#' @param state_path Path to save intermediate state
+#' @param chunk_size Number of prompts to process per chunk
+#' @param workers Number of parallel workers
+#' @param beep Play sound on completion
+#' @param plan Parallel backend: "multisession" or "multicore"
+#' @return Batch results object
 #' @keywords internal
 process_parallel <- function(chat_obj, prompts, type_spec = NULL,
                              state_path = tempfile("chat_batch_", fileext = ".rds"),
@@ -634,7 +638,7 @@ process_parallel <- function(chat_obj, prompts, type_spec = NULL,
           
           if (chunk_attempts >= max_chunk_attempts) {
             cli::cli_alert_danger(sprintf(
-              "Chunk %d/%d failed after %d attempts: %s",
+              "Chunk %d/%d attempt %d failed: %s",
               chunk_idx, length(chunks), chunk_attempts, conditionMessage(e)
             ))
             stop(e)
