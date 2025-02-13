@@ -2,11 +2,22 @@
 % Please edit documentation in R/hellmer.R
 \name{handle_batch_interrupt}
 \alias{handle_batch_interrupt}
-\title{Handle batch interruption}
+\title{Update batch state with new responses}
 \usage{
 handle_batch_interrupt(result, beep)
 }
+\arguments{
+\item{result}{A batch object containing processing state}
+
+\item{beep}{Logical indicating whether to play a sound}
+
+\item{x}{A batch object
+Handle batch interruption}
+}
+\value{
+NULL (called for side effects)
+}
 \description{
-Handle batch interruption
+Update batch state with new responses
 }
 \keyword{internal}

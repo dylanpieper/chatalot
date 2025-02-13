@@ -6,7 +6,16 @@
 \usage{
 finish_successful_batch(pb, beep)
 }
+\arguments{
+\item{pb}{Progress bar object}
+
+\item{beep}{Logical; whether to play success sound}
+}
+\value{
+NULL (invisibly)
+}
 \description{
-Finish successful batch processing
+Called after successful completion of batch processing to update progress
+indicators and provide feedback
 }
 \keyword{internal}

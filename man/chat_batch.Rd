@@ -4,24 +4,37 @@
 \alias{chat_batch}
 \title{Process a batch of prompts sequentially}
 \usage{
-chat_batch(chat_model = chat_claude(), echo = "none", beep = TRUE, ...)
+chat_batch(
+  chat_model = ellmer::chat_claude(),
+  echo = "none",
+  beep = TRUE,
+  timeout = 60,
+  max_retries = 3L,
+  initial_delay = 1,
+  max_delay = 32,
+  backoff_factor = 2,
+  ...
+)
 }
 \arguments{
-\item{chat_model}{Chat model object to use for processing (default: chat_claude())}
+\item{chat_model}{Chat model object to use for processing}
 
 \item{echo}{Level of output to display: "none" for silent operation,
-"text" for response text only, or "all" for full interaction (default: "none")}
+"text" for response text only, or "all" for full interaction}
 
-\item{beep}{Logical indicating whether to play a sound when batch processing completes (default: TRUE)}
+\item{beep}{Logical indicating whether to play a sound when batch processing completes}
+
+\item{timeout}{Maximum time in seconds to wait for each prompt response}
+
+\item{max_retries}{Maximum number of retry attempts per prompt}
+
+\item{initial_delay}{Initial delay in seconds before first retry}
+
+\item{max_delay}{Maximum delay in seconds between retries}
+
+\item{backoff_factor}{Factor to multiply delay by after each retry}
 
 \item{...}{Additional arguments passed to the underlying chat model}
-
-\item{prompts}{List or vector of prompts to process sequentially}
-
-\item{type_spec}{Type specification for structured data extraction (default: NULL)}
-
-\item{state_path}{Path for saving intermediate state. Enables resuming
-interrupted batches from the last successful prompt. (default: tempfile("chat_batch_", fileext = ".rds"))}
 }
 \value{
 A batch results object containing:

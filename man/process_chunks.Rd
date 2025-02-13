@@ -6,6 +6,26 @@
 \usage{
 process_chunks(chunks, result, chat_obj, type_spec, pb, state_path, echo, beep)
 }
+\arguments{
+\item{chunks}{List of prompt chunks to process}
+
+\item{result}{A batch object to store results}
+
+\item{chat_obj}{Chat model object for making API calls}
+
+\item{type_spec}{Type specification for structured data extraction}
+
+\item{pb}{Progress bar object}
+
+\item{state_path}{Path to save intermediate state}
+
+\item{echo}{Level of output to display ("none", "text", "all")}
+
+\item{beep}{Logical indicating whether to play sounds}
+}
+\value{
+Updated batch object with processed results
+}
 \description{
 Process chunks of prompts in parallel
 }

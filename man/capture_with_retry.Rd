@@ -12,7 +12,8 @@ capture_with_retry(
   max_retries = 3L,
   initial_delay = 1,
   max_delay = 32,
-  backoff_factor = 2
+  backoff_factor = 2,
+  timeout = 60
 )
 }
 \arguments{

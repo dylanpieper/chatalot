@@ -10,11 +10,26 @@ process(
   type_spec = NULL,
   state_path = tempfile("chat_batch_", fileext = ".rds"),
   echo = "text",
+  beep = TRUE,
   max_retries = 3L,
   initial_delay = 1,
   max_delay = 32,
   backoff_factor = 2,
-  beep = TRUE
+  timeout = 60
+)
+
+process(
+  chat_obj,
+  prompts,
+  type_spec = NULL,
+  state_path = tempfile("chat_batch_", fileext = ".rds"),
+  echo = "text",
+  beep = TRUE,
+  max_retries = 3L,
+  initial_delay = 1,
+  max_delay = 32,
+  backoff_factor = 2,
+  timeout = 60
 )
 }
 \arguments{
@@ -28,6 +43,8 @@ process(
 
 \item{echo}{Echo level ("none", "text", or "all")}
 
+\item{beep}{Play sound on completion, interruption, and error}
+
 \item{max_retries}{Maximum number of retry attempts per prompt}
 
 \item{initial_delay}{Initial delay in seconds before first retry}
@@ -35,11 +52,17 @@ process(
 \item{max_delay}{Maximum delay in seconds between retries}
 
 \item{backoff_factor}{Factor to multiply delay by after each retry}
+
+\item{timeout}{Maximum time in seconds to wait for each prompt response}
 }
 \value{
 Batch results object
+
+Batch results object
 }
 \description{
+Process batch of prompts with progress tracking and retries
+
 Process batch of prompts with progress tracking and retries
 }
 \keyword{internal}

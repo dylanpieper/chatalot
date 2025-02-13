@@ -9,10 +9,12 @@ process_parallel(
   prompts,
   type_spec = NULL,
   state_path = tempfile("chat_batch_", fileext = ".rds"),
-  chunk_size = 4,
   workers = 4,
+  chunk_size = 4,
+  plan = "multisession",
   beep = TRUE,
-  plan = "multisession"
+  timeout = 60,
+  max_chunk_attempts = 3L
 )
 }
 \arguments{
@@ -24,13 +26,17 @@ process_parallel(
 
 \item{state_path}{Path to save intermediate state}
 
-\item{chunk_size}{Number of prompts to process per chunk}
-
 \item{workers}{Number of parallel workers}
 
-\item{beep}{Play sound on completion}
+\item{chunk_size}{Number of prompts to process per chunk}
 
 \item{plan}{Parallel backend: "multisession" or "multicore"}
+
+\item{beep}{Play sound on completion, interruption, and error}
+
+\item{timeout}{Maximum time in seconds to wait for each prompt response}
+
+\item{max_chunk_attempts}{Maximum number of retry attempts for failed chunks}
 }
 \value{
 Batch results object
