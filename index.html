@@ -254,6 +254,7 @@
 <span>  state_path <span class="op">=</span> <span class="cn">NULL</span>,  <span class="co"># Optional path for state persistence</span></span>
 <span>  chunk_size <span class="op">=</span> <span class="fl">4</span>      <span class="co"># Number of prompts per chunk (parallel only)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p>You can mimic sequential processing when using <code><a href="reference/chat_parallel.html">chat_parallel()</a></code> by setting the <code>chunk_size = 1</code>, but this will likely decrease performance compared to <code><a href="reference/chat_batch.html">chat_batch()</a></code> (see <code>tests/test_benchmark.R</code>).</p>
 </div>
 <div class="section level3">
 <h3 id="results-methods">Results Methods<a class="anchor" aria-label="anchor" href="#results-methods"></a>
