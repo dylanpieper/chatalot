@@ -690,12 +690,21 @@ process_parallel <- function(
     beep = TRUE,
     timeout = 60,
     max_chunk_attempts = 3L) {
+  
   plan <- match.arg(plan, c("multisession", "multicore"))
   total_prompts <- length(prompts)
-
+  prompts_list <- as.list(prompts)
+  original_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
+  
   result <- if (file.exists(state_path)) {
     existing_result <- readRDS(state_path)
-    if (!identical(as.list(prompts), existing_result@prompts)) {
+    prompts_match <- isTRUE(all.equal(
+      prompts_list,
+      existing_result@prompts,
+      check.attributes = FALSE
+    ))
+    
+    if (!prompts_match || existing_result@input_type != original_type) {
       unlink(state_path)
       NULL
     } else {
@@ -704,17 +713,17 @@ process_parallel <- function(
   } else {
     NULL
   }
-
+  
   if (is.null(result)) {
     result <- batch(
-      prompts = as.list(prompts),
+      prompts = prompts_list,
       responses = vector("list", total_prompts),
       completed = 0L,
       state_path = state_path,
       type_spec = type_spec,
       echo = "none",
       progress_bar = NULL,
-      input_type = if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list",
+      input_type = original_type,
       max_retries = 3L,
       initial_delay = 1,
       max_delay = 32,
@@ -725,159 +734,124 @@ process_parallel <- function(
       state = list(
         active_workers = 0L,
         failed_chunks = list(),
-        retry_count = 0L
+        retry_count = 0L,
+        tokens = list()
       )
     )
+    saveRDS(result, state_path)
   }
-
-  if (result@completed >= total_prompts) {
-    cli::cli_alert_success("Complete")
-    return(create_results(result))
+  
+  handle_worker_response <- function(response, chunk_idx) {
+    if (inherits(response, "error")) {
+      if (is_auth_error(response)) {
+        stop(create_auth_error(response)$message)
+      }
+      return(FALSE)
+    }
+    
+    if (!is.null(response$tokens)) {
+      result@state$tokens[[chunk_idx]] <- response$tokens
+    }
+    
+    TRUE
   }
-
-  if (plan == "multisession") {
-    future::plan(future::multisession, workers = workers)
-  } else {
-    future::plan(future::multicore, workers = workers)
-  }
-
-  remaining_prompts <- prompts[(result@completed + 1L):total_prompts]
-  chunks <- split(remaining_prompts, ceiling(seq_along(remaining_prompts) / chunk_size))
-  was_interrupted <- FALSE
-  max_chunk_attempts <- 3
-  pb <- NULL
-
-  tryCatch(
-    {
-      pb <- cli::cli_progress_bar(
-        format = "Processing chats [{cli::pb_current}/{cli::pb_total}] [{cli::pb_bar}] {cli::pb_percent}",
-        total = total_prompts
-      )
-      cli::cli_progress_update(id = pb, set = result@completed)
-
+  
+  if (result@completed < total_prompts) {
+    if (plan == "multisession") {
+      future::plan(future::multisession, workers = workers)
+    } else {
+      future::plan(future::multicore, workers = workers)
+    }
+    
+    remaining_prompts <- prompts[(result@completed + 1L):total_prompts]
+    chunks <- split(remaining_prompts, ceiling(seq_along(remaining_prompts) / chunk_size))
+    
+    pb <- cli::cli_progress_bar(
+      format = "Processing chats [{cli::pb_current}/{cli::pb_total}] [{cli::pb_bar}] {cli::pb_percent}",
+      total = total_prompts
+    )
+    cli::cli_progress_update(id = pb, set = result@completed)
+    
+    tryCatch({
       for (chunk_idx in seq_along(chunks)) {
-        if (was_interrupted) break
-
         chunk <- chunks[[chunk_idx]]
-        chunk_attempts <- 0
-        chunk_successful <- FALSE
-
-        while (!chunk_successful && chunk_attempts < max_chunk_attempts) {
-          chunk_attempts <- chunk_attempts + 1
-
-          tryCatch(
-            {
-              new_responses <- furrr::future_map(
-                chunk,
-                function(prompt) {
-                  R.utils::withTimeout(
-                    {
-                      worker_chat <- chat_obj$clone()
-                      structure(
-                        tryCatch(
-                          {
-                            response <- capture_with_retry(
-                              worker_chat,
-                              prompt,
-                              type_spec,
-                              echo = "none",
-                              max_retries = 0,
-                              initial_delay = 1,
-                              max_delay = 16,
-                              backoff_factor = 2,
-                              timeout = timeout
-                            )
-                            list(success = TRUE, data = response)
-                          },
-                          error = function(e) {
-                            if (is_auth_error(e)) {
-                              create_auth_error(e)
-                            } else {
-                              list(success = FALSE, error = "other", message = e$message)
-                            }
-                          }
-                        ),
-                        class = "worker_response"
-                      )
-                    },
-                    timeout = timeout
-                  )
-                },
-                .progress = FALSE,
-                .options = furrr::furrr_options(
-                  scheduling = 1,
-                  seed = TRUE
+        retry_count <- 0
+        success <- FALSE
+        
+        while (!success && retry_count < max_chunk_attempts) {
+          retry_count <- retry_count + 1
+          worker_chat <- chat_obj$clone()
+          
+          chunk_result <- tryCatch({
+            responses <- furrr::future_map(
+              chunk,
+              function(prompt) {
+                capture_with_retry(
+                  worker_chat,
+                  prompt,
+                  type_spec,
+                  echo = "none",
+                  timeout = timeout
                 )
+              },
+              .options = furrr::furrr_options(
+                scheduling = 1,
+                seed = TRUE
               )
-
-              auth_errors <- Filter(function(x) !x$success && x$error == "auth", new_responses)
-              if (length(auth_errors) > 0) {
-                cli::cli_alert_warning(sprintf("Interrupted at chat %d of %d", result@completed, total_prompts))
-                stop(auth_errors[[1]]$message, call. = FALSE)
-              }
-
-              other_errors <- Filter(function(x) !x$success && x$error == "other", new_responses)
-              if (length(other_errors) > 0) {
-                stop(other_errors[[1]]$message, call. = FALSE)
-              }
-
-              successful_responses <- Filter(function(x) x$success, new_responses)
-              completed_before <- result@completed
-              for (i in seq_along(successful_responses)) {
-                result@responses[[completed_before + i]] <- successful_responses[[i]]$data
-              }
-              result@completed <- completed_before + length(successful_responses)
-              saveRDS(result, state_path)
-
-              cli::cli_progress_update(id = pb, set = result@completed)
-              chunk_successful <- TRUE
-            },
-            error = function(e) {
-              if (grepl("unauthorized|authentication|invalid.*key|api.*key",
-                tolower(conditionMessage(e)),
-                ignore.case = TRUE
-              )) {
-                stop(e)
-              }
-
-              if (chunk_attempts >= max_chunk_attempts) {
-                cli::cli_alert_danger(sprintf(
-                  "Chunk %d/%d attempt %d failed: %s",
-                  chunk_idx, length(chunks), chunk_attempts, conditionMessage(e)
-                ))
-                stop(e)
-              } else {
-                cli::cli_alert_warning(sprintf(
-                  "Chunk %d/%d attempt %d failed: %s. Retrying...",
-                  chunk_idx, length(chunks), chunk_attempts, conditionMessage(e)
-                ))
-                Sys.sleep(2^chunk_attempts)
-              }
-            }
-          )
+            )
+            
+            list(
+              success = TRUE,
+              responses = responses,
+              tokens = worker_chat$tokens()
+            )
+          }, error = function(e) {
+            structure(
+              list(
+                success = FALSE,
+                error = if (is_auth_error(e)) "auth" else "other",
+                message = conditionMessage(e)
+              ),
+              class = c("worker_error", "error", "condition")
+            )
+          })
+          
+          success <- handle_worker_response(chunk_result, chunk_idx)
+          
+          if (!success && retry_count < max_chunk_attempts) {
+            cli::cli_alert_warning(sprintf(
+              "Chunk %d failed (attempt %d/%d). Retrying...",
+              chunk_idx, retry_count, max_chunk_attempts
+            ))
+            Sys.sleep(2^retry_count)
+          }
         }
+        
+        if (!success) {
+          stop(sprintf("Chunk %d failed after %d attempts", chunk_idx, max_chunk_attempts))
+        }
+        
+        result@completed <- result@completed + length(chunk)
+        saveRDS(result, state_path)
+        cli::cli_progress_update(id = pb, set = result@completed)
       }
-
-      if (!was_interrupted) {
-        cli::cli_progress_done(id = pb)
-        cli::cli_alert_success("Complete")
-        if (beep) beepr::beep("ping")
-      }
-    },
-    error = function(e) {
-      if (!is.null(pb)) cli::cli_progress_done(id = pb)
+      
+      cli::cli_progress_done(id = pb)
+      if (beep) beepr::beep("ping")
+      
+    }, error = function(e) {
+      cli::cli_progress_done(id = pb)
       saveRDS(result, state_path)
       if (beep) beepr::beep("wilhelm")
       stop(e)
-    },
-    interrupt = function(e) {
-      if (beep) beepr::beep("coin")
-      if (!is.null(pb)) cli::cli_progress_done(id = pb)
+    }, interrupt = function(e) {
+      cli::cli_progress_done(id = pb)
       saveRDS(result, state_path)
-      cat(sprintf("\r! Interrupted at chat %d of %d", result@completed, total_prompts))
-    }
-  )
-
+      if (beep) beepr::beep("coin")
+      message(sprintf("\nInterrupted at chat %d of %d", result@completed, total_prompts))
+    })
+  }
+  
   create_results(result)
 }
 
@@ -1091,16 +1065,17 @@ chat_parallel <- function(
     timeout = 60,
     max_chunk_attempts = 3L,
     ...) {
+  
   plan <- match.arg(plan, choices = c("multisession", "multicore"))
   original_chat <- chat_model
   chat_env <- new.env(parent = emptyenv())
-
+  
   purrr::walk(names(original_chat), function(n) {
     assign(n, original_chat[[n]], envir = chat_env)
   })
-
+  
   chat_env$last_state_path <- NULL
-
+  
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
                              state_path = tempfile("chat_batch_", fileext = ".rds"),
@@ -1110,7 +1085,7 @@ chat_parallel <- function(
     } else {
       state_path <- chat_env$last_state_path
     }
-
+    
     process_parallel(
       chat_obj = original_chat,
       prompts = prompts,
@@ -1124,7 +1099,7 @@ chat_parallel <- function(
       max_chunk_attempts = max_chunk_attempts
     )
   }
-
+  
   structure(chat_env, class = class(original_chat))
 }
 
