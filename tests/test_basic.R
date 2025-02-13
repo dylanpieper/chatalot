@@ -15,10 +15,12 @@ prompts <- c(
 
 prompts <- as.list(prompts) # works with list or vector
 
-batched <- chat$batch(prompts) # resumes if interrupted
+result <- chat$batch(prompts) # resumes if interrupted
 
-batched$texts()
+result$progress()
 
-batched$chats()
+result$texts()
 
-batched$progress()
+result$chats()
+
+

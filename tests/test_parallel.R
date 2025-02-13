@@ -13,8 +13,8 @@ prompts <- list(
   "What day comes after Monday?"
 )
 
-batched <- chat$batch(prompts, chunk_size = 4) # resumes if interrupted
+result <- chat$batch(prompts, chunk_size = 4) # resumes if interrupted
 
-batched$texts()
+result$texts()
 
-batched$chats()
+result$chats()

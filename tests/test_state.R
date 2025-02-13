@@ -13,8 +13,8 @@ prompts <- list(
   "What day comes after Monday?"
 )
 
-batched <- chat$batch(prompts, state_path = "test.rds") # resumes if interrupted
+result <- chat$batch(prompts, state_path = "test.rds") # resumes if interrupted
 
-batched$texts()
+result$texts()
 
-batched$chats()
+result$chats()

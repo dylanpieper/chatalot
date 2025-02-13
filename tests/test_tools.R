@@ -23,8 +23,8 @@ prompts <- list(
   "Can you calculate the square of 15?"
 )
 
-batched <- chat$batch(prompts) # resumes if interrupted
+result <- chat$batch(prompts) # resumes if interrupted
 
-batched$texts()
+result$texts()
 
-batched$chats()
+result$chats()
