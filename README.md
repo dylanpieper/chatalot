@@ -208,6 +208,8 @@ batch(
 )
 ```
 
+You can mimic sequential processing when using `chat_parallel()` by setting the `chunk_size = 1`, but this will likely decrease performance compared to `chat_batch()` (see `tests/test_benchmark.R`).
+
 ### Results Methods
 
 -   `texts()`: Returns response texts in the same format as the input prompts (i.e., a character vector if prompts were provided as a vector, or a list if prompts were provided as a list)
