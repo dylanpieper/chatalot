@@ -1,5 +1,4 @@
-chat <- chat_batch(ellmer::chat_claude("You reply concisely"), 
-                   echo = "none") # "text" or "all"
+chat <- chat_batch()
 
 prompts <- c(
   "What is 2+2?",

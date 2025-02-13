@@ -1,9 +1,4 @@
-chat <- chat_parallel(
-  ellmer::chat_ollama(
-    model = "deepseek-r1:8b",
-    system_prompt = "You reply in one sentence or less"
-  )
-)
+chat <- chat_batch(timeout = 60)
 
 prompts <- c(
   "What is 2+2?",
@@ -20,10 +15,12 @@ prompts <- c(
 
 prompts <- as.list(prompts) # works with list or vector
 
-result <- chat$batch(prompts, chunk_size = 10) # resumes if interrupted
+result <- chat$batch(prompts) # resumes if interrupted
 
 result$progress()
 
 result$texts()
 
 result$chats()
+
+
