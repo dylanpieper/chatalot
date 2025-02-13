@@ -173,7 +173,7 @@ Creates a sequential batch processor.
 ``` r
 chat_batch(
   chat_model = chat_claude(),  # Base chat model
-  echo = "text",               # Output verbosity (sequential only)
+  echo = "none",               # Output verbosity (sequential only)
   beep = TRUE,                 # Toggle sound notifications
   max_retries = 3,             # Maximum retry attempts
   initial_delay = 1,           # Initial retry delay in seconds
