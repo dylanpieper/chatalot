@@ -18,7 +18,7 @@ Process multiple chat interactions with:
 -   Structured data extraction
 -   Tool integration
 -   Configurable output verbosity
--   Automatic retry with exponential backoff
+-   Automatic retry with backoff
 -   Sound notifications
 
 ## Installation
@@ -98,7 +98,7 @@ structured_data <- result$structured_data()
 
 ### Tool Integration
 
-Register and use tools in batch processing:
+Register and use tools (R functions):
 
 ``` r
 square_number <- function(num) num^2
@@ -132,7 +132,7 @@ chat <- chat_batch(
 
 ### Automatic Retry
 
-Automatically retry failed requests with exponential backoff:
+Automatically retry failed requests with backoff:
 
 ``` r
 chat <- chat_batch(
@@ -172,7 +172,7 @@ Creates a sequential batch processor.
 
 ``` r
 chat_batch(
-  chat_model = chat_openai(),  # Base chat model
+  chat_model = chat_claude(),  # Base chat model
   echo = "text",               # Output verbosity (sequential only)
   beep = TRUE,                 # Toggle sound notifications
   max_retries = 3,             # Maximum retry attempts
@@ -188,7 +188,7 @@ Creates a parallel batch processor.
 
 ``` r
 chat_parallel(
-  chat_model = chat_openai(),  # Base chat model
+  chat_model = chat_claude(),  # Base chat model
   beep = TRUE,                 # Enable sound notifications
   plan = "multisession",       # "multisession" or "multicore"
   workers = 4                  # Number of parallel workers
@@ -197,7 +197,7 @@ chat_parallel(
 
 ### batch\$batch()
 
-Processes a vector or list of prompts.
+Processes a list or vector of prompts.
 
 ``` r
 batch(
@@ -212,14 +212,7 @@ You can mimic sequential processing when using `chat_parallel()` by setting the 
 
 ### Results Methods
 
--   `texts()`: Returns response texts in the same format as the input prompts (i.e., a character vector if prompts were provided as a vector, or a list if prompts were provided as a list)
+-   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector)
 -   `chats()`: Returns a list of chat objects
 -   `progress()`: Returns processing statistics
 -   `structured_data()`: Returns extracted structured data (if `type_spec` is provided)
-
-### Todo
-
--   ✅ Add retries on error
--   ✅ Change `texts()` to return a list or vector matching the input
--   ✅ Add sound notifications on completion, interruption, and error
--   ✅ Add parallel processing support
