@@ -244,6 +244,37 @@ S7::method(chats, batch) <- function(x) {
   map(responses, "chat")
 }
 
+#' Check if an error is an authentication error
+#' @param error Error message or condition
+#' @return TRUE if authentication error, FALSE otherwise
+#' @keywords internal
+is_auth_error <- function(error) {
+  msg <- if (inherits(error, "condition")) conditionMessage(error) else as.character(error)
+  grepl("unauthorized|authentication|invalid.*key|api.*key",
+        tolower(msg),
+        ignore.case = TRUE)
+}
+
+#' Create a standardized authentication error
+#' @param original_error Original error message or condition
+#' @return Structured error information
+#' @keywords internal
+create_auth_error <- function(original_error) {
+  msg <- if (inherits(original_error, "condition")) 
+    conditionMessage(original_error) 
+  else 
+    as.character(original_error)
+  
+  structure(
+    list(
+      success = FALSE,
+      error = "auth",
+      message = paste("Authentication error - check your API key:", msg)
+    ),
+    class = c("chat_auth_error", "error", "condition")
+  )
+}
+
 #' Capture chat model response with proper handling
 #' @param original_chat Original chat model object
 #' @param prompt Prompt text
@@ -300,50 +331,45 @@ capture <- function(original_chat, prompt, type_spec = NULL, echo = "text") {
 #' @param backoff_factor Factor to multiply delay by after each retry
 #' @return List containing response information
 #' @keywords internal
-capture_with_retry <- function(original_chat, prompt, type_spec = NULL, echo = "text",
-                               max_retries = 3L, initial_delay = 1, max_delay = 32,
+capture_with_retry <- function(original_chat, prompt, type_spec = NULL, 
+                               echo = "text", max_retries = 3L, 
+                               initial_delay = 1, max_delay = 32,
                                backoff_factor = 2) {
   retry_with_delay <- function(attempt = 1, delay = initial_delay) {
-
-    result <- tryCatch(
-      {
-        R.utils::withTimeout(
-          {
-            capture(original_chat, prompt, type_spec, echo)
-          },
-          timeout = 60
-        )
-      },
-      error = function(e) {
-        if (inherits(e, "interrupt")) {
-          stop(e)
-        }
-
-        if (grepl("unauthorized|authentication|invalid.*key|api.*key", tolower(e$message))) {
-          stop("Authentication error - invalid API key: ", e$message)
-        }
-
-        if (attempt > max_retries) {
-          stop(e$message)
-        }
-
-        cli::cli_alert_warning(sprintf(
-          "Attempt %d failed: %s. Retrying in %.1f seconds...",
-          attempt, e$message, delay
-        ))
-
-        Sys.sleep(delay)
-        next_delay <- min(delay * backoff_factor, max_delay)
-        retry_with_delay(attempt + 1, next_delay)
-      },
-      timeout = function(e) {
-        stop("Operation timed out after 60 seconds")
+    result <- tryCatch({
+      R.utils::withTimeout({
+        capture(original_chat, prompt, type_spec, echo)
+      }, timeout = 60)
+    },
+    error = function(e) {
+      if (inherits(e, "interrupt")) {
+        stop(e)
       }
-    )
-
+      
+      if (is_auth_error(e)) {
+        stop(create_auth_error(e)$message)
+      }
+      
+      if (attempt > max_retries) {
+        stop(e$message)
+      }
+      
+      cli::cli_alert_warning(sprintf(
+        "Attempt %d failed: %s. Retrying in %.1f seconds...",
+        attempt, e$message, delay
+      ))
+      
+      Sys.sleep(delay)
+      next_delay <- min(delay * backoff_factor, max_delay)
+      retry_with_delay(attempt + 1, next_delay)
+    },
+    timeout = function(e) {
+      stop("Operation timed out after 60 seconds")
+    })
+    
     result
   }
-
+  
   retry_with_delay()
 }
 
@@ -586,11 +612,8 @@ process_parallel <- function(chat_obj, prompts, type_spec = NULL,
                     list(success = TRUE, data = response)
                   },
                   error = function(e) {
-                    if (grepl("unauthorized|authentication|invalid.*key|api.*key",
-                              tolower(e$message),
-                              ignore.case = TRUE
-                    )) {
-                      list(success = FALSE, error = "auth", message = e$message)
+                    if (is_auth_error(e)) {
+                      create_auth_error(e)
                     } else {
                       list(success = FALSE, error = "other", message = e$message)
                     }
