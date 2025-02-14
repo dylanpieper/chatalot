@@ -1,3 +1,10 @@
+test_that("chat_parallel initialization works", {
+  chat <- chat_parallel(beep = FALSE)
+  expect_true(inherits(chat, "Chat"))
+  expect_true(inherits(chat, "R6"))
+  expect_type(chat$batch, "closure")
+})
+
 test_that("chat_parallel processes chunks correctly", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
@@ -7,7 +14,7 @@ test_that("chat_parallel processes chunks correctly", {
   expect_type(result, "list")
   expect_s3_class(result, "batch")
   expect_equal(length(result$texts()), 2)
-  expect_true(all(sapply(result$chats(), function(x) inherits(x, "ellmer_chat"))))
+  expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
 })
 
 test_that("chat_parallel handles structured data", {
@@ -106,5 +113,5 @@ test_that("chat_parallel handles interruption and resume", {
   result <- chat_resume$batch(get_test_prompts(3), state_path = temp_file, chunk_size = 1)
   
   expect_equal(length(result$texts()), 3)
-  expect_true(all(sapply(result$chats(), function(x) inherits(x, "ellmer_chat"))))
+  expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
 })

@@ -1,11 +1,9 @@
 name: R-CMD-check
-
 on:
   push:
     branches: [main, master]
   pull_request:
     branches: [main, master]
-
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
@@ -33,7 +31,7 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
-
+          
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
@@ -45,7 +43,7 @@ jobs:
       
       - name: Test package
         run: |
-          devtools::test()
+          devtools::test(stop_on_failure = TRUE, stop_on_warning = FALSE)
         shell: Rscript {0}
         
       - name: Check package

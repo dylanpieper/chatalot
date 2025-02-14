@@ -1,6 +1,7 @@
 test_that("chat_batch initialization works", {
   chat <- chat_batch(beep = FALSE)
-  expect_s3_class(chat, "ellmer_chat")
+  expect_true(inherits(chat, "Chat"))
+  expect_true(inherits(chat, "R6"))
   expect_type(chat$batch, "closure")
 })
 
@@ -13,7 +14,7 @@ test_that("chat_batch processes prompts correctly", {
   expect_type(result, "list")
   expect_s3_class(result, "batch")
   expect_equal(length(result$texts()), 2)
-  expect_true(all(sapply(result$chats(), function(x) inherits(x, "ellmer_chat"))))
+  expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
 })
 
 test_that("chat_batch handles structured data", {
@@ -109,5 +110,5 @@ test_that("chat_batch handles interruption and resume", {
   result <- chat_resume$batch(get_test_prompts(3), state_path = temp_file)
   
   expect_equal(length(result$texts()), 3)
-  expect_true(all(sapply(result$chats(), function(x) inherits(x, "ellmer_chat"))))
+  expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
 })
