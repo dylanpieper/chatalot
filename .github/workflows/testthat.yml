@@ -41,7 +41,7 @@ jobs:
             any::rcmdcheck
             any::remotes
             any::devtools
-            dylanpieper/ellmer
+            dylanpieper/hellmer
           needs: check
 
       - name: Install dependencies
