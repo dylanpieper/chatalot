@@ -989,10 +989,15 @@ chat_batch <- function(
   chat_env$backoff_factor <- backoff_factor
   chat_env$last_state_path <- NULL
   
+  chat_env$register_tool <- chat_model$register_tool
+  chat_env$chat <- chat_model$chat
+  chat_env$extract_data <- chat_model$extract_data
+  chat_env$get_turns <- chat_model$get_turns
+  chat_env$tokens <- chat_model$tokens
+  
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
                              state_path = tempfile("chat_batch_", fileext = ".rds")) {
-
     if (is.null(chat_env$last_state_path)) {
       chat_env$last_state_path <- state_path
     } else {
@@ -1013,12 +1018,6 @@ chat_batch <- function(
       timeout = chat_env$timeout
     )
   }
-  
-  chat_env$chat <- chat_model$chat
-  chat_env$clone <- chat_model$clone
-  chat_env$extract_data <- chat_model$extract_data
-  chat_env$get_turns <- chat_model$get_turns
-  chat_env$tokens <- chat_model$tokens
   
   structure(chat_env, class = class(chat_model))
 }
@@ -1063,17 +1062,17 @@ chat_parallel <- function(
   original_chat <- chat_model
   chat_env <- new.env(parent = emptyenv())
   
-  purrr::walk(names(original_chat), function(n) {
-    assign(n, original_chat[[n]], envir = chat_env)
-  })
-  
   chat_env$last_state_path <- NULL
+  chat_env$register_tool <- original_chat$register_tool
+  chat_env$chat <- original_chat$chat
+  chat_env$extract_data <- original_chat$extract_data
+  chat_env$get_turns <- original_chat$get_turns
+  chat_env$tokens <- original_chat$tokens
   
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
                              state_path = tempfile("chat_batch_", fileext = ".rds"),
                              chunk_size = 4) {
-
     if (is.null(chat_env$last_state_path)) {
       chat_env$last_state_path <- state_path
     } else {
