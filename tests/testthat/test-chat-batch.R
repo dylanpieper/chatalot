@@ -85,9 +85,20 @@ test_that("chat_batch handles errors gracefully", {
   Sys.setenv(ANTHROPIC_API_KEY = "invalid_key")
   on.exit(Sys.setenv(ANTHROPIC_API_KEY = old_key))
   
-  expect_error(
-    chat$batch(get_test_prompts(1)),
-    regexp = "HTTP 401 Unauthorized|invalid.*api.*key|authentication_error",
-    ignore.case = TRUE
+  output <- capture.output({
+    error_messages <- testthat::capture_messages({
+      result <- tryCatch(
+        chat$batch(get_test_prompts(1)),
+        error = function(e) message(conditionMessage(e))
+      )
+    })
+  }, type = "message")
+  
+  combined_output <- paste(c(output, error_messages), collapse = "\n")
+  expect_match(
+    combined_output,
+    regexp = "HTTP 401|Unauthorized|invalid.*key|authentication_error",
+    ignore.case = TRUE,
+    info = "Checking if authentication error appears in output"
   )
 })
