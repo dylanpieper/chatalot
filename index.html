@@ -206,13 +206,12 @@
 <div class="section level3">
 <h3 id="timeout-handling">Timeout Handling<a class="anchor" aria-label="anchor" href="#timeout-handling"></a>
 </h3>
-<p>The timeout parameter specifies the maximum time (in seconds) to wait for a response from the chat model for each prompt. This prevents the batch process from stalling on an unresponsive prompt.</p>
+<p>The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the ellmer chat models.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_parallel.html">chat_parallel</a></span><span class="op">(</span></span>
 <span>  <span class="fu">ellmer</span><span class="fu">::</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_ollama.html" class="external-link">chat_ollama</a></span><span class="op">(</span></span>
 <span>    model <span class="op">=</span> <span class="st">"deepseek-r1:8b"</span>,</span>
-<span>    system_prompt <span class="op">=</span> <span class="st">"You reply in one sentence or less"</span>,</span>
-<span>    echo <span class="op">=</span> <span class="st">"none"</span> <span class="co"># required for ollama to suppress output</span></span>
+<span>    echo <span class="op">=</span> <span class="st">"none"</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  timeout <span class="op">=</span> <span class="fl">300</span></span>
 <span><span class="op">)</span></span></code></pre></div>
