@@ -156,14 +156,13 @@ If the code detects an authorization or API key issue, it will stop immediately.
 
 ### Timeout Handling
 
-The timeout parameter specifies the maximum time (in seconds) to wait for a response from the chat model for each prompt. This prevents the batch process from stalling on an unresponsive prompt.
+The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the ellmer chat models.
 
 ```r
 chat <- chat_parallel(
   ellmer::chat_ollama(
     model = "deepseek-r1:8b",
-    system_prompt = "You reply in one sentence or less",
-    echo = "none" # required for ollama to suppress output
+    echo = "none"
   ),
   timeout = 300
 )
