@@ -164,7 +164,7 @@ chat <- chat_parallel(
     model = "deepseek-r1:8b",
     echo = "none"
   ),
-  timeout = 300
+  timeout = 60
 )
 ```
 
