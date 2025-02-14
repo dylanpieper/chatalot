@@ -5,8 +5,8 @@ get_test_prompts <- function(n = 3) {
     "What is 2+2?",
     "Name a planet.",
     "What color is the sky?"
-  )[1:n]
-  return(as.list(prompts))
+  )
+  return(as.list(prompts[seq_len(n)]))
 }
 
 get_sentiment_type_spec <- function() {
@@ -32,27 +32,30 @@ simulate_interrupt <- function(after_n_calls = 1) {
   function() {
     interrupt_env$count <- interrupt_env$count + 1
     if (interrupt_env$count == after_n_calls) {
-      signalCondition(structure(
-        list(message = "Simulated interrupt"),
-        class = c("interrupt", "condition")
-      ))
+      stop(
+        structure(
+          list(message = "Simulated interrupt"),
+          class = c("interrupt", "error", "condition")
+        )
+      )
     }
   }
 }
 
-create_interruptible_chat <- function(chat_fn = chat_batch, ...) {
-  interrupt_hook <- simulate_interrupt(...)
-  wrapped_chat <- chat_fn()
-  original_batch <- wrapped_chat$batch
+create_interruptible_chat <- function(chat_fn = chat_batch, after_n_calls = 1, ...) {
+  interrupt_hook <- simulate_interrupt(after_n_calls)
+  chat <- chat_fn(...)
+  original_batch <- chat$batch
   
-  wrapped_chat$batch <- function(prompts, ...) {
+  chat$batch <- function(prompts, state_path = NULL, ...) {
     tryCatch({
       interrupt_hook()
-      original_batch(prompts, ...)
-    }, interrupt = function(e) {
+      original_batch(prompts, state_path = state_path, ...)
+    },
+    interrupt = function(e) {
       stop(e)
     })
   }
   
-  wrapped_chat
+  return(chat)
 }
