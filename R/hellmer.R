@@ -837,6 +837,7 @@ process_parallel <- function(
       }
       
       cli::cli_progress_done(id = pb)
+      cli::cli_alert_success("Complete") 
       if (beep) beepr::beep("ping")
       
     }, error = function(e) {
