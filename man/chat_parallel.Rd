@@ -13,6 +13,16 @@ chat_parallel(
   max_chunk_attempts = 3L,
   ...
 )
+
+chat_parallel(
+  chat_model = ellmer::chat_claude(),
+  workers = 4,
+  plan = "multisession",
+  beep = TRUE,
+  timeout = 60,
+  max_chunk_attempts = 3L,
+  ...
+)
 }
 \arguments{
 \item{chat_model}{A chat model object}
@@ -29,8 +39,20 @@ or "multicore" for forked processes}
 \item{max_chunk_attempts}{Maximum number of retry attempts for failed chunks (default: 3)}
 
 \item{...}{Additional arguments passed to the chat model}
+
+\item{chat_obj}{Chat model object for making API calls}
+
+\item{prompts}{Vector or list of prompts to process}
+
+\item{type_spec}{Type specification for structured data extraction}
+
+\item{state_path}{Path to save intermediate state}
+
+\item{chunk_size}{Number of prompts to process per chunk}
 }
 \value{
+Batch results object
+
 A batch results object containing:
 \itemize{
 \item prompts: Original input prompts
@@ -49,3 +71,4 @@ Processes a batch of chat prompts using parallel workers.
 Splits prompts into chunks for processing while maintaining state.
 For sequential processing, use \code{chat_batch()}.
 }
+\keyword{internal}

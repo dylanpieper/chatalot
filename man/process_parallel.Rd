@@ -2,7 +2,7 @@
 % Please edit documentation in R/hellmer.R
 \name{process_parallel}
 \alias{process_parallel}
-\title{Process a batch of prompts in parallel}
+\title{Process prompts in parallel chunks with error handling and state management}
 \usage{
 process_parallel(
   chat_obj,
@@ -18,30 +18,30 @@ process_parallel(
 )
 }
 \arguments{
-\item{chat_obj}{Chat model object for making API calls}
+\item{chat_obj}{Chat model object for API calls}
 
 \item{prompts}{Vector or list of prompts to process}
 
-\item{type_spec}{Type specification for structured data extraction}
+\item{type_spec}{Optional type specification for structured data extraction}
 
 \item{state_path}{Path to save intermediate state}
 
-\item{workers}{Number of parallel workers}
+\item{workers}{Number of parallel workers (default: 4)}
 
-\item{chunk_size}{Number of prompts to process per chunk}
+\item{chunk_size}{Number of prompts per chunk (default: 4)}
 
 \item{plan}{Parallel backend: "multisession" or "multicore"}
 
-\item{beep}{Play sound on completion, interruption, and error}
+\item{beep}{Play sound on completion/error (default: TRUE)}
 
-\item{timeout}{Maximum time in seconds to wait for each prompt response}
+\item{timeout}{Maximum seconds per prompt (default: 60)}
 
-\item{max_chunk_attempts}{Maximum number of retry attempts for failed chunks}
+\item{max_chunk_attempts}{Maximum retries per failed chunk (default: 3)}
 }
 \value{
-Batch results object
+Batch results object containing processed responses
 }
 \description{
-Process a batch of prompts in parallel
+Process prompts in parallel chunks with error handling and state management
 }
 \keyword{internal}

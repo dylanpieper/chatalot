@@ -17,20 +17,6 @@ process(
   backoff_factor = 2,
   timeout = 60
 )
-
-process(
-  chat_obj,
-  prompts,
-  type_spec = NULL,
-  state_path = tempfile("chat_batch_", fileext = ".rds"),
-  echo = "none",
-  beep = TRUE,
-  max_retries = 3L,
-  initial_delay = 1,
-  max_delay = 32,
-  backoff_factor = 2,
-  timeout = 60
-)
 }
 \arguments{
 \item{chat_obj}{Chat model object}
@@ -57,12 +43,8 @@ process(
 }
 \value{
 Batch results object
-
-Batch results object
 }
 \description{
-Process batch of prompts with progress tracking and retries
-
 Process batch of prompts with progress tracking and retries
 }
 \keyword{internal}
