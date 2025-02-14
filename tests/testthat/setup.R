@@ -1,5 +1,3 @@
-Sys.setenv(ANTHROPIC_API_KEY = Sys.getenv("ANTHROPIC_API_KEY"))
-
 get_test_prompts <- function(n = 3) {
   prompts <- c(
     "What is 2+2?",
