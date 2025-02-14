@@ -512,11 +512,7 @@ process <- function(
       }
     }
     
-    if (!is.null(progress_bar)) {
-      cli::cli_progress_done(id = progress_bar)
-    }
-    cli::cli_alert_success("Complete")
-    if (beep) beepr::beep("ping")
+    finish_successful_batch(progress_bar, beep)
     
   }, error = function(e) {
     if (!is.null(progress_bar)) {
@@ -526,11 +522,7 @@ process <- function(
     saveRDS(result, state_path)
     
     if (inherits(e, "interrupt")) {
-      if (beep) beepr::beep("coin")
-      cli::cli_alert_warning(sprintf(
-        "Interrupted at chat %d of %d",
-        result@completed, total_prompts
-      ))
+      handle_batch_interrupt(result, beep)
     } else {
       if (beep) beepr::beep("wilhelm")
       stop(e)
@@ -804,20 +796,14 @@ process_parallel <- function(
       }
     }
     
-    cli::cli_progress_done(id = pb)
-    cli::cli_alert_success("Complete")
-    if (beep) beepr::beep("ping")
+    finish_successful_batch(progress_bar, beep)
     
   }, error = function(e) {
     cli::cli_progress_done(id = pb)
     saveRDS(result, state_path)
     
     if (inherits(e, "interrupt")) {
-      if (beep) beepr::beep("coin")
-      cli::cli_alert_warning(sprintf(
-        "Interrupted at chat %d of %d",
-        result@completed, total_prompts
-      ))
+      handle_batch_interrupt(result, beep)
     } else {
       if (beep) beepr::beep("wilhelm")
       stop(e)
