@@ -90,7 +90,7 @@ test_that("chat_parallel handles worker failures", {
   
   expect_error(
     chat$batch(get_test_prompts(1), chunk_size = 1),
-    regexp = "auth|unauthorized|invalid.*key",
+    regexp = "HTTP 401 Unauthorized|invalid.*api.*key|authentication_error",
     ignore.case = TRUE
   )
 })

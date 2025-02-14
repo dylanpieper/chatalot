@@ -87,7 +87,7 @@ test_that("chat_batch handles errors gracefully", {
   
   expect_error(
     chat$batch(get_test_prompts(1)),
-    regexp = "auth|unauthorized|invalid.*key",
+    regexp = "HTTP 401 Unauthorized|invalid.*api.*key|authentication_error",
     ignore.case = TRUE
   )
 })
