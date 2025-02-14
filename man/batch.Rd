@@ -11,7 +11,6 @@ batch(
   state_path = character(0),
   type_spec = NULL,
   echo = character(0),
-  progress_bar = NULL,
   input_type = character(0),
   max_retries = integer(0),
   initial_delay = integer(0),
@@ -22,6 +21,37 @@ batch(
   plan = character(0),
   state = list()
 )
+}
+\arguments{
+\item{prompts}{List of prompts to process}
+
+\item{responses}{List to store responses}
+
+\item{completed}{Integer indicating number of completed prompts}
+
+\item{state_path}{Path to save state file}
+
+\item{type_spec}{Type specification for structured data extraction}
+
+\item{echo}{Level of output to display ("none", "text", "all")}
+
+\item{input_type}{Type of input ("vector" or "list")}
+
+\item{max_retries}{Maximum number of retry attempts}
+
+\item{initial_delay}{Initial delay before first retry}
+
+\item{max_delay}{Maximum delay between retries}
+
+\item{backoff_factor}{Factor to multiply delay by after each retry}
+
+\item{chunk_size}{Size of chunks for parallel processing}
+
+\item{workers}{Number of parallel workers}
+
+\item{plan}{Parallel backend plan}
+
+\item{state}{Internal state tracking}
 }
 \description{
 Batch class for managing chat processing

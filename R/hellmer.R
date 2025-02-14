@@ -1,12 +1,31 @@
+#' Extract texts from a batch result
+#' @name texts
+#' @param x A batch object
+#' @param ... Additional arguments passed to methods
+#' @return A character vector or list of text responses
 #' @export
 texts <- S7::new_generic("texts", "x")
 
+#' Extract chat objects from a batch result
+#' @name chats
+#' @param x A batch object
+#' @return A list of chat objects
 #' @export
 chats <- S7::new_generic("chats", "x")
 
+#' Get progress information from a batch result
+#' @name progress
+#' @param x A batch object
+#' @param ... Additional arguments passed to methods
+#' @return A list containing progress details
 #' @export
 progress <- S7::new_generic("progress", "x")
 
+#' Extract structured data from a batch result
+#' @name structured_data
+#' @param x A batch object
+#' @param ... Additional arguments passed to methods
+#' @return A list of structured data objects
 #' @export
 structured_data <- S7::new_generic("structured_data", "x")
 
@@ -18,11 +37,27 @@ structured_data <- S7::new_generic("structured_data", "x")
 #' @importFrom future plan multisession
 #' @importFrom purrr map_lgl pwalk map map_chr walk
 #' @importFrom R.utils withTimeout
+#' @importFrom utils str
 #' @keywords internal
 "_PACKAGE"
 
 #' Batch class for managing chat processing
 #' @name batch
+#' @param prompts List of prompts to process
+#' @param responses List to store responses
+#' @param completed Integer indicating number of completed prompts
+#' @param state_path Path to save state file
+#' @param type_spec Type specification for structured data extraction
+#' @param echo Level of output to display ("none", "text", "all")
+#' @param input_type Type of input ("vector" or "list")
+#' @param max_retries Maximum number of retry attempts
+#' @param initial_delay Initial delay before first retry
+#' @param max_delay Maximum delay between retries
+#' @param backoff_factor Factor to multiply delay by after each retry
+#' @param chunk_size Size of chunks for parallel processing
+#' @param workers Number of parallel workers
+#' @param plan Parallel backend plan
+#' @param state Internal state tracking
 #' @export
 batch <- S7::new_class(
   "batch",
@@ -75,9 +110,6 @@ batch <- S7::new_class(
         }
         NULL
       }
-    ),
-    progress_bar = S7::new_property(
-      class = S7::class_any | NULL
     ),
     input_type = S7::new_property(
       class = S7::class_character,
@@ -234,11 +266,12 @@ S7::method(texts, batch) <- function(x) {
   }
 }
 
-#' Extract chat objects from a batch
-#' @name chats.batch
+#' Extract chat objects from a batch result
+#' @name chats
 #' @param x A batch object
-#' @return List of chat objects
-#' @importFrom purrr map
+#' @param ... Additional arguments passed to methods
+#' @return A list of chat objects
+#' @export
 S7::method(chats, batch) <- function(x) {
   responses <- x@responses[seq_len(x@completed)]
   map(responses, "chat")
@@ -476,16 +509,16 @@ process <- function(
   }
   
   if (echo == "none") {
-    progress_bar <- cli::cli_progress_bar(
+    pb <- cli::cli_progress_bar(
       format = paste0(
         "{cli::pb_spin} Processing chats [{cli::pb_current}/{cli::pb_total}] ",
         "[{cli::pb_bar}] {cli::pb_percent}"
       ),
       total = total_prompts
     )
-    cli::cli_progress_update(id = progress_bar, set = result@completed)
+    cli::cli_progress_update(id = pb, set = result@completed)
   } else {
-    progress_bar <- NULL
+    pb <- NULL
   }
   
   tryCatch({
@@ -507,16 +540,16 @@ process <- function(
       result@completed <- i
       saveRDS(result, state_path)
       
-      if (!is.null(progress_bar)) {
-        cli::cli_progress_update(id = progress_bar, set = i)
+      if (!is.null(pb)) {
+        cli::cli_progress_update(id = pb, set = i)
       }
     }
     
-    finish_successful_batch(progress_bar, beep)
+    finish_successful_batch(pb, beep)
     
   }, error = function(e) {
-    if (!is.null(progress_bar)) {
-      cli::cli_progress_done(id = progress_bar)
+    if (!is.null(pb)) {
+      cli::cli_progress_done(id = pb)
     }
     
     saveRDS(result, state_path)
@@ -528,8 +561,8 @@ process <- function(
       stop(e)
     }
   }, interrupt = function(e) {
-    if (!is.null(progress_bar)) {
-      cli::cli_progress_done(id = progress_bar)
+    if (!is.null(pb)) {
+      cli::cli_progress_done(id = pb)
     }
     
     saveRDS(result, state_path)
@@ -549,18 +582,16 @@ process <- function(
 }
 
 #' Process a batch of prompts in parallel
-#' @param chat_obj Chat model object for making API calls
-#' @param prompts Vector or list of prompts to process
-#' @param type_spec Type specification for structured data extraction
-#' @param state_path Path to save intermediate state
+#' @name chat_parallel
+#' @param chat_model Chat model object to use
 #' @param workers Number of parallel workers
-#' @param chunk_size Number of prompts to process per chunk
-#' @param plan Parallel backend: "multisession" or "multicore"
-#' @param beep Play sound on completion, interruption, and error
-#' @param timeout Maximum time in seconds to wait for each prompt response
-#' @param max_chunk_attempts Maximum number of retry attempts for failed chunks
-#' @return Batch results object
-#' @keywords internal
+#' @param plan Processing strategy ("multisession" or "multicore")
+#' @param beep Play sound on completion
+#' @param timeout Maximum time to wait for response
+#' @param max_chunk_attempts Maximum retry attempts for chunks
+#' @param ... Additional arguments passed to chat model
+#' @return A batch results object
+#' @export
 chat_parallel <- function(
     chat_model = ellmer::chat_claude(),
     workers = 4,
@@ -675,7 +706,6 @@ process_parallel <- function(
       state_path = state_path,
       type_spec = type_spec,
       echo = "none",
-      progress_bar = NULL,
       input_type = original_type,
       max_retries = 3L,
       initial_delay = 1,
@@ -796,7 +826,7 @@ process_parallel <- function(
       }
     }
     
-    finish_successful_batch(progress_bar, beep)
+    finish_successful_batch(pb, beep)
     
   }, error = function(e) {
     cli::cli_progress_done(id = pb)
@@ -839,10 +869,10 @@ process_parallel <- function(
 #' @keywords internal
 process_chunks <- function(chunks, result, chat_obj, type_spec, pb, state_path, echo, beep) {
   was_interrupted <- FALSE
-
+  
   for (chunk in chunks) {
     if (was_interrupted) break
-
+    
     withCallingHandlers(
       {
         new_responses <- furrr::future_map(
@@ -853,8 +883,15 @@ process_chunks <- function(chunks, result, chat_obj, type_spec, pb, state_path, 
           },
           .progress = FALSE
         )
-
-        update_batch_state(result, new_responses, pb, state_path)
+        
+        start_idx <- result@completed + 1
+        end_idx <- result@completed + length(new_responses)
+        result@responses[start_idx:end_idx] <- new_responses
+        result@completed <- end_idx
+        saveRDS(result, state_path)
+        if (!is.null(pb)) {
+          cli::cli_progress_update(id = pb, set = end_idx)
+        }
       },
       interrupt = function(e) {
         was_interrupted <<- TRUE
@@ -863,16 +900,15 @@ process_chunks <- function(chunks, result, chat_obj, type_spec, pb, state_path, 
       }
     )
   }
-
+  
   if (!was_interrupted) {
     finish_successful_batch(pb, beep)
   }
 }
 
-#' Update batch state with new responses
-#' @param x A batch object
-
 #' Handle batch interruption
+#' @name handle_batch_interrupt
+#' @usage handle_batch_interrupt(result, beep)
 #' @param result A batch object containing processing state
 #' @param beep Logical indicating whether to play a sound
 #' @return NULL (called for side effects)

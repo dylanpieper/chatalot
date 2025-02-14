@@ -18,7 +18,9 @@ Imports:
     future,
     furrr,
     purrr,
-    rlang,
     R.utils,
-    S7 (>= 0.1.0)
+    S7,
+    utils
+Remotes:
+    dylanpieper/ellmer
 URL: https://dylanpieper.github.io/hellmer/
