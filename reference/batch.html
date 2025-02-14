@@ -45,7 +45,6 @@
 <span>  state_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  type_spec <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  echo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
-<span>  progress_bar <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  input_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  max_retries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  initial_delay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
@@ -58,8 +57,73 @@
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
-  </main></div>
+
+<dl><dt id="arg-prompts">prompts<a class="anchor" aria-label="anchor" href="#arg-prompts"></a></dt>
+<dd><p>List of prompts to process</p></dd>
+
+
+<dt id="arg-responses">responses<a class="anchor" aria-label="anchor" href="#arg-responses"></a></dt>
+<dd><p>List to store responses</p></dd>
+
+
+<dt id="arg-completed">completed<a class="anchor" aria-label="anchor" href="#arg-completed"></a></dt>
+<dd><p>Integer indicating number of completed prompts</p></dd>
+
+
+<dt id="arg-state-path">state_path<a class="anchor" aria-label="anchor" href="#arg-state-path"></a></dt>
+<dd><p>Path to save state file</p></dd>
+
+
+<dt id="arg-type-spec">type_spec<a class="anchor" aria-label="anchor" href="#arg-type-spec"></a></dt>
+<dd><p>Type specification for structured data extraction</p></dd>
+
+
+<dt id="arg-echo">echo<a class="anchor" aria-label="anchor" href="#arg-echo"></a></dt>
+<dd><p>Level of output to display ("none", "text", "all")</p></dd>
+
+
+<dt id="arg-input-type">input_type<a class="anchor" aria-label="anchor" href="#arg-input-type"></a></dt>
+<dd><p>Type of input ("vector" or "list")</p></dd>
+
+
+<dt id="arg-max-retries">max_retries<a class="anchor" aria-label="anchor" href="#arg-max-retries"></a></dt>
+<dd><p>Maximum number of retry attempts</p></dd>
+
+
+<dt id="arg-initial-delay">initial_delay<a class="anchor" aria-label="anchor" href="#arg-initial-delay"></a></dt>
+<dd><p>Initial delay before first retry</p></dd>
+
+
+<dt id="arg-max-delay">max_delay<a class="anchor" aria-label="anchor" href="#arg-max-delay"></a></dt>
+<dd><p>Maximum delay between retries</p></dd>
+
+
+<dt id="arg-backoff-factor">backoff_factor<a class="anchor" aria-label="anchor" href="#arg-backoff-factor"></a></dt>
+<dd><p>Factor to multiply delay by after each retry</p></dd>
+
+
+<dt id="arg-chunk-size">chunk_size<a class="anchor" aria-label="anchor" href="#arg-chunk-size"></a></dt>
+<dd><p>Size of chunks for parallel processing</p></dd>
+
+
+<dt id="arg-workers">workers<a class="anchor" aria-label="anchor" href="#arg-workers"></a></dt>
+<dd><p>Number of parallel workers</p></dd>
+
+
+<dt id="arg-plan">plan<a class="anchor" aria-label="anchor" href="#arg-plan"></a></dt>
+<dd><p>Parallel backend plan</p></dd>
+
+
+<dt id="arg-state">state<a class="anchor" aria-label="anchor" href="#arg-state"></a></dt>
+<dd><p>Internal state tracking</p></dd>
+
+</dl></div>
+
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
