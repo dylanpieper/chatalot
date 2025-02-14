@@ -1,5 +1,5 @@
 test_that("chat_batch initialization works", {
-  chat <- chat_batch()
+  chat <- chat_batch(beep = FALSE)
   expect_s3_class(chat, "ellmer_chat")
   expect_type(chat$batch, "closure")
 })
@@ -7,7 +7,7 @@ test_that("chat_batch initialization works", {
 test_that("chat_batch processes prompts correctly", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
-  chat <- chat_batch()
+  chat <- chat_batch(beep = FALSE)
   result <- chat$batch(get_test_prompts(2))
   
   expect_type(result, "list")
@@ -19,7 +19,7 @@ test_that("chat_batch processes prompts correctly", {
 test_that("chat_batch handles structured data", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
-  chat <- chat_batch()
+  chat <- chat_batch(beep = FALSE)
   prompts <- list(
     "I love this!",
     "This is terrible."
@@ -36,7 +36,7 @@ test_that("chat_batch handles structured data", {
 test_that("chat_batch works with tools", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
-  chat <- chat_batch()
+  chat <- chat_batch(beep = FALSE)
   chat$register_tool(get_square_tool())
   
   result <- chat$batch(list(
@@ -53,7 +53,7 @@ test_that("chat_batch handles state persistence", {
   temp_file <- tempfile(fileext = ".rds")
   on.exit(unlink(temp_file))
   
-  chat <- chat_batch()
+  chat <- chat_batch(beep = FALSE)
   result <- chat$batch(get_test_prompts(1), state_path = temp_file)
   
   expect_true(file.exists(temp_file))
@@ -63,7 +63,7 @@ test_that("chat_batch handles state persistence", {
 test_that("chat_batch respects timeout", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
-  chat <- chat_batch(timeout = 30)
+  chat <- chat_batch(timeout = 30, beep = FALSE)
   result <- chat$batch(get_test_prompts(1))
   expect_equal(length(result$texts()), 1)
 })
@@ -71,7 +71,7 @@ test_that("chat_batch respects timeout", {
 test_that("chat_batch supports echo", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
-  chat <- chat_batch(echo = "text")
+  chat <- chat_batch(echo = "text", beep = FALSE)
   result <- chat$batch(get_test_prompts(1))
   expect_equal(length(result$texts()), 1)
 })
@@ -79,7 +79,7 @@ test_that("chat_batch supports echo", {
 test_that("chat_batch handles errors gracefully", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
-  chat <- chat_batch()
+  chat <- chat_batch(beep = FALSE)
   old_key <- Sys.getenv("ANTHROPIC_API_KEY")
   Sys.setenv(ANTHROPIC_API_KEY = "invalid_key")
   on.exit(Sys.setenv(ANTHROPIC_API_KEY = old_key))
@@ -97,7 +97,7 @@ test_that("chat_batch handles interruption and resume", {
   temp_file <- tempfile(fileext = ".rds")
   on.exit(unlink(temp_file))
   
-  chat <- create_interruptible_chat(chat_batch, after_n_calls = 1)
+  chat <- create_interruptible_chat(chat_batch, after_n_calls = 1, beep = FALSE)
   expect_error(
     chat$batch(get_test_prompts(3), state_path = temp_file),
     class = "interrupt"
@@ -105,7 +105,7 @@ test_that("chat_batch handles interruption and resume", {
   
   expect_true(file.exists(temp_file))
   
-  chat_resume <- chat_batch()
+  chat_resume <- chat_batch(beep = FALSE)
   result <- chat_resume$batch(get_test_prompts(3), state_path = temp_file)
   
   expect_equal(length(result$texts()), 3)
