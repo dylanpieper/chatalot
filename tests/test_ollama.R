@@ -4,7 +4,7 @@ chat <- chat_parallel(
     system_prompt = "You reply in one sentence or less",
     echo = "none" # required for ollama to suppress output
   ),
-  timeout = 300
+  timeout = 1000 # still won't exceed ellmer's timeout
 )
 
 prompts <- c(
@@ -22,7 +22,7 @@ prompts <- c(
 
 prompts <- as.list(prompts) # works with list or vector
 
-result <- chat$batch(prompts, chunk_size = 2) # resumes if interrupted
+result <- chat$batch(prompts, chunk_size = 5) # resumes if interrupted
 
 result$progress()
 
