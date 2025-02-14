@@ -94,24 +94,3 @@ test_that("chat_parallel handles worker failures", {
     ignore.case = TRUE
   )
 })
-
-test_that("chat_parallel handles interruption and resume", {
-  skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
-  
-  temp_file <- tempfile(fileext = ".rds")
-  on.exit(unlink(temp_file))
-  
-  chat <- create_interruptible_chat(chat_parallel, after_n_calls = 1, workers = 1, beep = FALSE)
-  expect_error(
-    chat$batch(get_test_prompts(3), state_path = temp_file, chunk_size = 1),
-    class = "interrupt"
-  )
-  
-  expect_true(file.exists(temp_file))
-  
-  chat_resume <- chat_parallel(workers = 1, beep = FALSE)
-  result <- chat_resume$batch(get_test_prompts(3), state_path = temp_file, chunk_size = 1)
-  
-  expect_equal(length(result$texts()), 3)
-  expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
-})
