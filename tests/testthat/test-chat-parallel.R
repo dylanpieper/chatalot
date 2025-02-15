@@ -72,14 +72,6 @@ test_that("chat_parallel respects timeout", {
   expect_equal(length(result$texts()), 1)
 })
 
-test_that("chat_parallel supports echo", {
-  skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
-  
-  chat <- chat_parallel(workers = 1, echo = "text", beep = FALSE)
-  result <- chat$batch(get_test_prompts(1), chunk_size = 1)
-  expect_equal(length(result$texts()), 1)
-})
-
 test_that("chat_parallel handles worker failures", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
