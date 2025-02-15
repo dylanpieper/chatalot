@@ -71,7 +71,7 @@ chat <- chat_parallel(chat_claude, system_prompt = "Reply concisely")
 
 ### Tooling
 
-Register and use tools (R functions):
+Register and use tools/function calling:
 
 ``` r
 square_number <- function(num) num^2
