@@ -1,5 +1,5 @@
 chat <- chat_parallel(
-  ellmer::chat_ollama(
+  chat_ollama(
     model = "deepseek-r1:8b",
     system_prompt = "You reply in one sentence or less",
     echo = "none" # required for ollama to suppress output
