@@ -68,17 +68,20 @@
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>This vignette compares different approaches to batching LLM
-operations in R, looking at three main packages:</p>
+operations in R. There are currently three main packages that support
+batch processing:</p>
 <ul>
 <li>
 <a href="https://github.com/dylanpieper/hellmer" class="external-link">hellmer</a>:
-Synchronous batch processing across providers</li>
+Synchronous batch processing for any provider’s model supported by <a href="https://github.com/tidyverse/ellmer/" class="external-link">ellmer</a>
+</li>
 <li>
 <a href="https://github.com/edubruell/tidyllm" class="external-link">tidyllm</a>:
-Asynchronous batch processing across providers</li>
+Asynchronous batch processing for Anthropic, OpenAI, or Mistral
+models</li>
 <li>
-<a href="https://mlverse.github.io/mall/" class="external-link">mall</a>: Local model
-batch processing with Ollama</li>
+<a href="https://mlverse.github.io/mall" class="external-link">mall</a>: Local batch
+processing with Ollama</li>
 </ul>
 </div>
 <div class="section level2">
@@ -87,8 +90,7 @@ batch processing with Ollama</li>
 <div class="section level3">
 <h3 id="hellmer">hellmer<a class="anchor" aria-label="anchor" href="#hellmer"></a>
 </h3>
-<p>Focuses on synchronous batch processing across multiple providers via
-<a href="https://github.com/tidyverse/ellmer/" class="external-link">ellmer</a>:</p>
+<p>Focuses on synchronous batch processing:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/hellmer/">hellmer</a></span><span class="op">)</span></span>
 <span></span>
@@ -106,19 +108,23 @@ batch processing with Ollama</li>
 <div class="section level3">
 <h3 id="tidyllm">tidyllm<a class="anchor" aria-label="anchor" href="#tidyllm"></a>
 </h3>
-<p>Offers asynchronous batch processing across multiple providers:</p>
+<p>Focuses on asynchronous batch processing:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://edubruell.github.io/tidyllm/" class="external-link">tidyllm</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">batch_id</span> <span class="op">&lt;-</span> <span class="va">messages</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">send_batch</span><span class="op">(</span><span class="fu">claude</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">fetch_batch</span><span class="op">(</span><span class="va">batch_id</span>, <span class="fu">claude</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">glue</span><span class="op">(</span><span class="st">"Write a poem about {x}"</span>, x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cats"</span>,<span class="st">"dogs"</span>,<span class="st">"hamsters"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">llm_message</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">send_batch</span><span class="op">(</span><span class="fu">claude</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="st">"claude_batch.rds"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"claude_batch.rds"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>   <span class="fu">check_batch</span><span class="op">(</span><span class="fu">claude</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Key features:</p>
 <ul>
 <li>Asynchronous processing</li>
-<li>Multiple provider support</li>
-<li>Provider-specific batch APIs</li>
+<li>Supports Anthropic, OpenAI, or Mistral batching APIs</li>
 <li>Status checking capabilities</li>
+<li>Cost savings (~50% cheaper)</li>
 </ul>
 </div>
 <div class="section level3">
@@ -135,7 +141,7 @@ batch processing with Ollama</li>
 <li>Row-wise dataframe processing</li>
 <li>Integrated caching</li>
 <li>Pre-built NLP task prompts</li>
-<li>dplyr pipeline integration</li>
+<li>Pipe integration</li>
 </ul>
 </div>
 </div>
@@ -143,13 +149,14 @@ batch processing with Ollama</li>
 <h2 id="when-to-use-each-package">When to Use Each Package<a class="anchor" aria-label="anchor" href="#when-to-use-each-package"></a>
 </h2>
 <ul>
-<li>Use <a href="https://CRAN.R-project.org/package=hellmer" class="external-link">hellmer</a>
-for robust error handling, progress monitoring, and state
-management</li>
-<li>Use <a href="https://CRAN.R-project.org/package=tidyllm" class="external-link">tidyllm</a>
-for asynchronous processing across multiple providers</li>
-<li>Use <a href="https://CRAN.R-project.org/package=mall" class="external-link">mall</a> for
-local Ollama models and pre-built NLP tasks</li>
+<li>Use <a href="https://github.com/dylanpieper/hellmer" class="external-link">hellmer</a> for
+faster, but more costly, synchronous batch processing with the most
+provider coverage and additional tools</li>
+<li>Use <a href="https://github.com/edubruell/tidyllm" class="external-link">tidyllm</a> for
+slower, but less costly, asynchronous batch processing for Anthropic,
+OpenAI, or Mistral models</li>
+<li>Use <a href="https://mlverse.github.io/mall" class="external-link">mall</a> for local
+Ollama models and pre-built NLP tasks</li>
 </ul>
 </div>
 <div class="section level2">
@@ -157,14 +164,13 @@ local Ollama models and pre-built NLP tasks</li>
 </h2>
 <ul>
 <li>
-<strong>Synchronous</strong> (<a href="https://CRAN.R-project.org/package=hellmer" class="external-link">hellmer</a>, <a href="https://CRAN.R-project.org/package=mall" class="external-link">mall</a>): Immediate
-feedback, blocks until completion</li>
+<strong>Synchronous</strong> (<a href="https://github.com/dylanpieper/hellmer" class="external-link">hellmer</a>, <a href="https://mlverse.github.io/mall" class="external-link">mall</a>): Better for immediate
+feedback and structured tasks, blocks R until completion and consumes
+local resources (even more when using local LLMs such as Ollama)</li>
 <li>
-<strong>Asynchronous</strong> (<a href="https://CRAN.R-project.org/package=tidyllm" class="external-link">tidyllm</a>): Better
-for long-running jobs, requires status checking</li>
-<li>
-<strong>Resource Usage</strong>: Local (<a href="https://CRAN.R-project.org/package=mall" class="external-link">mall</a>) vs API-based
-(<a href="https://CRAN.R-project.org/package=tidyllm" class="external-link">tidyllm</a>, <a href="https://CRAN.R-project.org/package=hellmer" class="external-link">hellmer</a>)</li>
+<strong>Asynchronous</strong> (<a href="https://github.com/edubruell/tidyllm" class="external-link">tidyllm</a>): Better for
+long-running jobs and cost savings, requires status checking, does not
+block R and outsources batching compute</li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
