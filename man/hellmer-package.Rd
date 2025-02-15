@@ -6,7 +6,7 @@
 \alias{hellmer-package}
 \title{hellmer: Batch Processing for Chat Models}
 \description{
-This package enables batch processing of chat models from 'ellmer' supporting sequential or parallel processing.
+This package enables sequential or parallel batch processing for chat models from 'ellmer'.
 }
 \seealso{
 Useful links:

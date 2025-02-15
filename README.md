@@ -1,6 +1,6 @@
 # hellmer <img src="man/figures/hellmer-hex.png" align="right" width="140"/>
 
-This package enables batch processing of chat models from [ellmer](https://github.com/tidyverse/ellmer) supporting sequential or parallel processing.
+This package enables sequential or parallel batch processing for chat models from [ellmer](https://github.com/tidyverse/ellmer).
 
 ## Installation
 
@@ -236,3 +236,7 @@ You can mimic sequential processing when using `chat_parallel()` by setting the 
 -   `chats()`: Returns a list of chat objects
 -   `progress()`: Returns processing statistics
 -   `structured_data()`: Returns extracted structured data (if `type_spec` is provided)
+
+## Further Reading
+
+-   [Compare Batching Options](https://dylanpieper.github.io/hellmer/articles/batching-comparison.html)

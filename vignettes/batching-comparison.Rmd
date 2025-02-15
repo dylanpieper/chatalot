@@ -1,0 +1,93 @@
+---
+title: "Compare Batching Options"
+output: rmarkdown::html_vignette
+vignette: |
+  %\VignetteIndexEntry{Comparing Batching Options}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Overview
+
+This vignette compares different approaches to batching LLM operations in R, looking at three main packages:
+
+-   [hellmer](https://github.com/dylanpieper/hellmer): Synchronous batch processing across providers
+-   [tidyllm](https://github.com/edubruell/tidyllm): Asynchronous batch processing across providers
+-   [mall](https://mlverse.github.io/mall/): Local model batch processing with Ollama
+
+## Package Comparison
+
+### hellmer
+
+Focuses on synchronous batch processing across multiple providers via [ellmer](https://github.com/tidyverse/ellmer/):
+
+```{r eval=FALSE}
+library(hellmer)
+
+chat <- chat_batch(chat_claude())
+result <- chat$batch(prompts)
+```
+
+Key features:
+
+-   Sequential and parallel processing
+-   State persistence and recovery
+-   Progress tracking
+-   Automatic retry with backoff
+-   Supports tooling and structured data extraction
+
+### tidyllm
+
+Offers asynchronous batch processing across multiple providers:
+
+```{r eval=FALSE}
+library(tidyllm)
+
+batch_id <- messages |> 
+  send_batch(claude())
+results <- fetch_batch(batch_id, claude())
+```
+
+Key features:
+
+-   Asynchronous processing
+-   Multiple provider support
+-   Provider-specific batch APIs
+-   Status checking capabilities
+
+### mall
+
+Provides synchronous batching for local Ollama models:
+
+```{r eval=FALSE}
+library(mall)
+
+results <- data |>
+  llm_sentiment(text)
+```
+
+Key features:
+
+-   Row-wise dataframe processing
+-   Integrated caching
+-   Pre-built NLP task prompts
+-   dplyr pipeline integration
+
+## When to Use Each Package
+
+-   Use [hellmer](https://CRAN.R-project.org/package=hellmer) for robust error handling, progress monitoring, and state management
+-   Use [tidyllm](https://CRAN.R-project.org/package=tidyllm) for asynchronous processing across multiple providers
+-   Use [mall](https://CRAN.R-project.org/package=mall) for local Ollama models and pre-built NLP tasks
+
+## Performance Considerations
+
+-   **Synchronous** ([hellmer](https://CRAN.R-project.org/package=hellmer), [mall](https://CRAN.R-project.org/package=mall)): Immediate feedback, blocks until completion
+-   **Asynchronous** ([tidyllm](https://CRAN.R-project.org/package=tidyllm)): Better for long-running jobs, requires status checking
+-   **Resource Usage**: Local ([mall](https://CRAN.R-project.org/package=mall)) vs API-based ([tidyllm](https://CRAN.R-project.org/package=tidyllm), [hellmer](https://CRAN.R-project.org/package=hellmer))
