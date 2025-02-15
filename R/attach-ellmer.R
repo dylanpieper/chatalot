@@ -2,26 +2,19 @@
 #' @importFrom utils packageDescription
 #' @noRd
 .onAttach <- function(libname, pkgname) {
-  version <- utils::packageDescription(pkgname, fields = "Version")
-
   if (!requireNamespace("ellmer", quietly = TRUE)) {
     stop("Package 'ellmer' is required but not installed", call. = FALSE)
   }
-
-  suppressWarnings({
-    library("ellmer", character.only = TRUE, warn.conflicts = FALSE)
-  })
-
+  
+  pkg_version <- utils::packageDescription(pkgname, fields = "Version")
+  ellmer_version <- utils::packageDescription("ellmer", fields = "Version")
+  
   packageStartupMessage(
     sprintf(
-      "── Attaching packages ──────────────────── %s %s ──",
+      "Loaded %s v%s with ellmer v%s", 
       pkgname,
-      version
+      pkg_version,
+      ellmer_version
     )
-  )
-
-  ellmer_version <- utils::packageDescription("ellmer", fields = "Version")
-  packageStartupMessage(
-    sprintf("✔ ellmer %s", ellmer_version)
   )
 }

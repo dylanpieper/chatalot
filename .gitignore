@@ -4,4 +4,7 @@
 .Ruserdata
 .DS_Store
 docs
+inst/doc
 *.rds
+/doc/
+/Meta/
