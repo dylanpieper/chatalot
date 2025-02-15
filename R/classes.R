@@ -29,18 +29,6 @@ progress <- S7::new_generic("progress", "x")
 #' @export
 structured_data <- S7::new_generic("structured_data", "x")
 
-#' @import ellmer
-#' @import S7
-#' @importFrom cli cli_alert_success cli_alert_warning cli_h3 cli_text col_green
-#' @importFrom cli cli_progress_bar cli_progress_done
-#' @importFrom furrr future_map
-#' @importFrom future plan multisession
-#' @importFrom purrr map_lgl pwalk map map_chr walk
-#' @importFrom R.utils withTimeout
-#' @importFrom utils str
-#' @keywords internal
-"_PACKAGE"
-
 #' Batch class for managing chat processing
 #' @name batch
 #' @param prompts List of prompts to process
