@@ -12,15 +12,15 @@ devtools::install_github("dylanpieper/hellmer")
 
 Process multiple chat interactions with:
 
--   Sequential or parallel processing
+-   Ellmer's [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html)
 -   State persistence and recovery
 -   Progress tracking
--   Structured data extraction
--   Tool integration
 -   Configurable output verbosity
 -   Automatic retry with backoff
 -   Timeout handling
 -   Sound notifications
+
+Use the following
 
 ## Installation
 
@@ -37,7 +37,7 @@ Run `library(hellmer)` to get started. This package attaches `ellmer` for easy a
 ### Sequential Processing
 
 ``` r
-chat <- chat_batch(chat_claude())
+chat <- chat_batch(chat_claude, system_prompt = "Reply concisely")
 
 prompts <- list(
   "What is 2+2?",
@@ -64,20 +64,29 @@ result$chats()
 Simply swap `chat_batch()` for `chat_parallel()` to enable parallel processing.
 
 ``` r
-chat <- chat_parallel(chat_claude())
+chat <- chat_parallel(chat_claude, system_prompt = "Reply concisely")
 ```
 
 ## Features
 
-### State Management
+### Tooling
 
-Batch processing automatically saves state and can resume interrupted operations:
+Register and use tools (R functions):
 
 ``` r
-result <- chat$batch(prompts, state_path = "chat_state.rds")
-```
+square_number <- function(num) num^2
 
-If `state_path` is not defined, a temporary file will be created by default.
+chat$register_tool(tool(
+  square_number,
+  "Calculates the square of a given number",
+  num = type_integer("The number to square")
+))
+
+prompts <- list(
+  "What is the square of 3?",
+  "Calculate the square of 5."
+)
+```
 
 ### Structured Data Extraction
 
@@ -101,24 +110,15 @@ result <- chat$batch(prompts, type_spec = type_sentiment)
 structured_data <- result$structured_data()
 ```
 
-### Tool Integration
+### State Management
 
-Register and use tools (R functions):
+Batch processing automatically saves state and can resume interrupted operations:
 
 ``` r
-square_number <- function(num) num^2
-
-chat$register_tool(tool(
-  square_number,
-  "Calculates the square of a given number",
-  num = type_integer("The number to square")
-))
-
-prompts <- list(
-  "What is the square of 3?",
-  "Calculate the square of 5."
-)
+result <- chat$batch(prompts, state_path = "chat_state.rds")
 ```
+
+If `state_path` is not defined, a temporary file will be created by default.
 
 ### Output Control
 
@@ -130,7 +130,7 @@ Control verbosity with the `echo` parameter (sequential only):
 
 ``` r
 chat <- chat_batch(
-  chat_model = chat_claude(), 
+  chat_claude, 
   echo = "none"
 )
 ```
@@ -141,7 +141,7 @@ Automatically retry failed requests with backoff:
 
 ``` r
 chat <- chat_batch(
-  chat_model = chat_claude(),
+  chat_claude,        # Base chat model
   max_retries = 3,    # Maximum number of retry attempts
   initial_delay = 1,  # Initial delay in seconds
   max_delay = 32,     # Maximum delay between retries
@@ -160,14 +160,13 @@ If the code detects an authorization or API key issue, it will stop immediately.
 
 ### Timeout Handling
 
-The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the ellmer chat models.
+The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the chat models.
 
 ``` r
 chat <- chat_parallel(
-  chat_model = ellmer::chat_ollama(
-    model = "deepseek-r1:8b",
-    echo = "none"
-  ),
+  chat_ollama,
+  model = "deepseek-r1:8b",
+  system_prompt = "Reply in one sentence or less",
   timeout = 60
 )
 ```
@@ -178,7 +177,7 @@ Toggle sound notifications on batch completion, interruption, and error:
 
 ``` r
 chat <- chat_batch(
-  chat_model = chat_claude(),
+  chat_claude,
   beep = TRUE
 )
 ```
@@ -191,13 +190,13 @@ Creates a sequential batch processor.
 
 ``` r
 chat_batch(
-  chat_model = chat_claude(),  # Base chat model
-  echo = "none",               # Output verbosity (sequential only)
-  beep = TRUE,                 # Toggle sound notifications
-  max_retries = 3,             # Maximum retry attempts
-  initial_delay = 1,           # Initial retry delay in seconds
-  max_delay = 32,              # Maximum delay between retries
-  backoff_factor = 2           # Exponential backoff multiplier
+  chat_model = chat_claude,  # Base chat model
+  echo = "none",             # Output verbosity (sequential only)
+  beep = TRUE,               # Toggle sound notifications
+  max_retries = 3,           # Maximum retry attempts
+  initial_delay = 1,         # Initial retry delay in seconds
+  max_delay = 32,            # Maximum delay between retries
+  backoff_factor = 2         # Exponential backoff multiplier
 )
 ```
 
@@ -207,10 +206,10 @@ Creates a parallel batch processor.
 
 ``` r
 chat_parallel(
-  chat_model = chat_claude(),  # Base chat model
-  beep = TRUE,                 # Enable sound notifications
-  plan = "multisession",       # "multisession" or "multicore"
-  workers = 4                  # Number of parallel workers
+  chat_model = chat_claude,  # Base chat model
+  beep = TRUE,               # Enable sound notifications
+  plan = "multisession",     # "multisession" or "multicore"
+  workers = 4                # Number of parallel workers
 )
 ```
 
@@ -222,7 +221,7 @@ Processes a list or vector of prompts.
 batch(
   prompts,                                  # List of prompts to process
   type_spec = NULL,                         # Optional type specification for structured data
-  state_path = tempfile("chat_batch_",      # Optional path for state persistence
+  state_path = tempfile("chat_batch_",      # Optional path for state persistence (.rds)
                         fileext = ".rds"),
   chunk_size = 4                            # Number of prompts per chunk (parallel only)
 )

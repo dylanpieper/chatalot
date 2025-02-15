@@ -1,9 +1,7 @@
 chat <- chat_parallel(
-  chat_ollama(
-    model = "deepseek-r1:8b",
-    system_prompt = "You reply in one sentence or less",
-    echo = "none" # required for ollama to suppress output
-  ),
+  chat_ollama,
+  model = "deepseek-r1:8b",
+  system_prompt = "You reply in one sentence or less",
   timeout = 1000 # still won't exceed ellmer's timeout
 )
 
@@ -22,7 +20,7 @@ prompts <- c(
 
 prompts <- as.list(prompts) # works with list or vector
 
-result <- chat$batch(prompts, chunk_size = 5) # resumes if interrupted
+result <- chat$batch(prompts, chunk_size = 1) # resumes if interrupted
 
 result$progress()
 

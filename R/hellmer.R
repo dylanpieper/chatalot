@@ -28,7 +28,7 @@
 #'   }
 #' @export
 chat_batch <- function(
-    chat_model = ellmer::chat_claude(),
+    chat_model = ellmer::chat_claude,
     echo = "none",
     beep = TRUE,
     timeout = 60,
@@ -36,10 +36,10 @@ chat_batch <- function(
     initial_delay = 1,
     max_delay = 32,
     backoff_factor = 2,
-    ...) {
+    ...
+) {
   chat_env <- new.env(parent = emptyenv())
-  
-  chat_env$chat_model <- chat_model
+  chat_env$chat_model <- chat_model(echo = "none", ...)
   chat_env$echo <- echo
   chat_env$beep <- beep
   chat_env$timeout <- timeout
@@ -48,12 +48,11 @@ chat_batch <- function(
   chat_env$max_delay <- max_delay
   chat_env$backoff_factor <- backoff_factor
   chat_env$last_state_path <- NULL
-  
-  chat_env$register_tool <- chat_model$register_tool
-  chat_env$chat <- chat_model$chat
-  chat_env$extract_data <- chat_model$extract_data
-  chat_env$get_turns <- chat_model$get_turns
-  chat_env$tokens <- chat_model$tokens
+  chat_env$register_tool <- chat_env$chat_model$register_tool
+  chat_env$chat <- chat_env$chat_model$chat
+  chat_env$extract_data <- chat_env$chat_model$extract_data
+  chat_env$get_turns <- chat_env$chat_model$get_turns
+  chat_env$tokens <- chat_env$chat_model$tokens
   
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
@@ -110,7 +109,7 @@ chat_batch <- function(
 #'   }
 #' @export
 chat_parallel <- function(
-    chat_model = ellmer::chat_claude(),
+    chat_model = ellmer::chat_claude,
     workers = 4,
     plan = "multisession",
     beep = TRUE,
@@ -119,7 +118,7 @@ chat_parallel <- function(
     ...) {
   
   plan <- match.arg(plan, choices = c("multisession", "multicore"))
-  original_chat <- chat_model
+  original_chat <- chat_model(echo = "none", ...)
   chat_env <- new.env(parent = emptyenv())
   
   chat_env$last_state_path <- NULL

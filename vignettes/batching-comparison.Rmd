@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-This vignette compares different approaches to batching LLM operations in R. There are currently three main packages that support batch processing:
+This vignette compares different approaches to batching LLM operations in R. There are three main packages that support batch processing:
 
 -   [hellmer](https://github.com/dylanpieper/hellmer): Synchronous batch processing for any models supported by [ellmer](https://github.com/tidyverse/ellmer/)
 -   [tidyllm](https://github.com/edubruell/tidyllm): Asynchronous batch processing for Anthropic, OpenAI, or Mistral models
@@ -31,8 +31,11 @@ Focuses on synchronous batch processing:
 ```{r eval=FALSE}
 library(hellmer)
 
-chat <- chat_batch(chat_claude())
-result <- chat$batch(prompts)
+chat <- chat_batch(chat_claude, system_prompt = "Reply concisely")
+result <- chat$batch(list("What is 2+2?",
+                          "Name one planet.",
+                          "Is water wet?",
+                          "What color is the sky?"))
 ```
 
 Key features:
@@ -92,5 +95,5 @@ Key features:
 
 ## Performance Considerations
 
--   **Synchronous** ([hellmer](https://github.com/dylanpieper/hellmer), [mall](https://mlverse.github.io/mall)): Better for immediate feedback and structured tasks, blocks R until completion and consumes local resources (even more when using local LLMs such as Ollama)
+-   **Synchronous** ([hellmer](https://github.com/dylanpieper/hellmer), [mall](https://mlverse.github.io/mall)): Better for immediate feedback and structured tasks, blocks R until completion and consumes local resources
 -   **Asynchronous** ([tidyllm](https://github.com/edubruell/tidyllm)): Better for long-running jobs and cost savings, requires status checking, does not block R and outsources batching compute
