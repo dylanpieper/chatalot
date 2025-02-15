@@ -21,10 +21,10 @@
 #'     \item completed: Number of successfully processed prompts
 #'     \item state_path: Path where batch state is saved
 #'     \item type_spec: Type specification used for structured data
-#'     \item texts(): Function to extract text responses
-#'     \item chats(): Function to extract chat objects
-#'     \item progress(): Function to get processing status
-#'     \item structured_data(): Function to extract structured data if type_spec was provided
+#'     \item texts: Function to extract text responses
+#'     \item chats: Function to extract chat objects
+#'     \item progress: Function to get processing status
+#'     \item structured_data: Function to extract structured data (if `type_spec` was provided)
 #'   }
 #' @export
 chat_batch <- function(
@@ -103,10 +103,10 @@ chat_batch <- function(
 #'     \item completed: Number of successfully processed prompts
 #'     \item state_path: Path where batch state is saved
 #'     \item type_spec: Type specification used for structured data
-#'     \item texts(): Function to extract text responses
-#'     \item chats(): Function to extract chat objects
-#'     \item progress(): Function to get processing status
-#'     \item structured_data(): Function to extract structured data if type_spec was provided
+#'     \item texts: Function to extract text responses
+#'     \item chats: Function to extract chat objects
+#'     \item progress: Function to get processing status
+#'     \item structured_data: Function to extract structured data (if `type_spec` was provided)
 #'   }
 #' @export
 chat_parallel <- function(
