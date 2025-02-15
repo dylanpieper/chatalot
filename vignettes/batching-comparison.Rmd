@@ -36,6 +36,9 @@ result <- chat$batch(list("What is 2+2?",
                           "Name one planet.",
                           "Is water wet?",
                           "What color is the sky?"))
+result$progress()
+result$texts()
+result$chats()
 ```
 
 Key features:
@@ -78,7 +81,7 @@ Provides synchronous batching for local Ollama models:
 ```{r eval=FALSE}
 library(mall)
 
-results <- data |>
+result <- data |>
   llm_sentiment(text)
 ```
 
