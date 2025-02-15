@@ -18,9 +18,9 @@ knitr::opts_chunk$set(
 
 This vignette compares different approaches to batching LLM operations in R. There are currently three main packages that support batch processing:
 
--   [hellmer](https://github.com/dylanpieper/hellmer): Synchronous batch processing for any provider's model supported by [ellmer](https://github.com/tidyverse/ellmer/)
+-   [hellmer](https://github.com/dylanpieper/hellmer): Synchronous batch processing for any models supported by [ellmer](https://github.com/tidyverse/ellmer/)
 -   [tidyllm](https://github.com/edubruell/tidyllm): Asynchronous batch processing for Anthropic, OpenAI, or Mistral models
--   [mall](https://mlverse.github.io/mall): Local batch processing with Ollama
+-   [mall](https://mlverse.github.io/mall): Local batch processing with Ollama models
 
 ## Package Comparison
 
