@@ -56,12 +56,6 @@
 </h1></div>
 <p>This package enables sequential or parallel batch processing for chat models from <a href="https://github.com/tidyverse/ellmer" class="external-link">ellmer</a>.</p>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"dylanpieper/hellmer"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>Process multiple chat interactions with:</p>
@@ -78,9 +72,9 @@
 <p>Use the following</p>
 </div>
 <div class="section level2">
-<h2 id="installation-1">Installation<a class="anchor" aria-label="anchor" href="#installation-1"></a>
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"dylanpieper/hellmer"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -94,7 +88,7 @@
 <div class="section level3">
 <h3 id="sequential-processing">Sequential Processing<a class="anchor" aria-label="anchor" href="#sequential-processing"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_batch.html">chat_batch</a></span><span class="op">(</span><span class="va">chat_claude</span>, system_prompt <span class="op">=</span> <span class="st">"Reply concisely"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -120,7 +114,7 @@
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
 <p>Simply swap <code><a href="reference/chat_batch.html">chat_batch()</a></code> for <code><a href="reference/chat_parallel.html">chat_parallel()</a></code> to enable parallel processing.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_parallel.html">chat_parallel</a></span><span class="op">(</span><span class="va">chat_claude</span>, system_prompt <span class="op">=</span> <span class="st">"Reply concisely"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -130,8 +124,8 @@
 <div class="section level3">
 <h3 id="tooling">Tooling<a class="anchor" aria-label="anchor" href="#tooling"></a>
 </h3>
-<p>Register and use tools (R functions):</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>Register and use tools/function calling:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">square_number</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">num</span><span class="op">)</span> <span class="va">num</span><span class="op">^</span><span class="fl">2</span></span>
 <span></span>
 <span><span class="va">chat</span><span class="op">$</span><span class="fu">register_tool</span><span class="op">(</span><span class="fu">tool</span><span class="op">(</span></span>
@@ -149,7 +143,7 @@
 <h3 id="structured-data-extraction">Structured Data Extraction<a class="anchor" aria-label="anchor" href="#structured-data-extraction"></a>
 </h3>
 <p>Extract structured data using type specifications:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">type_sentiment</span> <span class="op">&lt;-</span> <span class="fu">type_object</span><span class="op">(</span></span>
 <span>  <span class="st">"Extract sentiment scores"</span>,</span>
 <span>  positive_score <span class="op">=</span> <span class="fu">type_number</span><span class="op">(</span><span class="st">"Positive sentiment score, 0.0 to 1.0"</span><span class="op">)</span>,</span>
@@ -170,7 +164,7 @@
 <h3 id="state-management">State Management<a class="anchor" aria-label="anchor" href="#state-management"></a>
 </h3>
 <p>Batch processing automatically saves state and can resume interrupted operations:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, state_path <span class="op">=</span> <span class="st">"chat_state.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>If <code>state_path</code> is not defined, a temporary file will be created by default.</p>
 </div>
@@ -186,7 +180,7 @@
 <li>
 <code>"all"</code>: Show both prompts and responses</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_batch.html">chat_batch</a></span><span class="op">(</span></span>
 <span>  <span class="va">chat_claude</span>, </span>
 <span>  echo <span class="op">=</span> <span class="st">"none"</span></span>
@@ -196,7 +190,7 @@
 <h3 id="automatic-retry">Automatic Retry<a class="anchor" aria-label="anchor" href="#automatic-retry"></a>
 </h3>
 <p>Automatically retry failed requests with backoff:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_batch.html">chat_batch</a></span><span class="op">(</span></span>
 <span>  <span class="va">chat_claude</span>,        <span class="co"># Base chat model</span></span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3</span>,    <span class="co"># Maximum number of retry attempts</span></span>
@@ -218,7 +212,7 @@
 <h3 id="timeout-handling">Timeout Handling<a class="anchor" aria-label="anchor" href="#timeout-handling"></a>
 </h3>
 <p>The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the chat models.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_parallel.html">chat_parallel</a></span><span class="op">(</span></span>
 <span>  <span class="va">chat_ollama</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"deepseek-r1:8b"</span>,</span>
@@ -230,7 +224,7 @@
 <h3 id="sound-notifications">Sound Notifications<a class="anchor" aria-label="anchor" href="#sound-notifications"></a>
 </h3>
 <p>Toggle sound notifications on batch completion, interruption, and error:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_batch.html">chat_batch</a></span><span class="op">(</span></span>
 <span>  <span class="va">chat_claude</span>,</span>
 <span>  beep <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -244,7 +238,7 @@
 <h3 id="chat_batch">chat_batch()<a class="anchor" aria-label="anchor" href="#chat_batch"></a>
 </h3>
 <p>Creates a sequential batch processor.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/chat_batch.html">chat_batch</a></span><span class="op">(</span></span>
 <span>  chat_model <span class="op">=</span> <span class="va">chat_claude</span>,  <span class="co"># Base chat model</span></span>
 <span>  echo <span class="op">=</span> <span class="st">"none"</span>,             <span class="co"># Output verbosity (sequential only)</span></span>
@@ -259,7 +253,7 @@
 <h3 id="chat_parallel">chat_parallel()<a class="anchor" aria-label="anchor" href="#chat_parallel"></a>
 </h3>
 <p>Creates a parallel batch processor.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/chat_parallel.html">chat_parallel</a></span><span class="op">(</span></span>
 <span>  chat_model <span class="op">=</span> <span class="va">chat_claude</span>,  <span class="co"># Base chat model</span></span>
 <span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,               <span class="co"># Enable sound notifications</span></span>
@@ -271,7 +265,7 @@
 <h3 id="batchbatch">batch$batch()<a class="anchor" aria-label="anchor" href="#batchbatch"></a>
 </h3>
 <p>Processes a list or vector of prompts.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/batch.html">batch</a></span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>,                                  <span class="co"># List of prompts to process</span></span>
 <span>  type_spec <span class="op">=</span> <span class="cn">NULL</span>,                         <span class="co"># Type specification for structured data</span></span>
