@@ -40,11 +40,13 @@ result <- chat$batch(list("What is 2+2?",
 
 Key features:
 
--   Sequential and parallel processing
+-   Ellmer's [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html)
 -   State persistence and recovery
 -   Progress tracking
+-   Configurable output verbosity
 -   Automatic retry with backoff
--   Supports tooling and structured data extraction
+-   Timeout handling
+-   Sound notifications
 
 ### tidyllm
 
