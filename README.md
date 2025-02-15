@@ -28,12 +28,16 @@ Process multiple chat interactions with:
 devtools::install_github("dylanpieper/hellmer")
 ```
 
+## Load Package
+
+This package attaches `ellmer` on load. You only need to run `library(hellmer)` to get started.
+
 ## Basic Usage
 
 ### Sequential Processing
 
 ``` r
-chat <- chat_batch(chat_claude("You reply concisely"))
+chat <- chat_batch(chat_claude())
 
 prompts <- list(
   "What is 2+2?",
@@ -60,7 +64,7 @@ result$chats()
 Simply swap `chat_batch()` for `chat_parallel()` to enable parallel processing.
 
 ``` r
-chat <- chat_parallel(chat_claude("You reply concisely"))
+chat <- chat_parallel(chat_claude())
 ```
 
 ## Features
@@ -126,7 +130,7 @@ Control verbosity with the `echo` parameter (sequential only):
 
 ``` r
 chat <- chat_batch(
-  chat_claude("You reply concisely"), 
+  chat_model = chat_claude(), 
   echo = "none"
 )
 ```
@@ -137,7 +141,7 @@ Automatically retry failed requests with backoff:
 
 ``` r
 chat <- chat_batch(
-  chat_claude(),
+  chat_model = chat_claude(),
   max_retries = 3,    # Maximum number of retry attempts
   initial_delay = 1,  # Initial delay in seconds
   max_delay = 32,     # Maximum delay between retries
@@ -158,9 +162,9 @@ If the code detects an authorization or API key issue, it will stop immediately.
 
 The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the ellmer chat models.
 
-```r
+``` r
 chat <- chat_parallel(
-  ellmer::chat_ollama(
+  chat_model = ellmer::chat_ollama(
     model = "deepseek-r1:8b",
     echo = "none"
   ),
@@ -174,7 +178,7 @@ Toggle sound notifications on batch completion, interruption, and error:
 
 ``` r
 chat <- chat_batch(
-  chat_claude(),
+  chat_model = chat_claude(),
   beep = TRUE
 )
 ```
@@ -216,14 +220,15 @@ Processes a list or vector of prompts.
 
 ``` r
 batch(
-  prompts,            # List of prompts to process
-  type_spec = NULL,   # Optional type specification for structured data
-  state_path = NULL,  # Optional path for state persistence
-  chunk_size = 4      # Number of prompts per chunk (parallel only)
+  prompts,                                  # List of prompts to process
+  type_spec = NULL,                         # Optional type specification for structured data
+  state_path = tempfile("chat_batch_",      # Optional path for state persistence
+                        fileext = ".rds"),
+  chunk_size = 4                            # Number of prompts per chunk (parallel only)
 )
 ```
 
-You can mimic sequential processing when using `chat_parallel()` by setting the `chunk_size = 1`, but this will likely decrease performance compared to `chat_batch()` (see `tests/test_benchmark.R`).
+You can mimic sequential processing when using `chat_parallel()` by setting the `chunk_size = 1`, but this will likely decrease performance compared to `chat_batch()` (see `tests/manual/test-benchmark.R`).
 
 ### Results Methods
 
