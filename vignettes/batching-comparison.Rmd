@@ -1,5 +1,5 @@
 ---
-title: "Compare Batching Options"
+title: "Compare Batching Packages for LLMs"
 output: rmarkdown::html_vignette
 vignette: |
   %\VignetteIndexEntry{Comparing Batching Options}

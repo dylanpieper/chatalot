@@ -239,4 +239,4 @@ You can mimic sequential processing when using `chat_parallel()` by setting the 
 
 ## Further Reading
 
--   [Compare Batching Options](https://dylanpieper.github.io/hellmer/articles/batching-comparison.html)
+-   [Compare Batching Packages for LLMs](https://dylanpieper.github.io/hellmer/articles/batching-comparison.html)
