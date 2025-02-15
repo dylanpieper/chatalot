@@ -30,7 +30,7 @@ devtools::install_github("dylanpieper/hellmer")
 
 ## Load Package
 
-This package attaches `ellmer` on load. You only need to run `library(hellmer)` to get started.
+Run `library(hellmer)` to get started. This package attaches `ellmer` on load for easy access to the chat models.
 
 ## Basic Usage
 
