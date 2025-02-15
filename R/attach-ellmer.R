@@ -9,6 +9,8 @@
   pkg_version <- utils::packageDescription(pkgname, fields = "Version")
   ellmer_version <- utils::packageDescription("ellmer", fields = "Version")
   
+  library(ellmer, character.only = TRUE, warn.conflicts = FALSE)
+  
   packageStartupMessage(
     sprintf(
       "Loaded %s v%s with ellmer v%s", 
