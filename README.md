@@ -2,12 +2,6 @@
 
 This package enables sequential or parallel batch processing for chat models from [ellmer](https://github.com/tidyverse/ellmer).
 
-## Installation
-
-``` r
-devtools::install_github("dylanpieper/hellmer")
-```
-
 ## Overview
 
 Process multiple chat interactions with:
