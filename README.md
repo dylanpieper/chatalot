@@ -208,7 +208,7 @@ Creates a parallel batch processor.
 chat_parallel(
   chat_model = chat_claude,  # Base chat model
   beep = TRUE,               # Enable sound notifications
-  plan = "multisession",     # "multisession" or "multicore"
+  plan = "multisession",     # Options: "multisession" or "multicore"
   workers = 4                # Number of parallel workers
 )
 ```
@@ -220,8 +220,8 @@ Processes a list or vector of prompts.
 ``` r
 batch(
   prompts,                                  # List of prompts to process
-  type_spec = NULL,                         # Optional type specification for structured data
-  state_path = tempfile("chat_batch_",      # Optional path for state persistence (.rds)
+  type_spec = NULL,                         # Type specification for structured data
+  state_path = tempfile("chat_batch_",      # Path for state persistence
                         fileext = ".rds"),
   chunk_size = 4                            # Number of prompts per chunk (parallel only)
 )
