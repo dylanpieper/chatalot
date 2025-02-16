@@ -35,7 +35,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/batching-comparison.html">Compare Packages for Batching LLM Tasks</a></li>
+<li><a class="dropdown-item" href="articles/compare-packages.html">Compare Packages for Batching LLM Tasks</a></li>
+    <li><a class="dropdown-item" href="articles/initialize-chat-models.html">Initialize Chat Models</a></li>
   </ul>
 </li>
       </ul>
@@ -54,7 +55,7 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="hellmer-">hellmer <img src="reference/figures/hellmer-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#hellmer-"></a>
 </h1></div>
-<p>This package enables sequential or parallel batch processing for chat models from <a href="https://github.com/tidyverse/ellmer" class="external-link">ellmer</a>.</p>
+<p>This package enables sequential or parallel batch processing for <a href="https://ellmer.tidyverse.org/reference/index.html" class="external-link">chat models</a> from <a href="https://github.com/tidyverse/ellmer" class="external-link">ellmer</a>.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -247,7 +248,7 @@
 <span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,         <span class="co"># Initial retry delay in seconds</span></span>
 <span>  max_delay <span class="op">=</span> <span class="fl">32</span>,            <span class="co"># Maximum delay between retries</span></span>
 <span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,        <span class="co"># Retry backoff multiplier</span></span>
-<span>  <span class="va">...</span>                        <span class="co"># Pass arguments to the chat model</span></span>
+<span>  <span class="va">...</span>                        <span class="co"># Pass parameters to the chat model</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -266,7 +267,7 @@
 <span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,         <span class="co"># Initial retry delay in seconds</span></span>
 <span>  max_delay <span class="op">=</span> <span class="fl">32</span>,            <span class="co"># Maximum delay between retries</span></span>
 <span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,        <span class="co"># Retry backoff multiplier</span></span>
-<span>  <span class="va">...</span>                        <span class="co"># Pass arguments to the chat model</span></span>
+<span>  <span class="va">...</span>                        <span class="co"># Pass parameters to the chat model</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -302,7 +303,9 @@
 <h2 id="further-reading">Further Reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
 </h2>
 <ul>
-<li><a href="https://dylanpieper.github.io/hellmer/articles/batching-comparison.html">Compare Packages for Batching LLM Tasks</a></li>
+<li>
+<a href="https://dylanpieper.github.io/hellmer/articles/initialize-chat-models.html">Initialize Chat Models</a>: Are you wondering if you can use <code>chat_claude(...)</code> as a user-defined object instead of the <code>chat_claude</code> function. Of course you can! Learn more the two methods and the default interface.</li>
+<li><a href="https://dylanpieper.github.io/hellmer/articles/compare-packages.html">Compare Packages for Batching LLM Tasks</a></li>
 </ul>
 </div>
 </div>

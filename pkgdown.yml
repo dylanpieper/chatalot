@@ -2,8 +2,9 @@ pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
-  batching-comparison: batching-comparison.html
-last_built: 2025-02-16T18:59Z
+  compare-packages: compare-packages.html
+  initialize-chat-models: initialize-chat-models.html
+last_built: 2025-02-16T21:14Z
 urls:
   reference: https://dylanpieper.github.io/hellmer/reference
   article: https://dylanpieper.github.io/hellmer/articles
