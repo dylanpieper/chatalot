@@ -5,7 +5,7 @@
 \title{Process a batch of prompts in parallel}
 \usage{
 chat_parallel(
-  chat_model = ellmer::chat_claude(),
+  chat_model = ellmer::chat_claude,
   workers = 4,
   plan = "multisession",
   beep = TRUE,
@@ -20,7 +20,7 @@ chat_parallel(
 )
 
 chat_parallel(
-  chat_model = ellmer::chat_claude(),
+  chat_model = ellmer::chat_claude,
   workers = 4,
   plan = "multisession",
   beep = TRUE,
@@ -35,7 +35,7 @@ chat_parallel(
 )
 }
 \arguments{
-\item{chat_model}{A chat model object}
+\item{chat_model}{Chat model function or object to use for processing (default: ellmer::chat_claude)}
 
 \item{workers}{Number of parallel workers to use}
 
@@ -55,6 +55,8 @@ or "multicore" for forked processes}
 \item{max_delay}{Maximum delay in seconds between retries (default: 32)}
 
 \item{backoff_factor}{Factor to multiply delay by after each retry (default: 2)}
+
+\item{chunk_size}{Number of prompts to process in each parallel chunk (default: 4)}
 
 \item{...}{Additional arguments passed to the chat model}
 }

@@ -92,7 +92,7 @@ chat_batch <- function(
 #' Splits prompts into chunks for processing while maintaining state.
 #' For sequential processing, use `chat_batch()`.
 #'
-#' @param chat_model A chat model object
+#' @param chat_model Chat model function or object to use for processing (default: ellmer::chat_claude)
 #' @param workers Number of parallel workers to use
 #' @param plan Processing strategy to use: "multisession" for separate R sessions
 #'        or "multicore" for forked processes
@@ -103,6 +103,7 @@ chat_batch <- function(
 #' @param initial_delay Initial delay in seconds before first retry (default: 1)
 #' @param max_delay Maximum delay in seconds between retries (default: 32)
 #' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
+#' @param chunk_size Number of prompts to process in each parallel chunk (default: 4)
 #' @param ... Additional arguments passed to the chat model
 #' @return A batch results object containing:
 #'   \itemize{
