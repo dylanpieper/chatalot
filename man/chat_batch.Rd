@@ -2,7 +2,7 @@
 % Please edit documentation in R/hellmer.R
 \name{chat_batch}
 \alias{chat_batch}
-\title{Process a batch of prompts sequentially}
+\title{Process a batch of prompts in sequence}
 \usage{
 chat_batch(
   chat_model = ellmer::chat_claude,

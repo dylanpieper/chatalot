@@ -15,6 +15,7 @@ chat_parallel(
   initial_delay = 1,
   max_delay = 32,
   backoff_factor = 2,
+  chunk_size = 4L,
   ...
 )
 
@@ -29,6 +30,7 @@ chat_parallel(
   initial_delay = 1,
   max_delay = 32,
   backoff_factor = 2,
+  chunk_size = 4L,
   ...
 )
 }

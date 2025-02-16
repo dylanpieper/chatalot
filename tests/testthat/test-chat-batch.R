@@ -2,7 +2,6 @@ test_that("chat_batch initialization and result class works", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
   chat <- chat_batch(beep = FALSE)
-  expect_true(inherits(chat, "chat_batch"))
   expect_true(inherits(chat, "Chat"))
   expect_true(inherits(chat, "R6"))
   

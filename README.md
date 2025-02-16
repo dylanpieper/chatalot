@@ -1,6 +1,6 @@
 # hellmer <img src="man/figures/hellmer-hex.png" align="right" width="140"/>
 
-This package enables sequential or parallel batch processing for chat models from [ellmer](https://github.com/tidyverse/ellmer).
+This package enables sequential or parallel batch processing for [chat models](https://ellmer.tidyverse.org/reference/index.html) from [ellmer](https://github.com/tidyverse/ellmer).
 
 ## Overview
 
@@ -191,7 +191,7 @@ chat_batch(
   initial_delay = 1,         # Initial retry delay in seconds
   max_delay = 32,            # Maximum delay between retries
   backoff_factor = 2,        # Retry backoff multiplier
-  ...                        # Pass arguments to the chat model
+  ...                        # Pass parameters to the chat model
 )
 ```
 
@@ -211,7 +211,7 @@ chat_parallel(
   initial_delay = 1,         # Initial retry delay in seconds
   max_delay = 32,            # Maximum delay between retries
   backoff_factor = 2,        # Retry backoff multiplier
-  ...                        # Pass arguments to the chat model
+  ...                        # Pass parameters to the chat model
 )
 ```
 
@@ -240,4 +240,5 @@ You can mimic sequential processing when using `chat_parallel()` by setting the 
 
 ## Further Reading
 
--   [Compare Packages for Batching LLM Tasks](https://dylanpieper.github.io/hellmer/articles/batching-comparison.html)
+-   [Initialize Chat Models](https://dylanpieper.github.io/hellmer/articles/initialize-chat-models.html): Are you wondering if you can use `chat_claude(...)` as a user-defined object instead of the `chat_claude` function. Of course you can! Learn more the two methods and the default interface.
+-   [Compare Packages for Batching LLM Tasks](https://dylanpieper.github.io/hellmer/articles/compare-packages.html)
