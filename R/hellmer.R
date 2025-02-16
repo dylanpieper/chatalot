@@ -118,7 +118,7 @@ chat_batch <- function(
 #'   }
 #' @export
 chat_parallel <- function(
-    chat_model = ellmer::chat_claude(),
+    chat_model = ellmer::chat_claude,
     workers = 4,
     plan = "multisession",
     beep = TRUE,

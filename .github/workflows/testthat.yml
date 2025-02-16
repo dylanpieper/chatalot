@@ -41,6 +41,11 @@ jobs:
             any::testthat
           needs: check
       
+      - name: Install package
+        run: |
+          remotes::install_local(".", dependencies = TRUE)
+        shell: Rscript {0}
+      
       - name: Test package
         run: |
           devtools::test(stop_on_failure = TRUE, stop_on_warning = FALSE)
