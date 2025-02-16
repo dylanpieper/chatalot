@@ -14,7 +14,11 @@ process_parallel(
   plan = "multisession",
   beep = TRUE,
   timeout = 60,
-  max_chunk_attempts = 3L
+  max_chunk_attempts = 3L,
+  max_retries = 3L,
+  initial_delay = 1,
+  max_delay = 32,
+  backoff_factor = 2
 )
 }
 \arguments{
@@ -37,6 +41,14 @@ process_parallel(
 \item{timeout}{Maximum seconds per prompt (default: 60)}
 
 \item{max_chunk_attempts}{Maximum retries per failed chunk (default: 3)}
+
+\item{max_retries}{Maximum retries per prompt (default: 3)}
+
+\item{initial_delay}{Initial delay before first retry (default: 1)}
+
+\item{max_delay}{Maximum delay between retries (default: 32)}
+
+\item{backoff_factor}{Delay multiplier after each retry (default: 2)}
 }
 \value{
 Batch results object containing processed responses

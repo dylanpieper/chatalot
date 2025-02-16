@@ -11,6 +11,10 @@ chat_parallel(
   beep = TRUE,
   timeout = 60,
   max_chunk_attempts = 3L,
+  max_retries = 3L,
+  initial_delay = 1,
+  max_delay = 32,
+  backoff_factor = 2,
   ...
 )
 
@@ -21,6 +25,10 @@ chat_parallel(
   beep = TRUE,
   timeout = 60,
   max_chunk_attempts = 3L,
+  max_retries = 3L,
+  initial_delay = 1,
+  max_delay = 32,
+  backoff_factor = 2,
   ...
 )
 }
@@ -37,6 +45,14 @@ or "multicore" for forked processes}
 \item{timeout}{Maximum time in seconds to wait for each prompt response}
 
 \item{max_chunk_attempts}{Maximum number of retry attempts for failed chunks (default: 3)}
+
+\item{max_retries}{Maximum number of retry attempts per prompt (default: 3)}
+
+\item{initial_delay}{Initial delay in seconds before first retry (default: 1)}
+
+\item{max_delay}{Maximum delay in seconds between retries (default: 32)}
+
+\item{backoff_factor}{Factor to multiply delay by after each retry (default: 2)}
 
 \item{...}{Additional arguments passed to the chat model}
 }

@@ -370,6 +370,10 @@ chat_parallel <- function(
 #' @param beep Play sound on completion/error (default: TRUE)
 #' @param timeout Maximum seconds per prompt (default: 60)
 #' @param max_chunk_attempts Maximum retries per failed chunk (default: 3)
+#' @param max_retries Maximum retries per prompt (default: 3)
+#' @param initial_delay Initial delay before first retry (default: 1)
+#' @param max_delay Maximum delay between retries (default: 32)
+#' @param backoff_factor Delay multiplier after each retry (default: 2)
 #' @return Batch results object containing processed responses
 #' @keywords internal
 process_parallel <- function(
@@ -382,7 +386,11 @@ process_parallel <- function(
     plan = "multisession",
     beep = TRUE,
     timeout = 60,
-    max_chunk_attempts = 3L) {
+    max_chunk_attempts = 3L,
+    max_retries = 3L,
+    initial_delay = 1,
+    max_delay = 32,
+    backoff_factor = 2) {
   
   validate_chunk_result <- function(chunk_result, chunk_idx) {
     if (inherits(chunk_result, "error") || inherits(chunk_result, "worker_error")) {
@@ -428,10 +436,10 @@ process_parallel <- function(
       type_spec = type_spec,
       echo = "none",
       input_type = original_type,
-      max_retries = 3L,
-      initial_delay = 1,
-      max_delay = 32,
-      backoff_factor = 2,
+      max_retries = max_retries,
+      initial_delay = initial_delay,
+      max_delay = max_delay,
+      backoff_factor = backoff_factor,
       chunk_size = as.integer(chunk_size),
       workers = as.integer(workers),
       plan = plan,
@@ -485,7 +493,11 @@ process_parallel <- function(
                 prompt,
                 type_spec,
                 echo = "none",
-                timeout = timeout
+                timeout = timeout,
+                max_retries = max_retries,
+                initial_delay = initial_delay,
+                max_delay = max_delay,
+                backoff_factor = backoff_factor
               )
             },
             .options = furrr::furrr_options(

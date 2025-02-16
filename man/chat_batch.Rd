@@ -5,7 +5,7 @@
 \title{Process a batch of prompts sequentially}
 \usage{
 chat_batch(
-  chat_model = ellmer::chat_claude(),
+  chat_model = ellmer::chat_claude,
   echo = "none",
   beep = TRUE,
   timeout = 60,

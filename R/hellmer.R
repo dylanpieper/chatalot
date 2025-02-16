@@ -94,6 +94,10 @@ chat_batch <- function(
 #' @param beep Logical indicating whether to play sound on completion
 #' @param timeout Maximum time in seconds to wait for each prompt response
 #' @param max_chunk_attempts Maximum number of retry attempts for failed chunks (default: 3)
+#' @param max_retries Maximum number of retry attempts per prompt (default: 3)
+#' @param initial_delay Initial delay in seconds before first retry (default: 1)
+#' @param max_delay Maximum delay in seconds between retries (default: 32)
+#' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
 #' @param ... Additional arguments passed to the chat model
 #' @return A batch results object containing:
 #'   \itemize{
@@ -109,24 +113,27 @@ chat_batch <- function(
 #'   }
 #' @export
 chat_parallel <- function(
-    chat_model = ellmer::chat_claude,
+    chat_model = ellmer::chat_claude(),
     workers = 4,
     plan = "multisession",
     beep = TRUE,
     timeout = 60,
     max_chunk_attempts = 3L,
+    max_retries = 3L,
+    initial_delay = 1,
+    max_delay = 32,
+    backoff_factor = 2,
     ...) {
   
   plan <- match.arg(plan, choices = c("multisession", "multicore"))
-  original_chat <- chat_model(echo = "none", ...)
+  original_chat <- chat_model
   chat_env <- new.env(parent = emptyenv())
   
+  purrr::walk(names(original_chat), function(n) {
+    assign(n, original_chat[[n]], envir = chat_env)
+  })
+  
   chat_env$last_state_path <- NULL
-  chat_env$register_tool <- original_chat$register_tool
-  chat_env$chat <- original_chat$chat
-  chat_env$extract_data <- original_chat$extract_data
-  chat_env$get_turns <- original_chat$get_turns
-  chat_env$tokens <- original_chat$tokens
   
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
@@ -148,7 +155,11 @@ chat_parallel <- function(
       plan = plan,
       beep = beep,
       timeout = timeout,
-      max_chunk_attempts = max_chunk_attempts
+      max_chunk_attempts = max_chunk_attempts,
+      max_retries = max_retries,
+      initial_delay = initial_delay,
+      max_delay = max_delay,
+      backoff_factor = backoff_factor
     )
   }
   
