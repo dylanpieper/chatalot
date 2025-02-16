@@ -78,7 +78,7 @@ chat_batch <- function(
     )
   }
   
-  structure(chat_env, class = class(chat_model))
+  structure(chat_env, class = c("chat_batch", class(chat_model)))
 }
 
 #' Process a batch of prompts in parallel
@@ -163,5 +163,5 @@ chat_parallel <- function(
     )
   }
   
-  structure(chat_env, class = class(original_chat))
+  structure(chat_env, class = c("chat_parallel", class(chat_model)))
 }

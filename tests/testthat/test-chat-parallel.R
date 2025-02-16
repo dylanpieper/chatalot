@@ -2,7 +2,9 @@ test_that("chat_parallel initialization and result class works", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
   chat <- chat_parallel(beep = FALSE)
-  expect_true(inherits(chat, "function"))
+  expect_true(inherits(chat, "chat_parallel"))
+  expect_true(inherits(chat, "Chat"))
+  expect_true(inherits(chat, "R6"))
   
   result <- chat$batch(get_test_prompts(1))
   expect_true(inherits(result$chats()[[1]], c("Chat", "R6")))
