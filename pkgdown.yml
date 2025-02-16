@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   compare-packages: compare-packages.html
   initialize-chat-models: initialize-chat-models.html
-last_built: 2025-02-16T21:30Z
+last_built: 2025-02-16T21:36Z
 urls:
   reference: https://dylanpieper.github.io/hellmer/reference
   article: https://dylanpieper.github.io/hellmer/articles
