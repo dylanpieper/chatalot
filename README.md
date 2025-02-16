@@ -184,13 +184,14 @@ Creates a sequential batch processor.
 
 ``` r
 chat_batch(
-  chat_model = chat_claude,  # Base chat model
+  chat_model = chat_claude,  # Ellmer chat model
   echo = "none",             # Output verbosity (sequential only)
   beep = TRUE,               # Toggle sound notifications
   max_retries = 3,           # Maximum retry attempts
   initial_delay = 1,         # Initial retry delay in seconds
   max_delay = 32,            # Maximum delay between retries
-  backoff_factor = 2         # Exponential backoff multiplier
+  backoff_factor = 2,        # Retry backoff multiplier
+  ...                        # Pass arguments to the chat model
 )
 ```
 
@@ -200,10 +201,17 @@ Creates a parallel batch processor.
 
 ``` r
 chat_parallel(
-  chat_model = chat_claude,  # Base chat model
-  beep = TRUE,               # Enable sound notifications
+  chat_model = chat_claude,  # Ellmer chat model
+  workers = 4,               # Number of parallel workers
   plan = "multisession",     # Options: "multisession" or "multicore"
-  workers = 4                # Number of parallel workers
+  beep = TRUE,               # Enable sound notifications
+  timeout = 60,              # Maximum seconds to wait for response
+  max_chunk_attempts = 3L,   # Maximum retries for failed chunks
+  max_retries = 3,           # Maximum retry attempts
+  initial_delay = 1,         # Initial retry delay in seconds
+  max_delay = 32,            # Maximum delay between retries
+  backoff_factor = 2,        # Retry backoff multiplier
+  ...                        # Pass arguments to the chat model
 )
 ```
 
