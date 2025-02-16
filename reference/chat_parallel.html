@@ -55,6 +55,10 @@ For sequential processing, use <code><a href="chat_batch.html">chat_batch()</a><
 <span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  timeout <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>  max_chunk_attempts <span class="op">=</span> <span class="fl">3L</span>,</span>
+<span>  max_retries <span class="op">=</span> <span class="fl">3L</span>,</span>
+<span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  max_delay <span class="op">=</span> <span class="fl">32</span>,</span>
+<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -65,6 +69,10 @@ For sequential processing, use <code><a href="chat_batch.html">chat_batch()</a><
 <span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  timeout <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>  max_chunk_attempts <span class="op">=</span> <span class="fl">3L</span>,</span>
+<span>  max_retries <span class="op">=</span> <span class="fl">3L</span>,</span>
+<span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  max_delay <span class="op">=</span> <span class="fl">32</span>,</span>
+<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -96,6 +104,22 @@ or "multicore" for forked processes</p></dd>
 
 <dt id="arg-max-chunk-attempts">max_chunk_attempts<a class="anchor" aria-label="anchor" href="#arg-max-chunk-attempts"></a></dt>
 <dd><p>Maximum number of retry attempts for failed chunks (default: 3)</p></dd>
+
+
+<dt id="arg-max-retries">max_retries<a class="anchor" aria-label="anchor" href="#arg-max-retries"></a></dt>
+<dd><p>Maximum number of retry attempts per prompt (default: 3)</p></dd>
+
+
+<dt id="arg-initial-delay">initial_delay<a class="anchor" aria-label="anchor" href="#arg-initial-delay"></a></dt>
+<dd><p>Initial delay in seconds before first retry (default: 1)</p></dd>
+
+
+<dt id="arg-max-delay">max_delay<a class="anchor" aria-label="anchor" href="#arg-max-delay"></a></dt>
+<dd><p>Maximum delay in seconds between retries (default: 32)</p></dd>
+
+
+<dt id="arg-backoff-factor">backoff_factor<a class="anchor" aria-label="anchor" href="#arg-backoff-factor"></a></dt>
+<dd><p>Factor to multiply delay by after each retry (default: 2)</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
