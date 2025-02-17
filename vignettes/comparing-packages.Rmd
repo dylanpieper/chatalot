@@ -59,21 +59,28 @@ Supports both synchronous and asynchronous batch processing with basic features 
 library(tidyllm)
 
 # Basic asynchronous batching
-glue("Write a poem about {x}", x=c("cats","dogs","hamsters")) |>
-  purrr::map(llm_message) |>
-  send_batch(claude()) |>
-  saveRDS("claude_batch.rds")
-readRDS("claude_batch.rds") |>
-   check_batch(claude())
-
-# Synchronous batching
-conversations <- c("What is 2+2?",
+conversations <- c(
+  "What is 2+2?",
   "Name one planet.",
   "Is water wet?",
-  "What color is the sky?") |>
-  purrr::map(~{llm_message(.x) |>
-                chat(openai())
-             })
+  "What color is the sky?"
+) |>
+  purrr::map(~ {
+    llm_message(.x) |>
+      chat(claude())
+  })
+
+# Synchronous batching
+conversations <- c(
+  "What is 2+2?",
+  "Name one planet.",
+  "Is water wet?",
+  "What color is the sky?"
+) |>
+  purrr::map(~ {
+    llm_message(.x) |>
+      chat(openai())
+  })
 ```
 
 Key features:
