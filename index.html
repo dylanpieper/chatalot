@@ -244,9 +244,10 @@
 <span>  echo <span class="op">=</span> <span class="st">"none"</span>,             <span class="co"># Output verbosity (sequential only)</span></span>
 <span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,               <span class="co"># Toggle sound notifications</span></span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3</span>,           <span class="co"># Maximum retry attempts</span></span>
-<span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,         <span class="co"># Initial retry delay in seconds</span></span>
-<span>  max_delay <span class="op">=</span> <span class="fl">32</span>,            <span class="co"># Maximum delay between retries</span></span>
+<span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,        <span class="co"># Initial retry delay in seconds</span></span>
+<span>  max_delay <span class="op">=</span> <span class="fl">60</span>,            <span class="co"># Maximum delay between retries</span></span>
 <span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,        <span class="co"># Retry backoff multiplier</span></span>
+<span>  timeout <span class="op">=</span> <span class="fl">60</span>,              <span class="co"># Maximum seconds to wait for response</span></span>
 <span>  <span class="va">...</span>                        <span class="co"># Pass parameters to the chat model</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -260,12 +261,13 @@
 <span>  workers <span class="op">=</span> <span class="fl">4</span>,               <span class="co"># Number of parallel workers</span></span>
 <span>  plan <span class="op">=</span> <span class="st">"multisession"</span>,     <span class="co"># Options: "multisession" or "multicore"</span></span>
 <span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,               <span class="co"># Enable sound notifications</span></span>
-<span>  timeout <span class="op">=</span> <span class="fl">60</span>,              <span class="co"># Maximum seconds to wait for response</span></span>
+<span>  chunk_size <span class="op">=</span> <span class="fl">4L</span>,           <span class="co"># Number of prompts to process in parallel at a time </span></span>
 <span>  max_chunk_attempts <span class="op">=</span> <span class="fl">3L</span>,   <span class="co"># Maximum retries for failed chunks</span></span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3</span>,           <span class="co"># Maximum retry attempts</span></span>
-<span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,         <span class="co"># Initial retry delay in seconds</span></span>
-<span>  max_delay <span class="op">=</span> <span class="fl">32</span>,            <span class="co"># Maximum delay between retries</span></span>
+<span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,        <span class="co"># Initial retry delay in seconds</span></span>
+<span>  max_delay <span class="op">=</span> <span class="fl">60</span>,            <span class="co"># Maximum delay between retries</span></span>
 <span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,        <span class="co"># Retry backoff multiplier</span></span>
+<span>  timeout <span class="op">=</span> <span class="fl">60</span>,              <span class="co"># Maximum seconds to wait for response</span></span>
 <span>  <span class="va">...</span>                        <span class="co"># Pass parameters to the chat model</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
