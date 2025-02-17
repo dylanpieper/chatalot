@@ -65,17 +65,17 @@
 
     
     
-<p>This package provides two ways to initialize <a href="%5Bellmer%20chat%20model%20function%5D(https://ellmer.tidyverse.org/reference/index.html)" class="external-link">ellmer
-chat models</a> for batch processing. This flexibility allows you to
-either pass a function that creates a ready-to-go chat model or pass a
-chat model object for more user control.</p>
+<p>This package provides two ways to use <a href="%5Bellmer%20chat%20model%20function%5D(https://ellmer.tidyverse.org/reference/index.html)" class="external-link">ellmer
+chat models</a> for batch processing. This flexibility allows you to 1)
+pass a function that creates a ready-to-go chat model or 2) pass a chat
+model object for more user control.</p>
 <div class="section level2">
 <h2 id="method-1-passing-a-function">Method 1: Passing a Function<a class="anchor" aria-label="anchor" href="#method-1-passing-a-function"></a>
 </h2>
 <p>The first method is to pass an ellmer chat model function directly.
-This is the preferred method because it lets hellmer handle the model
-initialization, specifically setting <code>echo = "none"</code> for
-cleaner console output:</p>
+This is the preferred method because it lets hellmer setup the model,
+specifically setting <code>echo = "none"</code> for cleaner console
+output:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/hellmer/">hellmer</a></span><span class="op">)</span></span>
 <span></span>
@@ -94,33 +94,33 @@ cleaner console output:</p>
 <p>In this case, hellmer will:</p>
 <ol style="list-style-type: decimal">
 <li>Recognize that <code>chat_model</code> is a function</li>
-<li>Initialize the model with <code>echo = "none"</code> and any
-additional parameters you provide</li>
+<li>Setup the model with <code>echo = "none"</code> and any additional
+parameters you provide</li>
 <li>Use this newly created model for batch processing</li>
 </ol>
 </div>
 <div class="section level2">
 <h2 id="method-2-passing-an-object">Method 2: Passing an Object<a class="anchor" aria-label="anchor" href="#method-2-passing-an-object"></a>
 </h2>
-<p>The second method is to pass an already initialized chat model. This
-is useful when you need more control over model configuration or want to
-reuse an existing model:</p>
+<p>The second method is to pass a chat model object. This is useful when
+you need more control over model configuration or want to reuse an
+existing model:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/hellmer/">hellmer</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create and configure a chat model</span></span>
-<span><span class="va">my_model</span> <span class="op">&lt;-</span> <span class="fu">chat_claude</span><span class="op">(</span></span>
-<span>  max_tokens <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span><span class="va">claude</span> <span class="op">&lt;-</span> <span class="fu">chat_claude</span><span class="op">(</span></span>
 <span>  system_prompt <span class="op">=</span> <span class="st">"Reply concisely"</span>,</span>
-<span>  echo <span class="op">=</span> <span class="st">"none"</span></span>
+<span>  echo <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  max_tokens <span class="op">=</span> <span class="fl">1000</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Sequential processing</span></span>
-<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chat_batch.html">chat_batch</a></span><span class="op">(</span>chat_model <span class="op">=</span> <span class="va">my_model</span><span class="op">)</span></span>
+<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chat_batch.html">chat_batch</a></span><span class="op">(</span>chat_model <span class="op">=</span> <span class="va">claude</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Parallel processing</span></span>
 <span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chat_parallel.html">chat_parallel</a></span><span class="op">(</span></span>
-<span>  chat_model <span class="op">=</span> <span class="va">my_model</span>,</span>
+<span>  chat_model <span class="op">=</span> <span class="va">claude</span>,</span>
 <span>  workers <span class="op">=</span> <span class="fl">4</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>In this case, hellmer will:</p>
