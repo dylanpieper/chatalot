@@ -8,11 +8,11 @@ chat_batch(
   chat_model = ellmer::chat_claude,
   echo = "none",
   beep = TRUE,
-  timeout = 60,
   max_retries = 3L,
   initial_delay = 1,
   max_delay = 32,
   backoff_factor = 2,
+  timeout = 60,
   ...
 )
 }
@@ -24,8 +24,6 @@ chat_batch(
 
 \item{beep}{Logical indicating whether to play a sound when batch processing completes}
 
-\item{timeout}{Maximum time in seconds to wait for each prompt response}
-
 \item{max_retries}{Maximum number of retry attempts per prompt}
 
 \item{initial_delay}{Initial delay in seconds before first retry}
@@ -33,6 +31,8 @@ chat_batch(
 \item{max_delay}{Maximum delay in seconds between retries}
 
 \item{backoff_factor}{Factor to multiply delay by after each retry}
+
+\item{timeout}{Maximum time in seconds to wait for each prompt response}
 
 \item{...}{Additional arguments passed to the underlying chat model}
 }

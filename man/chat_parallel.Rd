@@ -9,13 +9,13 @@ chat_parallel(
   workers = 4,
   plan = "multisession",
   beep = TRUE,
-  timeout = 60,
+  chunk_size = 4L,
   max_chunk_attempts = 3L,
   max_retries = 3L,
   initial_delay = 1,
   max_delay = 32,
   backoff_factor = 2,
-  chunk_size = 4L,
+  timeout = 60,
   ...
 )
 }
@@ -29,7 +29,7 @@ or "multicore" for forked processes}
 
 \item{beep}{Logical indicating whether to play sound on completion}
 
-\item{timeout}{Maximum time in seconds to wait for each prompt response}
+\item{chunk_size}{Number of prompts to process in each parallel chunk (default: 4)}
 
 \item{max_chunk_attempts}{Maximum number of retry attempts for failed chunks (default: 3)}
 
@@ -41,7 +41,7 @@ or "multicore" for forked processes}
 
 \item{backoff_factor}{Factor to multiply delay by after each retry (default: 2)}
 
-\item{chunk_size}{Number of prompts to process in each parallel chunk (default: 4)}
+\item{timeout}{Maximum time in seconds to wait for each prompt response}
 
 \item{...}{Additional arguments passed to the chat model}
 }
