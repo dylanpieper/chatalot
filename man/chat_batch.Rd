@@ -17,22 +17,22 @@ chat_batch(
 )
 }
 \arguments{
-\item{chat_model}{Chat model object to use for processing}
+\item{chat_model}{Chat model function/object to use for processing (default: \code{ellmer::chat_claude})}
 
 \item{echo}{Level of output to display: "none" for silent operation,
 "text" for response text only, or "all" for full interaction}
 
-\item{beep}{Logical indicating whether to play a sound when batch processing completes}
+\item{beep}{Logical to play a sound on batch completion, interruption, and error}
 
-\item{max_retries}{Maximum number of retry attempts per prompt}
+\item{max_retries}{Maximum number of retry attempts per prompt (default: 3)}
 
-\item{initial_delay}{Initial delay in seconds before first retry}
+\item{initial_delay}{Initial delay in seconds before first retry (default: 1)}
 
-\item{max_delay}{Maximum delay in seconds between retries}
+\item{max_delay}{Maximum delay in seconds between retries (default: 32)}
 
-\item{backoff_factor}{Factor to multiply delay by after each retry}
+\item{backoff_factor}{Factor to multiply delay by after each retry (default: 2)}
 
-\item{timeout}{Maximum time in seconds to wait for each prompt response}
+\item{timeout}{Maximum time in seconds to wait for each prompt response (default: 60)}
 
 \item{...}{Additional arguments passed to the underlying chat model}
 }

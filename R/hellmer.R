@@ -4,15 +4,15 @@
 #' Maintains state between runs and can resume interrupted processing.
 #' For parallel processing, use `chat_parallel()`.
 #'
-#' @param chat_model Chat model object to use for processing
+#' @param chat_model Chat model function/object to use for processing (default: `ellmer::chat_claude`)
 #' @param echo Level of output to display: "none" for silent operation,
 #'        "text" for response text only, or "all" for full interaction
-#' @param beep Logical indicating whether to play a sound when batch processing completes
-#' @param max_retries Maximum number of retry attempts per prompt
-#' @param initial_delay Initial delay in seconds before first retry
-#' @param max_delay Maximum delay in seconds between retries
-#' @param backoff_factor Factor to multiply delay by after each retry
-#' @param timeout Maximum time in seconds to wait for each prompt response
+#' @param beep Logical to play a sound on batch completion, interruption, and error
+#' @param max_retries Maximum number of retry attempts per prompt (default: 3)
+#' @param initial_delay Initial delay in seconds before first retry (default: 1)
+#' @param max_delay Maximum delay in seconds between retries (default: 32)
+#' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
+#' @param timeout Maximum time in seconds to wait for each prompt response (default: 60)
 #' @param ... Additional arguments passed to the underlying chat model
 #' @return A batch results object containing:
 #'   \itemize{
@@ -99,18 +99,18 @@ chat_batch <- function(
 #' Splits prompts into chunks for processing while maintaining state.
 #' For sequential processing, use `chat_batch()`.
 #'
-#' @param chat_model Chat model function or object to use for processing (default: ellmer::chat_claude)
+#' @param chat_model Chat model function/object to use for processing (default: `ellmer::chat_claude`)
 #' @param workers Number of parallel workers to use
 #' @param plan Processing strategy to use: "multisession" for separate R sessions
 #'        or "multicore" for forked processes
-#' @param beep Logical indicating whether to play sound on completion
+#' @param beep Logical to play a sound on batch completion, interruption, and error
 #' @param chunk_size Number of prompts to process in each parallel chunk (default: 4)
 #' @param max_chunk_attempts Maximum number of retry attempts for failed chunks (default: 3)
 #' @param max_retries Maximum number of retry attempts per prompt (default: 3)
 #' @param initial_delay Initial delay in seconds before first retry (default: 1)
 #' @param max_delay Maximum delay in seconds between retries (default: 32)
 #' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
-#' @param timeout Maximum time in seconds to wait for each prompt response
+#' @param timeout Maximum time in seconds to wait for each prompt response (default: 2)
 #' @param ... Additional arguments passed to the chat model
 #' @return A batch results object containing:
 #'   \itemize{

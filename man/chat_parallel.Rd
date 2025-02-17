@@ -20,14 +20,14 @@ chat_parallel(
 )
 }
 \arguments{
-\item{chat_model}{Chat model function or object to use for processing (default: ellmer::chat_claude)}
+\item{chat_model}{Chat model function/object to use for processing (default: \code{ellmer::chat_claude})}
 
 \item{workers}{Number of parallel workers to use}
 
 \item{plan}{Processing strategy to use: "multisession" for separate R sessions
 or "multicore" for forked processes}
 
-\item{beep}{Logical indicating whether to play sound on completion}
+\item{beep}{Logical to play a sound on batch completion, interruption, and error}
 
 \item{chunk_size}{Number of prompts to process in each parallel chunk (default: 4)}
 
@@ -41,7 +41,7 @@ or "multicore" for forked processes}
 
 \item{backoff_factor}{Factor to multiply delay by after each retry (default: 2)}
 
-\item{timeout}{Maximum time in seconds to wait for each prompt response}
+\item{timeout}{Maximum time in seconds to wait for each prompt response (default: 2)}
 
 \item{...}{Additional arguments passed to the chat model}
 }
