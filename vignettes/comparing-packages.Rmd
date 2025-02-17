@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 This vignette compares different approaches to batching LLM operations in R. The two main packages that provide batch processing capabilities are:
 
 -   [hellmer](https://github.com/dylanpieper/hellmer): Synchronous batch processing for any models supported by [ellmer](https://github.com/tidyverse/ellmer/)
--   [tidyllm](https://github.com/edubruell/tidyllm): Synchronous and asynchronous batch processing for Anthropic, OpenAI, Mistral, and Ollama models
+-   [tidyllm](https://github.com/edubruell/tidyllm): Synchronous and asynchronous batch processing for a wide range of models
 
 ## Package Comparison
 
@@ -53,7 +53,7 @@ Key features:
 
 ### tidyllm
 
-Supports both synchronous and asynchronous batch processing with basic features:
+Supports both synchronous and asynchronous batch processing with basic features and a side-effect-free, pipeline-oriented user interface:
 
 ```{r eval=FALSE}
 library(tidyllm)
@@ -79,8 +79,7 @@ conversations <- c("What is 2+2?",
 Key features:
 
 -   Both synchronous and asynchronous processing options
--   Side-effect-free, pipeline-oriented operation style
--   Supports Anthropic, OpenAI, Mistral, and Ollama APIs
+-   Asynchronous processing supports Anthropic, OpenAI, Mistral, and Ollama APIs
 -   Efficient parallel request queuing for Ollama
 -   Status checking capabilities for async jobs
 -   Cost savings (\~50% cheaper for async)
