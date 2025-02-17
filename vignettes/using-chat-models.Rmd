@@ -1,5 +1,5 @@
 ---
-title: "Initialize Chat Models"
+title: "Using Ellmer Chat Models"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Initializing Chat Models in hellmer}
@@ -20,8 +20,8 @@ knitr::opts_chunk$set(
 This package provides two ways to initialize [ellmer chat
 models](%5Bellmer%20chat%20model%20function%5D(https://ellmer.tidyverse.org/reference/index.html))
 for batch processing. This flexibility allows you to either pass a
-function that creates a ready-to-go chat model or pass a pre-configured
-chat model object for more user control.
+function that creates a ready-to-go chat model or pass a chat model
+object for more user control.
 
 ## Method 1: Passing a Function
 
@@ -54,7 +54,7 @@ In this case, hellmer will:
     parameters you provide
 3.  Use this newly created model for batch processing
 
-## Method 2: Passing a Pre-configured Object
+## Method 2: Passing an Object
 
 The second method is to pass an already initialized chat model. This is
 useful when you need more control over model configuration or want to
