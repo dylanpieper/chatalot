@@ -17,18 +17,17 @@ knitr::opts_chunk$set(
 )
 ```
 
-This package provides two ways to initialize [ellmer chat
+This package provides two ways to use [ellmer chat
 models](%5Bellmer%20chat%20model%20function%5D(https://ellmer.tidyverse.org/reference/index.html))
-for batch processing. This flexibility allows you to either pass a
-function that creates a ready-to-go chat model or pass a chat model
-object for more user control.
+for batch processing. This flexibility allows you to 1) pass a function
+that creates a ready-to-go chat model or 2) pass a chat model object for
+more user control.
 
 ## Method 1: Passing a Function
 
 The first method is to pass an ellmer chat model function directly. This
-is the preferred method because it lets hellmer handle the model
-initialization, specifically setting `echo = "none"` for cleaner console
-output:
+is the preferred method because it lets hellmer setup the model,
+specifically setting `echo = "none"` for cleaner console output:
 
 ``` r
 library(hellmer)
@@ -50,32 +49,32 @@ chat <- chat_parallel(
 In this case, hellmer will:
 
 1.  Recognize that `chat_model` is a function
-2.  Initialize the model with `echo = "none"` and any additional
-    parameters you provide
+2.  Setup the model with `echo = "none"` and any additional parameters
+    you provide
 3.  Use this newly created model for batch processing
 
 ## Method 2: Passing an Object
 
-The second method is to pass an already initialized chat model. This is
-useful when you need more control over model configuration or want to
-reuse an existing model:
+The second method is to pass a chat model object. This is useful when
+you need more control over model configuration or want to reuse an
+existing model:
 
 ``` r
 library(hellmer)
 
 # Create and configure a chat model
-my_model <- chat_claude(
-  max_tokens = 1000,
+claude <- chat_claude(
   system_prompt = "Reply concisely",
-  echo = "none"
+  echo = "none",
+  max_tokens = 1000
 )
 
 # Sequential processing
-chat <- chat_batch(chat_model = my_model)
+chat <- chat_batch(chat_model = claude)
 
 # Parallel processing
 chat <- chat_parallel(
-  chat_model = my_model,
+  chat_model = claude,
   workers = 4
 )
 ```
