@@ -125,16 +125,19 @@ interface:</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://edubruell.github.io/tidyllm/" class="external-link">tidyllm</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Basic asynchronous batching</span></span>
-<span><span class="va">conversations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"What is 2+2?"</span>,</span>
-<span>  <span class="st">"Name one planet."</span>,</span>
-<span>  <span class="st">"Is water wet?"</span>,</span>
-<span>  <span class="st">"What color is the sky?"</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="op">~</span> <span class="op">{</span></span>
-<span>    <span class="fu">llm_message</span><span class="op">(</span><span class="va">.x</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu">chat</span><span class="op">(</span><span class="fu">claude</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="fu">glue</span><span class="op">(</span><span class="st">"Write a response to: {x}"</span>, </span>
+<span>     x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>       <span class="st">"What is 2+2?"</span>,</span>
+<span>       <span class="st">"Name one planet."</span>,</span>
+<span>       <span class="st">"Is water wet?"</span>,</span>
+<span>       <span class="st">"What color is the sky?"</span></span>
+<span>     <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">llm_message</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">send_batch</span><span class="op">(</span><span class="fu">claude</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="st">"claude_batch.rds"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"claude_batch.rds"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">check_batch</span><span class="op">(</span><span class="fu">claude</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Synchronous batching</span></span>
 <span><span class="va">conversations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -145,7 +148,7 @@ interface:</p>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="op">~</span> <span class="op">{</span></span>
 <span>    <span class="fu">llm_message</span><span class="op">(</span><span class="va">.x</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu">chat</span><span class="op">(</span><span class="fu">openai</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>      <span class="fu">chat</span><span class="op">(</span><span class="fu">claude</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p>Key features:</p>
 <ul>
