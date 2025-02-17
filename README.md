@@ -14,8 +14,6 @@ Process multiple chat interactions with:
 -   Timeout handling
 -   Sound notifications
 
-Use the following
-
 ## Installation
 
 ``` r

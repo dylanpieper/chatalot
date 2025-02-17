@@ -92,6 +92,12 @@ Limitations of synchronous batching:
 -   No automatic retry or error handling
 -   No timeout management
 
+## Benchmark
+
+When comparing the performance between the two packages and methods (n = 10), hellmer's parallel processing has the best performance.
+
+![](../man/figures/hellmer-tidyllm.png){width="539"}
+
 ## Honorable Mentions
 
 These packages provide batch processing capabilities for Ollama models:
