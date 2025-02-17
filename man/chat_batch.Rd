@@ -17,12 +17,12 @@ chat_batch(
 )
 }
 \arguments{
-\item{chat_model}{Chat model function/object to use for processing (default: \code{ellmer::chat_claude})}
+\item{chat_model}{Chat model function/object (default: \code{ellmer::chat_claude})}
 
 \item{echo}{Level of output to display: "none" for silent operation,
-"text" for response text only, or "all" for full interaction}
+"text" for response text only, or "all" for full interaction (default: "none")}
 
-\item{beep}{Logical to play a sound on batch completion, interruption, and error}
+\item{beep}{Logical to play a sound on batch completion, interruption, and error (default: TRUE)}
 
 \item{max_retries}{Maximum number of retry attempts per prompt (default: 3)}
 

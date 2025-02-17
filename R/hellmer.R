@@ -4,10 +4,10 @@
 #' Maintains state between runs and can resume interrupted processing.
 #' For parallel processing, use `chat_parallel()`.
 #'
-#' @param chat_model Chat model function/object to use for processing (default: `ellmer::chat_claude`)
+#' @param chat_model Chat model function/object (default: `ellmer::chat_claude`)
 #' @param echo Level of output to display: "none" for silent operation,
-#'        "text" for response text only, or "all" for full interaction
-#' @param beep Logical to play a sound on batch completion, interruption, and error
+#'        "text" for response text only, or "all" for full interaction (default: "none")
+#' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
 #' @param max_retries Maximum number of retry attempts per prompt (default: 3)
 #' @param initial_delay Initial delay in seconds before first retry (default: 1)
 #' @param max_delay Maximum delay in seconds between retries (default: 32)
@@ -99,11 +99,11 @@ chat_batch <- function(
 #' Splits prompts into chunks for processing while maintaining state.
 #' For sequential processing, use `chat_batch()`.
 #'
-#' @param chat_model Chat model function/object to use for processing (default: `ellmer::chat_claude`)
-#' @param workers Number of parallel workers to use
+#' @param chat_model Chat model function/object (default: `ellmer::chat_claude`)
+#' @param workers Number of parallel workers to use (default: 4)
 #' @param plan Processing strategy to use: "multisession" for separate R sessions
-#'        or "multicore" for forked processes
-#' @param beep Logical to play a sound on batch completion, interruption, and error
+#'        or "multicore" for forked processes (default: "multisession")
+#' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
 #' @param chunk_size Number of prompts to process in each parallel chunk (default: 4)
 #' @param max_chunk_attempts Maximum number of retry attempts for failed chunks (default: 3)
 #' @param max_retries Maximum number of retry attempts per prompt (default: 3)
