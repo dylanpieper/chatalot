@@ -9,8 +9,8 @@ chat_batch(
   echo = "none",
   beep = TRUE,
   max_retries = 3L,
-  initial_delay = 1,
-  max_delay = 32,
+  initial_delay = 20,
+  max_delay = 60,
   backoff_factor = 2,
   timeout = 60,
   ...
@@ -26,9 +26,9 @@ chat_batch(
 
 \item{max_retries}{Maximum number of retry attempts per prompt (default: 3)}
 
-\item{initial_delay}{Initial delay in seconds before first retry (default: 1)}
+\item{initial_delay}{Initial delay in seconds before first retry (default: 20)}
 
-\item{max_delay}{Maximum delay in seconds between retries (default: 32)}
+\item{max_delay}{Maximum delay in seconds between retries (default: 60)}
 
 \item{backoff_factor}{Factor to multiply delay by after each retry (default: 2)}
 

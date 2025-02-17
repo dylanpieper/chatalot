@@ -9,8 +9,8 @@
 #'        "text" for response text only, or "all" for full interaction (default: "none")
 #' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
 #' @param max_retries Maximum number of retry attempts per prompt (default: 3)
-#' @param initial_delay Initial delay in seconds before first retry (default: 1)
-#' @param max_delay Maximum delay in seconds between retries (default: 32)
+#' @param initial_delay Initial delay in seconds before first retry (default: 20)
+#' @param max_delay Maximum delay in seconds between retries (default: 60)
 #' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
 #' @param timeout Maximum time in seconds to wait for each prompt response (default: 60)
 #' @param ... Additional arguments passed to the underlying chat model
@@ -32,8 +32,8 @@ chat_batch <- function(
     echo = "none",
     beep = TRUE,
     max_retries = 3L,
-    initial_delay = 1,
-    max_delay = 32,
+    initial_delay = 20,
+    max_delay = 60,
     backoff_factor = 2,
     timeout = 60,
     ...
@@ -107,8 +107,8 @@ chat_batch <- function(
 #' @param chunk_size Number of prompts to process in each parallel chunk (default: 4)
 #' @param max_chunk_attempts Maximum number of retry attempts for failed chunks (default: 3)
 #' @param max_retries Maximum number of retry attempts per prompt (default: 3)
-#' @param initial_delay Initial delay in seconds before first retry (default: 1)
-#' @param max_delay Maximum delay in seconds between retries (default: 32)
+#' @param initial_delay Initial delay in seconds before first retry (default: 20)
+#' @param max_delay Maximum delay in seconds between retries (default: 60)
 #' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
 #' @param timeout Maximum time in seconds to wait for each prompt response (default: 2)
 #' @param ... Additional arguments passed to the chat model
@@ -133,8 +133,8 @@ chat_parallel <- function(
     chunk_size = 4L,
     max_chunk_attempts = 3L,
     max_retries = 3L,
-    initial_delay = 1,
-    max_delay = 32,
+    initial_delay = 20,
+    max_delay = 60,
     backoff_factor = 2,
     timeout = 60,
     ...) {
