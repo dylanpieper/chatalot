@@ -70,7 +70,7 @@ For sequential processing, use <code><a href="chat_batch.html">chat_batch()</a><
 
 
 <dl><dt id="arg-chat-model">chat_model<a class="anchor" aria-label="anchor" href="#arg-chat-model"></a></dt>
-<dd><p>Chat model function or object to use for processing (default: ellmer::chat_claude)</p></dd>
+<dd><p>Chat model function/object to use for processing (default: <code><a href="https://ellmer.tidyverse.org/reference/chat_claude.html" class="external-link">ellmer::chat_claude</a></code>)</p></dd>
 
 
 <dt id="arg-workers">workers<a class="anchor" aria-label="anchor" href="#arg-workers"></a></dt>
@@ -83,7 +83,7 @@ or "multicore" for forked processes</p></dd>
 
 
 <dt id="arg-beep">beep<a class="anchor" aria-label="anchor" href="#arg-beep"></a></dt>
-<dd><p>Logical indicating whether to play sound on completion</p></dd>
+<dd><p>Logical to play a sound on batch completion, interruption, and error</p></dd>
 
 
 <dt id="arg-chunk-size">chunk_size<a class="anchor" aria-label="anchor" href="#arg-chunk-size"></a></dt>
@@ -111,7 +111,7 @@ or "multicore" for forked processes</p></dd>
 
 
 <dt id="arg-timeout">timeout<a class="anchor" aria-label="anchor" href="#arg-timeout"></a></dt>
-<dd><p>Maximum time in seconds to wait for each prompt response</p></dd>
+<dd><p>Maximum time in seconds to wait for each prompt response (default: 2)</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

@@ -67,7 +67,7 @@ For parallel processing, use <code><a href="chat_parallel.html">chat_parallel()<
 
 
 <dl><dt id="arg-chat-model">chat_model<a class="anchor" aria-label="anchor" href="#arg-chat-model"></a></dt>
-<dd><p>Chat model object to use for processing</p></dd>
+<dd><p>Chat model function/object to use for processing (default: <code><a href="https://ellmer.tidyverse.org/reference/chat_claude.html" class="external-link">ellmer::chat_claude</a></code>)</p></dd>
 
 
 <dt id="arg-echo">echo<a class="anchor" aria-label="anchor" href="#arg-echo"></a></dt>
@@ -76,27 +76,27 @@ For parallel processing, use <code><a href="chat_parallel.html">chat_parallel()<
 
 
 <dt id="arg-beep">beep<a class="anchor" aria-label="anchor" href="#arg-beep"></a></dt>
-<dd><p>Logical indicating whether to play a sound when batch processing completes</p></dd>
+<dd><p>Logical to play a sound on batch completion, interruption, and error</p></dd>
 
 
 <dt id="arg-max-retries">max_retries<a class="anchor" aria-label="anchor" href="#arg-max-retries"></a></dt>
-<dd><p>Maximum number of retry attempts per prompt</p></dd>
+<dd><p>Maximum number of retry attempts per prompt (default: 3)</p></dd>
 
 
 <dt id="arg-initial-delay">initial_delay<a class="anchor" aria-label="anchor" href="#arg-initial-delay"></a></dt>
-<dd><p>Initial delay in seconds before first retry</p></dd>
+<dd><p>Initial delay in seconds before first retry (default: 1)</p></dd>
 
 
 <dt id="arg-max-delay">max_delay<a class="anchor" aria-label="anchor" href="#arg-max-delay"></a></dt>
-<dd><p>Maximum delay in seconds between retries</p></dd>
+<dd><p>Maximum delay in seconds between retries (default: 32)</p></dd>
 
 
 <dt id="arg-backoff-factor">backoff_factor<a class="anchor" aria-label="anchor" href="#arg-backoff-factor"></a></dt>
-<dd><p>Factor to multiply delay by after each retry</p></dd>
+<dd><p>Factor to multiply delay by after each retry (default: 2)</p></dd>
 
 
 <dt id="arg-timeout">timeout<a class="anchor" aria-label="anchor" href="#arg-timeout"></a></dt>
-<dd><p>Maximum time in seconds to wait for each prompt response</p></dd>
+<dd><p>Maximum time in seconds to wait for each prompt response (default: 60)</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
