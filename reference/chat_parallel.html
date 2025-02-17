@@ -57,8 +57,8 @@ For sequential processing, use <code><a href="chat_batch.html">chat_batch()</a><
 <span>  chunk_size <span class="op">=</span> <span class="fl">4L</span>,</span>
 <span>  max_chunk_attempts <span class="op">=</span> <span class="fl">3L</span>,</span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3L</span>,</span>
-<span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  max_delay <span class="op">=</span> <span class="fl">32</span>,</span>
+<span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  max_delay <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  timeout <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -99,11 +99,11 @@ or "multicore" for forked processes (default: "multisession")</p></dd>
 
 
 <dt id="arg-initial-delay">initial_delay<a class="anchor" aria-label="anchor" href="#arg-initial-delay"></a></dt>
-<dd><p>Initial delay in seconds before first retry (default: 1)</p></dd>
+<dd><p>Initial delay in seconds before first retry (default: 20)</p></dd>
 
 
 <dt id="arg-max-delay">max_delay<a class="anchor" aria-label="anchor" href="#arg-max-delay"></a></dt>
-<dd><p>Maximum delay in seconds between retries (default: 32)</p></dd>
+<dd><p>Maximum delay in seconds between retries (default: 60)</p></dd>
 
 
 <dt id="arg-backoff-factor">backoff_factor<a class="anchor" aria-label="anchor" href="#arg-backoff-factor"></a></dt>
