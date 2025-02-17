@@ -78,8 +78,8 @@ Synchronous batch processing for any models supported by <a href="https://github
 </li>
 <li>
 <a href="https://github.com/edubruell/tidyllm" class="external-link">tidyllm</a>:
-Synchronous and asynchronous batch processing for Anthropic, OpenAI,
-Mistral, and Ollama models</li>
+Synchronous and asynchronous batch processing for a wide range of
+models</li>
 </ul>
 </div>
 <div class="section level2">
@@ -119,7 +119,8 @@ data extraction</a>
 <h3 id="tidyllm">tidyllm<a class="anchor" aria-label="anchor" href="#tidyllm"></a>
 </h3>
 <p>Supports both synchronous and asynchronous batch processing with
-basic features:</p>
+basic features and a side-effect-free, pipeline-oriented user
+interface:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://edubruell.github.io/tidyllm/" class="external-link">tidyllm</a></span><span class="op">)</span></span>
 <span></span>
@@ -142,8 +143,8 @@ basic features:</p>
 <p>Key features:</p>
 <ul>
 <li>Both synchronous and asynchronous processing options</li>
-<li>Side-effect-free, pipeline-oriented operation style</li>
-<li>Supports Anthropic, OpenAI, Mistral, and Ollama APIs</li>
+<li>Asynchronous processing supports Anthropic, OpenAI, Mistral, and
+Ollama APIs</li>
 <li>Efficient parallel request queuing for Ollama</li>
 <li>Status checking capabilities for async jobs</li>
 <li>Cost savings (~50% cheaper for async)</li>
@@ -157,6 +158,13 @@ basic features:</p>
 <li>No timeout management</li>
 </ul>
 </div>
+</div>
+<div class="section level2">
+<h2 id="benchmark">Benchmark<a class="anchor" aria-label="anchor" href="#benchmark"></a>
+</h2>
+<p>When comparing the performance between the two packages and methods
+(n = 10), hellmer’s parallel processing has the best performance.</p>
+<p><img src="../reference/figures/hellmer-tidyllm.png" width="539"></p>
 </div>
 <div class="section level2">
 <h2 id="honorable-mentions">Honorable Mentions<a class="anchor" aria-label="anchor" href="#honorable-mentions"></a>
