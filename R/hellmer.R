@@ -104,7 +104,7 @@ chat_batch <- function(
 #' @param plan Processing strategy to use: "multisession" for separate R sessions
 #'        or "multicore" for forked processes (default: "multisession")
 #' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
-#' @param chunk_size Number of prompts to process in each parallel chunk (default: 4)
+#' @param chunk_size Number of prompts to process in parallel at a time (default: 4)
 #' @param max_chunk_attempts Maximum number of retry attempts for failed chunks (default: 3)
 #' @param max_retries Maximum number of retry attempts per prompt (default: 3)
 #' @param initial_delay Initial delay in seconds before first retry (default: 20)

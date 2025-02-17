@@ -29,7 +29,7 @@ or "multicore" for forked processes (default: "multisession")}
 
 \item{beep}{Logical to play a sound on batch completion, interruption, and error (default: TRUE)}
 
-\item{chunk_size}{Number of prompts to process in each parallel chunk (default: 4)}
+\item{chunk_size}{Number of prompts to process in parallel at a time (default: 4)}
 
 \item{max_chunk_attempts}{Maximum number of retry attempts for failed chunks (default: 3)}
 

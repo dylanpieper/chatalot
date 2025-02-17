@@ -189,6 +189,7 @@ chat_batch(
   initial_delay = 1,         # Initial retry delay in seconds
   max_delay = 32,            # Maximum delay between retries
   backoff_factor = 2,        # Retry backoff multiplier
+  timeout = 60,              # Maximum seconds to wait for response
   ...                        # Pass parameters to the chat model
 )
 ```
@@ -203,12 +204,13 @@ chat_parallel(
   workers = 4,               # Number of parallel workers
   plan = "multisession",     # Options: "multisession" or "multicore"
   beep = TRUE,               # Enable sound notifications
-  timeout = 60,              # Maximum seconds to wait for response
+  chunk_size = 4L,           # Number of prompts to process in parallel at a time 
   max_chunk_attempts = 3L,   # Maximum retries for failed chunks
   max_retries = 3,           # Maximum retry attempts
   initial_delay = 1,         # Initial retry delay in seconds
   max_delay = 32,            # Maximum delay between retries
   backoff_factor = 2,        # Retry backoff multiplier
+  timeout = 60,              # Maximum seconds to wait for response
   ...                        # Pass parameters to the chat model
 )
 ```
