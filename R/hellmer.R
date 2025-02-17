@@ -45,7 +45,7 @@ chat_batch <- function(
     chat_model
   }
   
-  map(names(chat_env$chat_model), ~{
+  purrr::map(names(chat_env$chat_model), ~{
     chat_env[[.x]] <- chat_env$chat_model[[.x]]
   })
   
@@ -59,7 +59,7 @@ chat_batch <- function(
     backoff_factor = backoff_factor
   )
   
-  iwalk(params, ~{
+  purrr::iwalk(params, ~{
     chat_env[[.y]] <- .x
   })
   
@@ -147,7 +147,7 @@ chat_parallel <- function(
     chat_model
   }
   
-  map(names(chat_env$chat_model), ~{
+  purrr::map(names(chat_env$chat_model), ~{
     chat_env[[.x]] <- chat_env$chat_model[[.x]]
   })
   
@@ -164,7 +164,7 @@ chat_parallel <- function(
     chunk_size = chunk_size
   )
 
-  iwalk(params, ~{
+  purrr::iwalk(params, ~{
     chat_env[[.y]] <- .x
   })
   

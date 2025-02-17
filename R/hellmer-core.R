@@ -302,63 +302,6 @@ process <- function(
   create_results(result)
 }
 
-#' Process a batch of prompts in parallel
-#' @name chat_parallel
-#' @param chat_model Chat model object to use
-#' @param workers Number of parallel workers
-#' @param plan Processing strategy ("multisession" or "multicore")
-#' @param beep Play sound on completion
-#' @param timeout Maximum time to wait for response
-#' @param max_chunk_attempts Maximum retry attempts for chunks
-#' @param ... Additional arguments passed to chat model
-#' @return A batch results object
-#' @export
-chat_parallel <- function(
-    chat_model = ellmer::chat_claude(),
-    workers = 4,
-    plan = "multisession",
-    beep = TRUE,
-    timeout = 60,
-    max_chunk_attempts = 3L,
-    ...) {
-  
-  plan <- match.arg(plan, choices = c("multisession", "multicore"))
-  original_chat <- chat_model
-  chat_env <- new.env(parent = emptyenv())
-  
-  purrr::walk(names(original_chat), function(n) {
-    assign(n, original_chat[[n]], envir = chat_env)
-  })
-  
-  chat_env$last_state_path <- NULL
-  
-  chat_env$batch <- function(prompts,
-                             type_spec = NULL,
-                             state_path = tempfile("chat_batch_", fileext = ".rds"),
-                             chunk_size = 4) {
-    if (is.null(chat_env$last_state_path)) {
-      chat_env$last_state_path <- state_path
-    } else {
-      state_path <- chat_env$last_state_path
-    }
-    
-    process_parallel(
-      chat_obj = original_chat,
-      prompts = prompts,
-      type_spec = type_spec,
-      state_path = state_path,
-      workers = workers,
-      chunk_size = chunk_size,
-      plan = plan,
-      beep = beep,
-      timeout = timeout,
-      max_chunk_attempts = max_chunk_attempts
-    )
-  }
-  
-  structure(chat_env, class = class(original_chat))
-}
-
 #' Process prompts in parallel chunks with error handling and state management
 #' @param chat_obj Chat model object for API calls
 #' @param prompts Vector or list of prompts to process
