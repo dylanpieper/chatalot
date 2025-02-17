@@ -186,8 +186,8 @@ chat_batch(
   echo = "none",             # Output verbosity (sequential only)
   beep = TRUE,               # Toggle sound notifications
   max_retries = 3,           # Maximum retry attempts
-  initial_delay = 1,         # Initial retry delay in seconds
-  max_delay = 32,            # Maximum delay between retries
+  initial_delay = 20,        # Initial retry delay in seconds
+  max_delay = 60,            # Maximum delay between retries
   backoff_factor = 2,        # Retry backoff multiplier
   timeout = 60,              # Maximum seconds to wait for response
   ...                        # Pass parameters to the chat model
@@ -207,8 +207,8 @@ chat_parallel(
   chunk_size = 4L,           # Number of prompts to process in parallel at a time 
   max_chunk_attempts = 3L,   # Maximum retries for failed chunks
   max_retries = 3,           # Maximum retry attempts
-  initial_delay = 1,         # Initial retry delay in seconds
-  max_delay = 32,            # Maximum delay between retries
+  initial_delay = 20,        # Initial retry delay in seconds
+  max_delay = 60,            # Maximum delay between retries
   backoff_factor = 2,        # Retry backoff multiplier
   timeout = 60,              # Maximum seconds to wait for response
   ...                        # Pass parameters to the chat model
