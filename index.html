@@ -189,14 +189,14 @@
 <div class="section level3">
 <h3 id="automatic-retry">Automatic Retry<a class="anchor" aria-label="anchor" href="#automatic-retry"></a>
 </h3>
-<p>Automatically retry failed requests with backoff:</p>
+<p>Automatically retry failed requests with backoff, which serves as a wide guardrail against token/RPM limits and random errors:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_batch.html">chat_batch</a></span><span class="op">(</span></span>
-<span>  <span class="va">chat_claude</span>,        <span class="co"># Base chat model</span></span>
-<span>  max_retries <span class="op">=</span> <span class="fl">3</span>,    <span class="co"># Maximum number of retry attempts</span></span>
-<span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,  <span class="co"># Initial delay in seconds</span></span>
-<span>  max_delay <span class="op">=</span> <span class="fl">32</span>,     <span class="co"># Maximum delay between retries</span></span>
-<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>  <span class="co"># Multiply delay by this factor after each retry</span></span>
+<span>  <span class="va">chat_claude</span>,         <span class="co"># Base chat model</span></span>
+<span>  max_retries <span class="op">=</span> <span class="fl">3</span>,     <span class="co"># Maximum number of retry attempts</span></span>
+<span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,  <span class="co"># Initial delay in seconds</span></span>
+<span>  max_delay <span class="op">=</span> <span class="fl">60</span>,      <span class="co"># Maximum delay between retries</span></span>
+<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>   <span class="co"># Multiply delay by this factor after each retry</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>If a request fails, the code will:</p>
 <ol style="list-style-type: decimal">
