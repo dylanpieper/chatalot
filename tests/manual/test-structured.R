@@ -1,4 +1,4 @@
-chat <- chat_parallel()
+chat <- chat_future()
 
 type_sentiment <- type_object(
   "Extract the sentiment scores of a given text",

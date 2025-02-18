@@ -29,7 +29,7 @@ Run `library(hellmer)` to get started. This package attaches `ellmer` for easy a
 ### Sequential Processing
 
 ``` r
-chat <- chat_batch(chat_claude, system_prompt = "Reply concisely")
+chat <- chat_sequential(chat_claude, system_prompt = "Reply concisely")
 
 prompts <- list(
   "What is 2+2?",
@@ -53,10 +53,10 @@ result$chats()
 
 ### Parallel Processing
 
-Simply swap `chat_batch()` for `chat_parallel()` to enable parallel processing.
+Simply swap `chat_sequential()` for `chat_future()` to enable parallel processing.
 
 ``` r
-chat <- chat_parallel(chat_claude, system_prompt = "Reply concisely")
+chat <- chat_future(chat_claude, system_prompt = "Reply concisely")
 ```
 
 ## Features
@@ -121,7 +121,7 @@ Control verbosity with the `echo` parameter (sequential only):
 -   `"all"`: Show both prompts and responses
 
 ``` r
-chat <- chat_batch(
+chat <- chat_sequential(
   chat_claude, 
   echo = "none"
 )
@@ -132,7 +132,7 @@ chat <- chat_batch(
 Automatically retry failed requests with backoff, which serves as a wide guardrail against token/RPM limits and random errors:
 
 ``` r
-chat <- chat_batch(
+chat <- chat_sequential(
   chat_claude,         # Base chat model
   max_retries = 3,     # Maximum number of retry attempts
   initial_delay = 20,  # Initial delay in seconds
@@ -155,7 +155,7 @@ If the code detects an authorization or API key issue, it will stop immediately.
 The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the chat models.
 
 ``` r
-chat <- chat_parallel(
+chat <- chat_future(
   chat_ollama,
   model = "deepseek-r1:8b",
   system_prompt = "Reply in one sentence or less",
@@ -168,7 +168,7 @@ chat <- chat_parallel(
 Toggle sound notifications on batch completion, interruption, and error:
 
 ``` r
-chat <- chat_batch(
+chat <- chat_sequential(
   chat_claude,
   beep = TRUE
 )
@@ -176,12 +176,12 @@ chat <- chat_batch(
 
 ## Quick References
 
-### chat_batch()
+### chat_sequential()
 
 Creates a sequential batch processor.
 
 ``` r
-chat_batch(
+chat_sequential(
   chat_model = chat_claude,  # Ellmer chat model
   echo = "none",             # Output verbosity (sequential only)
   beep = TRUE,               # Toggle sound notifications
@@ -194,12 +194,12 @@ chat_batch(
 )
 ```
 
-### chat_parallel()
+### chat_future()
 
 Creates a parallel batch processor.
 
 ``` r
-chat_parallel(
+chat_future(
   chat_model = chat_claude,  # Ellmer chat model
   workers = 4,               # Number of parallel workers
   plan = "multisession",     # Options: "multisession" or "multicore"
@@ -223,13 +223,13 @@ Processes a list or vector of prompts.
 batch(
   prompts,                                  # List of prompts to process
   type_spec = NULL,                         # Type specification for structured data
-  state_path = tempfile("chat_batch_",      # Path for state persistence
+  state_path = tempfile("chat_sequential_",      # Path for state persistence
                         fileext = ".rds"),
   chunk_size = 4                            # Number of prompts per chunk (parallel only)
 )
 ```
 
-You can mimic sequential processing when using `chat_parallel()` by setting the `chunk_size = 1`, but this will likely decrease performance compared to `chat_batch()` (see `tests/manual/test-benchmark.R`).
+You can mimic sequential processing when using `chat_future()` by setting the `chunk_size = 1`, but this will likely decrease performance compared to `chat_sequential()` (see `tests/manual/test-benchmark.R`).
 
 ### Results Methods
 

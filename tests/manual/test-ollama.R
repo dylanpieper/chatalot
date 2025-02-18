@@ -1,4 +1,4 @@
-chat <- chat_parallel(
+chat <- chat_future(
   chat_ollama,
   model = "deepseek-r1:8b",
   system_prompt = "You reply in one sentence or less",

@@ -2,7 +2,7 @@ square_number <- function(num) {
   num^2
 }
 
-chat <- chat_batch()
+chat <- chat_sequential()
 
 chat$register_tool(tool(
   square_number,

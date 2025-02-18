@@ -1,4 +1,4 @@
-chat <- chat_batch()
+chat <- chat_sequential()
 
 prompts <- list(
   "What is 2+2?",

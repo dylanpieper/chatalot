@@ -1,4 +1,4 @@
-chat <- chat_parallel()
+chat <- chat_future()
 
 # Create 100 simple prompts for testing
 prompts <- c(

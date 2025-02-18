@@ -1,7 +1,7 @@
-test_that("chat_batch initialization and result class works", {
+test_that("chat_sequential initialization and result class works", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
-  chat <- chat_batch(beep = FALSE)
+  chat <- chat_sequential(beep = FALSE)
   expect_true(inherits(chat, "Chat"))
   expect_true(inherits(chat, "R6"))
   
@@ -9,10 +9,10 @@ test_that("chat_batch initialization and result class works", {
   expect_true(inherits(result$chats()[[1]], c("Chat", "R6")))
 })
 
-test_that("chat_batch processes prompts correctly", {
+test_that("chat_sequential processes prompts correctly", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
-  chat <- chat_batch(beep = FALSE)
+  chat <- chat_sequential(beep = FALSE)
   result <- chat$batch(get_test_prompts(2))
   
   expect_type(result, "list")
@@ -21,10 +21,10 @@ test_that("chat_batch processes prompts correctly", {
   expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
 })
 
-test_that("chat_batch handles structured data", {
+test_that("chat_sequential handles structured data", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
-  chat <- chat_batch(beep = FALSE)
+  chat <- chat_sequential(beep = FALSE)
   prompts <- list(
     "I love this!",
     "This is terrible."
@@ -38,10 +38,10 @@ test_that("chat_batch handles structured data", {
   expect_true(all(sapply(data, function(x) !is.null(x$score))))
 })
 
-test_that("chat_batch works with tools", {
+test_that("chat_sequential works with tools", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
-  chat <- chat_batch(beep = FALSE)
+  chat <- chat_sequential(beep = FALSE)
   chat$register_tool(get_square_tool())
   
   result <- chat$batch(list(
@@ -52,43 +52,43 @@ test_that("chat_batch works with tools", {
   expect_equal(length(result$texts()), 2)
 })
 
-test_that("chat_batch handles state persistence", {
+test_that("chat_sequential handles state persistence", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
   temp_file <- tempfile(fileext = ".rds")
   on.exit(unlink(temp_file))
   
-  chat <- chat_batch(beep = FALSE)
+  chat <- chat_sequential(beep = FALSE)
   result <- chat$batch(get_test_prompts(1), state_path = temp_file)
   
   expect_true(file.exists(temp_file))
   expect_equal(length(result$texts()), 1)
 })
 
-test_that("chat_batch respects timeout", {
+test_that("chat_sequential respects timeout", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
-  chat <- chat_batch(timeout = 30, beep = FALSE)
+  chat <- chat_sequential(timeout = 30, beep = FALSE)
   result <- chat$batch(get_test_prompts(1))
   expect_equal(length(result$texts()), 1)
 })
 
-test_that("chat_batch supports echo", {
+test_that("chat_sequential supports echo", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
-  chat <- chat_batch(echo = "text", beep = FALSE)
+  chat <- chat_sequential(echo = "text", beep = FALSE)
   result <- chat$batch(get_test_prompts(1))
   expect_equal(length(result$texts()), 1)
 })
 
-test_that("chat_batch handles errors gracefully", {
+test_that("chat_sequential handles errors gracefully", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
   
   original_key <- Sys.getenv("ANTHROPIC_API_KEY", unset = NA)
   Sys.unsetenv("ANTHROPIC_API_KEY")
   Sys.setenv(ANTHROPIC_API_KEY = "invalid_key")
   
-  chat <- chat_batch(beep = FALSE)
+  chat <- chat_sequential(beep = FALSE)
   
   on.exit({
     if (!is.na(original_key)) {

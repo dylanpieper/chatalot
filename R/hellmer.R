@@ -2,7 +2,7 @@
 #' @description
 #' Processes a batch of chat prompts one at a time in sequential order.
 #' Maintains state between runs and can resume interrupted processing.
-#' For parallel processing, use `chat_parallel()`.
+#' For parallel processing, use `chat_future()`.
 #'
 #' @param chat_model Chat model function/object (default: `ellmer::chat_claude`)
 #' @param echo Level of output to display: "none" for silent operation,
@@ -27,7 +27,7 @@
 #'     \item structured_data: Function to extract structured data (if `type_spec` was provided)
 #'   }
 #' @export
-chat_batch <- function(
+chat_sequential <- function(
     chat_model = ellmer::chat_claude,
     echo = "none",
     beep = TRUE,
@@ -67,7 +67,7 @@ chat_batch <- function(
   
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
-                             state_path = tempfile("chat_batch_", fileext = ".rds")) {
+                             state_path = tempfile("chat_", fileext = ".rds")) {
     chat_env$last_state_path <- if (is.null(chat_env$last_state_path)) {
       state_path
     } else {
@@ -97,7 +97,7 @@ chat_batch <- function(
 #' @description
 #' Processes a batch of chat prompts using parallel workers.
 #' Splits prompts into chunks for processing while maintaining state.
-#' For sequential processing, use `chat_batch()`.
+#' For sequential processing, use `chat_sequential()`.
 #'
 #' @param chat_model Chat model function/object (default: `ellmer::chat_claude`)
 #' @param workers Number of parallel workers to use (default: 4)
@@ -125,7 +125,7 @@ chat_batch <- function(
 #'     \item structured_data: Function to extract structured data (if `type_spec` was provided)
 #'   }
 #' @export
-chat_parallel <- function(
+chat_future <- function(
     chat_model = ellmer::chat_claude,
     workers = 4,
     plan = "multisession",
@@ -172,7 +172,7 @@ chat_parallel <- function(
   
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
-                             state_path = tempfile("chat_batch_", fileext = ".rds"),
+                             state_path = tempfile("chat_", fileext = ".rds"),
                              chunk_size = chat_env$chunk_size) {
     chat_env$last_state_path <- if (is.null(chat_env$last_state_path)) {
       state_path

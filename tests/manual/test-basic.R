@@ -1,4 +1,4 @@
-chat <- chat_batch(system_prompt = "Reply concisely")
+chat <- chat_sequential(system_prompt = "Reply concisely")
 
 prompts <- c(
   "What is 2+2?",

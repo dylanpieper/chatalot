@@ -33,13 +33,13 @@ specifically setting `echo = "none"` for cleaner console output:
 library(hellmer)
 
 # Sequential processing
-chat <- chat_batch(
+chat <- chat_sequential(
   chat_model = chat_claude,
   system_prompt = "Reply concisely"
 )
 
 # Parallel processing
-chat <- chat_parallel(
+chat <- chat_future(
   chat_model = chat_claude,
   system_prompt = "Reply concisely",
   workers = 4
@@ -70,10 +70,10 @@ claude <- chat_claude(
 )
 
 # Sequential processing
-chat <- chat_batch(chat_model = claude)
+chat <- chat_sequential(chat_model = claude)
 
 # Parallel processing
-chat <- chat_parallel(
+chat <- chat_future(
   chat_model = claude,
   workers = 4
 )

@@ -30,7 +30,7 @@ Focuses on synchronous batch processing with robust features:
 ```{r eval=FALSE}
 library(hellmer)
 
-chat <- chat_batch(chat_claude, system_prompt = "Reply concisely")
+chat <- chat_sequential(chat_claude, system_prompt = "Reply concisely")
 result <- chat$batch(list("What is 2+2?",
                          "Name one planet.",
                          "Is water wet?",

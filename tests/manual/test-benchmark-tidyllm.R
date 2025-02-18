@@ -8,7 +8,7 @@ library(ggplot2)
 library(RColorBrewer)
 
 run_hellmer_batch <- function() {
-  chat <- chat_batch(chat_claude, system_prompt = "Reply concisely")
+  chat <- chat_sequential(chat_claude, system_prompt = "Reply concisely")
   result <- chat$batch(list(
     "What is 2+2?",
     "Name one planet.",
@@ -19,7 +19,7 @@ run_hellmer_batch <- function() {
 }
 
 run_hellmer_parallel <- function() {
-  chat <- chat_parallel(chat_claude, system_prompt = "Reply concisely")
+  chat <- chat_future(chat_claude, system_prompt = "Reply concisely")
   result <- chat$batch(list(
     "What is 2+2?",
     "Name one planet.",
