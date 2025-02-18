@@ -185,7 +185,7 @@ chat_sequential(
   chat_model = chat_claude,  # Ellmer chat model
   echo = "none",             # Output verbosity (sequential only)
   beep = TRUE,               # Toggle sound notifications
-  max_retries = 3,           # Maximum retry attempts
+  max_retries = 3L,          # Maximum retry attempts
   initial_delay = 20,        # Initial retry delay in seconds
   max_delay = 60,            # Maximum delay between retries
   backoff_factor = 2,        # Retry backoff multiplier
@@ -201,7 +201,7 @@ Creates a parallel batch processor.
 ``` r
 chat_future(
   chat_model = chat_claude,  # Ellmer chat model
-  workers = 4,               # Number of parallel workers
+  workers = 4L,              # Number of parallel workers
   plan = "multisession",     # Options: "multisession" or "multicore"
   beep = TRUE,               # Enable sound notifications
   chunk_size = 4L,           # Number of prompts to process in parallel at a time 
