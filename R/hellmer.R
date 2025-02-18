@@ -8,7 +8,7 @@
 #' @param echo Level of output to display: "none" for silent operation,
 #'        "text" for response text only, or "all" for full interaction (default: "none")
 #' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
-#' @param max_retries Maximum number of retry attempts per prompt (default: 3)
+#' @param max_retries Maximum number of retry attempts per prompt (default: 3L)
 #' @param initial_delay Initial delay in seconds before first retry (default: 20)
 #' @param max_delay Maximum delay in seconds between retries (default: 60)
 #' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
@@ -100,13 +100,13 @@ chat_sequential <- function(
 #' For sequential processing, use `chat_sequential()`.
 #'
 #' @param chat_model Chat model function/object (default: `ellmer::chat_claude`)
-#' @param workers Number of parallel workers to use (default: 4)
+#' @param workers Number of parallel workers to use (default: 4L)
 #' @param plan Processing strategy to use: "multisession" for separate R sessions
 #'        or "multicore" for forked processes (default: "multisession")
 #' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
-#' @param chunk_size Number of prompts to process in parallel at a time (default: 4)
-#' @param max_chunk_attempts Maximum number of retry attempts for failed chunks (default: 3)
-#' @param max_retries Maximum number of retry attempts per prompt (default: 3)
+#' @param chunk_size Number of prompts to process in parallel at a time (default: 4L)
+#' @param max_chunk_attempts Maximum number of retry attempts for failed chunks (default: 3L)
+#' @param max_retries Maximum number of retry attempts per prompt (default: 3L)
 #' @param initial_delay Initial delay in seconds before first retry (default: 20)
 #' @param max_delay Maximum delay in seconds between retries (default: 60)
 #' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
@@ -127,7 +127,7 @@ chat_sequential <- function(
 #' @export
 chat_future <- function(
     chat_model = ellmer::chat_claude,
-    workers = 4,
+    workers = 4L,
     plan = "multisession",
     beep = TRUE,
     chunk_size = 4L,

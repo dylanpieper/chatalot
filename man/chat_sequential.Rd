@@ -24,7 +24,7 @@ chat_sequential(
 
 \item{beep}{Logical to play a sound on batch completion, interruption, and error (default: TRUE)}
 
-\item{max_retries}{Maximum number of retry attempts per prompt (default: 3)}
+\item{max_retries}{Maximum number of retry attempts per prompt (default: 3L)}
 
 \item{initial_delay}{Initial delay in seconds before first retry (default: 20)}
 
