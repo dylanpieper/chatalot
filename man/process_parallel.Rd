@@ -8,7 +8,7 @@ process_parallel(
   chat_obj,
   prompts,
   type_spec = NULL,
-  state_path = tempfile("chat_batch_", fileext = ".rds"),
+  state_path = tempfile("chat_", fileext = ".rds"),
   workers = 4,
   chunk_size = 4,
   plan = "multisession",

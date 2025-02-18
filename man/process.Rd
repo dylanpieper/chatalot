@@ -8,7 +8,7 @@ process(
   chat_obj,
   prompts,
   type_spec = NULL,
-  state_path = tempfile("chat_batch_", fileext = ".rds"),
+  state_path = tempfile("chat_", fileext = ".rds"),
   echo = "none",
   beep = TRUE,
   max_retries = 3L,

@@ -223,7 +223,7 @@ Processes a list or vector of prompts.
 batch(
   prompts,                                  # List of prompts to process
   type_spec = NULL,                         # Type specification for structured data
-  state_path = tempfile("chat_sequential_",      # Path for state persistence
+  state_path = tempfile("chat_",            # Path for state persistence
                         fileext = ".rds"),
   chunk_size = 4                            # Number of prompts per chunk (parallel only)
 )
