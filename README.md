@@ -129,15 +129,15 @@ chat <- chat_batch(
 
 ### Automatic Retry
 
-Automatically retry failed requests with backoff:
+Automatically retry failed requests with backoff, which serves as a wide guardrail against token/RPM limits and random errors:
 
 ``` r
 chat <- chat_batch(
-  chat_claude,        # Base chat model
-  max_retries = 3,    # Maximum number of retry attempts
-  initial_delay = 1,  # Initial delay in seconds
-  max_delay = 32,     # Maximum delay between retries
-  backoff_factor = 2  # Multiply delay by this factor after each retry
+  chat_claude,         # Base chat model
+  max_retries = 3,     # Maximum number of retry attempts
+  initial_delay = 20,  # Initial delay in seconds
+  max_delay = 60,      # Maximum delay between retries
+  backoff_factor = 2   # Multiply delay by this factor after each retry
 )
 ```
 
