@@ -22,5 +22,3 @@ result$progress()
 result$texts()
 
 result$chats()
-
-
