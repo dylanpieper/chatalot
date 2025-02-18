@@ -59,6 +59,8 @@ Simply swap `chat_sequential()` for `chat_future()` to enable parallel processin
 chat <- chat_future(chat_claude, system_prompt = "Reply concisely")
 ```
 
+The reason this function isn't named `chat_parallel()` is because this function will likely be included in ellmer ([#143](https://github.com/tidyverse/ellmer/issues/143)).
+
 ## Features
 
 ### Tooling
