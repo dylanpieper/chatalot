@@ -13,7 +13,7 @@ prompts <- c(
   "What day comes after Monday?"
 )
 
-prompts <- as.list(prompts) # works with list or vector
+#prompts <- as.list(prompts) # works with list or vector
 
 result <- chat$batch(prompts) # resumes if interrupted
 

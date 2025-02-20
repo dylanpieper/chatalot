@@ -240,17 +240,35 @@ S7::method(structured_data, batch) <- function(x) {
 #' Extract text responses from a batch
 #' @name texts.batch
 #' @param x A batch object
+#' @param flatten Logical; whether to flatten structured data into a single string (default: TRUE)
 #' @return A character vector (if original prompts were supplied as a vector) or
 #'   a list of response texts (if original prompts were supplied as a list)
-#' @importFrom purrr map_chr
-S7::method(texts, batch) <- function(x) {
+#' @importFrom purrr map map_chr
+S7::method(texts, batch) <- function(x, flatten = TRUE) {
   responses <- x@responses[seq_len(x@completed)]
-  text_values <- purrr::map_chr(responses, "text")
   
-  if (x@input_type == "vector") {
-    return(text_values)
+  extract_text <- function(response) {
+    if (is.null(response)) {
+      return(NA_character_)
+    }
+    
+    if (!is.null(response$structured_data)) {
+      return(response$structured_data)
+    }
+    
+    if (!is.null(response$text)) {
+      return(response$text)
+    }
+    
+    NA_character_
+  }
+  
+  values <- purrr::map(responses, extract_text)
+  
+  if (x@input_type == "vector" && flatten && all(purrr::map_lgl(values, is.character))) {
+    return(unlist(values))
   } else {
-    return(as.list(text_values))
+    return(values)
   }
 }
 
