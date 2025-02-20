@@ -18,7 +18,5 @@ prompts <- as.list(prompts) # works with list or vector
 result <- chat$batch(prompts) # resumes if interrupted
 
 result$progress()
-
 result$texts()
-
 result$chats()

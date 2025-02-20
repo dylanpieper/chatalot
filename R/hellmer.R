@@ -36,49 +36,41 @@ chat_sequential <- function(
     max_delay = 60,
     backoff_factor = 2,
     timeout = 60,
-    ...
-) {
+    ...) {
   chat_env <- new.env(parent = emptyenv())
   chat_env$chat_model <- if (is.function(chat_model)) {
     chat_model(echo = "none", ...)
   } else {
     chat_model
   }
-  
-  purrr::map(names(chat_env$chat_model), ~{
-    chat_env[[.x]] <- chat_env$chat_model[[.x]]
-  })
-  
-  params <- list(
-    echo = echo,
-    beep = beep,
-    timeout = timeout,
-    max_retries = max_retries,
-    initial_delay = initial_delay,
-    max_delay = max_delay,
-    backoff_factor = backoff_factor
-  )
-  
-  purrr::iwalk(params, ~{
-    chat_env[[.y]] <- .x
-  })
-  
+
+  for (n in names(chat_env$chat_model)) {
+    chat_env[[n]] <- chat_env$chat_model[[n]]
+  }
+
+  chat_env$echo <- echo
+  chat_env$beep <- beep
+  chat_env$timeout <- timeout
+  chat_env$max_retries <- max_retries
+  chat_env$initial_delay <- initial_delay
+  chat_env$max_delay <- max_delay
+  chat_env$backoff_factor <- backoff_factor
   chat_env$last_state_path <- NULL
-  
+
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
                              state_path = tempfile("chat_", fileext = ".rds")) {
-    chat_env$last_state_path <- if (is.null(chat_env$last_state_path)) {
-      state_path
+    if (is.null(chat_env$last_state_path)) {
+      chat_env$last_state_path <- state_path
     } else {
-      chat_env$last_state_path
+      state_path <- chat_env$last_state_path
     }
-    
+
     process(
       chat_obj = chat_env$chat_model,
       prompts = prompts,
       type_spec = type_spec,
-      state_path = chat_env$last_state_path,
+      state_path = state_path,
       echo = chat_env$echo,
       beep = chat_env$beep,
       max_retries = chat_env$max_retries,
@@ -88,7 +80,7 @@ chat_sequential <- function(
       timeout = chat_env$timeout
     )
   }
-  
+
   class(chat_env) <- c("Chat", "R6")
   chat_env
 }
@@ -138,7 +130,6 @@ chat_future <- function(
     backoff_factor = 2,
     timeout = 60,
     ...) {
-  
   plan <- match.arg(plan, choices = c("multisession", "multicore"))
   chat_env <- new.env(parent = emptyenv())
   chat_env$chat_model <- if (is.function(chat_model)) {
@@ -146,58 +137,51 @@ chat_future <- function(
   } else {
     chat_model
   }
-  
-  purrr::map(names(chat_env$chat_model), ~{
-    chat_env[[.x]] <- chat_env$chat_model[[.x]]
-  })
-  
-  params <- list(
-    workers = workers,
-    plan = plan,
-    beep = beep,
-    timeout = timeout,
-    max_chunk_attempts = max_chunk_attempts,
-    max_retries = max_retries,
-    initial_delay = initial_delay,
-    max_delay = max_delay,
-    backoff_factor = backoff_factor,
-    chunk_size = chunk_size
-  )
 
-  purrr::iwalk(params, ~{
-    chat_env[[.y]] <- .x
-  })
-  
+  for (n in names(chat_env$chat_model)) {
+    chat_env[[n]] <- chat_env$chat_model[[n]]
+  }
+
+  chat_env$workers <- workers
+  chat_env$plan <- plan
+  chat_env$beep <- beep
+  chat_env$timeout <- timeout
+  chat_env$max_chunk_attempts <- max_chunk_attempts
+  chat_env$max_retries <- max_retries
+  chat_env$initial_delay <- initial_delay
+  chat_env$max_delay <- max_delay
+  chat_env$backoff_factor <- backoff_factor
+  chat_env$chunk_size <- chunk_size
   chat_env$last_state_path <- NULL
-  
+
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
                              state_path = tempfile("chat_", fileext = ".rds"),
                              chunk_size = chat_env$chunk_size) {
-    chat_env$last_state_path <- if (is.null(chat_env$last_state_path)) {
-      state_path
+    if (is.null(chat_env$last_state_path)) {
+      chat_env$last_state_path <- state_path
     } else {
-      chat_env$last_state_path
+      state_path <- chat_env$last_state_path
     }
-    
-    process_parallel(
+
+    process_future(
       chat_obj = chat_env$chat_model,
       prompts = prompts,
       type_spec = type_spec,
-      state_path = chat_env$last_state_path,
+      state_path = state_path,
       workers = chat_env$workers,
+      chunk_size = chunk_size,
       plan = chat_env$plan,
       beep = chat_env$beep,
-      chunk_size = chunk_size,
+      timeout = chat_env$timeout,
       max_chunk_attempts = chat_env$max_chunk_attempts,
       max_retries = chat_env$max_retries,
       initial_delay = chat_env$initial_delay,
       max_delay = chat_env$max_delay,
-      backoff_factor = chat_env$backoff_factor,
-      timeout = chat_env$timeout
+      backoff_factor = chat_env$backoff_factor
     )
   }
-  
+
   class(chat_env) <- c("Chat", "R6")
   chat_env
 }

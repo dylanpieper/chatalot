@@ -5,6 +5,8 @@
 \title{Extract text responses from a batch}
 \arguments{
 \item{x}{A batch object}
+
+\item{flatten}{Logical; whether to flatten structured data into a single string (default: TRUE)}
 }
 \value{
 A character vector (if original prompts were supplied as a vector) or

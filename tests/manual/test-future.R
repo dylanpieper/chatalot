@@ -1,4 +1,4 @@
-chat <- chat_future()
+chat <- chat_future(chat_openai)
 
 prompts <- c(
   "What is 2+2?",
@@ -15,6 +15,6 @@ prompts <- c(
 
 result <- chat$batch(prompts, chunk_size = 4) # resumes if interrupted
 
+result$progress()
 result$texts()
-
 result$chats()

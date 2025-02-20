@@ -2,7 +2,7 @@ square_number <- function(num) {
   num^2
 }
 
-chat <- chat_sequential()
+chat <- chat_future(chat_openai)
 
 chat$register_tool(tool(
   square_number,
@@ -25,6 +25,6 @@ prompts <- list(
 
 result <- chat$batch(prompts) # resumes if interrupted
 
+result$progress()
 result$texts()
-
 result$chats()
