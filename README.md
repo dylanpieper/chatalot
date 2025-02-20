@@ -135,8 +135,8 @@ Automatically retry failed requests with backoff, which serves as a wide guardra
 
 ``` r
 chat <- chat_sequential(
-  chat_claude,         # Base chat model
-  max_retries = 3,     # Maximum number of retry attempts
+  chat_claude,         # Ellmer chat model
+  max_retries = 3,     # Maximum retry attempts
   initial_delay = 20,  # Initial delay in seconds
   max_delay = 60,      # Maximum delay between retries
   backoff_factor = 2   # Multiply delay by this factor after each retry
@@ -188,7 +188,7 @@ chat_sequential(
   echo = "none",             # Output verbosity (sequential only)
   beep = TRUE,               # Toggle sound notifications
   max_retries = 3L,          # Maximum retry attempts
-  initial_delay = 20,        # Initial retry delay in seconds
+  initial_delay = 20,        # Initial delay in seconds
   max_delay = 60,            # Maximum delay between retries
   backoff_factor = 2,        # Retry backoff multiplier
   timeout = 60,              # Maximum seconds to wait for response
@@ -209,7 +209,7 @@ chat_future(
   chunk_size = 4L,           # Number of prompts to process in parallel at a time 
   max_chunk_attempts = 3L,   # Maximum retries for failed chunks
   max_retries = 3,           # Maximum retry attempts
-  initial_delay = 20,        # Initial retry delay in seconds
+  initial_delay = 20,        # Initial delay in seconds
   max_delay = 60,            # Maximum delay between retries
   backoff_factor = 2,        # Retry backoff multiplier
   timeout = 60,              # Maximum seconds to wait for response
@@ -217,7 +217,7 @@ chat_future(
 )
 ```
 
-### batch\$batch()
+### chat\$batch()
 
 Processes a list or vector of prompts.
 
