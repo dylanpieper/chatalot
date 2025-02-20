@@ -242,5 +242,5 @@ You can mimic sequential processing when using `chat_future()` by setting the `c
 
 ## Further Reading
 
--   [Using Ellmer Chat Models](https://dylanpieper.github.io/hellmer/articles/using-chat-models.html): Are you wondering if you can use `chat_claude()` as a user-defined object instead of the `chat_claude` function? Of course you can! Learn more the two methods and the default interface.
+-   [Using Ellmer Chat Models](https://dylanpieper.github.io/hellmer/articles/using-chat-models.html): Are you wondering if you can use `chat_claude()` as a user-defined object instead of the `chat_claude` function? Of course you can! Learn more about the two methods and the default interface.
 -   [Comparing Packages for Batching LLM Tasks](https://dylanpieper.github.io/hellmer/articles/comparing-packages.html)
