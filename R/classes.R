@@ -243,7 +243,7 @@ S7::method(structured_data, batch) <- function(x) {
 #' @param flatten Logical; whether to flatten structured data into a single string (default: TRUE)
 #' @return A character vector (if original prompts were supplied as a vector) or
 #'   a list of response texts (if original prompts were supplied as a list)
-#' @importFrom purrr map map_chr
+#' @importFrom purrr map map_lgl
 S7::method(texts, batch) <- function(x, flatten = TRUE) {
   responses <- x@responses[seq_len(x@completed)]
   
