@@ -53,8 +53,6 @@ result$chats()
 
 ### Parallel Processing
 
-Simply swap `chat_sequential()` for `chat_future()` to enable parallel processing.
-
 ``` r
 chat <- chat_future(chat_claude, system_prompt = "Reply concisely")
 ```
