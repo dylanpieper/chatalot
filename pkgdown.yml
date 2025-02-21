@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   comparing-packages: comparing-packages.html
   using-chat-models: using-chat-models.html
-last_built: 2025-02-20T21:29Z
+last_built: 2025-02-21T14:02Z
 urls:
   reference: https://dylanpieper.github.io/hellmer/reference
   article: https://dylanpieper.github.io/hellmer/articles
