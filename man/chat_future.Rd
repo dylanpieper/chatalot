@@ -5,7 +5,7 @@
 \title{Process a batch of prompts in parallel}
 \usage{
 chat_future(
-  chat_model = ellmer::chat_claude,
+  chat_model = NULL,
   workers = 4L,
   plan = "multisession",
   beep = TRUE,
@@ -20,7 +20,7 @@ chat_future(
 )
 }
 \arguments{
-\item{chat_model}{Chat model function/object (default: \code{ellmer::chat_claude})}
+\item{chat_model}{ellmer chat model function or object (e.g., \code{ellmer::chat_claude})}
 
 \item{workers}{Number of parallel workers to use (default: 4L)}
 

@@ -4,7 +4,7 @@
 #' Maintains state between runs and can resume interrupted processing.
 #' For parallel processing, use `chat_future()`.
 #'
-#' @param chat_model Chat model function/object (default: `ellmer::chat_claude`)
+#' @param chat_model ellmer chat model function or object (e.g., \code{ellmer::chat_claude})
 #' @param echo Level of output to display: "none" for silent operation,
 #'        "text" for response text only, or "all" for full interaction (default: "none")
 #' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
@@ -28,7 +28,7 @@
 #'   }
 #' @export
 chat_sequential <- function(
-    chat_model = ellmer::chat_claude,
+    chat_model = NULL,
     echo = "none",
     beep = TRUE,
     max_retries = 3L,
@@ -37,6 +37,10 @@ chat_sequential <- function(
     backoff_factor = 2,
     timeout = 60,
     ...) {
+  if (is.null(chat_model)) {
+    stop("Define a ellmer chat model (e.g., chat_openai or chat_claude)")
+  }
+
   chat_env <- new.env(parent = emptyenv())
   chat_env$chat_model <- if (is.function(chat_model)) {
     chat_model(echo = "none", ...)
@@ -91,7 +95,7 @@ chat_sequential <- function(
 #' Splits prompts into chunks for processing while maintaining state.
 #' For sequential processing, use `chat_sequential()`.
 #'
-#' @param chat_model Chat model function/object (default: `ellmer::chat_claude`)
+#' @param chat_model ellmer chat model function or object (e.g., \code{ellmer::chat_claude})
 #' @param workers Number of parallel workers to use (default: 4L)
 #' @param plan Processing strategy to use: "multisession" for separate R sessions
 #'        or "multicore" for forked processes (default: "multisession")
@@ -118,7 +122,7 @@ chat_sequential <- function(
 #'   }
 #' @export
 chat_future <- function(
-    chat_model = ellmer::chat_claude,
+    chat_model = NULL,
     workers = 4L,
     plan = "multisession",
     beep = TRUE,
@@ -130,6 +134,10 @@ chat_future <- function(
     backoff_factor = 2,
     timeout = 60,
     ...) {
+  if (is.null(chat_model)) {
+    stop("Define a ellmer chat_model (e.g., chat_openai or chat_claude)")
+  }
+
   plan <- match.arg(plan, choices = c("multisession", "multicore"))
   chat_env <- new.env(parent = emptyenv())
   chat_env$chat_model <- if (is.function(chat_model)) {

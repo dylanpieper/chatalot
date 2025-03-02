@@ -5,7 +5,7 @@
 \title{Process a batch of prompts in sequence}
 \usage{
 chat_sequential(
-  chat_model = ellmer::chat_claude,
+  chat_model = NULL,
   echo = "none",
   beep = TRUE,
   max_retries = 3L,
@@ -17,7 +17,7 @@ chat_sequential(
 )
 }
 \arguments{
-\item{chat_model}{Chat model function/object (default: \code{ellmer::chat_claude})}
+\item{chat_model}{ellmer chat model function or object (e.g., \code{ellmer::chat_claude})}
 
 \item{echo}{Level of output to display: "none" for silent operation,
 "text" for response text only, or "all" for full interaction (default: "none")}
