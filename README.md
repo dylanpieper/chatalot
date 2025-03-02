@@ -1,6 +1,6 @@
 # hellmer <img src="man/figures/hellmer-hex.png" align="right" width="140"/>
 
-This package enables sequential or parallel batch processing for [chat models](https://ellmer.tidyverse.org/reference/index.html) from [ellmer](https://github.com/tidyverse/ellmer).
+hellmer enables sequential or parallel batch processing for [chat models](https://ellmer.tidyverse.org/reference/index.html) from [ellmer](https://github.com/tidyverse/ellmer).
 
 ## Overview
 
@@ -22,7 +22,7 @@ devtools::install_github("dylanpieper/hellmer")
 
 ## Load Package
 
-Run `library(hellmer)` to get started. This package attaches `ellmer` for easy access to the chat models.
+Run `library(hellmer)` to load the package and attach `ellmer` for easy access to the chat models.
 
 ## Basic Usage
 

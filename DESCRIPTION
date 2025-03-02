@@ -3,7 +3,7 @@ Title: Batch Processing for Chat Models
 Version: 0.1.0
 Authors@R: 
     person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
-Description: This package enables sequential or parallel batch processing for chat models from 'ellmer'.
+Description: hellmer enables sequential or parallel batch processing for chat models from 'ellmer'.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
