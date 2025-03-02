@@ -152,13 +152,12 @@ If the code detects an authorization or API key issue, it will stop immediately.
 
 ### Timeout Handling
 
-The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the chat models.
+The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the chat model functions.
 
 ``` r
 chat <- chat_future(
-  chat_ollama,
-  model = "deepseek-r1:8b",
-  system_prompt = "Reply in one sentence or less",
+  chat_claude,
+  system_prompt = "Reply concisely",
   timeout = 60
 )
 ```
@@ -241,4 +240,3 @@ You can mimic sequential processing when using `chat_future()` by setting the `c
 ## Further Reading
 
 -   [Using Ellmer Chat Models](https://dylanpieper.github.io/hellmer/articles/using-chat-models.html): Are you wondering if you can use `chat_claude()` as a user-defined object instead of the `chat_claude` function? Of course you can! Learn more about the two methods and the default interface.
--   [Comparing Packages for Batching LLM Tasks](https://dylanpieper.github.io/hellmer/articles/comparing-packages.html)
