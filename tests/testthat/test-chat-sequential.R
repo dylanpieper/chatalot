@@ -68,7 +68,7 @@ test_that("chat_sequential handles state persistence", {
 test_that("chat_sequential respects timeout", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 
-  chat <- chat_sequential(timeout = 30, beep = FALSE)
+  chat <- chat_sequential(ellmer::chat_claude, timeout = 30, beep = FALSE)
   result <- chat$batch(get_test_prompts(1))
   expect_equal(length(result$texts()), 1)
 })
