@@ -1,4 +1,4 @@
-chat <- chat_sequential()
+chat <- chat_sequential(ellmer::chat_openai)
 
 prompts <- list(
   "What is 2+2?",

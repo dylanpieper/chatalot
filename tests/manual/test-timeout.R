@@ -1,4 +1,4 @@
-chat <- chat_sequential(timeout = 60)
+chat <- chat_sequential(ellmer::chat_openai, timeout = 60)
 
 prompts <- c(
   "What is 2+2?",
@@ -22,5 +22,3 @@ result$progress()
 result$texts()
 
 result$chats()
-
-

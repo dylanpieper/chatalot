@@ -1,4 +1,4 @@
-chat <- chat_future()
+chat <- chat_future(ellmer::chat_openai)
 
 # Create 100 simple prompts for testing
 prompts <- c(
@@ -13,7 +13,7 @@ prompts <- c(
   "What is 100÷4?",
   "What is 9+9?",
   "What is 3x8?",
-  
+
   # Nature
   "Name one planet.",
   "What color is the sky?",
@@ -25,7 +25,7 @@ prompts <- c(
   "Do cats have tails?",
   "Are clouds in the sky?",
   "Do trees have leaves?",
-  
+
   # Colors
   "Name a primary color.",
   "What color is a banana?",
@@ -37,7 +37,7 @@ prompts <- c(
   "What color are oranges?",
   "What color is the night sky?",
   "What color is gold?",
-  
+
   # Time
   "What day comes after Monday?",
   "How many days are in a week?",
@@ -49,7 +49,7 @@ prompts <- c(
   "How many hours are in a day?",
   "What month comes before December?",
   "How many minutes are in an hour?",
-  
+
   # Simple Facts
   "Is ice cold?",
   "Do humans have two eyes?",
@@ -61,7 +61,7 @@ prompts <- c(
   "Do books have pages?",
   "Is metal hard?",
   "Do phones ring?",
-  
+
   # Animals
   "Do dogs bark?",
   "Can birds fly?",
@@ -73,7 +73,7 @@ prompts <- c(
   "Can penguins swim?",
   "Do monkeys climb?",
   "Can bears hibernate?",
-  
+
   # Food
   "Is pizza a food?",
   "Are apples fruits?",
@@ -85,7 +85,7 @@ prompts <- c(
   "Are lemons sour?",
   "Is honey sweet?",
   "Is soup liquid?",
-  
+
   # Numbers
   "Count to 3.",
   "Is 5 greater than 3?",
@@ -97,7 +97,7 @@ prompts <- c(
   "Is 15 greater than 10?",
   "Is 1 the first number?",
   "Is 50 half of 100?",
-  
+
   # Greetings
   "Say hello.",
   "Say goodbye.",
@@ -109,7 +109,7 @@ prompts <- c(
   "Say sorry.",
   "Say good afternoon.",
   "Say hi.",
-  
+
   # True/False
   "True or false: Water is wet.",
   "True or false: Birds can fly.",
@@ -127,5 +127,5 @@ prompts <- c(
 result <- chat$batch(prompts, chunk_size = 4) # resumes if interrupted
 
 # Get results
-result$texts()  # Get all response texts
-result$chats()  # Get all chat objects
+result$texts() # Get all response texts
+result$chats() # Get all chat objects

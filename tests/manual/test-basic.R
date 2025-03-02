@@ -1,4 +1,4 @@
-chat <- chat_sequential(system_prompt = "Reply concisely")
+chat <- chat_sequential(ellmer::chat_openai, system_prompt = "Reply concisely")
 
 prompts <- c(
   "What is 2+2?",
@@ -13,7 +13,7 @@ prompts <- c(
   "What day comes after Monday?"
 )
 
-#prompts <- as.list(prompts) # works with list or vector
+# prompts <- as.list(prompts) # works with list or vector
 
 result <- chat$batch(prompts) # resumes if interrupted
 

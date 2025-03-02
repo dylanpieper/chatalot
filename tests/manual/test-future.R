@@ -1,4 +1,4 @@
-chat <- chat_future(chat_openai)
+chat <- chat_future(ellmer::chat_openai)
 
 prompts <- c(
   "What is 2+2?",

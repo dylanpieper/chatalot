@@ -2,7 +2,7 @@ square_number <- function(num) {
   num^2
 }
 
-chat <- chat_future(chat_openai)
+chat <- chat_future(ellmer::chat_openai)
 
 chat$register_tool(tool(
   square_number,

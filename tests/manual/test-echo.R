@@ -1,4 +1,4 @@
-chat <- chat_sequential(echo = "text") # or "all"
+chat <- chat_sequential(ellmer::chat_openai, echo = "text") # or "all"
 
 prompts <- c(
   "What is 2+2?",
@@ -22,5 +22,3 @@ result$progress()
 result$texts()
 
 result$chats()
-
-
