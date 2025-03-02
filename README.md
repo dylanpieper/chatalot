@@ -6,7 +6,7 @@ This package enables sequential or parallel batch processing for [chat models](h
 
 Process multiple chat interactions with:
 
--   Ellmer's [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html)
+-   [Tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html)
 -   State persistence and recovery
 -   Progress tracking
 -   Configurable output verbosity
@@ -129,7 +129,7 @@ chat <- chat_sequential(
 
 ### Automatic Retry
 
-Automatically retry failed requests with backoff, which serves as a wide guardrail against token/RPM limits and random errors:
+Automatically retry failed requests with backoff, which serves as a wide guardrail against errors while ellmer and httr2 guard against API-specific limits/rules:
 
 ``` r
 chat <- chat_sequential(
