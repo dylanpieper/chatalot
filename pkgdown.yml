@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   using-chat-models: using-chat-models.html
-last_built: 2025-03-02T20:08Z
+last_built: 2025-03-02T20:13Z
 urls:
   reference: https://dylanpieper.github.io/hellmer/reference
   article: https://dylanpieper.github.io/hellmer/articles
