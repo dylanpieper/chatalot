@@ -76,7 +76,7 @@ test_that("chat_sequential respects timeout", {
 test_that("chat_sequential supports echo", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 
-  chat <- chat_sequential(echo = "text", beep = FALSE)
+  chat <- chat_sequential(ellmer::chat_claude, echo = "text", beep = FALSE)
   result <- chat$batch(get_test_prompts(1))
   expect_equal(length(result$texts()), 1)
 })
