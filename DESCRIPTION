@@ -17,13 +17,11 @@ VignetteBuilder: knitr
 Imports: 
     beepr,
     cli,
-    ellmer,
     future,
     furrr,
     purrr,
     R.utils,
     S7,
     utils
-Depends:
-    ellmer
+Depends: ellmer
 URL: https://dylanpieper.github.io/hellmer/
