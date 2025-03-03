@@ -24,4 +24,6 @@ Imports:
     R.utils,
     S7,
     utils
+Depends:
+    ellmer
 URL: https://dylanpieper.github.io/hellmer/
