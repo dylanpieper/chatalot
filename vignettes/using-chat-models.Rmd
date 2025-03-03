@@ -64,6 +64,7 @@ library(hellmer)
 
 # Create and configure a chat model
 claude <- chat_claude(
+  model = "claude-3-7-sonnet-latest",
   system_prompt = "Reply concisely",
   echo = "none",
   max_tokens = 1000
