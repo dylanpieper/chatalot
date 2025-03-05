@@ -360,8 +360,7 @@ process_future <- function(
 
   if (is.null(chunk_size)) {
     chunk_size <- max(1L, ceiling(length(prompts) / 10))
-    cli::cli_alert_info("Using default chunk size, which is 10% of the number of prompts")
-    cli::cli_alert_info(sprintf("Processing %d prompts per chunk", chunk_size))
+    cli::cli_alert_info("Defaulting to {.field chunk_size} of {.val {chunk_size}} prompts per chunk")
   }
 
   if (file.exists(state_path)) {
