@@ -16,19 +16,15 @@ Process multiple chat interactions with:
 
 ## Installation
 
+You can install `hellmer` from CRAN with:
+
 ``` r
-devtools::install_github("dylanpieper/hellmer")
+install.packages("hellmer")
 ```
 
-## Load Package
+## Setup API Keys
 
-Run `library(hellmer)` to load the package and attach `ellmer` for easy access to the chat models.
-
-To finish the instructions on setting an API key, I'll provide both the RStudio approach you started and the alternative methods:
-
-## Set API Key
-
-I recommend the `usethis` package to add API keys to your `.Renviron` such as `OPENAI_API_KEY=your-key`.
+`ellmer` will look for API keys in your environmental variables. I recommend the `usethis` package to setup API keys in your `.Renviron` such as `OPENAI_API_KEY=your-key`.
 
 ``` r
 usethis::edit_r_environ(scope = c("user", "project"))
@@ -39,6 +35,8 @@ usethis::edit_r_environ(scope = c("user", "project"))
 ### Sequential Processing
 
 ``` r
+library(hellmer)
+
 chat <- chat_sequential(chat_openai, 
                         system_prompt = "Reply concisely, one sentence")
 
