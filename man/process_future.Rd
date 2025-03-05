@@ -32,7 +32,7 @@ process_future(
 
 \item{workers}{Number of parallel workers (default: number of CPU cores)}
 
-\item{chunk_size}{Number of prompts per chunk (default: length of prompts / 4)}
+\item{chunk_size}{Number of prompts to process in parallel at a time (default: 10\% of the number of prompts)}
 
 \item{plan}{Parallel backend: "multisession" or "multicore"}
 

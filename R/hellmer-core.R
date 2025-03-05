@@ -308,7 +308,7 @@ process <- function(
 #' @param type_spec Optional type specification for structured data extraction
 #' @param state_path Path to save intermediate state
 #' @param workers Number of parallel workers (default: number of CPU cores)
-#' @param chunk_size Number of prompts per chunk (default: length of prompts / 4)
+#' @param chunk_size Number of prompts to process in parallel at a time (default: 10% of the number of prompts)
 #' @param plan Parallel backend: "multisession" or "multicore"
 #' @param beep Play sound on completion/error (default: TRUE)
 #' @param timeout Maximum seconds per prompt (default: 60)
@@ -359,7 +359,9 @@ process_future <- function(
   original_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
 
   if (is.null(chunk_size)) {
-    chunk_size <- max(1L, total_prompts %/% 4L)
+    chunk_size <- max(1L, ceiling(length(prompts) / 10))
+    cli::cli_alert_info("Using default chunk size, which is 10% of the number of prompts")
+    cli::cli_alert_info(sprintf("Processing %d prompts per chunk", chunk_size))
   }
 
   if (file.exists(state_path)) {
