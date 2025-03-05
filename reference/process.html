@@ -49,12 +49,12 @@
 <span>  type_spec <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  state_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"chat_"</span>, fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span>,</span>
 <span>  echo <span class="op">=</span> <span class="st">"none"</span>,</span>
-<span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3L</span>,</span>
 <span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  max_delay <span class="op">=</span> <span class="fl">32</span>,</span>
+<span>  max_delay <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  timeout <span class="op">=</span> <span class="fl">60</span></span>
+<span>  timeout <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>  beep <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -82,10 +82,6 @@
 <dd><p>Echo level ("none", "text", or "all")</p></dd>
 
 
-<dt id="arg-beep">beep<a class="anchor" aria-label="anchor" href="#arg-beep"></a></dt>
-<dd><p>Play sound on completion, interruption, and error</p></dd>
-
-
 <dt id="arg-max-retries">max_retries<a class="anchor" aria-label="anchor" href="#arg-max-retries"></a></dt>
 <dd><p>Maximum number of retry attempts per prompt</p></dd>
 
@@ -104,6 +100,10 @@
 
 <dt id="arg-timeout">timeout<a class="anchor" aria-label="anchor" href="#arg-timeout"></a></dt>
 <dd><p>Maximum time in seconds to wait for each prompt response</p></dd>
+
+
+<dt id="arg-beep">beep<a class="anchor" aria-label="anchor" href="#arg-beep"></a></dt>
+<dd><p>Play sound on completion, interruption, and error</p></dd>
 
 </dl></div>
     <div class="section level2">

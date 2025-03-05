@@ -48,16 +48,16 @@
 <span>  <span class="va">prompts</span>,</span>
 <span>  type_spec <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  state_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"chat_"</span>, fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span>,</span>
-<span>  workers <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>  chunk_size <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  workers <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  chunk_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  plan <span class="op">=</span> <span class="st">"multisession"</span>,</span>
-<span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  timeout <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>  max_chunk_attempts <span class="op">=</span> <span class="fl">3L</span>,</span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3L</span>,</span>
 <span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  max_delay <span class="op">=</span> <span class="fl">32</span>,</span>
-<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span></span>
+<span>  max_delay <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  timeout <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>  beep <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -82,23 +82,15 @@
 
 
 <dt id="arg-workers">workers<a class="anchor" aria-label="anchor" href="#arg-workers"></a></dt>
-<dd><p>Number of parallel workers (default: 4)</p></dd>
+<dd><p>Number of parallel workers (default: number of CPU cores)</p></dd>
 
 
 <dt id="arg-chunk-size">chunk_size<a class="anchor" aria-label="anchor" href="#arg-chunk-size"></a></dt>
-<dd><p>Number of prompts per chunk (default: 4)</p></dd>
+<dd><p>Number of prompts to process in parallel at a time (default: 10% of the number of prompts)</p></dd>
 
 
 <dt id="arg-plan">plan<a class="anchor" aria-label="anchor" href="#arg-plan"></a></dt>
 <dd><p>Parallel backend: "multisession" or "multicore"</p></dd>
-
-
-<dt id="arg-beep">beep<a class="anchor" aria-label="anchor" href="#arg-beep"></a></dt>
-<dd><p>Play sound on completion/error (default: TRUE)</p></dd>
-
-
-<dt id="arg-timeout">timeout<a class="anchor" aria-label="anchor" href="#arg-timeout"></a></dt>
-<dd><p>Maximum seconds per prompt (default: 60)</p></dd>
 
 
 <dt id="arg-max-chunk-attempts">max_chunk_attempts<a class="anchor" aria-label="anchor" href="#arg-max-chunk-attempts"></a></dt>
@@ -119,6 +111,14 @@
 
 <dt id="arg-backoff-factor">backoff_factor<a class="anchor" aria-label="anchor" href="#arg-backoff-factor"></a></dt>
 <dd><p>Delay multiplier after each retry (default: 2)</p></dd>
+
+
+<dt id="arg-timeout">timeout<a class="anchor" aria-label="anchor" href="#arg-timeout"></a></dt>
+<dd><p>Maximum seconds per prompt (default: 60)</p></dd>
+
+
+<dt id="arg-beep">beep<a class="anchor" aria-label="anchor" href="#arg-beep"></a></dt>
+<dd><p>Play sound on completion/error (default: TRUE)</p></dd>
 
 </dl></div>
     <div class="section level2">

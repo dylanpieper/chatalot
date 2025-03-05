@@ -126,7 +126,39 @@
 <dd><p>Internal state tracking</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>Returns an S7 class object of class "batch" that represents a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides methods for:</p><ul><li><p>Extracting text responses via <code><a href="texts.html">texts()</a></code></p></li>
+<li><p>Accessing full chat objects via <code><a href="chats.html">chats()</a></code></p></li>
+<li><p>Tracking processing progress via <code><a href="progress.html">progress()</a></code></p></li>
+<li><p>Extracting structured data via <code><a href="structured_data.html">structured_data()</a></code> when a type specification is provided</p></li>
+</ul><p>The batch object manages prompt processing, tracks completion status, and handles retries for failed requests.</p>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># ellmer::has_credentials("openai")</span></span></span>
+<span class="r-in"><span><span class="co"># Create a chat processor</span></span></span>
+<span class="r-in"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="fu">chat_openai</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Process a batch of prompts</span></span></span>
+<span class="r-in"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"What is R?"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"Explain base R versus tidyverse"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"Explain vectors, lists, and data frames"</span></span></span>
+<span class="r-in"><span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Check the progress if interrupted</span></span></span>
+<span class="r-in"><span><span class="va">batch</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Return the responses as a vector or list</span></span></span>
+<span class="r-in"><span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Return the chat objects</span></span></span>
+<span class="r-in"><span><span class="va">batch</span><span class="op">$</span><span class="fu">chats</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

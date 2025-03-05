@@ -63,6 +63,30 @@
     <p>A list of structured data objects</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># ellmer::has_credentials("openai")</span></span></span>
+<span class="r-in"><span><span class="co"># Create a chat processor with type specification</span></span></span>
+<span class="r-in"><span><span class="va">book_type</span> <span class="op">&lt;-</span> <span class="fu">type_object</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  title <span class="op">=</span> <span class="fu">type_string</span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  author <span class="op">=</span> <span class="fu">type_string</span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  year <span class="op">=</span> <span class="fu">type_integer</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Create chat processor</span></span></span>
+<span class="r-in"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="fu">chat_openai</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Process a batch of prompts with type spec</span></span></span>
+<span class="r-in"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"Return info about 1984 by George Orwell"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"Return info about Brave New World by Aldous Huxley"</span></span></span>
+<span class="r-in"><span><span class="op">)</span>, type_spec <span class="op">=</span> <span class="va">book_type</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Extract structured data</span></span></span>
+<span class="r-in"><span><span class="va">batch</span><span class="op">$</span><span class="fu">structured_data</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

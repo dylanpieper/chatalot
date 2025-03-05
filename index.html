@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Batch Processing for Chat Models">
-<meta name="description" content="Batch process chats from ellmer in sequence or parallel.">
-<meta property="og:description" content="Batch process chats from ellmer in sequence or parallel.">
+<meta name="description" content="Provides tools for efficient batch processing of multiple chat model interactions. Building on the ellmer package, it enables both sequential and parallel processing of chat completions with robust error handling, progress tracking, and retry capabilities. The package implements methods for distributing workloads across multiple R sessions or cores using the future framework, managing authentication errors, and capturing structured results from large batches of prompts.">
+<meta property="og:description" content="Provides tools for efficient batch processing of multiple chat model interactions. Building on the ellmer package, it enables both sequential and parallel processing of chat completions with robust error handling, progress tracking, and retry capabilities. The package implements methods for distributing workloads across multiple R sessions or cores using the future framework, managing authentication errors, and capturing structured results from large batches of prompts.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -82,6 +82,14 @@
 <h2 id="load-package">Load Package<a class="anchor" aria-label="anchor" href="#load-package"></a>
 </h2>
 <p>Run <code><a href="https://dylanpieper.github.io/hellmer/">library(hellmer)</a></code> to load the package and attach <code>ellmer</code> for easy access to the chat models.</p>
+<p>To finish the instructions on setting an API key, I’ll provide both the RStudio approach you started and the alternative methods:</p>
+</div>
+<div class="section level2">
+<h2 id="set-api-key">Set API Key<a class="anchor" aria-label="anchor" href="#set-api-key"></a>
+</h2>
+<p>I recommend the <code>usethis</code> package to add API keys to your <code>.Renviron</code> such as <code>OPENAI_API_KEY=your-key</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu">edit_r_environ</span><span class="op">(</span>scope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"user"</span>, <span class="st">"project"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="basic-usage">Basic Usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
@@ -89,22 +97,27 @@
 <div class="section level3">
 <h3 id="sequential-processing">Sequential Processing<a class="anchor" aria-label="anchor" href="#sequential-processing"></a>
 </h3>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="va">chat_claude</span>, system_prompt <span class="op">=</span> <span class="st">"Reply concisely"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="va">chat_openai</span>, </span>
+<span>                        system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="st">"What is 2+2?"</span>,</span>
-<span>  <span class="st">"Name one planet."</span>,</span>
-<span>  <span class="st">"Is water wet?"</span>,</span>
-<span>  <span class="st">"What color is the sky?"</span>,</span>
-<span>  <span class="st">"Count to 3."</span>,</span>
-<span>  <span class="st">"Say hello."</span>,</span>
-<span>  <span class="st">"Name a primary color."</span>,</span>
-<span>  <span class="st">"What is 5x5?"</span>,</span>
-<span>  <span class="st">"True or false: Birds can fly."</span>,</span>
-<span>  <span class="st">"What day comes after Monday?"</span></span>
+<span>  <span class="st">"What is R?"</span>,</span>
+<span>  <span class="st">"Explain base R versus tidyverse"</span>,</span>
+<span>  <span class="st">"Explain vectors, lists, and data frames"</span>,</span>
+<span>  <span class="st">"How do environments work in R?"</span>,</span>
+<span>  <span class="st">"Compare R and Python for data analysis"</span>,</span>
+<span>  <span class="st">"Explain lazy evaluation in R"</span>,</span>
+<span>  <span class="st">"What are R's apply functions?"</span>,</span>
+<span>  <span class="st">"How do R packages work?"</span>,</span>
+<span>  <span class="st">"Explain R's object-oriented programming systems."</span>,</span>
+<span>  <span class="st">"What are closures in R?"</span>,</span>
+<span>  <span class="st">"Describe R memory management"</span>,</span>
+<span>  <span class="st">"How does R handle missing values?"</span>,</span>
+<span>  <span class="st">"Explain R's integration with C++"</span>,</span>
+<span>  <span class="st">"Compare dplyr and data.table approaches"</span>,</span>
+<span>  <span class="st">"What are R formulas and when to use them?"</span></span>
 <span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">result</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span>
@@ -114,9 +127,29 @@
 <div class="section level3">
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="va">chat_claude</span>, system_prompt <span class="op">=</span> <span class="st">"Reply concisely"</span><span class="op">)</span></span></code></pre></div>
-<p>The reason this function isn’t named <code>chat_parallel()</code> is because it will likely be included in ellmer (<a href="https://github.com/tidyverse/ellmer/issues/143" class="external-link">#143</a>).</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="va">chat_openai</span>, </span>
+<span>                    system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="performance-vs-safety-trade-off">Performance vs Safety Trade-Off<a class="anchor" aria-label="anchor" href="#performance-vs-safety-trade-off"></a>
+</h4>
+<p>When using parallel processing with <code>chat_future</code>, there’s a trade-off between performance and safety:</p>
+<ul>
+<li>
+<strong>Maximum Performance</strong>: Setting <code>chunk_size</code> equal to the number of prompts results in a 4-5x faster processing speed</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<ul>
+<li>
+<strong>Maximum Safety</strong>: Using a smaller <code>chunk_size</code> ensures state is saved more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)</li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="naming-note">Naming Note<a class="anchor" aria-label="anchor" href="#naming-note"></a>
+</h4>
+<p><code>chat_future</code> isn’t named <code>chat_parallel</code> because the latter will be included in <code>ellmer</code> (<a href="https://github.com/tidyverse/ellmer/issues/143" class="external-link">#143</a>).</p>
+</div>
 </div>
 </div>
 <div class="section level2">
@@ -126,7 +159,7 @@
 <h3 id="tooling">Tooling<a class="anchor" aria-label="anchor" href="#tooling"></a>
 </h3>
 <p>Register and use tools/function calling:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">square_number</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">num</span><span class="op">)</span> <span class="va">num</span><span class="op">^</span><span class="fl">2</span></span>
 <span></span>
 <span><span class="va">chat</span><span class="op">$</span><span class="fu">register_tool</span><span class="op">(</span><span class="fu">tool</span><span class="op">(</span></span>
@@ -144,7 +177,7 @@
 <h3 id="structured-data-extraction">Structured Data Extraction<a class="anchor" aria-label="anchor" href="#structured-data-extraction"></a>
 </h3>
 <p>Extract structured data using type specifications:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">type_sentiment</span> <span class="op">&lt;-</span> <span class="fu">type_object</span><span class="op">(</span></span>
 <span>  <span class="st">"Extract sentiment scores"</span>,</span>
 <span>  positive_score <span class="op">=</span> <span class="fu">type_number</span><span class="op">(</span><span class="st">"Positive sentiment score, 0.0 to 1.0"</span><span class="op">)</span>,</span>
@@ -165,7 +198,7 @@
 <h3 id="state-management">State Management<a class="anchor" aria-label="anchor" href="#state-management"></a>
 </h3>
 <p>Batch processing automatically saves state and can resume interrupted operations:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, state_path <span class="op">=</span> <span class="st">"chat_state.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>If <code>state_path</code> is not defined, a temporary file will be created by default.</p>
 </div>
@@ -181,19 +214,19 @@
 <li>
 <code>"all"</code>: Show both prompts and responses</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
-<span>  <span class="va">chat_claude</span>, </span>
+<span>  <span class="va">chat_openai</span>, </span>
 <span>  echo <span class="op">=</span> <span class="st">"none"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="automatic-retry">Automatic Retry<a class="anchor" aria-label="anchor" href="#automatic-retry"></a>
 </h3>
-<p>Automatically retry failed requests with backoff, which serves as a wide guardrail against errors while ellmer and httr2 guard against API-specific limits/rules:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>Automatically retry failed requests with backoff, which serves as a wide guardrail against errors while <code>ellmer</code> and <code>httr2</code> serve as a narrow guardrail against specific API limits:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
-<span>  <span class="va">chat_claude</span>,         <span class="co"># Ellmer chat model</span></span>
+<span>  <span class="va">chat_openai</span>,         <span class="co"># Ellmer chat model</span></span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3</span>,     <span class="co"># Maximum retry attempts</span></span>
 <span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,  <span class="co"># Initial delay in seconds</span></span>
 <span>  max_delay <span class="op">=</span> <span class="fl">60</span>,      <span class="co"># Maximum delay between retries</span></span>
@@ -213,77 +246,21 @@
 <h3 id="timeout-handling">Timeout Handling<a class="anchor" aria-label="anchor" href="#timeout-handling"></a>
 </h3>
 <p>The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the chat model functions.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span></span>
-<span>  <span class="va">chat_claude</span>,</span>
-<span>  system_prompt <span class="op">=</span> <span class="st">"Reply concisely"</span>,</span>
-<span>  timeout <span class="op">=</span> <span class="fl">60</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_future</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  chat_openai,</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="at">system_prompt =</span> <span class="st">"Reply concisely, one sentence"</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  <span class="at">timeout =</span> <span class="dv">60</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="sound-notifications">Sound Notifications<a class="anchor" aria-label="anchor" href="#sound-notifications"></a>
 </h3>
 <p>Toggle sound notifications on batch completion, interruption, and error:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
-<span>  <span class="va">chat_claude</span>,</span>
+<span>  <span class="va">chat_openai</span>,</span>
 <span>  beep <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="quick-references">Quick References<a class="anchor" aria-label="anchor" href="#quick-references"></a>
-</h2>
-<div class="section level3">
-<h3 id="chat_sequential">chat_sequential()<a class="anchor" aria-label="anchor" href="#chat_sequential"></a>
-</h3>
-<p>Creates a sequential batch processor.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
-<span>  chat_model <span class="op">=</span> <span class="va">chat_claude</span>,  <span class="co"># Ellmer chat model</span></span>
-<span>  echo <span class="op">=</span> <span class="st">"none"</span>,             <span class="co"># Output verbosity (sequential only)</span></span>
-<span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,               <span class="co"># Toggle sound notifications</span></span>
-<span>  max_retries <span class="op">=</span> <span class="fl">3L</span>,          <span class="co"># Maximum retry attempts</span></span>
-<span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,        <span class="co"># Initial delay in seconds</span></span>
-<span>  max_delay <span class="op">=</span> <span class="fl">60</span>,            <span class="co"># Maximum delay between retries</span></span>
-<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,        <span class="co"># Retry backoff multiplier</span></span>
-<span>  timeout <span class="op">=</span> <span class="fl">60</span>,              <span class="co"># Maximum seconds to wait for response</span></span>
-<span>  <span class="va">...</span>                        <span class="co"># Pass parameters to the chat model</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="chat_future">chat_future()<a class="anchor" aria-label="anchor" href="#chat_future"></a>
-</h3>
-<p>Creates a parallel batch processor.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span></span>
-<span>  chat_model <span class="op">=</span> <span class="va">chat_claude</span>,  <span class="co"># Ellmer chat model</span></span>
-<span>  workers <span class="op">=</span> <span class="fl">4L</span>,              <span class="co"># Number of parallel workers</span></span>
-<span>  plan <span class="op">=</span> <span class="st">"multisession"</span>,     <span class="co"># Options: "multisession" or "multicore"</span></span>
-<span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,               <span class="co"># Enable sound notifications</span></span>
-<span>  chunk_size <span class="op">=</span> <span class="fl">4L</span>,           <span class="co"># Number of prompts to process in parallel at a time </span></span>
-<span>  max_chunk_attempts <span class="op">=</span> <span class="fl">3L</span>,   <span class="co"># Maximum retries for failed chunks</span></span>
-<span>  max_retries <span class="op">=</span> <span class="fl">3</span>,           <span class="co"># Maximum retry attempts</span></span>
-<span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,        <span class="co"># Initial delay in seconds</span></span>
-<span>  max_delay <span class="op">=</span> <span class="fl">60</span>,            <span class="co"># Maximum delay between retries</span></span>
-<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,        <span class="co"># Retry backoff multiplier</span></span>
-<span>  timeout <span class="op">=</span> <span class="fl">60</span>,              <span class="co"># Maximum seconds to wait for response</span></span>
-<span>  <span class="va">...</span>                        <span class="co"># Pass parameters to the chat model</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="chatbatch">chat$batch()<a class="anchor" aria-label="anchor" href="#chatbatch"></a>
-</h3>
-<p>Processes a list or vector of prompts.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/batch.html">batch</a></span><span class="op">(</span></span>
-<span>  <span class="va">prompts</span>,                                  <span class="co"># List of prompts to process</span></span>
-<span>  type_spec <span class="op">=</span> <span class="cn">NULL</span>,                         <span class="co"># Type specification for structured data</span></span>
-<span>  state_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"chat_"</span>,            <span class="co"># Path for state persistence</span></span>
-<span>                        fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span>,</span>
-<span>  chunk_size <span class="op">=</span> <span class="fl">4</span>                            <span class="co"># Number of prompts per chunk (parallel only)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>You can mimic sequential processing when using <code><a href="reference/chat_future.html">chat_future()</a></code> by setting the <code>chunk_size = 1</code>, but this will likely decrease performance compared to <code><a href="reference/chat_sequential.html">chat_sequential()</a></code> (see <code>tests/manual/test-benchmark.R</code>).</p>
 </div>
 <div class="section level3">
 <h3 id="results-methods">Results Methods<a class="anchor" aria-label="anchor" href="#results-methods"></a>
@@ -305,7 +282,7 @@
 </h2>
 <ul>
 <li>
-<a href="https://dylanpieper.github.io/hellmer/articles/using-chat-models.html">Using Ellmer Chat Models</a>: Are you wondering if you can use <code>chat_claude()</code> as a user-defined object instead of the <code>chat_claude</code> function? Of course you can! Learn more about the two methods and the default interface.</li>
+<a href="https://dylanpieper.github.io/hellmer/articles/using-chat-models.html">Using Ellmer Chat Models</a>: Are you wondering if you can use <code>chat_openai()</code> as a user-defined object instead of the <code>chat_openai</code> function? Of course you can! Learn more about the two methods and the default interface.</li>
 </ul>
 </div>
 </div>
