@@ -28,7 +28,7 @@ To finish the instructions on setting an API key, I'll provide both the RStudio 
 
 ## Set API Key
 
-I recommend `usethis` to add API keys to your `.Renviron` such as `OPENAI_API_KEY=your-key-here`.
+I recommend the `usethis` package to add API keys to your `.Renviron` such as `OPENAI_API_KEY=your-key-here`.
 
 ``` r
 usethis::edit_r_environ(scope = c("user", "project"))
@@ -73,7 +73,21 @@ chat <- chat_future(chat_openai,
                     system_prompt = "Reply concisely, one sentence")
 ```
 
-This function isn't named `chat_parallel()` because it will be included in ellmer ([#143](https://github.com/tidyverse/ellmer/issues/143)).
+#### Performance vs Safety Trade-Off
+
+When using parallel processing with `chat_future`, there's an important trade-off between performance and safety:
+
+-   **Maximum Performance**: Setting `chunk_size` equal to the number of prompts results in a 4-5x faster processing speed
+
+``` r
+chat$batch(prompts, chunk_size = length(prompts))
+```
+
+-   **Maximum Safety**: Using a smaller `chunk_size` ensures state is saved more frequently, allowing recovery if something goes wrong (the default is the number prompts / 10)
+
+#### Naming Note
+
+`chat_future` isn't named `chat_parallel` because the latter will be included in ellmer ([#143](https://github.com/tidyverse/ellmer/issues/143)).
 
 ## Features
 
