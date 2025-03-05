@@ -3,7 +3,7 @@ Title: Batch Processing for Chat Models
 Version: 0.1.0
 Authors@R: 
     person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
-Description: Batch process chats from 'ellmer' in sequence or parallel.
+Description: Provides tools for efficient batch processing of multiple chat model interactions. Building on the 'ellmer' package, it enables both sequential and parallel processing of chat completions with robust error handling, progress tracking, and retry capabilities. The package implements methods for distributing workloads across multiple R sessions or cores using the 'future' framework, managing authentication errors, and capturing structured results from large batches of prompts.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -19,6 +19,7 @@ Imports:
     cli,
     future,
     furrr,
+    parallel,
     purrr,
     R.utils,
     S7,
