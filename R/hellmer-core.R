@@ -69,7 +69,7 @@ capture <- function(original_chat, prompt, type_spec = NULL, echo = "text") {
       response <- chat$chat(prompt)
     } else {
       response <- chat$chat(prompt)
-      cat(response, "\n")
+      cli::cat_line(response)
     }
 
     if (is.null(response)) {
