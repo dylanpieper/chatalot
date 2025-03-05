@@ -75,19 +75,14 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
+<p>You can install <code>hellmer</code> from CRAN with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"dylanpieper/hellmer"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"hellmer"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="load-package">Load Package<a class="anchor" aria-label="anchor" href="#load-package"></a>
+<h2 id="setup-api-keys">Setup API Keys<a class="anchor" aria-label="anchor" href="#setup-api-keys"></a>
 </h2>
-<p>Run <code><a href="https://dylanpieper.github.io/hellmer/">library(hellmer)</a></code> to load the package and attach <code>ellmer</code> for easy access to the chat models.</p>
-<p>To finish the instructions on setting an API key, I’ll provide both the RStudio approach you started and the alternative methods:</p>
-</div>
-<div class="section level2">
-<h2 id="set-api-key">Set API Key<a class="anchor" aria-label="anchor" href="#set-api-key"></a>
-</h2>
-<p>I recommend the <code>usethis</code> package to add API keys to your <code>.Renviron</code> such as <code>OPENAI_API_KEY=your-key</code>.</p>
+<p><code>ellmer</code> will look for API keys in your environmental variables. I recommend the <code>usethis</code> package to setup API keys in your <code>.Renviron</code> such as <code>OPENAI_API_KEY=your-key</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu">edit_r_environ</span><span class="op">(</span>scope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"user"</span>, <span class="st">"project"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -98,7 +93,9 @@
 <h3 id="sequential-processing">Sequential Processing<a class="anchor" aria-label="anchor" href="#sequential-processing"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="va">chat_openai</span>, </span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/hellmer/">hellmer</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="va">chat_openai</span>, </span>
 <span>                        system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -162,10 +159,10 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">square_number</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">num</span><span class="op">)</span> <span class="va">num</span><span class="op">^</span><span class="fl">2</span></span>
 <span></span>
-<span><span class="va">chat</span><span class="op">$</span><span class="fu">register_tool</span><span class="op">(</span><span class="fu">tool</span><span class="op">(</span></span>
+<span><span class="va">chat</span><span class="op">$</span><span class="fu">register_tool</span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/tool.html" class="external-link">tool</a></span><span class="op">(</span></span>
 <span>  <span class="va">square_number</span>,</span>
 <span>  <span class="st">"Calculates the square of a given number"</span>,</span>
-<span>  num <span class="op">=</span> <span class="fu">type_integer</span><span class="op">(</span><span class="st">"The number to square"</span><span class="op">)</span></span>
+<span>  num <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_integer</a></span><span class="op">(</span><span class="st">"The number to square"</span><span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -178,11 +175,11 @@
 </h3>
 <p>Extract structured data using type specifications:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">type_sentiment</span> <span class="op">&lt;-</span> <span class="fu">type_object</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">type_sentiment</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_object</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Extract sentiment scores"</span>,</span>
-<span>  positive_score <span class="op">=</span> <span class="fu">type_number</span><span class="op">(</span><span class="st">"Positive sentiment score, 0.0 to 1.0"</span><span class="op">)</span>,</span>
-<span>  negative_score <span class="op">=</span> <span class="fu">type_number</span><span class="op">(</span><span class="st">"Negative sentiment score, 0.0 to 1.0"</span><span class="op">)</span>,</span>
-<span>  neutral_score <span class="op">=</span> <span class="fu">type_number</span><span class="op">(</span><span class="st">"Neutral sentiment score, 0.0 to 1.0"</span><span class="op">)</span></span>
+<span>  positive_score <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="st">"Positive sentiment score, 0.0 to 1.0"</span><span class="op">)</span>,</span>
+<span>  negative_score <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="st">"Negative sentiment score, 0.0 to 1.0"</span><span class="op">)</span>,</span>
+<span>  neutral_score <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="st">"Neutral sentiment score, 0.0 to 1.0"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -282,7 +279,7 @@
 </h2>
 <ul>
 <li>
-<a href="https://dylanpieper.github.io/hellmer/articles/using-chat-models.html">Using Ellmer Chat Models</a>: Are you wondering if you can use <code>chat_openai()</code> as a user-defined object instead of the <code>chat_openai</code> function? Of course you can! Learn more about the two methods and the default interface.</li>
+<a href="https://dylanpieper.github.io/hellmer/articles/using-chat-models.html">Using Ellmer Chat Models</a>: Are you wondering if you can use <code><a href="https://ellmer.tidyverse.org/reference/chat_openai.html" class="external-link">chat_openai()</a></code> as a user-defined object instead of the <code>chat_openai</code> function? Of course you can! Learn more about the two methods and the default interface.</li>
 </ul>
 </div>
 </div>
