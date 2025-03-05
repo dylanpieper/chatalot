@@ -30,6 +30,6 @@ batch <- chat$batch(list(
 ))
 
 # Extract text responses
-texts(batch)
+batch$texts()
 \dontshow{\}) # examplesIf}
 }

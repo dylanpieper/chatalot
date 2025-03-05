@@ -15,7 +15,7 @@
 #' ))
 #'
 #' # Extract text responses
-#' texts(batch)
+#' batch$texts()
 #' @export
 texts <- S7::new_generic("texts", "x")
 
@@ -34,8 +34,8 @@ texts <- S7::new_generic("texts", "x")
 #'   "Explain vectors, lists, and data frames"
 #' ))
 #'
-#' # Extract full chat objects
-#' chat_objects <- chats(batch)
+#' # Return the chat objects
+#' batch$chats()
 #' @export
 chats <- S7::new_generic("chats", "x")
 
@@ -83,7 +83,7 @@ progress <- S7::new_generic("progress", "x")
 #' ), type_spec = book_type)
 #'
 #' # Extract structured data
-#' structured_data(batch)
+#' batch$structured_data()
 #' @export
 structured_data <- S7::new_generic("structured_data", "x")
 

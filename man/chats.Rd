@@ -33,7 +33,7 @@ batch <- chat$batch(list(
   "Explain vectors, lists, and data frames"
 ))
 
-# Extract full chat objects
-chat_objects <- chats(batch)
+# Return the chat objects
+batch$chats()
 \dontshow{\}) # examplesIf}
 }

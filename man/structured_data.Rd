@@ -36,6 +36,6 @@ batch <- chat$batch(list(
 ), type_spec = book_type)
 
 # Extract structured data
-structured_data(batch)
+batch$structured_data()
 \dontshow{\}) # examplesIf}
 }
