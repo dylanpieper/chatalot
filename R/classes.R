@@ -3,6 +3,19 @@
 #' @param x A batch object
 #' @param ... Additional arguments passed to methods
 #' @return A character vector or list of text responses
+#' @examplesIf ellmer::has_credentials("openai")
+#' # Create a chat processor
+#' chat <- chat_sequential(chat_openai())
+#'
+#' # Process a batch of prompts
+#' batch <- chat$batch(list(
+#'   "What is R?",
+#'   "Explain base R versus tidyverse",
+#'   "Explain vectors, lists, and data frames"
+#' ))
+#'
+#' # Extract text responses
+#' texts(batch)
 #' @export
 texts <- S7::new_generic("texts", "x")
 
@@ -10,6 +23,19 @@ texts <- S7::new_generic("texts", "x")
 #' @name chats
 #' @param x A batch object
 #' @return A list of chat objects
+#' @examplesIf ellmer::has_credentials("openai")
+#' # Create a chat processor
+#' chat <- chat_sequential(chat_openai())
+#'
+#' # Process a batch of prompts
+#' batch <- chat$batch(list(
+#'   "What is R?",
+#'   "Explain base R versus tidyverse",
+#'   "Explain vectors, lists, and data frames"
+#' ))
+#'
+#' # Extract full chat objects
+#' chat_objects <- chats(batch)
 #' @export
 chats <- S7::new_generic("chats", "x")
 
@@ -18,6 +44,19 @@ chats <- S7::new_generic("chats", "x")
 #' @param x A batch object
 #' @param ... Additional arguments passed to methods
 #' @return A list containing progress details
+#' @examplesIf ellmer::has_credentials("openai")
+#' # Create a chat processor
+#' chat <- chat_sequential(chat_openai())
+#'
+#' # Process a batch of prompts
+#' batch <- chat$batch(list(
+#'   "What is R?",
+#'   "Explain base R versus tidyverse",
+#'   "Explain vectors, lists, and data frames"
+#' ))
+#'
+#' # Check the progress
+#' batch$progress()
 #' @export
 progress <- S7::new_generic("progress", "x")
 
@@ -26,6 +65,25 @@ progress <- S7::new_generic("progress", "x")
 #' @param x A batch object
 #' @param ... Additional arguments passed to methods
 #' @return A list of structured data objects
+#' @examplesIf ellmer::has_credentials("openai")
+#' # Create a chat processor with type specification
+#' book_type <- type_object(
+#'   title = type_string(),
+#'   author = type_string(),
+#'   year = type_integer()
+#' )
+#'
+#' # Create chat processor
+#' chat <- chat_sequential(chat_openai())
+#'
+#' # Process a batch of prompts with type spec
+#' batch <- chat$batch(list(
+#'   "Return info about 1984 by George Orwell",
+#'   "Return info about Brave New World by Aldous Huxley"
+#' ), type_spec = book_type)
+#'
+#' # Extract structured data
+#' structured_data(batch)
 #' @export
 structured_data <- S7::new_generic("structured_data", "x")
 
@@ -46,6 +104,33 @@ structured_data <- S7::new_generic("structured_data", "x")
 #' @param workers Number of parallel workers
 #' @param plan Parallel backend plan
 #' @param state Internal state tracking
+#' @return Returns an S7 class object of class "batch" that represents a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides methods for:
+#' \itemize{
+#'   \item Extracting text responses via \code{texts()}
+#'   \item Accessing full chat objects via \code{chats()}
+#'   \item Tracking processing progress via \code{progress()}
+#'   \item Extracting structured data via \code{structured_data()} when a type specification is provided
+#' }
+#' The batch object manages prompt processing, tracks completion status, and handles retries for failed requests.
+#' @examplesIf ellmer::has_credentials("openai")
+#' # Create a chat processor
+#' chat <- chat_sequential(chat_openai())
+#'
+#' # Process a batch of prompts
+#' batch <- chat$batch(list(
+#'   "What is R?",
+#'   "Explain base R versus tidyverse",
+#'   "Explain vectors, lists, and data frames"
+#' ))
+#'
+#' # Check the progress if interrupted
+#' batch$progress()
+#'
+#' # Return the responses as a vector or list
+#' batch$texts()
+#'
+#' # Return the chat objects
+#' batch$chats()
 #' @export
 batch <- S7::new_class(
   "batch",
@@ -246,25 +331,25 @@ S7::method(structured_data, batch) <- function(x) {
 #' @importFrom purrr map map_lgl
 S7::method(texts, batch) <- function(x, flatten = TRUE) {
   responses <- x@responses[seq_len(x@completed)]
-  
+
   extract_text <- function(response) {
     if (is.null(response)) {
       return(NA_character_)
     }
-    
+
     if (!is.null(response$structured_data)) {
       return(response$structured_data)
     }
-    
+
     if (!is.null(response$text)) {
       return(response$text)
     }
-    
+
     NA_character_
   }
-  
+
   values <- purrr::map(responses, extract_text)
-  
+
   if (x@input_type == "vector" && flatten && all(purrr::map_lgl(values, is.character))) {
     return(unlist(values))
   } else {

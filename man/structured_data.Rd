@@ -17,3 +17,25 @@ A list of structured data objects
 \description{
 Extract structured data from a batch result
 }
+\examples{
+\dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Create a chat processor with type specification
+book_type <- type_object(
+  title = type_string(),
+  author = type_string(),
+  year = type_integer()
+)
+
+# Create chat processor
+chat <- chat_sequential(chat_openai())
+
+# Process a batch of prompts with type spec
+batch <- chat$batch(list(
+  "Return info about 1984 by George Orwell",
+  "Return info about Brave New World by Aldous Huxley"
+), type_spec = book_type)
+
+# Extract structured data
+structured_data(batch)
+\dontshow{\}) # examplesIf}
+}

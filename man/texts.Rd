@@ -17,3 +17,19 @@ A character vector or list of text responses
 \description{
 Extract texts from a batch result
 }
+\examples{
+\dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Create a chat processor
+chat <- chat_sequential(chat_openai())
+
+# Process a batch of prompts
+batch <- chat$batch(list(
+  "What is R?",
+  "Explain base R versus tidyverse",
+  "Explain vectors, lists, and data frames"
+))
+
+# Extract text responses
+texts(batch)
+\dontshow{\}) # examplesIf}
+}

@@ -34,10 +34,10 @@ chat_sequential(
 
 \item{beep}{Logical to play a sound on batch completion, interruption, and error (default: TRUE)}
 
-\item{...}{Additional arguments passed to the underlying chat model}
+\item{...}{Additional arguments passed to the underlying chat model (e.g., \code{system_prompt})}
 }
 \value{
-A batch results object containing:
+A batch object (S7 class) containing
 \itemize{
 \item prompts: Original input prompts
 \item responses: Raw response data for completed prompts
@@ -54,4 +54,26 @@ A batch results object containing:
 Processes a batch of chat prompts one at a time in sequential order.
 Maintains state between runs and can resume interrupted processing.
 For parallel processing, use \code{chat_future()}.
+}
+\examples{
+\dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Create a sequential chat processor
+chat <- chat_sequential(chat_openai, system_prompt = "Reply concisely, one sentence")
+
+# Process a batch of prompts in sequence
+batch <- chat$batch(list(
+  "What is R?",
+  "Explain base R versus tidyverse",
+  "Explain vectors, lists, and data frames"
+))
+
+# Check the progress if interrupted
+batch$progress()
+
+# Return the responses as a vector or list
+batch$texts()
+
+# Return the chat objects
+batch$chats()
+\dontshow{\}) # examplesIf}
 }

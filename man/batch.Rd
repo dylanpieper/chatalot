@@ -53,6 +53,38 @@ batch(
 
 \item{state}{Internal state tracking}
 }
+\value{
+Returns an S7 class object of class "batch" that represents a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides methods for:
+\itemize{
+\item Extracting text responses via \code{texts()}
+\item Accessing full chat objects via \code{chats()}
+\item Tracking processing progress via \code{progress()}
+\item Extracting structured data via \code{structured_data()} when a type specification is provided
+}
+The batch object manages prompt processing, tracks completion status, and handles retries for failed requests.
+}
 \description{
 Batch class for managing chat processing
+}
+\examples{
+\dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Create a chat processor
+chat <- chat_sequential(chat_openai())
+
+# Process a batch of prompts
+batch <- chat$batch(list(
+  "What is R?",
+  "Explain base R versus tidyverse",
+  "Explain vectors, lists, and data frames"
+))
+
+# Check the progress if interrupted
+batch$progress()
+
+# Return the responses as a vector or list
+batch$texts()
+
+# Return the chat objects
+batch$chats()
+\dontshow{\}) # examplesIf}
 }

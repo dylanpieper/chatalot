@@ -43,10 +43,10 @@ or "multicore" for forked processes (default: "multisession")}
 
 \item{beep}{Logical to play a sound on batch completion, interruption, and error (default: TRUE)}
 
-\item{...}{Additional arguments passed to the chat model}
+\item{...}{Additional arguments passed to the underlying chat model (e.g., \code{system_prompt})}
 }
 \value{
-A batch results object containing:
+A batch object (S7 class) containing:
 \itemize{
 \item prompts: Original input prompts
 \item responses: Raw response data for completed prompts
@@ -63,4 +63,26 @@ A batch results object containing:
 Processes a batch of chat prompts using parallel workers.
 Splits prompts into chunks for processing while maintaining state.
 For sequential processing, use \code{chat_sequential()}.
+}
+\examples{
+\dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Create a parallel chat processor
+chat <- chat_future(chat_openai, system_prompt = "Reply concisely, one sentence")
+
+# Process a batch of prompts in parallel
+batch <- chat$batch(list(
+  "What is R?",
+  "Explain base R versus tidyverse",
+  "Explain vectors, lists, and data frames"
+))
+
+# Check the progress if interrupted
+batch$progress()
+
+# Return the responses as a vector or list
+batch$texts()
+
+# Return the chat objects
+batch$chats()
+\dontshow{\}) # examplesIf}
 }

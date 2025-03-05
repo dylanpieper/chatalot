@@ -4,7 +4,7 @@
 #' Maintains state between runs and can resume interrupted processing.
 #' For parallel processing, use `chat_future()`.
 #'
-#' @param chat_model ellmer chat model function or object (e.g., \code{ellmer::chat_claude})
+#' @param chat_model ellmer chat model function or object (e.g., `ellmer::chat_claude`)
 #' @param echo Level of output to display: "none" for silent operation,
 #'        "text" for response text only, or "all" for full interaction (default: "none")
 #' @param max_retries Maximum number of retry attempts per prompt (default: 3L)
@@ -13,8 +13,8 @@
 #' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
 #' @param timeout Maximum time in seconds to wait for each prompt response (default: 60)
 #' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
-#' @param ... Additional arguments passed to the underlying chat model
-#' @return A batch results object containing:
+#' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
+#' @return A batch object (S7 class) containing
 #'   \itemize{
 #'     \item prompts: Original input prompts
 #'     \item responses: Raw response data for completed prompts
@@ -26,6 +26,25 @@
 #'     \item progress: Function to get processing status
 #'     \item structured_data: Function to extract structured data (if `type_spec` was provided)
 #'   }
+#' @examplesIf ellmer::has_credentials("openai")
+#' # Create a sequential chat processor
+#' chat <- chat_sequential(chat_openai, system_prompt = "Reply concisely, one sentence")
+#'
+#' # Process a batch of prompts in sequence
+#' batch <- chat$batch(list(
+#'   "What is R?",
+#'   "Explain base R versus tidyverse",
+#'   "Explain vectors, lists, and data frames"
+#' ))
+#'
+#' # Check the progress if interrupted
+#' batch$progress()
+#'
+#' # Return the responses as a vector or list
+#' batch$texts()
+#'
+#' # Return the chat objects
+#' batch$chats()
 #' @export
 chat_sequential <- function(
     chat_model = NULL,
@@ -95,7 +114,7 @@ chat_sequential <- function(
 #' Splits prompts into chunks for processing while maintaining state.
 #' For sequential processing, use `chat_sequential()`.
 #'
-#' @param chat_model ellmer chat model function or object (e.g., \code{ellmer::chat_claude})
+#' @param chat_model ellmer chat model function or object (e.g., `ellmer::chat_claude`)
 #' @param workers Number of parallel workers to use (default: number of CPU cores)
 #' @param plan Processing strategy to use: "multisession" for separate R sessions
 #'        or "multicore" for forked processes (default: "multisession")
@@ -107,8 +126,8 @@ chat_sequential <- function(
 #' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
 #' @param timeout Maximum time in seconds to wait for each prompt response (default: 2)
 #' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
-#' @param ... Additional arguments passed to the chat model
-#' @return A batch results object containing:
+#' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
+#' @return A batch object (S7 class) containing:
 #'   \itemize{
 #'     \item prompts: Original input prompts
 #'     \item responses: Raw response data for completed prompts
@@ -120,6 +139,25 @@ chat_sequential <- function(
 #'     \item progress: Function to get processing status
 #'     \item structured_data: Function to extract structured data (if `type_spec` was provided)
 #'   }
+#' @examplesIf ellmer::has_credentials("openai")
+#' # Create a parallel chat processor
+#' chat <- chat_future(chat_openai, system_prompt = "Reply concisely, one sentence")
+#'
+#' # Process a batch of prompts in parallel
+#' batch <- chat$batch(list(
+#'   "What is R?",
+#'   "Explain base R versus tidyverse",
+#'   "Explain vectors, lists, and data frames"
+#' ))
+#'
+#' # Check the progress if interrupted
+#' batch$progress()
+#'
+#' # Return the responses as a vector or list
+#' batch$texts()
+#'
+#' # Return the chat objects
+#' batch$chats()
 #' @export
 chat_future <- function(
     chat_model = NULL,
@@ -171,7 +209,7 @@ chat_future <- function(
     } else {
       state_path <- chat_env$last_state_path
     }
-    
+
     if (is.null(chunk_size)) {
       chunk_size <- max(1L, length(prompts) %/% 4L)
     }

@@ -24,26 +24,41 @@ devtools::install_github("dylanpieper/hellmer")
 
 Run `library(hellmer)` to load the package and attach `ellmer` for easy access to the chat models.
 
+To finish the instructions on setting an API key, I'll provide both the RStudio approach you started and the alternative methods:
+
+## Set API Key
+
+I recommend `usethis` to add API keys to your `.Renviron` such as `OPENAI_API_KEY=your-key-here`.
+
+``` r
+usethis::edit_r_environ(scope = c("user", "project"))
+```
+
 ## Basic Usage
 
 ### Sequential Processing
 
 ``` r
-chat <- chat_sequential(chat_claude, system_prompt = "Reply concisely")
+chat <- chat_sequential(chat_openai, 
+                        system_prompt = "Reply concisely, one sentence")
 
 prompts <- list(
-  "What is 2+2?",
-  "Name one planet.",
-  "Is water wet?",
-  "What color is the sky?",
-  "Count to 3.",
-  "Say hello.",
-  "Name a primary color.",
-  "What is 5x5?",
-  "True or false: Birds can fly.",
-  "What day comes after Monday?"
+  "What is R?",
+  "Explain base R versus tidyverse",
+  "Explain vectors, lists, and data frames",
+  "How do environments work in R?",
+  "Compare R and Python for data analysis",
+  "Explain lazy evaluation in R",
+  "What are R's apply functions?",
+  "How do R packages work?",
+  "Explain R's object-oriented programming systems.",
+  "What are closures in R?",
+  "Describe R memory management",
+  "How does R handle missing values?",
+  "Explain R's integration with C++",
+  "Compare dplyr and data.table approaches",
+  "What are R formulas and when to use them?"
 )
-
 result <- chat$batch(prompts)
 
 result$progress()
@@ -54,10 +69,11 @@ result$chats()
 ### Parallel Processing
 
 ``` r
-chat <- chat_future(chat_claude, system_prompt = "Reply concisely")
+chat <- chat_future(chat_openai, 
+                    system_prompt = "Reply concisely, one sentence")
 ```
 
-The reason this function isn't named `chat_parallel()` is because it will likely be included in ellmer ([#143](https://github.com/tidyverse/ellmer/issues/143)).
+This function isn't named `chat_parallel()` because it will be included in ellmer ([#143](https://github.com/tidyverse/ellmer/issues/143)).
 
 ## Features
 
@@ -122,7 +138,7 @@ Control verbosity with the `echo` parameter (sequential only):
 
 ``` r
 chat <- chat_sequential(
-  chat_claude, 
+  chat_openai, 
   echo = "none"
 )
 ```
@@ -133,7 +149,7 @@ Automatically retry failed requests with backoff, which serves as a wide guardra
 
 ``` r
 chat <- chat_sequential(
-  chat_claude,         # Ellmer chat model
+  chat_openai,         # Ellmer chat model
   max_retries = 3,     # Maximum retry attempts
   initial_delay = 20,  # Initial delay in seconds
   max_delay = 60,      # Maximum delay between retries
@@ -156,8 +172,8 @@ The timeout parameter specifies the maximum time to wait for a response from the
 
 ``` r
 chat <- chat_future(
-  chat_claude,
-  system_prompt = "Reply concisely",
+  chat_openai,
+  system_prompt = "Reply concisely, one sentence"
   timeout = 60
 )
 ```
@@ -168,10 +184,11 @@ Toggle sound notifications on batch completion, interruption, and error:
 
 ``` r
 chat <- chat_sequential(
-  chat_claude,
+  chat_openai,
   beep = TRUE
 )
 ```
+
 ### Results Methods
 
 -   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector)
@@ -181,4 +198,4 @@ chat <- chat_sequential(
 
 ## Further Reading
 
--   [Using Ellmer Chat Models](https://dylanpieper.github.io/hellmer/articles/using-chat-models.html): Are you wondering if you can use `chat_claude()` as a user-defined object instead of the `chat_claude` function? Of course you can! Learn more about the two methods and the default interface.
+-   [Using Ellmer Chat Models](https://dylanpieper.github.io/hellmer/articles/using-chat-models.html): Are you wondering if you can use `chat_openai()` as a user-defined object instead of the `chat_openai` function? Of course you can! Learn more about the two methods and the default interface.
