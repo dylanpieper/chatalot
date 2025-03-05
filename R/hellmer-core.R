@@ -184,12 +184,12 @@ process <- function(
     type_spec = NULL,
     state_path = tempfile("chat_", fileext = ".rds"),
     echo = "none",
-    beep = TRUE,
     max_retries = 3L,
     initial_delay = 1,
-    max_delay = 32,
+    max_delay = 60,
     backoff_factor = 2,
-    timeout = 60) {
+    timeout = 60,
+    beep = TRUE) {
   if (file.exists(state_path)) {
     result <- readRDS(state_path)
     if (!identical(as.list(prompts), result@prompts)) {
@@ -307,8 +307,8 @@ process <- function(
 #' @param prompts Vector or list of prompts to process
 #' @param type_spec Optional type specification for structured data extraction
 #' @param state_path Path to save intermediate state
-#' @param workers Number of parallel workers (default: 4)
-#' @param chunk_size Number of prompts per chunk (default: 4)
+#' @param workers Number of parallel workers (default: number of CPU cores)
+#' @param chunk_size Number of prompts per chunk (default: length of prompts / 4)
 #' @param plan Parallel backend: "multisession" or "multicore"
 #' @param beep Play sound on completion/error (default: TRUE)
 #' @param timeout Maximum seconds per prompt (default: 60)
@@ -324,16 +324,16 @@ process_future <- function(
     prompts,
     type_spec = NULL,
     state_path = tempfile("chat_", fileext = ".rds"),
-    workers = 4,
-    chunk_size = 4,
+    workers = parallel::detectCores(),
+    chunk_size = NULL,
     plan = "multisession",
-    beep = TRUE,
-    timeout = 60,
     max_chunk_attempts = 3L,
     max_retries = 3L,
     initial_delay = 1,
-    max_delay = 32,
-    backoff_factor = 2) {
+    max_delay = 60,
+    backoff_factor = 2,
+    timeout = 60,
+    beep = TRUE) {
   validate_chunk_result <- function(chunk_result, chunk_idx) {
     if (inherits(chunk_result, "error") || inherits(chunk_result, "worker_error")) {
       if (is_auth_error(chunk_result)) {
@@ -357,6 +357,10 @@ process_future <- function(
   total_prompts <- length(prompts)
   prompts_list <- as.list(prompts)
   original_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
+
+  if (is.null(chunk_size)) {
+    chunk_size <- max(1L, total_prompts %/% 4L)
+  }
 
   if (file.exists(state_path)) {
     result <- readRDS(state_path)

@@ -7,12 +7,12 @@
 chat_sequential(
   chat_model = NULL,
   echo = "none",
-  beep = TRUE,
   max_retries = 3L,
   initial_delay = 20,
   max_delay = 60,
   backoff_factor = 2,
   timeout = 60,
+  beep = TRUE,
   ...
 )
 }
@@ -21,8 +21,6 @@ chat_sequential(
 
 \item{echo}{Level of output to display: "none" for silent operation,
 "text" for response text only, or "all" for full interaction (default: "none")}
-
-\item{beep}{Logical to play a sound on batch completion, interruption, and error (default: TRUE)}
 
 \item{max_retries}{Maximum number of retry attempts per prompt (default: 3L)}
 
@@ -33,6 +31,8 @@ chat_sequential(
 \item{backoff_factor}{Factor to multiply delay by after each retry (default: 2)}
 
 \item{timeout}{Maximum time in seconds to wait for each prompt response (default: 60)}
+
+\item{beep}{Logical to play a sound on batch completion, interruption, and error (default: TRUE)}
 
 \item{...}{Additional arguments passed to the underlying chat model}
 }

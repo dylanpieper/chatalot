@@ -6,30 +6,28 @@
 \usage{
 chat_future(
   chat_model = NULL,
-  workers = 4L,
+  workers = parallel::detectCores(),
   plan = "multisession",
-  beep = TRUE,
-  chunk_size = 4L,
+  chunk_size = NULL,
   max_chunk_attempts = 3L,
   max_retries = 3L,
   initial_delay = 20,
   max_delay = 60,
   backoff_factor = 2,
   timeout = 60,
+  beep = TRUE,
   ...
 )
 }
 \arguments{
 \item{chat_model}{ellmer chat model function or object (e.g., \code{ellmer::chat_claude})}
 
-\item{workers}{Number of parallel workers to use (default: 4L)}
+\item{workers}{Number of parallel workers to use (default: number of CPU cores)}
 
 \item{plan}{Processing strategy to use: "multisession" for separate R sessions
 or "multicore" for forked processes (default: "multisession")}
 
-\item{beep}{Logical to play a sound on batch completion, interruption, and error (default: TRUE)}
-
-\item{chunk_size}{Number of prompts to process in parallel at a time (default: 4L)}
+\item{chunk_size}{Number of prompts to process in parallel at a time (default: length of prompts / 4)}
 
 \item{max_chunk_attempts}{Maximum number of retry attempts for failed chunks (default: 3L)}
 
@@ -42,6 +40,8 @@ or "multicore" for forked processes (default: "multisession")}
 \item{backoff_factor}{Factor to multiply delay by after each retry (default: 2)}
 
 \item{timeout}{Maximum time in seconds to wait for each prompt response (default: 2)}
+
+\item{beep}{Logical to play a sound on batch completion, interruption, and error (default: TRUE)}
 
 \item{...}{Additional arguments passed to the chat model}
 }

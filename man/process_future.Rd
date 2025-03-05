@@ -9,16 +9,16 @@ process_future(
   prompts,
   type_spec = NULL,
   state_path = tempfile("chat_", fileext = ".rds"),
-  workers = 4,
-  chunk_size = 4,
+  workers = parallel::detectCores(),
+  chunk_size = NULL,
   plan = "multisession",
-  beep = TRUE,
-  timeout = 60,
   max_chunk_attempts = 3L,
   max_retries = 3L,
   initial_delay = 1,
-  max_delay = 32,
-  backoff_factor = 2
+  max_delay = 60,
+  backoff_factor = 2,
+  timeout = 60,
+  beep = TRUE
 )
 }
 \arguments{
@@ -30,15 +30,11 @@ process_future(
 
 \item{state_path}{Path to save intermediate state}
 
-\item{workers}{Number of parallel workers (default: 4)}
+\item{workers}{Number of parallel workers (default: number of CPU cores)}
 
-\item{chunk_size}{Number of prompts per chunk (default: 4)}
+\item{chunk_size}{Number of prompts per chunk (default: length of prompts / 4)}
 
 \item{plan}{Parallel backend: "multisession" or "multicore"}
-
-\item{beep}{Play sound on completion/error (default: TRUE)}
-
-\item{timeout}{Maximum seconds per prompt (default: 60)}
 
 \item{max_chunk_attempts}{Maximum retries per failed chunk (default: 3)}
 
@@ -49,6 +45,10 @@ process_future(
 \item{max_delay}{Maximum delay between retries (default: 32)}
 
 \item{backoff_factor}{Delay multiplier after each retry (default: 2)}
+
+\item{timeout}{Maximum seconds per prompt (default: 60)}
+
+\item{beep}{Play sound on completion/error (default: TRUE)}
 }
 \value{
 Batch results object containing processed responses

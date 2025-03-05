@@ -7,12 +7,12 @@
 #' @param chat_model ellmer chat model function or object (e.g., \code{ellmer::chat_claude})
 #' @param echo Level of output to display: "none" for silent operation,
 #'        "text" for response text only, or "all" for full interaction (default: "none")
-#' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
 #' @param max_retries Maximum number of retry attempts per prompt (default: 3L)
 #' @param initial_delay Initial delay in seconds before first retry (default: 20)
 #' @param max_delay Maximum delay in seconds between retries (default: 60)
 #' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
 #' @param timeout Maximum time in seconds to wait for each prompt response (default: 60)
+#' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
 #' @param ... Additional arguments passed to the underlying chat model
 #' @return A batch results object containing:
 #'   \itemize{
@@ -30,12 +30,12 @@
 chat_sequential <- function(
     chat_model = NULL,
     echo = "none",
-    beep = TRUE,
     max_retries = 3L,
     initial_delay = 20,
     max_delay = 60,
     backoff_factor = 2,
     timeout = 60,
+    beep = TRUE,
     ...) {
   if (is.null(chat_model)) {
     stop("Define a ellmer chat model (e.g., chat_openai or chat_claude)")
@@ -53,12 +53,12 @@ chat_sequential <- function(
   }
 
   chat_env$echo <- echo
-  chat_env$beep <- beep
-  chat_env$timeout <- timeout
   chat_env$max_retries <- max_retries
   chat_env$initial_delay <- initial_delay
   chat_env$max_delay <- max_delay
   chat_env$backoff_factor <- backoff_factor
+  chat_env$timeout <- timeout
+  chat_env$beep <- beep
   chat_env$last_state_path <- NULL
 
   chat_env$batch <- function(prompts,
@@ -76,12 +76,12 @@ chat_sequential <- function(
       type_spec = type_spec,
       state_path = state_path,
       echo = chat_env$echo,
-      beep = chat_env$beep,
       max_retries = chat_env$max_retries,
       initial_delay = chat_env$initial_delay,
       max_delay = chat_env$max_delay,
       backoff_factor = chat_env$backoff_factor,
-      timeout = chat_env$timeout
+      timeout = chat_env$timeout,
+      beep = chat_env$beep
     )
   }
 
@@ -96,17 +96,17 @@ chat_sequential <- function(
 #' For sequential processing, use `chat_sequential()`.
 #'
 #' @param chat_model ellmer chat model function or object (e.g., \code{ellmer::chat_claude})
-#' @param workers Number of parallel workers to use (default: 4L)
+#' @param workers Number of parallel workers to use (default: number of CPU cores)
 #' @param plan Processing strategy to use: "multisession" for separate R sessions
 #'        or "multicore" for forked processes (default: "multisession")
-#' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
-#' @param chunk_size Number of prompts to process in parallel at a time (default: 4L)
+#' @param chunk_size Number of prompts to process in parallel at a time (default: length of prompts / 4)
 #' @param max_chunk_attempts Maximum number of retry attempts for failed chunks (default: 3L)
 #' @param max_retries Maximum number of retry attempts per prompt (default: 3L)
 #' @param initial_delay Initial delay in seconds before first retry (default: 20)
 #' @param max_delay Maximum delay in seconds between retries (default: 60)
 #' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
 #' @param timeout Maximum time in seconds to wait for each prompt response (default: 2)
+#' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
 #' @param ... Additional arguments passed to the chat model
 #' @return A batch results object containing:
 #'   \itemize{
@@ -123,16 +123,16 @@ chat_sequential <- function(
 #' @export
 chat_future <- function(
     chat_model = NULL,
-    workers = 4L,
+    workers = parallel::detectCores(),
     plan = "multisession",
-    beep = TRUE,
-    chunk_size = 4L,
+    chunk_size = NULL,
     max_chunk_attempts = 3L,
     max_retries = 3L,
     initial_delay = 20,
     max_delay = 60,
     backoff_factor = 2,
     timeout = 60,
+    beep = TRUE,
     ...) {
   if (is.null(chat_model)) {
     stop("Define a ellmer chat_model (e.g., chat_openai or chat_claude)")
@@ -152,14 +152,14 @@ chat_future <- function(
 
   chat_env$workers <- workers
   chat_env$plan <- plan
-  chat_env$beep <- beep
-  chat_env$timeout <- timeout
+  chat_env$chunk_size <- chunk_size
   chat_env$max_chunk_attempts <- max_chunk_attempts
   chat_env$max_retries <- max_retries
   chat_env$initial_delay <- initial_delay
   chat_env$max_delay <- max_delay
   chat_env$backoff_factor <- backoff_factor
-  chat_env$chunk_size <- chunk_size
+  chat_env$timeout <- timeout
+  chat_env$beep <- beep
   chat_env$last_state_path <- NULL
 
   chat_env$batch <- function(prompts,
@@ -171,6 +171,10 @@ chat_future <- function(
     } else {
       state_path <- chat_env$last_state_path
     }
+    
+    if (is.null(chunk_size)) {
+      chunk_size <- max(1L, length(prompts) %/% 4L)
+    }
 
     process_future(
       chat_obj = chat_env$chat_model,
@@ -180,13 +184,13 @@ chat_future <- function(
       workers = chat_env$workers,
       chunk_size = chunk_size,
       plan = chat_env$plan,
-      beep = chat_env$beep,
-      timeout = chat_env$timeout,
       max_chunk_attempts = chat_env$max_chunk_attempts,
       max_retries = chat_env$max_retries,
       initial_delay = chat_env$initial_delay,
       max_delay = chat_env$max_delay,
-      backoff_factor = chat_env$backoff_factor
+      backoff_factor = chat_env$backoff_factor,
+      timeout = chat_env$timeout,
+      beep = chat_env$beep
     )
   }
 
