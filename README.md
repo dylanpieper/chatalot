@@ -1,6 +1,6 @@
 # hellmer <img src="man/figures/hellmer-hex.png" align="right" width="140"/>
 
-hellmer enables sequential or parallel batch processing for [chat models](https://ellmer.tidyverse.org/reference/index.html) from [ellmer](https://github.com/tidyverse/ellmer).
+`hellmer` enables sequential or parallel batch processing for [chat models](https://ellmer.tidyverse.org/reference/index.html) from [ellmer](https://github.com/tidyverse/ellmer).
 
 ## Overview
 
