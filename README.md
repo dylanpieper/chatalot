@@ -89,12 +89,12 @@ result$texts()
 result$chats()
 # [[1]]
 # <Chat turns=3 tokens=22/21>
-#  ── system ────────────────
+#  ── system ─────────────────────────────────────────────────────────────────────────
 # Reply concisely, one sentence
-# ── user ───────────────────
+# ── user ────────────────────────────────────────────────────────────────────────────
 # What is R?
-# ── assistant ──────────────
-# R is a programming language and software environment used for statistical computing, 
+# ── assistant ───────────────────────────────────────────────────────────────────────
+# R is a programming language and software environment used for statistical computing,
 # data analysis, and graphical representation.
 # ...
 ```
