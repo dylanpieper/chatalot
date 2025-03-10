@@ -110,13 +110,13 @@ chat <- chat_future(chat_openai,
 
 When using parallel processing with `chat_future`, there's a trade-off between performance and safety:
 
--   **Maximum Performance**: Setting `chunk_size` equal to the number of prompts results in a 4-5x faster processing speed
+-   **Maximum Performance**: Setting `chunk_size` equal to the number of prompts results in a 4-5x faster processing speed but will not save state as a file until all chats are processed
 
 ``` r
 chat$batch(prompts, chunk_size = length(prompts))
 ```
 
--   **Maximum Safety**: Using a smaller `chunk_size` ensures state is saved more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)
+-   **Maximum Safety**: Using a smaller `chunk_size` ensures state is saved to the disk more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)
 
 #### Naming Note
 
@@ -189,7 +189,7 @@ result$structured_data()
 
 ### State Management
 
-Batch processing automatically saves state and can resume interrupted operations:
+Batch processing automatically saves state as a file and can resume interrupted operations:
 
 ``` r
 result <- chat$batch(prompts, state_path = "chat_state.rds")
