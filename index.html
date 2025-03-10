@@ -165,13 +165,13 @@
 <p>When using parallel processing with <code>chat_future</code>, there’s a trade-off between performance and safety:</p>
 <ul>
 <li>
-<strong>Maximum Performance</strong>: Setting <code>chunk_size</code> equal to the number of prompts results in a 4-5x faster processing speed</li>
+<strong>Maximum Performance</strong>: Setting <code>chunk_size</code> equal to the number of prompts results in a 4-5x faster processing speed but will not save state as a file until all chats are processed</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>
-<strong>Maximum Safety</strong>: Using a smaller <code>chunk_size</code> ensures state is saved more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)</li>
+<strong>Maximum Safety</strong>: Using a smaller <code>chunk_size</code> ensures state is saved to the disk more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)</li>
 </ul>
 </div>
 <div class="section level4">
@@ -248,7 +248,7 @@
 <div class="section level3">
 <h3 id="state-management">State Management<a class="anchor" aria-label="anchor" href="#state-management"></a>
 </h3>
-<p>Batch processing automatically saves state and can resume interrupted operations:</p>
+<p>Batch processing automatically saves state as a file and can resume interrupted operations:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, state_path <span class="op">=</span> <span class="st">"chat_state.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>If <code>state_path</code> is not defined, a temporary file will be created by default.</p>
