@@ -78,9 +78,12 @@ result$progress()
 
 result$texts()
 # [[1]]
-# [1] "R is a programming language and software environment used for statistical computing, data analysis, and graphical representation."
+# [1] "R is a programming language and software environment used for statistical computing,
+# data analysis, and graphical representation."
 # [[2]]
-# [1] "Base R refers to the original set of R functions and packages, while tidyverse is a collection of R packages designed for data science that offer a more consistent and readable syntax."
+# [1] "Base R refers to the original set of R functions and packages, while tidyverse is a
+# collection of R packages designed for data science that offer a more consistent and
+# readable syntax."
 # ...
 
 result$chats()
@@ -91,7 +94,8 @@ result$chats()
 # ── user ───────────────────
 # What is R?
 # ── assistant ──────────────
-# R is a programming language and software environment used for statistical computing, data analysis, and graphical representation.
+# R is a programming language and software environment used for statistical computing, 
+# data analysis, and graphical representation.
 # ...
 ```
 
