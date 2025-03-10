@@ -57,11 +57,42 @@ prompts <- list(
   "Compare dplyr and data.table approaches",
   "What are R formulas and when to use them?"
 )
-result <- chat$batch(prompts)
 
+result <- chat$batch(prompts)
+```
+
+Access the results:
+
+``` r
 result$progress()
+# $total_prompts
+# [1] 15
+# $completed_prompts
+# [1] 15
+# $completion_percentage
+# [1] 100
+# $remaining_prompts
+# [1] 0
+# $state_path
+# [1] "/var/folders/cw/9ksk103n06n5lf4z3d__7c2r0000gn/T//RtmptmmaV0/chat_c5383b1279ae.rds"
+
 result$texts()
+# [[1]]
+# [1] "R is a programming language and software environment used for statistical computing, data analysis, and graphical representation."
+# [[2]]
+# [1] "Base R refers to the original set of R functions and packages, while tidyverse is a collection of R packages designed for data science that offer a more consistent and readable syntax."
+# ...
+
 result$chats()
+# [[1]]
+# <Chat turns=3 tokens=22/21>
+#  ── system ────────────────
+# Reply concisely, one sentence
+# ── user ───────────────────
+# What is R?
+# ── assistant ──────────────
+# R is a programming language and software environment used for statistical computing, data analysis, and graphical representation.
+# ...
 ```
 
 ### Parallel Processing
@@ -94,18 +125,31 @@ chat$batch(prompts, chunk_size = length(prompts))
 Register and use tools/function calling:
 
 ``` r
-square_number <- function(num) num^2
+get_current_time <- function(tz = "UTC") {
+  format(Sys.time(), tz = tz, usetz = TRUE)
+}
 
 chat$register_tool(tool(
-  square_number,
-  "Calculates the square of a given number",
-  num = type_integer("The number to square")
+  get_current_time,
+  "Gets the current time in the given time zone.",
+  tz = type_string(
+    "The time zone to get the current time in. Defaults to `\"UTC\"`.",
+    required = FALSE
+  )
 ))
 
 prompts <- list(
-  "What is the square of 3?",
-  "Calculate the square of 5."
+  "What time is it in Chicago?",
+  "What time is it in New York?"
 )
+
+result <- chat$batch(prompts)
+
+result$texts()
+# [[1]]
+# [1] "The current time in Chicago is 9:29 AM CDT."
+# [[2]]
+# [1] "The current time in New York is 10:29 AM EDT on March 10, 2025."
 ```
 
 ### Structured Data Extraction
@@ -121,13 +165,22 @@ type_sentiment <- type_object(
 )
 
 prompts <- list(
-  "I love this product! It's amazing!",
-  "This is okay, nothing special.",
-  "Terrible experience, very disappointed."
+  "The R community is really supportive and welcoming.",
+  "R has both base functions and tidyverse functions for data manipulation.",
+  "R's object-oriented system is confusing, inconsistent, and painful to use."
 )
 
 result <- chat$batch(prompts, type_spec = type_sentiment)
-structured_data <- result$structured_data()
+
+result$structured_data()
+# [[1]]
+# [[1]]$positive_score
+# [1] 0.9
+# [[1]]$negative_score
+# [1] 0.05
+# [[1]]$neutral_score
+# [1] 0.05
+# ...
 ```
 
 ### State Management
