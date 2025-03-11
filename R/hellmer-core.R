@@ -350,6 +350,17 @@ process_future <- function(
       return(list(valid = FALSE, message = sprintf("Empty responses in chunk %d", chunk_idx)))
     }
 
+    null_indices <- which(vapply(chunk_result$responses, is.null, logical(1)))
+    if (length(null_indices) > 0) {
+      return(list(
+        valid = FALSE,
+        message = sprintf(
+          "NULL responses at indices %s in chunk %d",
+          paste(null_indices, collapse = ", "), chunk_idx
+        )
+      ))
+    }
+
     list(valid = TRUE, message = NULL)
   }
 
