@@ -214,15 +214,15 @@ chat <- chat_sequential(
 
 ### Automatic Retry
 
-Automatically retry failed requests with backoff, which serves as a wide guardrail against errors while `ellmer` and `httr2` serve as a narrow guardrail against specific API limits:
+Automatically retry failed requests with exponential backoff, which serves as a wide guardrail against errors while `ellmer` and `httr2` serve as a narrow guardrail against specific API limits:
 
 ``` r
 chat <- chat_sequential(
-  chat_openai,         # Ellmer chat model
-  max_retries = 3,     # Maximum retry attempts
-  initial_delay = 20,  # Initial delay in seconds
-  max_delay = 60,      # Maximum delay between retries
-  backoff_factor = 2   # Multiply delay by this factor after each retry
+  chat_openai,         # ellmer chat model
+  max_retries = 3,     # maximum retry attempts
+  initial_delay = 20,  # initial delay in seconds
+  max_delay = 60,      # maximum delay between retries
+  backoff_factor = 2   # multiply delay by this factor after each retry
 )
 ```
 

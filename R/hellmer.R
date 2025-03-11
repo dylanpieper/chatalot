@@ -57,7 +57,7 @@ chat_sequential <- function(
     beep = TRUE,
     ...) {
   if (is.null(chat_model)) {
-    stop("Define a ellmer chat model (e.g., chat_openai or chat_claude)")
+    stop("Define an ellmer chat model (e.g., chat_openai or chat_claude)")
   }
 
   chat_env <- new.env(parent = emptyenv())
@@ -173,7 +173,7 @@ chat_future <- function(
     beep = TRUE,
     ...) {
   if (is.null(chat_model)) {
-    stop("Define a ellmer chat_model (e.g., chat_openai or chat_claude)")
+    stop("Define an ellmer chat_model (e.g., chat_openai or chat_claude)")
   }
 
   plan <- match.arg(plan, choices = c("multisession", "multicore"))
