@@ -163,9 +163,9 @@ Extract structured data using type specifications:
 ``` r
 type_sentiment <- type_object(
   "Extract sentiment scores",
-  positive_score = type_number("Positive sentiment score, 0.0 to 1.0"),
-  negative_score = type_number("Negative sentiment score, 0.0 to 1.0"),
-  neutral_score = type_number("Neutral sentiment score, 0.0 to 1.0")
+  positive_score = type_number("Positive sentiment score, 0.00 to 1.00"),
+  negative_score = type_number("Negative sentiment score, 0.00 to 1.00"),
+  neutral_score = type_number("Neutral sentiment score, 0.00 to 1.00")
 )
 
 prompts <- list(
@@ -179,11 +179,11 @@ result <- chat$batch(prompts, type_spec = type_sentiment)
 result$structured_data()
 # [[1]]
 # [[1]]$positive_score
-# [1] 0.9
+# [1] 0.95
 # [[1]]$negative_score
 # [1] 0.05
 # [[1]]$neutral_score
-# [1] 0.05
+# [1] 0
 # ...
 ```
 
