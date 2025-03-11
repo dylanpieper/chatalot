@@ -274,14 +274,14 @@
 <div class="section level3">
 <h3 id="automatic-retry">Automatic Retry<a class="anchor" aria-label="anchor" href="#automatic-retry"></a>
 </h3>
-<p>Automatically retry failed requests with backoff, which serves as a wide guardrail against errors while <code>ellmer</code> and <code>httr2</code> serve as a narrow guardrail against specific API limits:</p>
+<p>Automatically retry failed requests with exponential backoff, which serves as a wide guardrail against errors while <code>ellmer</code> and <code>httr2</code> serve as a narrow guardrail against specific API limits:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
-<span>  <span class="va">chat_openai</span>,         <span class="co"># Ellmer chat model</span></span>
-<span>  max_retries <span class="op">=</span> <span class="fl">3</span>,     <span class="co"># Maximum retry attempts</span></span>
-<span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,  <span class="co"># Initial delay in seconds</span></span>
-<span>  max_delay <span class="op">=</span> <span class="fl">60</span>,      <span class="co"># Maximum delay between retries</span></span>
-<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>   <span class="co"># Multiply delay by this factor after each retry</span></span>
+<span>  <span class="va">chat_openai</span>,         <span class="co"># ellmer chat model</span></span>
+<span>  max_retries <span class="op">=</span> <span class="fl">3</span>,     <span class="co"># maximum retry attempts</span></span>
+<span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,  <span class="co"># initial delay in seconds</span></span>
+<span>  max_delay <span class="op">=</span> <span class="fl">60</span>,      <span class="co"># maximum delay between retries</span></span>
+<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>   <span class="co"># multiply delay by this factor after each retry</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>If a request fails, the code will:</p>
 <ol style="list-style-type: decimal">
