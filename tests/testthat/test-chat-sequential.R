@@ -1,5 +1,5 @@
 test_that("chat_sequential initialization and result class works", {
-  skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
+  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
 
   chat <- chat_sequential(ellmer::chat_openai, beep = FALSE)
   expect_true(inherits(chat, "Chat"))
@@ -10,7 +10,7 @@ test_that("chat_sequential initialization and result class works", {
 })
 
 test_that("chat_sequential processes prompts correctly", {
-  skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
+  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
 
   chat <- chat_sequential(ellmer::chat_openai, beep = FALSE)
   result <- chat$batch(get_test_prompts(2))
@@ -21,8 +21,8 @@ test_that("chat_sequential processes prompts correctly", {
   expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
 })
 
-test_that("chat_sequential handles structured data extraction via texts()", {
-  skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
+test_that("chat_sequential handles structured data extraction", {
+  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
 
   chat <- chat_sequential(ellmer::chat_openai, beep = FALSE)
   prompts <- list(
@@ -39,24 +39,26 @@ test_that("chat_sequential handles structured data extraction via texts()", {
 })
 
 test_that("chat_sequential handles structured data with judgements", {
-  skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
+  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
 
-  chat <- chat_sequential(ellmer::chat_claude, beep = FALSE)
+  chat <- chat_sequential(ellmer::chat_openai, beep = FALSE)
   prompts <- list(
     "I love this!",
     "This is terrible."
   )
 
   result <- chat$batch(prompts, type_spec = get_sentiment_type_spec(), judgements = 1)
-  data <- result$structured_data()
+  data <- result$texts()
+  turns <- result$chats()[[1]]$get_turns()
 
   expect_type(data, "list")
   expect_length(data, 2)
+  expect_length(turns, 6)
   expect_true(all(sapply(data, function(x) !is.null(x$score))))
 })
 
 test_that("chat_sequential works with tools", {
-  skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
+  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
 
   chat <- chat_sequential(ellmer::chat_openai, beep = FALSE)
   chat$register_tool(get_square_tool())
@@ -70,7 +72,7 @@ test_that("chat_sequential works with tools", {
 })
 
 test_that("chat_sequential handles state persistence", {
-  skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
+  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
 
   temp_file <- tempfile(fileext = ".rds")
   on.exit(unlink(temp_file))
@@ -83,7 +85,7 @@ test_that("chat_sequential handles state persistence", {
 })
 
 test_that("chat_sequential respects timeout", {
-  skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
+  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
 
   chat <- chat_sequential(ellmer::chat_openai, timeout = 30, beep = FALSE)
   result <- chat$batch(get_test_prompts(1))
@@ -91,7 +93,7 @@ test_that("chat_sequential respects timeout", {
 })
 
 test_that("chat_sequential supports echo", {
-  skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
+  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
 
   chat <- chat_sequential(ellmer::chat_openai, echo = "text", beep = FALSE)
   result <- chat$batch(get_test_prompts(1))
