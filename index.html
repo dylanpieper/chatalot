@@ -55,7 +55,7 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="hellmer-">hellmer <img src="reference/figures/hellmer-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#hellmer-"></a>
 </h1></div>
-<p><code>hellmer</code> enables sequential or parallel batch processing for <a href="https://ellmer.tidyverse.org/reference/index.html" class="external-link">chat models</a> from <a href="https://github.com/tidyverse/ellmer" class="external-link">ellmer</a>.</p>
+<p><code>hellmer</code> enables sequential or parallel batch processing for <code>ellmer</code> <a href="https://ellmer.tidyverse.org/reference/index.html" class="external-link">chat models</a>.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -244,7 +244,7 @@
 <span><span class="co"># [[1]]$neutral_score</span></span>
 <span><span class="co"># [1] 0</span></span>
 <span><span class="co"># ...</span></span></code></pre></div>
-<p>A new experimental development feature implements LLM-as-a-judge into the chat turns to refine structured data extractions. Use the <code>judgements</code> parameter to set the number of iterations (warning: uses more tokens):</p>
+<p>A new experimental development feature implements LLM-as-a-judge into the chat turns to refine structured data extractions. Use the <code>judgements</code> parameter to set the number of iterations (warning: increases token use):</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, judgements <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 </div>
