@@ -244,12 +244,15 @@
 <span><span class="co"># [[1]]$neutral_score</span></span>
 <span><span class="co"># [1] 0</span></span>
 <span><span class="co"># ...</span></span></code></pre></div>
+<p>A new experimental feature (dev only) allows you to use your LLM-as-a-judge to refine your structured data extractions:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, judgements <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="state-management">State Management<a class="anchor" aria-label="anchor" href="#state-management"></a>
 </h3>
 <p>Batch processing automatically saves state as a file and can resume interrupted operations:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, state_path <span class="op">=</span> <span class="st">"chat_state.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>If <code>state_path</code> is not defined, a temporary file will be created by default.</p>
 </div>
@@ -265,7 +268,7 @@
 <li>
 <code>"all"</code>: Show both prompts and responses</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
 <span>  <span class="va">chat_openai</span>, </span>
 <span>  echo <span class="op">=</span> <span class="st">"none"</span></span>
@@ -275,7 +278,7 @@
 <h3 id="automatic-retry">Automatic Retry<a class="anchor" aria-label="anchor" href="#automatic-retry"></a>
 </h3>
 <p>Automatically retry failed requests with exponential backoff, which serves as a wide guardrail against errors while <code>ellmer</code> and <code>httr2</code> serve as a narrow guardrail against specific API limits:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
 <span>  <span class="va">chat_openai</span>,         <span class="co"># ellmer chat model</span></span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3</span>,     <span class="co"># maximum retry attempts</span></span>
@@ -297,17 +300,17 @@
 <h3 id="timeout-handling">Timeout Handling<a class="anchor" aria-label="anchor" href="#timeout-handling"></a>
 </h3>
 <p>The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the chat model functions.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_future</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  chat_openai,</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="at">system_prompt =</span> <span class="st">"Reply concisely, one sentence"</span></span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="at">timeout =</span> <span class="dv">60</span></span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_future</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  chat_openai,</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="at">system_prompt =</span> <span class="st">"Reply concisely, one sentence"</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>  <span class="at">timeout =</span> <span class="dv">60</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="sound-notifications">Sound Notifications<a class="anchor" aria-label="anchor" href="#sound-notifications"></a>
 </h3>
 <p>Toggle sound notifications on batch completion, interruption, and error:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
 <span>  <span class="va">chat_openai</span>,</span>
 <span>  beep <span class="op">=</span> <span class="cn">TRUE</span></span>
