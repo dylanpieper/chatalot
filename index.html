@@ -235,7 +235,7 @@
 <span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">result</span><span class="op">$</span><span class="fu">structured_data</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">result</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co"># [[1]]</span></span>
 <span><span class="co"># [[1]]$positive_score</span></span>
 <span><span class="co"># [1] 0.95</span></span>
@@ -244,7 +244,7 @@
 <span><span class="co"># [[1]]$neutral_score</span></span>
 <span><span class="co"># [1] 0</span></span>
 <span><span class="co"># ...</span></span></code></pre></div>
-<p>A new experimental feature (dev only) allows you to use your LLM-as-a-judge to refine your structured data extractions:</p>
+<p>A new experimental development feature implements LLM-as-a-judge into the turns of the chat to refine structured data extractions via the <code>judgements</code> parameter:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, judgements <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -321,13 +321,11 @@
 </h3>
 <ul>
 <li>
-<code><a href="reference/texts.html">texts()</a></code>: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector)</li>
+<code><a href="reference/texts.html">texts()</a></code>: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a type specification is provided, it returns structured data instead of plain text.</li>
 <li>
 <code><a href="reference/chats.html">chats()</a></code>: Returns a list of chat objects</li>
 <li>
 <code><a href="reference/progress.html">progress()</a></code>: Returns processing statistics</li>
-<li>
-<code><a href="reference/structured_data.html">structured_data()</a></code>: Returns extracted structured data (if <code>type_spec</code> is provided)</li>
 </ul>
 </div>
 </div>
