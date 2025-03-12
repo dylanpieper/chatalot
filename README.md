@@ -187,6 +187,12 @@ result$structured_data()
 # ...
 ```
 
+A new experimental feature (dev only) allows you to use your LLM-as-a-judge to refine your structured data extractions:
+
+``` r
+result <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)
+```
+
 ### State Management
 
 Batch processing automatically saves state as a file and can resume interrupted operations:

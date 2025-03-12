@@ -94,6 +94,7 @@ structured_data <- S7::new_generic("structured_data", "x")
 #' @param completed Integer indicating number of completed prompts
 #' @param state_path Path to save state file
 #' @param type_spec Type specification for structured data extraction
+#' @param judgements Number of judgements in a `batch_judge()` workflow (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
 #' @param echo Level of output to display ("none", "text", "all")
 #' @param input_type Type of input ("vector" or "list")
 #' @param max_retries Maximum number of retry attempts
@@ -171,6 +172,18 @@ batch <- S7::new_class(
           if (!inherits(value, c("ellmer::TypeObject", "ellmer::Type", "ellmer::TypeArray"))) {
             return("@type_spec must be an ellmer type specification (created with type_object(), type_array(), etc.) or NULL")
           }
+        }
+        NULL
+      }
+    ),
+    judgements = S7::new_property(
+      class = S7::class_integer,
+      validator = function(value) {
+        if (length(value) != 1) {
+          "@judgements must be a single integer"
+        }
+        if (value < 0) {
+          "@judgements must be non-negative"
         }
         NULL
       }
