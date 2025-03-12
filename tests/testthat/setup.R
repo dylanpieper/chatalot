@@ -1,10 +1,10 @@
 get_test_prompts <- function(n = 3) {
-  prompts <- c(
+  prompts <- list(
     "What is 2+2?",
     "Name a planet.",
     "What color is the sky?"
   )
-  return(as.list(prompts[seq_len(n)]))
+  return(prompts[seq_len(n)])
 }
 
 get_sentiment_type_spec <- function() {
