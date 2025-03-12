@@ -6,7 +6,7 @@
 \alias{hellmer-package}
 \title{hellmer: Batch Processing for Chat Models}
 \description{
-Provides tools for efficient batch processing of multiple chat model interactions. Building on the 'ellmer' package, it enables both sequential and parallel processing of chat completions with robust error handling, progress tracking, and retry capabilities. The package implements methods for distributing workloads across multiple R sessions or cores using the 'future' framework, managing authentication errors, and capturing structured results from large batches of prompts.
+Batch processing framework for 'ellmer' chat model interactions. Enables sequential and parallel processing of chat completions. Core capabilities include error handling with backoff, state persistence, progress tracking, and retry management. Parallel processing is implemented via the 'future' framework. Additional features include structured data extraction, tool integration, timeout handling, verbosity control, and sound notifications. Includes methods for returning chat texts, chat objects, progress status, and structured data.
 }
 \seealso{
 Useful links:

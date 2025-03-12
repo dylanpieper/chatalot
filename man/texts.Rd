@@ -2,7 +2,7 @@
 % Please edit documentation in R/classes.R
 \name{texts}
 \alias{texts}
-\title{Extract texts from a batch result}
+\title{Extract texts or structured data from a batch result}
 \usage{
 texts(x, ...)
 }
@@ -12,10 +12,10 @@ texts(x, ...)
 \item{...}{Additional arguments passed to methods}
 }
 \value{
-A character vector or list of text responses
+A character vector or list of text responses. If a type specification was provided to the batch, structured data objects will be returned instead.
 }
 \description{
-Extract texts from a batch result
+Extract texts or structured data from a batch result
 }
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

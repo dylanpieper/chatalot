@@ -56,10 +56,9 @@ batch(
 \value{
 Returns an S7 class object of class "batch" that represents a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides methods for:
 \itemize{
-\item Extracting text responses via \code{texts()}
+\item Extracting text responses via \code{texts()} (includes structured data when a type specification is provided)
 \item Accessing full chat objects via \code{chats()}
 \item Tracking processing progress via \code{progress()}
-\item Extracting structured data via \code{structured_data()} when a type specification is provided
 }
 The batch object manages prompt processing, tracks completion status, and handles retries for failed requests.
 }

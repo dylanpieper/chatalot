@@ -176,7 +176,7 @@ prompts <- list(
 
 result <- chat$batch(prompts, type_spec = type_sentiment)
 
-result$structured_data()
+result$texts()
 # [[1]]
 # [[1]]$positive_score
 # [1] 0.95
@@ -185,6 +185,12 @@ result$structured_data()
 # [[1]]$neutral_score
 # [1] 0
 # ...
+```
+
+A new experimental development feature implements LLM-as-a-judge into the turns of the chat to refine structured data extractions.
+
+``` r
+result <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)
 ```
 
 ### State Management
@@ -260,10 +266,9 @@ chat <- chat_sequential(
 
 ### Results Methods
 
--   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector)
+-   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a type specification is provided, it returns structured data instead of plain text.
 -   `chats()`: Returns a list of chat objects
 -   `progress()`: Returns processing statistics
--   `structured_data()`: Returns extracted structured data (if `type_spec` is provided)
 
 ## Further Reading
 

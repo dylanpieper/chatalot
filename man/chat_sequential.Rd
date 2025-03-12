@@ -44,10 +44,9 @@ A batch object (S7 class) containing
 \item completed: Number of successfully processed prompts
 \item state_path: Path where batch state is saved
 \item type_spec: Type specification used for structured data
-\item texts: Function to extract text responses
+\item texts: Function to extract text responses (includes structured data when a type specification is provided)
 \item chats: Function to extract chat objects
 \item progress: Function to get processing status
-\item structured_data: Function to extract structured data (if \code{type_spec} was provided)
 }
 }
 \description{

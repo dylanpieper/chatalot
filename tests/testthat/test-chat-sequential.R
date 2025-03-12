@@ -1,7 +1,7 @@
 test_that("chat_sequential initialization and result class works", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 
-  chat <- chat_sequential(ellmer::chat_claude, beep = FALSE)
+  chat <- chat_sequential(ellmer::chat_openai, beep = FALSE)
   expect_true(inherits(chat, "Chat"))
   expect_true(inherits(chat, "R6"))
 
@@ -12,7 +12,7 @@ test_that("chat_sequential initialization and result class works", {
 test_that("chat_sequential processes prompts correctly", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 
-  chat <- chat_sequential(ellmer::chat_claude, beep = FALSE)
+  chat <- chat_sequential(ellmer::chat_openai, beep = FALSE)
   result <- chat$batch(get_test_prompts(2))
 
   expect_type(result, "list")
@@ -21,17 +21,17 @@ test_that("chat_sequential processes prompts correctly", {
   expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
 })
 
-test_that("chat_sequential handles structured data", {
+test_that("chat_sequential handles structured data extraction via texts()", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 
-  chat <- chat_sequential(ellmer::chat_claude, beep = FALSE)
+  chat <- chat_sequential(ellmer::chat_openai, beep = FALSE)
   prompts <- list(
     "I love this!",
     "This is terrible."
   )
 
   result <- chat$batch(prompts, type_spec = get_sentiment_type_spec())
-  data <- result$structured_data()
+  data <- result$texts()
 
   expect_type(data, "list")
   expect_length(data, 2)
@@ -41,7 +41,7 @@ test_that("chat_sequential handles structured data", {
 test_that("chat_sequential works with tools", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 
-  chat <- chat_sequential(ellmer::chat_claude, beep = FALSE)
+  chat <- chat_sequential(ellmer::chat_openai, beep = FALSE)
   chat$register_tool(get_square_tool())
 
   result <- chat$batch(list(
@@ -58,7 +58,7 @@ test_that("chat_sequential handles state persistence", {
   temp_file <- tempfile(fileext = ".rds")
   on.exit(unlink(temp_file))
 
-  chat <- chat_sequential(ellmer::chat_claude, beep = FALSE)
+  chat <- chat_sequential(ellmer::chat_openai, beep = FALSE)
   result <- chat$batch(get_test_prompts(1), state_path = temp_file)
 
   expect_true(file.exists(temp_file))
@@ -68,7 +68,7 @@ test_that("chat_sequential handles state persistence", {
 test_that("chat_sequential respects timeout", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 
-  chat <- chat_sequential(ellmer::chat_claude, timeout = 30, beep = FALSE)
+  chat <- chat_sequential(ellmer::chat_openai, timeout = 30, beep = FALSE)
   result <- chat$batch(get_test_prompts(1))
   expect_equal(length(result$texts()), 1)
 })
@@ -76,25 +76,25 @@ test_that("chat_sequential respects timeout", {
 test_that("chat_sequential supports echo", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 
-  chat <- chat_sequential(ellmer::chat_claude, echo = "text", beep = FALSE)
+  chat <- chat_sequential(ellmer::chat_openai, echo = "text", beep = FALSE)
   result <- chat$batch(get_test_prompts(1))
   expect_equal(length(result$texts()), 1)
 })
 
 test_that("chat_sequential handles errors gracefully", {
-  skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
+  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
 
-  original_key <- Sys.getenv("ANTHROPIC_API_KEY", unset = NA)
-  Sys.unsetenv("ANTHROPIC_API_KEY")
-  Sys.setenv(ANTHROPIC_API_KEY = "invalid_key")
+  original_key <- Sys.getenv("OPENAI_API_KEY", unset = NA)
+  Sys.unsetenv("OPENAI_API_KEY")
+  Sys.setenv(OPENAI_API_KEY = "invalid_key")
 
-  chat <- chat_sequential(ellmer::chat_claude, beep = FALSE)
+  chat <- chat_sequential(ellmer::chat_openai, beep = FALSE)
 
   on.exit({
     if (!is.na(original_key)) {
-      Sys.setenv(ANTHROPIC_API_KEY = original_key)
+      Sys.setenv(OPENAI_API_KEY = original_key)
     } else {
-      Sys.unsetenv("ANTHROPIC_API_KEY")
+      Sys.unsetenv("OPENAI_API_KEY")
     }
   })
 

@@ -653,7 +653,6 @@ create_results <- function(result) {
   base_list$texts <- function() texts(result)
   base_list$chats <- function() chats(result)
   base_list$progress <- function() progress(result)
-  base_list$structured_data <- function() structured_data(result)
 
   structure(base_list, class = "batch")
 }

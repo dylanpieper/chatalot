@@ -2,7 +2,7 @@
 % Please edit documentation in R/classes.R
 \name{texts.batch}
 \alias{texts.batch}
-\title{Extract text responses from a batch}
+\title{Extract text responses or structured data from a batch}
 \arguments{
 \item{x}{A batch object}
 
@@ -10,8 +10,9 @@
 }
 \value{
 A character vector (if original prompts were supplied as a vector) or
-a list of response texts (if original prompts were supplied as a list)
+a list of response texts (if original prompts were supplied as a list).
+If a type specification was provided to the batch, structured data objects will be returned instead.
 }
 \description{
-Extract text responses from a batch
+Extract text responses or structured data from a batch
 }

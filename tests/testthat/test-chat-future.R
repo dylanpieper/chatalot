@@ -1,7 +1,7 @@
 test_that("chat_future initialization and result class works", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 
-  chat <- chat_future(ellmer::chat_claude, beep = FALSE)
+  chat <- chat_future(ellmer::chat_openai, beep = FALSE)
   expect_true(inherits(chat, "Chat"))
   expect_true(inherits(chat, "R6"))
 
@@ -12,7 +12,7 @@ test_that("chat_future initialization and result class works", {
 test_that("chat_future processes chunks correctly", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 
-  chat <- chat_future(ellmer::chat_claude, workers = 1, beep = FALSE)
+  chat <- chat_future(ellmer::chat_openai, workers = 1, beep = FALSE)
   result <- chat$batch(get_test_prompts(2), chunk_size = 1)
 
   expect_type(result, "list")
@@ -21,17 +21,17 @@ test_that("chat_future processes chunks correctly", {
   expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
 })
 
-test_that("chat_future handles structured data", {
+test_that("chat_future handles structured data extraction via texts()", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 
-  chat <- chat_future(ellmer::chat_claude, workers = 1, beep = FALSE)
+  chat <- chat_future(ellmer::chat_openai, workers = 1, beep = FALSE)
   prompts <- list(
     "I love this!",
     "This is terrible."
   )
 
   result <- chat$batch(prompts, type_spec = get_sentiment_type_spec(), chunk_size = 1)
-  data <- result$structured_data()
+  data <- result$texts()
 
   expect_type(data, "list")
   expect_length(data, 2)
@@ -41,7 +41,7 @@ test_that("chat_future handles structured data", {
 test_that("chat_future works with tools", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 
-  chat <- chat_future(ellmer::chat_claude, workers = 1, beep = FALSE)
+  chat <- chat_future(ellmer::chat_openai, workers = 1, beep = FALSE)
   chat$register_tool(get_square_tool())
 
   result <- chat$batch(
@@ -61,7 +61,7 @@ test_that("chat_future handles state persistence", {
   temp_file <- tempfile(fileext = ".rds")
   on.exit(unlink(temp_file))
 
-  chat <- chat_future(ellmer::chat_claude, workers = 1, beep = FALSE)
+  chat <- chat_future(ellmer::chat_openai, workers = 1, beep = FALSE)
   result <- chat$batch(get_test_prompts(1), state_path = temp_file, chunk_size = 1)
 
   expect_true(file.exists(temp_file))
@@ -71,25 +71,25 @@ test_that("chat_future handles state persistence", {
 test_that("chat_future respects timeout", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 
-  chat <- chat_future(ellmer::chat_claude, workers = 1, timeout = 30, beep = FALSE)
+  chat <- chat_future(ellmer::chat_openai, workers = 1, timeout = 30, beep = FALSE)
   result <- chat$batch(get_test_prompts(1), chunk_size = 1)
   expect_equal(length(result$texts()), 1)
 })
 
 test_that("chat_future handles worker failures", {
-  skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
+  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
 
-  original_key <- Sys.getenv("ANTHROPIC_API_KEY", unset = NA)
-  Sys.unsetenv("ANTHROPIC_API_KEY")
-  Sys.setenv(ANTHROPIC_API_KEY = "invalid_key")
+  original_key <- Sys.getenv("OPENAI_API_KEY", unset = NA)
+  Sys.unsetenv("OPENAI_API_KEY")
+  Sys.setenv(OPENAI_API_KEY = "invalid_key")
 
-  chat <- chat_future(ellmer::chat_claude, workers = 1, beep = FALSE)
+  chat <- chat_future(ellmer::chat_openai, workers = 1, beep = FALSE)
 
   on.exit({
     if (!is.na(original_key)) {
-      Sys.setenv(ANTHROPIC_API_KEY = original_key)
+      Sys.setenv(OPENAI_API_KEY = original_key)
     } else {
-      Sys.unsetenv("ANTHROPIC_API_KEY")
+      Sys.unsetenv("OPENAI_API_KEY")
     }
   })
 
