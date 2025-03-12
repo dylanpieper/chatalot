@@ -1,6 +1,6 @@
 # hellmer <img src="man/figures/hellmer-hex.png" align="right" width="140"/>
 
-`hellmer` enables sequential or parallel batch processing for [chat models](https://ellmer.tidyverse.org/reference/index.html) from [ellmer](https://github.com/tidyverse/ellmer).
+`hellmer` enables sequential or parallel batch processing for `ellmer` [chat models](https://ellmer.tidyverse.org/reference/index.html).
 
 ## Overview
 
@@ -187,7 +187,7 @@ result$texts()
 # ...
 ```
 
-A new experimental development feature implements LLM-as-a-judge into the chat turns to refine structured data extractions. Use the `judgements` parameter to set the number of iterations (warning: uses more tokens):
+A new experimental development feature implements LLM-as-a-judge into the chat turns to refine structured data extractions. Use the `judgements` parameter to set the number of iterations (warning: increases token use):
 
 ``` r
 result <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)
