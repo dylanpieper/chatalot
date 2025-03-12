@@ -25,7 +25,7 @@
 #'     \item chats: Function to extract chat objects
 #'     \item progress: Function to get processing status
 #'   }
-#' @examplesIf ellmer::has_credentials("openai")
+#' @examplesIf hellmer::has_credentials("openai")
 #' # Create a sequential chat processor
 #' chat <- chat_sequential(chat_openai, system_prompt = "Reply concisely, one sentence")
 #'
@@ -39,7 +39,7 @@
 #' # Check the progress if interrupted
 #' batch$progress()
 #'
-#' # Return the responses as a vector or list
+#' # Return the responses
 #' batch$texts()
 #'
 #' # Return the chat objects
@@ -81,7 +81,16 @@ chat_sequential <- function(
 
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
+                             judgements = 0,
                              state_path = tempfile("chat_", fileext = ".rds")) {
+    if (judgements > 0 && is.null(type_spec)) {
+      cli::cli_alert_warning("Judgements parameter ({judgements}) specified but will be ignored without a type_spec")
+    }
+
+    if (!is.null(type_spec) && judgements < 0) {
+      cli::cli_abort("Number of judgements must be non-negative")
+    }
+
     if (is.null(chat_env$last_state_path)) {
       chat_env$last_state_path <- state_path
     } else {
@@ -92,6 +101,7 @@ chat_sequential <- function(
       chat_obj = chat_env$chat_model,
       prompts = prompts,
       type_spec = type_spec,
+      judgements = judgements,
       state_path = state_path,
       echo = chat_env$echo,
       max_retries = chat_env$max_retries,
@@ -137,7 +147,7 @@ chat_sequential <- function(
 #'     \item chats: Function to extract chat objects
 #'     \item progress: Function to get processing status
 #'   }
-#' @examplesIf ellmer::has_credentials("openai")
+#' @examplesIf hellmer::has_credentials("openai")
 #' # Create a parallel chat processor
 #' chat <- chat_future(chat_openai, system_prompt = "Reply concisely, one sentence")
 #'
@@ -151,7 +161,7 @@ chat_sequential <- function(
 #' # Check the progress if interrupted
 #' batch$progress()
 #'
-#' # Return the responses as a vector or list
+#' # Return the responses
 #' batch$texts()
 #'
 #' # Return the chat objects
@@ -200,8 +210,17 @@ chat_future <- function(
 
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
+                             judgements = 0,
                              state_path = tempfile("chat_", fileext = ".rds"),
                              chunk_size = chat_env$chunk_size) {
+    if (judgements > 0 && is.null(type_spec)) {
+      cli::cli_alert_warning("Judgements parameter ({judgements}) specified but will be ignored without a type_spec")
+    }
+
+    if (!is.null(type_spec) && judgements < 0) {
+      cli::cli_abort("Number of judgements must be non-negative")
+    }
+
     if (is.null(chat_env$last_state_path)) {
       chat_env$last_state_path <- state_path
     } else {
@@ -212,6 +231,7 @@ chat_future <- function(
       chat_obj = chat_env$chat_model,
       prompts = prompts,
       type_spec = type_spec,
+      judgements = judgements,
       state_path = state_path,
       workers = chat_env$workers,
       chunk_size = chunk_size,

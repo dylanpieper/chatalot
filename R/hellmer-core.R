@@ -35,10 +35,11 @@ create_auth_error <- function(original_error) {
 #' @param original_chat Original chat model object
 #' @param prompt Prompt text
 #' @param type_spec Type specification for structured data
+#' @param judgements Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
 #' @param echo Echo level ("none", "text", "all")
 #' @return List containing response information
 #' @keywords internal
-capture <- function(original_chat, prompt, type_spec = NULL, echo = "text") {
+capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, echo = "text") {
   response <- NULL
   structured_data <- NULL
   chat <- original_chat$clone()
@@ -50,16 +51,9 @@ capture <- function(original_chat, prompt, type_spec = NULL, echo = "text") {
   }
 
   if (!is.null(type_spec)) {
-    if (echo == "none") {
-      temp_file <- tempfile()
-      sink(temp_file)
-      structured_data <- chat$extract_data(prompt, type = type_spec)
-      sink()
-      unlink(temp_file)
-    } else {
-      structured_data <- chat$extract_data(prompt, type = type_spec)
-      str(structured_data)
-    }
+    result <- process_judgements(chat, prompt, type_spec, judgements, echo)
+    structured_data <- result$final
+    chat <- result$chat
 
     if (is.null(structured_data)) {
       stop("Received NULL structured data response")
@@ -77,10 +71,10 @@ capture <- function(original_chat, prompt, type_spec = NULL, echo = "text") {
     }
   }
 
-  turns <- chat$get_turns()
+  chat_turns <- chat$get_turns()
   tokens <- chat$tokens()
 
-  if (is.null(turns) || length(turns) == 0) {
+  if (is.null(chat_turns) || length(chat_turns) == 0) {
     stop("No chat turns recorded")
   }
 
@@ -92,7 +86,7 @@ capture <- function(original_chat, prompt, type_spec = NULL, echo = "text") {
     chat = chat,
     text = response,
     structured_data = structured_data,
-    turns = turns,
+    turns = chat_turns,
     tokens = tokens
   )
 }
@@ -102,14 +96,16 @@ capture <- function(original_chat, prompt, type_spec = NULL, echo = "text") {
 #' @param prompt Prompt text
 #' @param type_spec Type specification for structured data
 #' @param echo Echo level ("none", "text", "all")
+#' @param judgements Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
 #' @param max_retries Maximum number of retry attempts
 #' @param initial_delay Initial delay in seconds before first retry
 #' @param max_delay Maximum delay in seconds between retries
 #' @param backoff_factor Factor to multiply delay by after each retry
+#' @param timeout Timeout in seconds
 #' @return List containing response information
 #' @keywords internal
 capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
-                               echo = "text", max_retries = 3L,
+                               echo = "text", judgements = 0, max_retries = 3L,
                                initial_delay = 1, max_delay = 32,
                                backoff_factor = 2, timeout = 60) {
   retry_with_delay <- function(attempt = 1, delay = initial_delay) {
@@ -117,7 +113,7 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
       {
         R.utils::withTimeout(
           {
-            capture(original_chat, prompt, type_spec, echo)
+            capture(original_chat, prompt, type_spec, judgements, echo)
           },
           timeout = timeout
         )
@@ -168,20 +164,22 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
 #' @param chat_obj Chat model object
 #' @param prompts List of prompts
 #' @param type_spec Type specification for structured data
+#' @param judgements Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
 #' @param state_path Path for saving state
-#' @param echo Echo level ("none", "text", or "all")
-#' @param beep Play sound on completion, interruption, and error
-#' @param max_retries Maximum number of retry attempts per prompt
-#' @param initial_delay Initial delay in seconds before first retry
-#' @param max_delay Maximum delay in seconds between retries
-#' @param backoff_factor Factor to multiply delay by after each retry
-#' @param timeout Maximum time in seconds to wait for each prompt response
+#' @param echo Echo level
+#' @param beep Play sound on completion
+#' @param max_retries Maximum retry attempts
+#' @param initial_delay Initial delay before retry
+#' @param max_delay Maximum delay between retries
+#' @param backoff_factor Factor to multiply delay
+#' @param timeout Maximum time to wait
 #' @return Batch results object
 #' @keywords internal
 process <- function(
     chat_obj,
     prompts,
     type_spec = NULL,
+    judgements = 0,
     state_path = tempfile("chat_", fileext = ".rds"),
     echo = "none",
     max_retries = 3L,
@@ -209,6 +207,7 @@ process <- function(
       completed = 0L,
       state_path = state_path,
       type_spec = type_spec,
+      judgements = as.integer(judgements),
       echo = echo,
       input_type = orig_type,
       max_retries = as.integer(max_retries),
@@ -251,6 +250,7 @@ process <- function(
 
       response <- capture_with_retry(
         chat_obj, prompts[[i]], type_spec, echo,
+        judgements = judgements,
         max_retries = max_retries,
         initial_delay = initial_delay,
         max_delay = max_delay,
@@ -306,23 +306,25 @@ process <- function(
 #' @param chat_obj Chat model object for API calls
 #' @param prompts Vector or list of prompts to process
 #' @param type_spec Optional type specification for structured data extraction
+#' @param judgements Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
 #' @param state_path Path to save intermediate state
-#' @param workers Number of parallel workers (default: number of CPU cores)
-#' @param chunk_size Number of prompts to process in parallel at a time (default: 10% of the number of prompts)
-#' @param plan Parallel backend: "multisession" or "multicore"
-#' @param beep Play sound on completion/error (default: TRUE)
-#' @param timeout Maximum seconds per prompt (default: 60)
-#' @param max_chunk_attempts Maximum retries per failed chunk (default: 3)
-#' @param max_retries Maximum retries per prompt (default: 3)
-#' @param initial_delay Initial delay before first retry (default: 1)
-#' @param max_delay Maximum delay between retries (default: 32)
-#' @param backoff_factor Delay multiplier after each retry (default: 2)
-#' @return Batch results object containing processed responses
+#' @param workers Number of parallel workers
+#' @param chunk_size Number of prompts to process in parallel at a time
+#' @param plan Parallel backend
+#' @param beep Play sound on completion/error
+#' @param timeout Maximum seconds per prompt
+#' @param max_chunk_attempts Maximum retries per failed chunk
+#' @param max_retries Maximum retries per prompt
+#' @param initial_delay Initial delay before first retry
+#' @param max_delay Maximum delay between retries
+#' @param backoff_factor Delay multiplier after each retry
+#' @return Batch results object
 #' @keywords internal
 process_future <- function(
     chat_obj,
     prompts,
     type_spec = NULL,
+    judgements = 0,
     state_path = tempfile("chat_", fileext = ".rds"),
     workers = parallel::detectCores(),
     chunk_size = NULL,
@@ -392,6 +394,7 @@ process_future <- function(
       completed = 0L,
       state_path = state_path,
       type_spec = type_spec,
+      judgements = as.integer(judgements),
       echo = "none",
       input_type = original_type,
       max_retries = max_retries,
@@ -452,6 +455,7 @@ process_future <- function(
                   prompt,
                   type_spec,
                   echo = "none",
+                  judgements = judgements,
                   timeout = timeout,
                   max_retries = max_retries,
                   initial_delay = initial_delay,
@@ -559,13 +563,19 @@ process_future <- function(
 #' @param result A batch object to store results
 #' @param chat_obj Chat model object for making API calls
 #' @param type_spec Type specification for structured data extraction
+#' @param judgements Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
 #' @param pb Progress bar object
 #' @param state_path Path to save intermediate state
 #' @param echo Level of output to display ("none", "text", "all")
 #' @param beep Logical indicating whether to play sounds
+#' @param timeout Maximum time in seconds to wait per prompt
+#' @param max_retries Maximum number of retry attempts
+#' @param initial_delay Initial delay in seconds before first retry
+#' @param max_delay Maximum delay in seconds between retries
+#' @param backoff_factor Factor to multiply delay by after each retry
 #' @return Updated batch object with processed results
 #' @keywords internal
-process_chunks <- function(chunks, result, chat_obj, type_spec, pb, state_path, echo, beep) {
+process_chunks <- function(chunks, result, chat_obj, type_spec, judgements, pb, state_path, echo, beep, timeout = 60, max_retries = 3L, initial_delay = 1, max_delay = 60, backoff_factor = 2) {
   was_interrupted <- FALSE
 
   for (chunk in chunks) {
@@ -577,7 +587,18 @@ process_chunks <- function(chunks, result, chat_obj, type_spec, pb, state_path, 
           chunk,
           function(prompt) {
             worker_chat <- chat_obj$clone()
-            capture_with_retry(worker_chat, prompt, type_spec, echo = "none")
+            capture_with_retry(
+              worker_chat,
+              prompt,
+              type_spec,
+              echo = "none",
+              judgements = judgements,
+              timeout = timeout,
+              max_retries = max_retries,
+              initial_delay = initial_delay,
+              max_delay = max_delay,
+              backoff_factor = backoff_factor
+            )
           },
           .progress = FALSE
         )
@@ -602,6 +623,88 @@ process_chunks <- function(chunks, result, chat_obj, type_spec, pb, state_path, 
   if (!was_interrupted) {
     finish_successful_batch(pb, beep)
   }
+}
+
+#' Process structured data extraction with judgement
+#' @param chat_obj Chat model object
+#' @param prompt The prompt or text to analyze
+#' @param type_spec Type specification for structured data
+#' @param judgements Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
+#' @param echo Level of output
+#' @return List containing extraction process
+#' @keywords internal
+process_judgements <- function(chat_obj, prompt, type_spec, judgements = 0, echo = "none") {
+  result <- list(
+    initial = NULL,
+    evaluations = list(),
+    refined = list()
+  )
+
+  chat <- chat_obj$clone()
+
+  if (echo == "all") {
+    cli::cli_h3(cli::col_green("Initial Extraction"))
+  }
+
+  result$initial <- chat$extract_data(
+    prompt,
+    type = type_spec,
+    echo = echo
+  )
+
+  current_extraction <- result$initial
+
+  judgement_rounds <- judgements
+
+  if (judgement_rounds > 0) {
+    for (i in 1:judgement_rounds) {
+      if (echo == "all") {
+        cli::cli_h3(cli::col_green(paste0("Judgement Round ", i)))
+      }
+
+      eval_prompt <- paste(
+        "What could be improved in my data extraction?",
+        "I extracted the following structured data:",
+        jsonlite::toJSON(current_extraction, pretty = TRUE, auto_unbox = TRUE),
+        "The original prompt was:", prompt
+      )
+
+      if (echo == "none") {
+        evaluation <- chat$chat(eval_prompt, echo = "none")
+      } else {
+        cli::cli_h3(cli::col_green(paste0("Evaluation", i)))
+        evaluation <- chat$chat(eval_prompt, echo = echo)
+      }
+      result$evaluations[[i]] <- evaluation
+
+      refine_prompt <- paste(
+        "Extract the following data more accurately:",
+        prompt,
+        "The prior extraction had the following structured data:",
+        jsonlite::toJSON(current_extraction, pretty = TRUE, auto_unbox = TRUE),
+        "The prior extraction had these issues:", evaluation
+      )
+
+      refined <- chat$extract_data(
+        refine_prompt,
+        type = type_spec,
+        echo = echo
+      )
+
+      result$refined[[i]] <- refined
+      current_extraction <- refined
+
+      if (echo %in% c("text", "all")) {
+        cli::cli_h3(cli::col_green(paste0("Refined Extraction", i)))
+        str(refined)
+      }
+    }
+  }
+
+  result$final <- current_extraction
+  result$chat <- chat
+
+  return(result)
 }
 
 #' Handle batch interruption

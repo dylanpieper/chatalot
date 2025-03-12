@@ -38,6 +38,23 @@ test_that("chat_sequential handles structured data extraction via texts()", {
   expect_true(all(sapply(data, function(x) !is.null(x$score))))
 })
 
+test_that("chat_sequential handles structured data with judgements", {
+  skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
+
+  chat <- chat_sequential(ellmer::chat_claude, beep = FALSE)
+  prompts <- list(
+    "I love this!",
+    "This is terrible."
+  )
+
+  result <- chat$batch(prompts, type_spec = get_sentiment_type_spec(), judgements = 1)
+  data <- result$structured_data()
+
+  expect_type(data, "list")
+  expect_length(data, 2)
+  expect_true(all(sapply(data, function(x) !is.null(x$score))))
+})
+
 test_that("chat_sequential works with tools", {
   skip_if_not(nzchar(Sys.getenv("ANTHROPIC_API_KEY")), "API key not available")
 

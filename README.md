@@ -187,7 +187,7 @@ result$texts()
 # ...
 ```
 
-A new experimental development feature implements LLM-as-a-judge into the turns of the chat to refine structured data extractions.
+A new experimental development feature implements LLM-as-a-judge into the turns of the chat to refine structured data extractions via the `judgements` parameter:
 
 ``` r
 result <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)
