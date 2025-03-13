@@ -5,8 +5,6 @@ repo:
 template:
   bootstrap: 5
   light-switch: true
-  css:
-    - pkgdown.css
 figures:
   dev: grfx
 reference:

@@ -103,13 +103,13 @@ chat <- chat_future(chat_openai,
 
 When using parallel processing with `chat_future`, there's a trade-off between performance and safety:
 
--   **Maximum Performance**: Setting `chunk_size` equal to the number of prompts results in a 4-5x faster processing speed but will not save state as a file until all chats are processed
+-   **Maximum Performance**: Setting `chunk_size` equal to the number of prompts results in a 4-5x faster processing speed but progress will not be saved to the disk until all chats are processed
 
 ``` r
 chat$batch(prompts, chunk_size = length(prompts))
 ```
 
--   **Maximum Safety**: Using a smaller `chunk_size` ensures state is saved to the disk more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)
+-   **Maximum Safety**: Using a smaller `chunk_size` ensures progress is saved to the disk more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)
 
 ## Features
 
@@ -187,7 +187,7 @@ result <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)
 
 ### State Management
 
-Batch processing automatically saves state as a file and can resume interrupted operations:
+Batch processing automatically saves progress to an `.rds` file on the disk and allows you to resume interrupted operations:
 
 ``` r
 result <- chat$batch(prompts, state_path = "chat_state.rds")
@@ -258,9 +258,9 @@ chat <- chat_sequential(
 
 ### Results Methods
 
+-   `progress()`: Returns processing status
 -   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a type specification is provided, it returns structured data instead of plain text.
 -   `chats()`: Returns a list of chat objects
--   `progress()`: Returns processing statistics
 
 ## Further Reading
 
