@@ -163,17 +163,15 @@
 <div class="section level4">
 <h4 id="performance-vs-safety-trade-off">Performance vs Safety Trade-Off<a class="anchor" aria-label="anchor" href="#performance-vs-safety-trade-off"></a>
 </h4>
-<p>When using parallel processing with <code>chat_future</code>, there’s a trade-off between performance and safety:</p>
+<p>When using parallel processing with <code>chat_future</code>, there’s a trade-off between safety and performance:</p>
 <ul>
+<li>
+<strong>Maximum Safety</strong>: Using a smaller <code>chunk_size</code> ensures progress is saved to the disk more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)</li>
 <li>
 <strong>Maximum Performance</strong>: Setting <code>chunk_size</code> equal to the number of prompts results in a 4-5x faster processing speed but progress will not be saved to the disk until all chats are processed</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<ul>
-<li>
-<strong>Maximum Safety</strong>: Using a smaller <code>chunk_size</code> ensures progress is saved to the disk more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)</li>
-</ul>
 </div>
 </div>
 </div>
@@ -245,7 +243,19 @@
 <span><span class="co">#&gt; ...</span></span></code></pre></div>
 <p>The development version implements LLM-as-a-judge into the chat turns to refine structured data extractions. Use the <code>judgements</code> parameter to set the number of iterations (increases token use):</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, judgements <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, judgements <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">result</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; [[1]]$positive_score</span></span>
+<span><span class="co">#&gt; [1] 0.95</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[1]]$negative_score</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[1]]$neutral_score</span></span>
+<span><span class="co">#&gt; [1] 0.05</span></span>
+<span><span class="co">#&gt; ...</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="state-management">State Management<a class="anchor" aria-label="anchor" href="#state-management"></a>
