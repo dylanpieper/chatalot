@@ -4,5 +4,26 @@ repo:
     home: https://github.com/dylanpieper/hellmer
 template:
   bootstrap: 5
+  light-switch: true
+  css:
+    - pkgdown.css
 figures:
   dev: grfx
+reference:
+  - title: "Chat Processing"
+    desc: "Functions for creating chat processors"
+    contents:
+      - chat_sequential
+      - chat_future
+      - batch
+      
+  - title: "Progress Tracking"
+    desc: "Functions for monitoring progress"
+    contents:
+      - progress
+  
+  - title: "Result Extraction"
+    desc: "Functions for extracting data"
+    contents:
+      - chats
+      - texts

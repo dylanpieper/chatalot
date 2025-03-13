@@ -8,17 +8,11 @@ chats(x, ...)
 }
 \arguments{
 \item{x}{A batch object}
-
-\item{...}{Additional arguments passed to methods}
 }
 \value{
 A list of chat objects
-
-A list of chat objects
 }
 \description{
-Extract chat objects from a batch result
-
 Extract chat objects from a batch result
 }
 \examples{

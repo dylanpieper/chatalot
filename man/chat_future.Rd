@@ -78,7 +78,7 @@ batch <- chat$batch(list(
 # Check the progress if interrupted
 batch$progress()
 
-# Return the responses as a vector or list
+# Return the responses
 batch$texts()
 
 # Return the chat objects

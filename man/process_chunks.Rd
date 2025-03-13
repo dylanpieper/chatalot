@@ -4,7 +4,22 @@
 \alias{process_chunks}
 \title{Process chunks of prompts in parallel}
 \usage{
-process_chunks(chunks, result, chat_obj, type_spec, pb, state_path, echo, beep)
+process_chunks(
+  chunks,
+  result,
+  chat_obj,
+  type_spec,
+  judgements,
+  pb,
+  state_path,
+  echo,
+  beep,
+  timeout = 60,
+  max_retries = 3L,
+  initial_delay = 1,
+  max_delay = 60,
+  backoff_factor = 2
+)
 }
 \arguments{
 \item{chunks}{List of prompt chunks to process}
@@ -15,6 +30,8 @@ process_chunks(chunks, result, chat_obj, type_spec, pb, state_path, echo, beep)
 
 \item{type_spec}{Type specification for structured data extraction}
 
+\item{judgements}{Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
+
 \item{pb}{Progress bar object}
 
 \item{state_path}{Path to save intermediate state}
@@ -22,6 +39,16 @@ process_chunks(chunks, result, chat_obj, type_spec, pb, state_path, echo, beep)
 \item{echo}{Level of output to display ("none", "text", "all")}
 
 \item{beep}{Logical indicating whether to play sounds}
+
+\item{timeout}{Maximum time in seconds to wait per prompt}
+
+\item{max_retries}{Maximum number of retry attempts}
+
+\item{initial_delay}{Initial delay in seconds before first retry}
+
+\item{max_delay}{Maximum delay in seconds between retries}
+
+\item{backoff_factor}{Factor to multiply delay by after each retry}
 }
 \value{
 Updated batch object with processed results

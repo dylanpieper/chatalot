@@ -8,6 +8,7 @@ process(
   chat_obj,
   prompts,
   type_spec = NULL,
+  judgements = 0,
   state_path = tempfile("chat_", fileext = ".rds"),
   echo = "none",
   max_retries = 3L,
@@ -25,21 +26,23 @@ process(
 
 \item{type_spec}{Type specification for structured data}
 
+\item{judgements}{Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
+
 \item{state_path}{Path for saving state}
 
-\item{echo}{Echo level ("none", "text", or "all")}
+\item{echo}{Echo level}
 
-\item{max_retries}{Maximum number of retry attempts per prompt}
+\item{max_retries}{Maximum retry attempts}
 
-\item{initial_delay}{Initial delay in seconds before first retry}
+\item{initial_delay}{Initial delay before retry}
 
-\item{max_delay}{Maximum delay in seconds between retries}
+\item{max_delay}{Maximum delay between retries}
 
-\item{backoff_factor}{Factor to multiply delay by after each retry}
+\item{backoff_factor}{Factor to multiply delay}
 
-\item{timeout}{Maximum time in seconds to wait for each prompt response}
+\item{timeout}{Maximum time to wait}
 
-\item{beep}{Play sound on completion, interruption, and error}
+\item{beep}{Play sound on completion}
 }
 \value{
 Batch results object

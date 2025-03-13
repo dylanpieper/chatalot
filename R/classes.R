@@ -294,14 +294,7 @@ batch <- S7::new_class(
 )
 
 
-#' Extract text responses or structured data from a batch
-#' @name texts.batch
-#' @param x A batch object
-#' @param flatten Logical; whether to flatten structured data into a single string (default: TRUE)
-#' @return A character vector (if original prompts were supplied as a vector) or
-#'   a list of response texts (if original prompts were supplied as a list).
-#'   If a type specification was provided to the batch, structured data objects will be returned instead.
-#' @importFrom purrr map map_lgl
+#' @keywords internal
 S7::method(texts, batch) <- function(x, flatten = TRUE) {
   responses <- x@responses[seq_len(x@completed)]
 
@@ -330,22 +323,13 @@ S7::method(texts, batch) <- function(x, flatten = TRUE) {
   }
 }
 
-#' Extract chat objects from a batch result
-#' @name chats
-#' @param x A batch object
-#' @param ... Additional arguments passed to methods
-#' @return A list of chat objects
-#' @export
+#' @keywords internal
 S7::method(chats, batch) <- function(x) {
   responses <- x@responses[seq_len(x@completed)]
   map(responses, "chat")
 }
 
-#' Extract progress information from a batch
-#' @name progress.batch
-#' @param x A batch object
-#' @return A list containing progress details
-#' @importFrom cli cli_alert_warning
+#' @keywords internal
 S7::method(progress, batch) <- function(x) {
   list(
     total_prompts = length(x@prompts),

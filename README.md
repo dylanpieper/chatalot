@@ -16,7 +16,7 @@ Process multiple chat interactions with:
 
 ## Installation
 
-You can install `hellmer` from CRAN with:
+You can install the package from CRAN with:
 
 ``` r
 install.packages("hellmer")
@@ -37,25 +37,14 @@ usethis::edit_r_environ(scope = c("user", "project"))
 ``` r
 library(hellmer)
 
-chat <- chat_sequential(chat_openai, 
-                        system_prompt = "Reply concisely, one sentence")
+chat <- chat_sequential(
+  chat_openai, 
+  system_prompt = "Reply concisely, one sentence"
+)
 
 prompts <- list(
   "What is R?",
-  "Explain base R versus tidyverse",
-  "Explain vectors, lists, and data frames",
-  "How do environments work in R?",
-  "Compare R and Python for data analysis",
-  "Explain lazy evaluation in R",
-  "What are R's apply functions?",
-  "How do R packages work?",
-  "Explain R's object-oriented programming systems.",
-  "What are closures in R?",
-  "Describe R memory management",
-  "How does R handle missing values?",
-  "Explain R's integration with C++",
-  "Compare dplyr and data.table approaches",
-  "What are R formulas and when to use them?"
+  "Explain base R versus tidyverse"
 )
 
 result <- chat$batch(prompts)
@@ -65,38 +54,42 @@ Access the results:
 
 ``` r
 result$progress()
-# $total_prompts
-# [1] 15
-# $completed_prompts
-# [1] 15
-# $completion_percentage
-# [1] 100
-# $remaining_prompts
-# [1] 0
-# $state_path
-# [1] "/var/folders/cw/9ksk103n06n5lf4z3d__7c2r0000gn/T//RtmptmmaV0/chat_c5383b1279ae.rds"
+#> $total_prompts
+#> [1] 2
+#> 
+#> $completed_prompts
+#> [1] 2
+#> 
+#> $completion_percentage
+#> [1] 100
+#> 
+#> $remaining_prompts
+#> [1] 0
+#> 
+#> $state_path
+#> [1] "/var/folders/.../chat_c5383b1279ae.rds"
 
 result$texts()
-# [[1]]
-# [1] "R is a programming language and software environment used for statistical computing,
-# data analysis, and graphical representation."
-# [[2]]
-# [1] "Base R refers to the original set of R functions and packages, while tidyverse is a
-# collection of R packages designed for data science that offer a more consistent and
-# readable syntax."
-# ...
+#> [[1]]
+#> [1] "R is a programming language and software environment used for 
+#> statistical computing, data analysis, and graphical representation."
+#> 
+#> [[2]]
+#> [1] "Base R refers to the original set of R functions and packages, 
+#> while tidyverse is a collection of R packages designed for data science
+#> that offer a more consistent and readable syntax."
 
 result$chats()
-# [[1]]
-# <Chat turns=3 tokens=22/21>
-#  ── system ─────────────────────────────────────────────────────────────────────────
-# Reply concisely, one sentence
-# ── user ────────────────────────────────────────────────────────────────────────────
-# What is R?
-# ── assistant ───────────────────────────────────────────────────────────────────────
-# R is a programming language and software environment used for statistical computing,
-# data analysis, and graphical representation.
-# ...
+#> [[1]]
+#> <Chat turns=3 tokens=22/21>
+#>  ── system ────────────────────────────────────────────────────────────
+#> Reply concisely, one sentence
+#> ── user ───────────────────────────────────────────────────────────────
+#> What is R?
+#> ── assistant ──────────────────────────────────────────────────────────
+#> R is a programming language and software environment used for 
+#> statistical computing, data analysis, and graphical representation.
+#> ...
 ```
 
 ### Parallel Processing
@@ -117,10 +110,6 @@ chat$batch(prompts, chunk_size = length(prompts))
 ```
 
 -   **Maximum Safety**: Using a smaller `chunk_size` ensures state is saved to the disk more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)
-
-#### Naming Note
-
-`chat_future` isn't named `chat_parallel` because the latter will be included in `ellmer` ([#143](https://github.com/tidyverse/ellmer/issues/143)).
 
 ## Features
 
@@ -150,10 +139,11 @@ prompts <- list(
 result <- chat$batch(prompts)
 
 result$texts()
-# [[1]]
-# [1] "The current time in Chicago is 9:29 AM CDT."
-# [[2]]
-# [1] "The current time in New York is 10:29 AM EDT on March 10, 2025."
+#> [[1]]
+#> [1] "The current time in Chicago is 9:29 AM CDT."
+#> 
+#> [[2]]
+#> [1] "The current time in New York is 10:29 AM EDT."
 ```
 
 ### Structured Data Extraction
@@ -177,17 +167,19 @@ prompts <- list(
 result <- chat$batch(prompts, type_spec = type_sentiment)
 
 result$texts()
-# [[1]]
-# [[1]]$positive_score
-# [1] 0.95
-# [[1]]$negative_score
-# [1] 0.05
-# [[1]]$neutral_score
-# [1] 0
-# ...
+#> [[1]]
+#> $positive_score
+#> [1] 0.95
+#> 
+#> $negative_score
+#> [1] 0.05
+#> 
+#> $neutral_score
+#> [1] 0
+#> ...
 ```
 
-A new experimental development feature implements LLM-as-a-judge into the chat turns to refine structured data extractions. Use the `judgements` parameter to set the number of iterations (warning: increases token use):
+The development version implements LLM-as-a-judge into the chat turns to refine structured data extractions. Use the `judgements` parameter to set the number of iterations (increases token use):
 
 ``` r
 result <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)

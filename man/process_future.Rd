@@ -8,6 +8,7 @@ process_future(
   chat_obj,
   prompts,
   type_spec = NULL,
+  judgements = 0,
   state_path = tempfile("chat_", fileext = ".rds"),
   workers = parallel::detectCores(),
   chunk_size = NULL,
@@ -28,30 +29,32 @@ process_future(
 
 \item{type_spec}{Optional type specification for structured data extraction}
 
+\item{judgements}{Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
+
 \item{state_path}{Path to save intermediate state}
 
-\item{workers}{Number of parallel workers (default: number of CPU cores)}
+\item{workers}{Number of parallel workers}
 
-\item{chunk_size}{Number of prompts to process in parallel at a time (default: 10\% of the number of prompts)}
+\item{chunk_size}{Number of prompts to process in parallel at a time}
 
-\item{plan}{Parallel backend: "multisession" or "multicore"}
+\item{plan}{Parallel backend}
 
-\item{max_chunk_attempts}{Maximum retries per failed chunk (default: 3)}
+\item{max_chunk_attempts}{Maximum retries per failed chunk}
 
-\item{max_retries}{Maximum retries per prompt (default: 3)}
+\item{max_retries}{Maximum retries per prompt}
 
-\item{initial_delay}{Initial delay before first retry (default: 1)}
+\item{initial_delay}{Initial delay before first retry}
 
-\item{max_delay}{Maximum delay between retries (default: 32)}
+\item{max_delay}{Maximum delay between retries}
 
-\item{backoff_factor}{Delay multiplier after each retry (default: 2)}
+\item{backoff_factor}{Delay multiplier after each retry}
 
-\item{timeout}{Maximum seconds per prompt (default: 60)}
+\item{timeout}{Maximum seconds per prompt}
 
-\item{beep}{Play sound on completion/error (default: TRUE)}
+\item{beep}{Play sound on completion/error}
 }
 \value{
-Batch results object containing processed responses
+Batch results object
 }
 \description{
 Process prompts in parallel chunks with error handling and state management

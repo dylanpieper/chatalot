@@ -9,6 +9,7 @@ capture_with_retry(
   prompt,
   type_spec = NULL,
   echo = "text",
+  judgements = 0,
   max_retries = 3L,
   initial_delay = 1,
   max_delay = 32,
@@ -25,6 +26,8 @@ capture_with_retry(
 
 \item{echo}{Echo level ("none", "text", "all")}
 
+\item{judgements}{Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
+
 \item{max_retries}{Maximum number of retry attempts}
 
 \item{initial_delay}{Initial delay in seconds before first retry}
@@ -32,6 +35,8 @@ capture_with_retry(
 \item{max_delay}{Maximum delay in seconds between retries}
 
 \item{backoff_factor}{Factor to multiply delay by after each retry}
+
+\item{timeout}{Timeout in seconds}
 }
 \value{
 List containing response information

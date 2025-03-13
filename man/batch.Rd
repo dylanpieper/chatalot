@@ -10,6 +10,7 @@ batch(
   completed = integer(0),
   state_path = character(0),
   type_spec = NULL,
+  judgements = integer(0),
   echo = character(0),
   input_type = character(0),
   max_retries = integer(0),
@@ -32,6 +33,8 @@ batch(
 \item{state_path}{Path to save state file}
 
 \item{type_spec}{Type specification for structured data extraction}
+
+\item{judgements}{Number of judgements in a \code{batch_judge()} workflow (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
 
 \item{echo}{Level of output to display ("none", "text", "all")}
 
