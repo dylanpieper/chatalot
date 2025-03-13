@@ -127,7 +127,7 @@ chat_sequential <- function(
 #' @param workers Number of parallel workers to use (default: number of CPU cores)
 #' @param plan Processing strategy to use: "multisession" for separate R sessions
 #'        or "multicore" for forked processes (default: "multisession")
-#' @param chunk_size Number of prompts to process in parallel at a time (default: 10% of the number of prompts)
+#' @param chunk_size Number of prompts to process in parallel at a time (default: number of prompts / 10)
 #' @param max_chunk_attempts Maximum number of retry attempts for failed chunks (default: 3L)
 #' @param max_retries Maximum number of retry attempts per prompt (default: 3L)
 #' @param initial_delay Initial delay in seconds before first retry (default: 20)

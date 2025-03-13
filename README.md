@@ -101,15 +101,14 @@ chat <- chat_future(chat_openai,
 
 #### Performance vs Safety Trade-Off
 
-When using parallel processing with `chat_future`, there's a trade-off between performance and safety:
+When using parallel processing with `chat_future`, there's a trade-off between safety and performance:
 
+-   **Maximum Safety**: Using a smaller `chunk_size` ensures progress is saved to the disk more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)
 -   **Maximum Performance**: Setting `chunk_size` equal to the number of prompts results in a 4-5x faster processing speed but progress will not be saved to the disk until all chats are processed
 
 ``` r
 chat$batch(prompts, chunk_size = length(prompts))
 ```
-
--   **Maximum Safety**: Using a smaller `chunk_size` ensures progress is saved to the disk more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)
 
 ## Features
 
@@ -183,6 +182,18 @@ The development version implements LLM-as-a-judge into the chat turns to refine 
 
 ``` r
 result <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)
+
+result$texts()
+#> [[1]]
+#> [[1]]$positive_score
+#> [1] 0.95
+#> 
+#> [[1]]$negative_score
+#> [1] 0
+#> 
+#> [[1]]$neutral_score
+#> [1] 0.05
+#> ...
 ```
 
 ### State Management

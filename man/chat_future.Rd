@@ -27,7 +27,7 @@ chat_future(
 \item{plan}{Processing strategy to use: "multisession" for separate R sessions
 or "multicore" for forked processes (default: "multisession")}
 
-\item{chunk_size}{Number of prompts to process in parallel at a time (default: 10\% of the number of prompts)}
+\item{chunk_size}{Number of prompts to process in parallel at a time (default: number of prompts / 10)}
 
 \item{max_chunk_attempts}{Maximum number of retry attempts for failed chunks (default: 3L)}
 
