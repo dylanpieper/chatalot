@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Batch Processing for Chat Models • hellmer</title>
-<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -18,7 +18,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="index.html">hellmer</a>
 
@@ -45,6 +45,14 @@
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/dylanpieper/hellmer" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
+<li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="dark"><span class="fa fa-moon"></span> Dark</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="auto"><span class="fa fa-adjust"></span> Auto</button></li>
+  </ul>
+</li>
       </ul>
 </div>
 
@@ -75,7 +83,7 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install <code>hellmer</code> from CRAN with:</p>
+<p>You can install the package from CRAN with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"hellmer"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -95,63 +103,56 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/hellmer/">hellmer</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="va">chat_openai</span>, </span>
-<span>                        system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span>
+<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
+<span>  <span class="va">chat_openai</span>, </span>
+<span>  system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="st">"What is R?"</span>,</span>
-<span>  <span class="st">"Explain base R versus tidyverse"</span>,</span>
-<span>  <span class="st">"Explain vectors, lists, and data frames"</span>,</span>
-<span>  <span class="st">"How do environments work in R?"</span>,</span>
-<span>  <span class="st">"Compare R and Python for data analysis"</span>,</span>
-<span>  <span class="st">"Explain lazy evaluation in R"</span>,</span>
-<span>  <span class="st">"What are R's apply functions?"</span>,</span>
-<span>  <span class="st">"How do R packages work?"</span>,</span>
-<span>  <span class="st">"Explain R's object-oriented programming systems."</span>,</span>
-<span>  <span class="st">"What are closures in R?"</span>,</span>
-<span>  <span class="st">"Describe R memory management"</span>,</span>
-<span>  <span class="st">"How does R handle missing values?"</span>,</span>
-<span>  <span class="st">"Explain R's integration with C++"</span>,</span>
-<span>  <span class="st">"Compare dplyr and data.table approaches"</span>,</span>
-<span>  <span class="st">"What are R formulas and when to use them?"</span></span>
+<span>  <span class="st">"Explain base R versus tidyverse"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span></code></pre></div>
 <p>Access the results:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co"># $total_prompts</span></span>
-<span><span class="co"># [1] 15</span></span>
-<span><span class="co"># $completed_prompts</span></span>
-<span><span class="co"># [1] 15</span></span>
-<span><span class="co"># $completion_percentage</span></span>
-<span><span class="co"># [1] 100</span></span>
-<span><span class="co"># $remaining_prompts</span></span>
-<span><span class="co"># [1] 0</span></span>
-<span><span class="co"># $state_path</span></span>
-<span><span class="co"># [1] "/var/folders/cw/9ksk103n06n5lf4z3d__7c2r0000gn/T//RtmptmmaV0/chat_c5383b1279ae.rds"</span></span>
+<span><span class="co">#&gt; $total_prompts</span></span>
+<span><span class="co">#&gt; [1] 2</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $completed_prompts</span></span>
+<span><span class="co">#&gt; [1] 2</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $completion_percentage</span></span>
+<span><span class="co">#&gt; [1] 100</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $remaining_prompts</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $state_path</span></span>
+<span><span class="co">#&gt; [1] "/var/folders/.../chat_c5383b1279ae.rds"</span></span>
 <span></span>
 <span><span class="va">result</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co"># [[1]]</span></span>
-<span><span class="co"># [1] "R is a programming language and software environment used for statistical computing,</span></span>
-<span><span class="co"># data analysis, and graphical representation."</span></span>
-<span><span class="co"># [[2]]</span></span>
-<span><span class="co"># [1] "Base R refers to the original set of R functions and packages, while tidyverse is a</span></span>
-<span><span class="co"># collection of R packages designed for data science that offer a more consistent and</span></span>
-<span><span class="co"># readable syntax."</span></span>
-<span><span class="co"># ...</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; [1] "R is a programming language and software environment used for </span></span>
+<span><span class="co">#&gt; statistical computing, data analysis, and graphical representation."</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt; [1] "Base R refers to the original set of R functions and packages, </span></span>
+<span><span class="co">#&gt; while tidyverse is a collection of R packages designed for data science</span></span>
+<span><span class="co">#&gt; that offer a more consistent and readable syntax."</span></span>
 <span></span>
 <span><span class="va">result</span><span class="op">$</span><span class="fu">chats</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co"># [[1]]</span></span>
-<span><span class="co"># &lt;Chat turns=3 tokens=22/21&gt;</span></span>
-<span><span class="co">#  ── system ─────────────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co"># Reply concisely, one sentence</span></span>
-<span><span class="co"># ── user ────────────────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co"># What is R?</span></span>
-<span><span class="co"># ── assistant ───────────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co"># R is a programming language and software environment used for statistical computing,</span></span>
-<span><span class="co"># data analysis, and graphical representation.</span></span>
-<span><span class="co"># ...</span></span></code></pre></div>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; &lt;Chat turns=3 tokens=22/21&gt;</span></span>
+<span><span class="co">#&gt;  ── system ────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; Reply concisely, one sentence</span></span>
+<span><span class="co">#&gt; ── user ───────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; What is R?</span></span>
+<span><span class="co">#&gt; ── assistant ──────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; R is a programming language and software environment used for </span></span>
+<span><span class="co">#&gt; statistical computing, data analysis, and graphical representation.</span></span>
+<span><span class="co">#&gt; ...</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
@@ -173,11 +174,6 @@
 <li>
 <strong>Maximum Safety</strong>: Using a smaller <code>chunk_size</code> ensures state is saved to the disk more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)</li>
 </ul>
-</div>
-<div class="section level4">
-<h4 id="naming-note">Naming Note<a class="anchor" aria-label="anchor" href="#naming-note"></a>
-</h4>
-<p><code>chat_future</code> isn’t named <code>chat_parallel</code> because the latter will be included in <code>ellmer</code> (<a href="https://github.com/tidyverse/ellmer/issues/143" class="external-link">#143</a>).</p>
 </div>
 </div>
 </div>
@@ -210,10 +206,11 @@
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">result</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co"># [[1]]</span></span>
-<span><span class="co"># [1] "The current time in Chicago is 9:29 AM CDT."</span></span>
-<span><span class="co"># [[2]]</span></span>
-<span><span class="co"># [1] "The current time in New York is 10:29 AM EDT on March 10, 2025."</span></span></code></pre></div>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; [1] "The current time in Chicago is 9:29 AM CDT."</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt; [1] "The current time in New York is 10:29 AM EDT."</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="structured-data-extraction">Structured Data Extraction<a class="anchor" aria-label="anchor" href="#structured-data-extraction"></a>
@@ -236,15 +233,17 @@
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">result</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co"># [[1]]</span></span>
-<span><span class="co"># [[1]]$positive_score</span></span>
-<span><span class="co"># [1] 0.95</span></span>
-<span><span class="co"># [[1]]$negative_score</span></span>
-<span><span class="co"># [1] 0.05</span></span>
-<span><span class="co"># [[1]]$neutral_score</span></span>
-<span><span class="co"># [1] 0</span></span>
-<span><span class="co"># ...</span></span></code></pre></div>
-<p>A new experimental development feature implements LLM-as-a-judge into the chat turns to refine structured data extractions. Use the <code>judgements</code> parameter to set the number of iterations (warning: increases token use):</p>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; $positive_score</span></span>
+<span><span class="co">#&gt; [1] 0.95</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $negative_score</span></span>
+<span><span class="co">#&gt; [1] 0.05</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $neutral_score</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; ...</span></span></code></pre></div>
+<p>The development version implements LLM-as-a-judge into the chat turns to refine structured data extractions. Use the <code>judgements</code> parameter to set the number of iterations (increases token use):</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, judgements <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 </div>
