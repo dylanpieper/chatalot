@@ -1,5 +1,5 @@
 test_that("chat_future initialization and result class works", {
-  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
+  skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   chat <- chat_future(ellmer::chat_openai, beep = FALSE)
   expect_true(inherits(chat, "Chat"))
@@ -10,7 +10,7 @@ test_that("chat_future initialization and result class works", {
 })
 
 test_that("chat_future processes chunks correctly", {
-  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
+  skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   chat <- chat_future(ellmer::chat_openai, workers = 1, beep = FALSE)
   result <- chat$batch(get_test_prompts(2), chunk_size = 1)
@@ -22,7 +22,7 @@ test_that("chat_future processes chunks correctly", {
 })
 
 test_that("chat_future handles structured data extraction", {
-  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
+  skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   chat <- chat_future(ellmer::chat_openai, workers = 1, beep = FALSE)
   prompts <- list(
@@ -39,7 +39,7 @@ test_that("chat_future handles structured data extraction", {
 })
 
 test_that("chat_future handles structured data with judgements", {
-  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
+  skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   chat <- chat_future(ellmer::chat_openai, workers = 1, beep = FALSE)
   prompts <- list(
@@ -58,7 +58,7 @@ test_that("chat_future handles structured data with judgements", {
 })
 
 test_that("chat_future works with tools", {
-  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
+  skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   chat <- chat_future(ellmer::chat_openai, workers = 1, beep = FALSE)
   chat$register_tool(get_square_tool())
@@ -75,7 +75,7 @@ test_that("chat_future works with tools", {
 })
 
 test_that("chat_future handles state persistence", {
-  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
+  skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   temp_file <- tempfile(fileext = ".rds")
   on.exit(unlink(temp_file))
@@ -88,7 +88,7 @@ test_that("chat_future handles state persistence", {
 })
 
 test_that("chat_future respects timeout", {
-  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
+  skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   chat <- chat_future(ellmer::chat_openai, workers = 1, timeout = 30, beep = FALSE)
   result <- chat$batch(get_test_prompts(1), chunk_size = 1)
@@ -96,7 +96,7 @@ test_that("chat_future respects timeout", {
 })
 
 test_that("chat_future handles worker failures", {
-  skip_if_not(nzchar(Sys.getenv("OPENAI_API_KEY")), "API key not available")
+  skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   original_key <- Sys.getenv("OPENAI_API_KEY", unset = NA)
   Sys.unsetenv("OPENAI_API_KEY")

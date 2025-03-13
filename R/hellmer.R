@@ -25,7 +25,7 @@
 #'     \item chats: Function to extract chat objects
 #'     \item progress: Function to get processing status
 #'   }
-#' @examplesIf hellmer::has_credentials("openai")
+#' @examplesIf ellmer::has_credentials("openai")
 #' # Create a sequential chat processor
 #' chat <- chat_sequential(chat_openai, system_prompt = "Reply concisely, one sentence")
 #'
@@ -147,7 +147,7 @@ chat_sequential <- function(
 #'     \item chats: Function to extract chat objects
 #'     \item progress: Function to get processing status
 #'   }
-#' @examplesIf hellmer::has_credentials("openai")
+#' @examplesIf ellmer::has_credentials("openai")
 #' # Create a parallel chat processor
 #' chat <- chat_future(chat_openai, system_prompt = "Reply concisely, one sentence")
 #'
