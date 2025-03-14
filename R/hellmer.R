@@ -9,7 +9,7 @@
 #'        "text" for response text only, or "all" for full interaction (default: "none")
 #' @param max_retries Maximum number of retry attempts per prompt (default: 3L)
 #' @param initial_delay Initial delay in seconds before first retry (default: 20)
-#' @param max_delay Maximum delay in seconds between retries (default: 60)
+#' @param max_delay Maximum delay in seconds between retries (default: 80)
 #' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
 #' @param timeout Maximum time in seconds to wait for each prompt response (default: 60)
 #' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
@@ -50,7 +50,7 @@ chat_sequential <- function(
     echo = "none",
     max_retries = 3L,
     initial_delay = 20,
-    max_delay = 60,
+    max_delay = 80,
     backoff_factor = 2,
     timeout = 60,
     beep = TRUE,
@@ -131,7 +131,7 @@ chat_sequential <- function(
 #' @param max_chunk_attempts Maximum number of retry attempts for failed chunks (default: 3L)
 #' @param max_retries Maximum number of retry attempts per prompt (default: 3L)
 #' @param initial_delay Initial delay in seconds before first retry (default: 20)
-#' @param max_delay Maximum delay in seconds between retries (default: 60)
+#' @param max_delay Maximum delay in seconds between retries (default: 80)
 #' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
 #' @param timeout Maximum time in seconds to wait for each prompt response (default: 2)
 #' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
@@ -175,7 +175,7 @@ chat_future <- function(
     max_chunk_attempts = 3L,
     max_retries = 3L,
     initial_delay = 20,
-    max_delay = 60,
+    max_delay = 80,
     backoff_factor = 2,
     timeout = 60,
     beep = TRUE,

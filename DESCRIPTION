@@ -1,6 +1,6 @@
 Package: hellmer
 Title: Batch Processing for Chat Models
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
 Description: Batch processing framework for 'ellmer' chat model interactions.
@@ -27,6 +27,7 @@ Imports:
     cli,
     future,
     furrr,
+    jsonlite,
     parallel,
     purrr,
     R.utils,

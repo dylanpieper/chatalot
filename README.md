@@ -178,7 +178,7 @@ result$texts()
 #> ...
 ```
 
-The development version implements LLM-as-a-judge into the chat turns to refine structured data extractions. Use the `judgements` parameter to set the number of iterations (increases token use):
+To iteratively refine structured data extractions, implement LLM-as-a-judge into the chat turns using the `judgements` parameter (increases token use):
 
 ``` r
 result <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)
@@ -230,7 +230,7 @@ chat <- chat_sequential(
   chat_openai,         # ellmer chat model
   max_retries = 3,     # maximum retry attempts
   initial_delay = 20,  # initial delay in seconds
-  max_delay = 60,      # maximum delay between retries
+  max_delay = 80,      # maximum delay between retries
   backoff_factor = 2   # multiply delay by this factor after each retry
 )
 ```

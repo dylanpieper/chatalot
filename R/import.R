@@ -4,6 +4,7 @@
 #' @importFrom cli cli_progress_bar cli_progress_done
 #' @importFrom furrr future_map
 #' @importFrom future plan multisession
+#' @importFrom jsonlite toJSON
 #' @importFrom purrr map_lgl pwalk map map_chr walk iwalk
 #' @importFrom R.utils withTimeout
 #' @importFrom utils str packageDescription

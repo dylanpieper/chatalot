@@ -8,6 +8,8 @@ chats(x, ...)
 }
 \arguments{
 \item{x}{A batch object}
+
+\item{...}{Additional arguments}
 }
 \value{
 A list of chat objects

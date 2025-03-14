@@ -9,7 +9,7 @@ chat_sequential(
   echo = "none",
   max_retries = 3L,
   initial_delay = 20,
-  max_delay = 60,
+  max_delay = 80,
   backoff_factor = 2,
   timeout = 60,
   beep = TRUE,
@@ -26,7 +26,7 @@ chat_sequential(
 
 \item{initial_delay}{Initial delay in seconds before first retry (default: 20)}
 
-\item{max_delay}{Maximum delay in seconds between retries (default: 60)}
+\item{max_delay}{Maximum delay in seconds between retries (default: 80)}
 
 \item{backoff_factor}{Factor to multiply delay by after each retry (default: 2)}
 

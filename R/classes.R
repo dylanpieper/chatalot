@@ -22,6 +22,7 @@ texts <- S7::new_generic("texts", "x")
 #' Extract chat objects from a batch result
 #' @name chats
 #' @param x A batch object
+#' @param ... Additional arguments
 #' @return A list of chat objects
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create a chat processor
