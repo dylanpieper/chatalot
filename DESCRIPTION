@@ -1,17 +1,16 @@
 Package: hellmer
 Title: Batch Processing for Chat Models
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
-Description: Batch processing framework for 'ellmer' chat model interactions.
-    Enables sequential and parallel processing of chat completions.
-    Core capabilities include error handling with backoff, state persistence,
-    progress tracking, and retry management.
+Description: Batch processing framework for 'ellmer' chat models.
+    Provides both sequential and parallel processing of chat interactions
+    with features including tool calling and structured data extraction.
+    Enables workflow management through automatic retry with backoff, state persistence
+    and recovery, progress tracking, and timeout handling.
+    Additional quality-of-life features include verbosity control and sound notifications.
     Parallel processing is implemented via the 'future' framework.
-    Additional features include structured data extraction, tool integration,
-    timeout handling, verbosity control, and sound notifications.
-    Includes methods for returning chat texts, chat objects, progress status, 
-    and structured data.
+    Includes methods for retrieving progress status, chat texts, and chat objects.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
