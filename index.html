@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Batch Processing for Chat Models • hellmer</title>
-<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -18,11 +18,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="index.html">hellmer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,14 @@
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/dylanpieper/hellmer" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
+<li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="dark"><span class="fa fa-moon"></span> Dark</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="auto"><span class="fa fa-adjust"></span> Auto</button></li>
+  </ul>
+</li>
       </ul>
 </div>
 
@@ -55,7 +63,7 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="hellmer-">hellmer <img src="reference/figures/hellmer-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#hellmer-"></a>
 </h1></div>
-<p>hellmer enables sequential or parallel batch processing for <a href="https://ellmer.tidyverse.org/reference/index.html" class="external-link">chat models</a> from <a href="https://github.com/tidyverse/ellmer" class="external-link">ellmer</a>.</p>
+<p><code>hellmer</code> enables sequential or parallel batch processing for <a href="https://ellmer.tidyverse.org/reference/index.html" class="external-link">chat models</a> supported by <code>ellmer</code>.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -75,7 +83,7 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install <code>hellmer</code> from CRAN with:</p>
+<p>You can install the package from CRAN with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"hellmer"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -95,57 +103,75 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/hellmer/">hellmer</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="va">chat_openai</span>, </span>
-<span>                        system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span>
+<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
+<span>  <span class="va">chat_openai</span>, </span>
+<span>  system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="st">"What is R?"</span>,</span>
-<span>  <span class="st">"Explain base R versus tidyverse"</span>,</span>
-<span>  <span class="st">"Explain vectors, lists, and data frames"</span>,</span>
-<span>  <span class="st">"How do environments work in R?"</span>,</span>
-<span>  <span class="st">"Compare R and Python for data analysis"</span>,</span>
-<span>  <span class="st">"Explain lazy evaluation in R"</span>,</span>
-<span>  <span class="st">"What are R's apply functions?"</span>,</span>
-<span>  <span class="st">"How do R packages work?"</span>,</span>
-<span>  <span class="st">"Explain R's object-oriented programming systems."</span>,</span>
-<span>  <span class="st">"What are closures in R?"</span>,</span>
-<span>  <span class="st">"Describe R memory management"</span>,</span>
-<span>  <span class="st">"How does R handle missing values?"</span>,</span>
-<span>  <span class="st">"Explain R's integration with C++"</span>,</span>
-<span>  <span class="st">"Compare dplyr and data.table approaches"</span>,</span>
-<span>  <span class="st">"What are R formulas and when to use them?"</span></span>
+<span>  <span class="st">"Explain base R versus tidyverse"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">result</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span></code></pre></div>
+<p>Access the results:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">result</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $total_prompts</span></span>
+<span><span class="co">#&gt; [1] 2</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $completed_prompts</span></span>
+<span><span class="co">#&gt; [1] 2</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $completion_percentage</span></span>
+<span><span class="co">#&gt; [1] 100</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $remaining_prompts</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $state_path</span></span>
+<span><span class="co">#&gt; [1] "/var/folders/.../chat_c5383b1279ae.rds"</span></span>
+<span></span>
 <span><span class="va">result</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">result</span><span class="op">$</span><span class="fu">chats</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; [1] "R is a programming language and software environment used for </span></span>
+<span><span class="co">#&gt; statistical computing, data analysis, and graphical representation."</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt; [1] "Base R refers to the original set of R functions and packages, </span></span>
+<span><span class="co">#&gt; while tidyverse is a collection of R packages designed for data science</span></span>
+<span><span class="co">#&gt; that offer a more consistent and readable syntax."</span></span>
+<span></span>
+<span><span class="va">result</span><span class="op">$</span><span class="fu">chats</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; &lt;Chat turns=3 tokens=22/21&gt;</span></span>
+<span><span class="co">#&gt;  ── system ────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; Reply concisely, one sentence</span></span>
+<span><span class="co">#&gt; ── user ───────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; What is R?</span></span>
+<span><span class="co">#&gt; ── assistant ──────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; R is a programming language and software environment used for </span></span>
+<span><span class="co">#&gt; statistical computing, data analysis, and graphical representation.</span></span>
+<span><span class="co">#&gt; ...</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="va">chat_openai</span>, </span>
 <span>                    system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="performance-vs-safety-trade-off">Performance vs Safety Trade-Off<a class="anchor" aria-label="anchor" href="#performance-vs-safety-trade-off"></a>
 </h4>
-<p>When using parallel processing with <code>chat_future</code>, there’s a trade-off between performance and safety:</p>
+<p>When using parallel processing with <code>chat_future</code>, there’s a trade-off between safety and performance:</p>
 <ul>
 <li>
-<strong>Maximum Performance</strong>: Setting <code>chunk_size</code> equal to the number of prompts results in a 4-5x faster processing speed</li>
+<strong>Maximum Safety</strong>: Using a smaller <code>chunk_size</code> ensures progress is saved to the disk more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)</li>
+<li>
+<strong>Maximum Performance</strong>: Setting <code>chunk_size</code> equal to the number of prompts results in a 4-5x faster processing speed but progress will not be saved to the disk until all chats are processed</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<ul>
-<li>
-<strong>Maximum Safety</strong>: Using a smaller <code>chunk_size</code> ensures state is saved more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)</li>
-</ul>
-</div>
-<div class="section level4">
-<h4 id="naming-note">Naming Note<a class="anchor" aria-label="anchor" href="#naming-note"></a>
-</h4>
-<p><code>chat_future</code> isn’t named <code>chat_parallel</code> because the latter will be included in <code>ellmer</code> (<a href="https://github.com/tidyverse/ellmer/issues/143" class="external-link">#143</a>).</p>
 </div>
 </div>
 </div>
@@ -156,46 +182,86 @@
 <h3 id="tooling">Tooling<a class="anchor" aria-label="anchor" href="#tooling"></a>
 </h3>
 <p>Register and use tools/function calling:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">square_number</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">num</span><span class="op">)</span> <span class="va">num</span><span class="op">^</span><span class="fl">2</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">get_current_time</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">tz</span> <span class="op">=</span> <span class="st">"UTC"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, tz <span class="op">=</span> <span class="va">tz</span>, usetz <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">chat</span><span class="op">$</span><span class="fu">register_tool</span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/tool.html" class="external-link">tool</a></span><span class="op">(</span></span>
-<span>  <span class="va">square_number</span>,</span>
-<span>  <span class="st">"Calculates the square of a given number"</span>,</span>
-<span>  num <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_integer</a></span><span class="op">(</span><span class="st">"The number to square"</span><span class="op">)</span></span>
+<span>  <span class="va">get_current_time</span>,</span>
+<span>  <span class="st">"Gets the current time in the given time zone."</span>,</span>
+<span>  tz <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_string</a></span><span class="op">(</span></span>
+<span>    <span class="st">"The time zone to get the current time in. Defaults to `\"UTC\"`."</span>,</span>
+<span>    required <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="st">"What is the square of 3?"</span>,</span>
-<span>  <span class="st">"Calculate the square of 5."</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="st">"What time is it in Chicago?"</span>,</span>
+<span>  <span class="st">"What time is it in New York?"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">result</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; [1] "The current time in Chicago is 9:29 AM CDT."</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt; [1] "The current time in New York is 10:29 AM EDT."</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="structured-data-extraction">Structured Data Extraction<a class="anchor" aria-label="anchor" href="#structured-data-extraction"></a>
 </h3>
 <p>Extract structured data using type specifications:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">type_sentiment</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_object</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Extract sentiment scores"</span>,</span>
-<span>  positive_score <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="st">"Positive sentiment score, 0.0 to 1.0"</span><span class="op">)</span>,</span>
-<span>  negative_score <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="st">"Negative sentiment score, 0.0 to 1.0"</span><span class="op">)</span>,</span>
-<span>  neutral_score <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="st">"Neutral sentiment score, 0.0 to 1.0"</span><span class="op">)</span></span>
+<span>  positive_score <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="st">"Positive sentiment score, 0.00 to 1.00"</span><span class="op">)</span>,</span>
+<span>  negative_score <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="st">"Negative sentiment score, 0.00 to 1.00"</span><span class="op">)</span>,</span>
+<span>  neutral_score <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="st">"Neutral sentiment score, 0.00 to 1.00"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="st">"I love this product! It's amazing!"</span>,</span>
-<span>  <span class="st">"This is okay, nothing special."</span>,</span>
-<span>  <span class="st">"Terrible experience, very disappointed."</span></span>
+<span>  <span class="st">"The R community is really supportive and welcoming."</span>,</span>
+<span>  <span class="st">"R has both base functions and tidyverse functions for data manipulation."</span>,</span>
+<span>  <span class="st">"R's object-oriented system is confusing, inconsistent, and painful to use."</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span><span class="op">)</span></span>
-<span><span class="va">structured_data</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">$</span><span class="fu">structured_data</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span></span>
+<span><span class="va">result</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; $positive_score</span></span>
+<span><span class="co">#&gt; [1] 0.95</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $negative_score</span></span>
+<span><span class="co">#&gt; [1] 0.05</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $neutral_score</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; ...</span></span></code></pre></div>
+<p>To iteratively refine structured data extractions, implement LLM-as-a-judge into the chat turns using the <code>judgements</code> parameter (increases token use):</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, judgements <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">result</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; [[1]]$positive_score</span></span>
+<span><span class="co">#&gt; [1] 0.95</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[1]]$negative_score</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[1]]$neutral_score</span></span>
+<span><span class="co">#&gt; [1] 0.05</span></span>
+<span><span class="co">#&gt; ...</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="state-management">State Management<a class="anchor" aria-label="anchor" href="#state-management"></a>
 </h3>
-<p>Batch processing automatically saves state and can resume interrupted operations:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>Batch processing automatically saves progress to an <code>.rds</code> file on the disk and allows you to resume interrupted operations:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, state_path <span class="op">=</span> <span class="st">"chat_state.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>If <code>state_path</code> is not defined, a temporary file will be created by default.</p>
 </div>
@@ -211,7 +277,7 @@
 <li>
 <code>"all"</code>: Show both prompts and responses</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
 <span>  <span class="va">chat_openai</span>, </span>
 <span>  echo <span class="op">=</span> <span class="st">"none"</span></span>
@@ -220,14 +286,14 @@
 <div class="section level3">
 <h3 id="automatic-retry">Automatic Retry<a class="anchor" aria-label="anchor" href="#automatic-retry"></a>
 </h3>
-<p>Automatically retry failed requests with backoff, which serves as a wide guardrail against errors while <code>ellmer</code> and <code>httr2</code> serve as a narrow guardrail against specific API limits:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p>Automatically retry failed requests with exponential backoff, which serves as a wide guardrail against errors while <code>ellmer</code> and <code>httr2</code> serve as a narrow guardrail against specific API limits:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
-<span>  <span class="va">chat_openai</span>,         <span class="co"># Ellmer chat model</span></span>
-<span>  max_retries <span class="op">=</span> <span class="fl">3</span>,     <span class="co"># Maximum retry attempts</span></span>
-<span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,  <span class="co"># Initial delay in seconds</span></span>
-<span>  max_delay <span class="op">=</span> <span class="fl">60</span>,      <span class="co"># Maximum delay between retries</span></span>
-<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>   <span class="co"># Multiply delay by this factor after each retry</span></span>
+<span>  <span class="va">chat_openai</span>,         <span class="co"># ellmer chat model</span></span>
+<span>  max_retries <span class="op">=</span> <span class="fl">3</span>,     <span class="co"># maximum retry attempts</span></span>
+<span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,  <span class="co"># initial delay in seconds</span></span>
+<span>  max_delay <span class="op">=</span> <span class="fl">80</span>,      <span class="co"># maximum delay between retries</span></span>
+<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>   <span class="co"># multiply delay by this factor after each retry</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>If a request fails, the code will:</p>
 <ol style="list-style-type: decimal">
@@ -243,17 +309,17 @@
 <h3 id="timeout-handling">Timeout Handling<a class="anchor" aria-label="anchor" href="#timeout-handling"></a>
 </h3>
 <p>The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the chat model functions.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_future</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  chat_openai,</span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="at">system_prompt =</span> <span class="st">"Reply concisely, one sentence"</span></span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  <span class="at">timeout =</span> <span class="dv">60</span></span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_future</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  chat_openai,</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="at">system_prompt =</span> <span class="st">"Reply concisely, one sentence"</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>  <span class="at">timeout =</span> <span class="dv">60</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="sound-notifications">Sound Notifications<a class="anchor" aria-label="anchor" href="#sound-notifications"></a>
 </h3>
 <p>Toggle sound notifications on batch completion, interruption, and error:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
 <span>  <span class="va">chat_openai</span>,</span>
 <span>  beep <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -264,13 +330,11 @@
 </h3>
 <ul>
 <li>
-<code><a href="reference/texts.html">texts()</a></code>: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector)</li>
+<code><a href="reference/progress.html">progress()</a></code>: Returns processing status</li>
+<li>
+<code><a href="reference/texts.html">texts()</a></code>: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a type specification is provided, it returns structured data instead of plain text.</li>
 <li>
 <code><a href="reference/chats.html">chats()</a></code>: Returns a list of chat objects</li>
-<li>
-<code><a href="reference/progress.html">progress()</a></code>: Returns processing statistics</li>
-<li>
-<code><a href="reference/structured_data.html">structured_data()</a></code>: Returns extracted structured data (if <code>type_spec</code> is provided)</li>
 </ul>
 </div>
 </div>
