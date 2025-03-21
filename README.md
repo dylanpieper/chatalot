@@ -1,17 +1,18 @@
 # hellmer <img src="man/figures/hellmer-hex.png" align="right" width="140"/>
 
-`hellmer` enables sequential or parallel batch processing for [chat models](https://ellmer.tidyverse.org/reference/index.html) supported by `ellmer`.
+[![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://cran.r-pkg.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
+
+Enable sequential and parallel batch processing for [chat models](#0) supported by `ellmer`.
 
 ## Overview
 
 Process multiple chat interactions with:
 
 -   [Tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html)
--   State persistence and recovery
--   Progress tracking
--   Configurable output verbosity
+-   Progress tracking and recovery
 -   Automatic retry with backoff
 -   Timeout handling
+-   Configurable output verbosity
 -   Sound notifications
 
 ## Installation
@@ -196,30 +197,16 @@ result$texts()
 #> ...
 ```
 
-### State Management
+### Progress Tracking and Recovery
 
 Batch processing automatically saves progress to an `.rds` file on the disk and allows you to resume interrupted operations:
 
 ``` r
 result <- chat$batch(prompts, state_path = "chat_state.rds")
+result$progress()
 ```
 
 If `state_path` is not defined, a temporary file will be created by default.
-
-### Output Control
-
-Control verbosity with the `echo` parameter (sequential only):
-
--   `"none"`: Silent operation with progress bar
--   `"text"`: Show chat responses only
--   `"all"`: Show both prompts and responses
-
-``` r
-chat <- chat_sequential(
-  chat_openai, 
-  echo = "none"
-)
-```
 
 ### Automatic Retry
 
@@ -253,6 +240,21 @@ chat <- chat_future(
   chat_openai,
   system_prompt = "Reply concisely, one sentence"
   timeout = 60
+)
+```
+
+### Output Control
+
+Control verbosity with the `echo` parameter (sequential only):
+
+-   `"none"`: Silent operation with progress bar
+-   `"text"`: Show chat responses only
+-   `"all"`: Show both prompts and responses
+
+``` r
+chat <- chat_sequential(
+  chat_openai, 
+  echo = "none"
 )
 ```
 
