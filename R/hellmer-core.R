@@ -39,49 +39,38 @@ create_auth_error <- function(original_error) {
 #' @param echo Echo level ("none", "text", "all")
 #' @return List containing response information
 #' @keywords internal
-capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, echo = "text") {
+capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, echo = "none") {
   response <- NULL
   structured_data <- NULL
   chat <- original_chat$clone()
-
-  if (echo == "all") {
-    cli::cli_h3(cli::col_green("Prompt"))
-    cli::cli_text(prompt)
-    cli::cli_h3(cli::col_green("Response"))
-  }
-
+  
   if (!is.null(type_spec)) {
     result <- process_judgements(chat, prompt, type_spec, judgements, echo)
     structured_data <- result$final
     chat <- result$chat
-
+    
     if (is.null(structured_data)) {
       stop("Received NULL structured data response")
     }
   } else {
-    if (echo == "none") {
-      response <- chat$chat(prompt)
-    } else {
-      response <- chat$chat(prompt)
-      cli::cat_line(response)
-    }
-
+    response <- chat$chat(prompt)
+    
     if (is.null(response)) {
       stop("Received NULL chat response")
     }
   }
-
+  
   chat_turns <- chat$get_turns()
   tokens <- chat$tokens()
-
+  
   if (is.null(chat_turns) || length(chat_turns) == 0) {
     stop("No chat turns recorded")
   }
-
+  
   if (is.null(tokens)) {
     stop("No token information available")
   }
-
+  
   list(
     chat = chat,
     text = response,
@@ -105,7 +94,7 @@ capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, ech
 #' @return List containing response information
 #' @keywords internal
 capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
-                               echo = "text", judgements = 0, max_retries = 3L,
+                               echo = "none", judgements = 0, max_retries = 3L,
                                initial_delay = 1, max_delay = 32,
                                backoff_factor = 2, timeout = 60) {
   retry_with_delay <- function(attempt = 1, delay = initial_delay) {
@@ -122,11 +111,11 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
         if (inherits(e, "interrupt")) {
           stop(e)
         }
-
+        
         if (is_auth_error(e)) {
           stop(create_auth_error(e)$message)
         }
-
+        
         if (attempt > max_retries) {
           structure(
             list(
@@ -142,7 +131,7 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
             "Attempt %d failed: %s. Retrying in %.1f seconds...",
             attempt, e$message, delay
           ))
-
+          
           Sys.sleep(delay)
           next_delay <- min(delay * backoff_factor, max_delay)
           retry_with_delay(attempt + 1, next_delay)
@@ -156,7 +145,7 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
       }
     )
   }
-
+  
   retry_with_delay()
 }
 
@@ -198,7 +187,7 @@ process <- function(
   } else {
     result <- NULL
   }
-
+  
   if (is.null(result)) {
     orig_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
     result <- batch(
@@ -221,14 +210,15 @@ process <- function(
     )
     saveRDS(result, state_path)
   }
-
+  
   total_prompts <- length(prompts)
-
+  
   if (result@completed >= total_prompts) {
     cli::cli_alert_success("Complete")
     return(create_results(result))
   }
-
+  
+  pb <- NULL
   if (echo == "none") {
     pb <- cli::cli_progress_bar(
       format = paste0(
@@ -238,16 +228,10 @@ process <- function(
       total = total_prompts
     )
     cli::cli_progress_update(id = pb, set = result@completed)
-  } else {
-    pb <- NULL
   }
-
+  
   tryCatch({
     for (i in (result@completed + 1L):total_prompts) {
-      if (echo %in% c("text", "all")) {
-        cli::cli_h3(cli::col_green(sprintf("Processing chats [%d/%d]", i, total_prompts)))
-      }
-
       response <- capture_with_retry(
         chat_obj, prompts[[i]], type_spec, echo,
         judgements = judgements,
@@ -257,24 +241,24 @@ process <- function(
         backoff_factor = backoff_factor,
         timeout = timeout
       )
-
+      
       result@responses[[i]] <- response
       result@completed <- i
       saveRDS(result, state_path)
-
+      
       if (!is.null(pb)) {
         cli::cli_progress_update(id = pb, set = i)
       }
     }
-
+    
     finish_successful_batch(pb, beep)
   }, error = function(e) {
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
     }
-
+    
     saveRDS(result, state_path)
-
+    
     if (inherits(e, "interrupt")) {
       handle_batch_interrupt(result, beep)
     } else {
@@ -285,9 +269,9 @@ process <- function(
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
     }
-
+    
     saveRDS(result, state_path)
-
+    
     if (beep) beepr::beep("coin")
     cli::cli_alert_warning(sprintf(
       "Interrupted at chat %d of %d",
@@ -298,7 +282,7 @@ process <- function(
       result <- readRDS(state_path)
     }
   })
-
+  
   create_results(result)
 }
 
@@ -318,6 +302,7 @@ process <- function(
 #' @param initial_delay Initial delay before first retry
 #' @param max_delay Maximum delay between retries
 #' @param backoff_factor Delay multiplier after each retry
+#' @param echo Level of output to display ("none", "text", "all")  
 #' @return Batch results object
 #' @keywords internal
 process_future <- function(
@@ -335,7 +320,8 @@ process_future <- function(
     max_delay = 60,
     backoff_factor = 2,
     timeout = 60,
-    beep = TRUE) {
+    beep = TRUE,
+    echo = "none") {
   validate_chunk_result <- function(chunk_result, chunk_idx) {
     if (inherits(chunk_result, "error") || inherits(chunk_result, "worker_error")) {
       if (is_auth_error(chunk_result)) {
@@ -395,7 +381,7 @@ process_future <- function(
       state_path = state_path,
       type_spec = type_spec,
       judgements = as.integer(judgements),
-      echo = "none",
+      echo = echo,
       input_type = original_type,
       max_retries = max_retries,
       initial_delay = initial_delay,
@@ -454,7 +440,7 @@ process_future <- function(
                   worker_chat,
                   prompt,
                   type_spec,
-                  echo = "none",
+                  echo = echo,
                   judgements = judgements,
                   timeout = timeout,
                   max_retries = max_retries,
@@ -591,7 +577,7 @@ process_chunks <- function(chunks, result, chat_obj, type_spec, judgements, pb, 
               worker_chat,
               prompt,
               type_spec,
-              echo = "none",
+              echo = echo,
               judgements = judgements,
               timeout = timeout,
               max_retries = max_retries,
@@ -639,44 +625,31 @@ process_judgements <- function(chat_obj, prompt, type_spec, judgements = 0, echo
     evaluations = list(),
     refined = list()
   )
-
+  
   chat <- chat_obj$clone()
-
-  if (echo == "all") {
-    cli::cli_h3(cli::col_green("Initial Extraction"))
-  }
-
+  
   result$initial <- chat$extract_data(
     prompt,
     type = type_spec,
     echo = echo
   )
-
+  
   current_extraction <- result$initial
-
+  
   judgement_rounds <- judgements
-
+  
   if (judgement_rounds > 0) {
     for (i in 1:judgement_rounds) {
-      if (echo == "all") {
-        cli::cli_h3(cli::col_green(paste0("Judgement Round ", i)))
-      }
-
       eval_prompt <- paste(
         "What could be improved in my data extraction?",
         "I extracted the following structured data:",
         jsonlite::toJSON(current_extraction, pretty = TRUE, auto_unbox = TRUE),
         "The original prompt was:", prompt
       )
-
-      if (echo == "none") {
-        evaluation <- chat$chat(eval_prompt, echo = "none")
-      } else {
-        cli::cli_h3(cli::col_green(paste0("Evaluation", i)))
-        evaluation <- chat$chat(eval_prompt, echo = echo)
-      }
+      
+      evaluation <- chat$chat(eval_prompt)
       result$evaluations[[i]] <- evaluation
-
+      
       refine_prompt <- paste(
         "Extract the following data more accurately:",
         prompt,
@@ -684,26 +657,21 @@ process_judgements <- function(chat_obj, prompt, type_spec, judgements = 0, echo
         jsonlite::toJSON(current_extraction, pretty = TRUE, auto_unbox = TRUE),
         "The prior extraction had these issues:", evaluation
       )
-
+      
       refined <- chat$extract_data(
         refine_prompt,
         type = type_spec,
         echo = echo
       )
-
+      
       result$refined[[i]] <- refined
       current_extraction <- refined
-
-      if (echo %in% c("text", "all")) {
-        cli::cli_h3(cli::col_green(paste0("Refined Extraction", i)))
-        str(refined)
-      }
     }
   }
-
+  
   result$final <- current_extraction
   result$chat <- chat
-
+  
   return(result)
 }
 

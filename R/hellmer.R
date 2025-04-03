@@ -26,8 +26,11 @@
 #'     \item progress: Function to get processing status
 #'   }
 #' @examplesIf ellmer::has_credentials("openai")
-#' # Create a sequential chat processor
+#' # Create a sequential chat processor with function
 #' chat <- chat_sequential(chat_openai, system_prompt = "Reply concisely, one sentence")
+#'
+#' # Or with initialized model
+#' chat <- chat_sequential(chat_openai(echo = "all", system_prompt = "Reply concisely"))
 #'
 #' # Process a batch of prompts in sequence
 #' batch <- chat$batch(list(
@@ -58,19 +61,36 @@ chat_sequential <- function(
   if (is.null(chat_model)) {
     stop("Define an ellmer chat model (e.g., chat_openai or chat_claude)")
   }
-
+  
   chat_env <- new.env(parent = emptyenv())
-  chat_env$chat_model <- if (is.function(chat_model)) {
-    chat_model(echo = "none", ...)
+  
+  if (is.function(chat_model)) {
+    chat_env$chat_model <- chat_model(...)
   } else {
-    chat_model
+    chat_env$chat_model <- chat_model
   }
-
+  
   for (n in names(chat_env$chat_model)) {
     chat_env[[n]] <- chat_env$chat_model[[n]]
   }
-
-  chat_env$echo <- echo
+  
+  model_echo <- NULL
+  if (exists("echo", envir = chat_env$chat_model)) {
+    model_echo <- chat_env$chat_model$echo
+  } else if (exists("options", envir = chat_env$chat_model) && 
+             is.list(chat_env$chat_model$options) && 
+             "echo" %in% names(chat_env$chat_model$options)) {
+    model_echo <- chat_env$chat_model$options$echo
+  }
+  
+  chat_env$echo <- if (!is.null(echo)) {
+    echo
+  } else if (!is.null(model_echo)) {
+    model_echo
+  } else {
+    "none"
+  }
+  
   chat_env$max_retries <- max_retries
   chat_env$initial_delay <- initial_delay
   chat_env$max_delay <- max_delay
@@ -78,7 +98,7 @@ chat_sequential <- function(
   chat_env$timeout <- timeout
   chat_env$beep <- beep
   chat_env$last_state_path <- NULL
-
+  
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
                              judgements = 0,
@@ -86,17 +106,17 @@ chat_sequential <- function(
     if (judgements > 0 && is.null(type_spec)) {
       cli::cli_alert_warning("Judgements parameter ({judgements}) specified but will be ignored without a type_spec")
     }
-
+    
     if (!is.null(type_spec) && judgements < 0) {
       cli::cli_abort("Number of judgements must be non-negative")
     }
-
+    
     if (is.null(chat_env$last_state_path)) {
       chat_env$last_state_path <- state_path
     } else {
       state_path <- chat_env$last_state_path
     }
-
+    
     process(
       chat_obj = chat_env$chat_model,
       prompts = prompts,
@@ -112,7 +132,7 @@ chat_sequential <- function(
       beep = chat_env$beep
     )
   }
-
+  
   class(chat_env) <- c("Chat", "R6")
   chat_env
 }
@@ -124,6 +144,8 @@ chat_sequential <- function(
 #' For sequential processing, use `chat_sequential()`.
 #'
 #' @param chat_model ellmer chat model function or object (e.g., `ellmer::chat_claude`)
+#' @param echo Level of output to display: "none" for silent operation,
+#'        "text" for response text only, or "all" for full interaction (default: "none")
 #' @param workers Number of parallel workers to use (default: number of CPU cores)
 #' @param plan Processing strategy to use: "multisession" for separate R sessions
 #'        or "multicore" for forked processes (default: "multisession")
@@ -133,7 +155,7 @@ chat_sequential <- function(
 #' @param initial_delay Initial delay in seconds before first retry (default: 20)
 #' @param max_delay Maximum delay in seconds between retries (default: 80)
 #' @param backoff_factor Factor to multiply delay by after each retry (default: 2)
-#' @param timeout Maximum time in seconds to wait for each prompt response (default: 2)
+#' @param timeout Maximum time in seconds to wait for each prompt response (default: 60)
 #' @param beep Logical to play a sound on batch completion, interruption, and error (default: TRUE)
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
 #' @return A batch object (S7 class) containing:
@@ -148,8 +170,11 @@ chat_sequential <- function(
 #'     \item progress: Function to get processing status
 #'   }
 #' @examplesIf ellmer::has_credentials("openai")
-#' # Create a parallel chat processor
+#' # Create a parallel chat processor with function
 #' chat <- chat_future(chat_openai, system_prompt = "Reply concisely, one sentence")
+#'
+#' # Or with initialized model
+#' chat <- chat_future(chat_openai(echo = "all", system_prompt = "Reply concisely"))
 #'
 #' # Process a batch of prompts in parallel
 #' batch <- chat$batch(list(
@@ -169,6 +194,7 @@ chat_sequential <- function(
 #' @export
 chat_future <- function(
     chat_model = NULL,
+    echo = "none",
     workers = parallel::detectCores(),
     plan = "multisession",
     chunk_size = NULL,
@@ -183,19 +209,37 @@ chat_future <- function(
   if (is.null(chat_model)) {
     stop("Define an ellmer chat_model (e.g., chat_openai or chat_claude)")
   }
-
+  
   plan <- match.arg(plan, choices = c("multisession", "multicore"))
   chat_env <- new.env(parent = emptyenv())
-  chat_env$chat_model <- if (is.function(chat_model)) {
-    chat_model(echo = "none", ...)
+  
+  if (is.function(chat_model)) {
+    chat_env$chat_model <- chat_model(...)
   } else {
-    chat_model
+    chat_env$chat_model <- chat_model
   }
-
+  
   for (n in names(chat_env$chat_model)) {
     chat_env[[n]] <- chat_env$chat_model[[n]]
   }
-
+  
+  model_echo <- NULL
+  if (exists("echo", envir = chat_env$chat_model)) {
+    model_echo <- chat_env$chat_model$echo
+  } else if (exists("options", envir = chat_env$chat_model) && 
+             is.list(chat_env$chat_model$options) && 
+             "echo" %in% names(chat_env$chat_model$options)) {
+    model_echo <- chat_env$chat_model$options$echo
+  }
+  
+  chat_env$echo <- if (!is.null(echo)) {
+    echo
+  } else if (!is.null(model_echo)) {
+    model_echo
+  } else {
+    "none"
+  }
+  
   chat_env$workers <- workers
   chat_env$plan <- plan
   chat_env$chunk_size <- chunk_size
@@ -207,7 +251,7 @@ chat_future <- function(
   chat_env$timeout <- timeout
   chat_env$beep <- beep
   chat_env$last_state_path <- NULL
-
+  
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
                              judgements = 0,
@@ -216,17 +260,17 @@ chat_future <- function(
     if (judgements > 0 && is.null(type_spec)) {
       cli::cli_alert_warning("Judgements parameter ({judgements}) specified but will be ignored without a type_spec")
     }
-
+    
     if (!is.null(type_spec) && judgements < 0) {
       cli::cli_abort("Number of judgements must be non-negative")
     }
-
+    
     if (is.null(chat_env$last_state_path)) {
       chat_env$last_state_path <- state_path
     } else {
       state_path <- chat_env$last_state_path
     }
-
+    
     process_future(
       chat_obj = chat_env$chat_model,
       prompts = prompts,
@@ -242,10 +286,11 @@ chat_future <- function(
       max_delay = chat_env$max_delay,
       backoff_factor = chat_env$backoff_factor,
       timeout = chat_env$timeout,
-      beep = chat_env$beep
+      beep = chat_env$beep,
+      echo = chat_env$echo
     )
   }
-
+  
   class(chat_env) <- c("Chat", "R6")
   chat_env
 }

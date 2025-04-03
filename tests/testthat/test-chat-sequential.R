@@ -95,7 +95,13 @@ test_that("chat_sequential respects timeout", {
 test_that("chat_sequential supports echo", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
+  # Test with explicit echo parameter
   chat <- chat_sequential(ellmer::chat_openai, echo = "text", beep = FALSE)
+  result <- chat$batch(get_test_prompts(1))
+  expect_equal(length(result$texts()), 1)
+  
+  # Test with "none" echo parameter
+  chat <- chat_sequential(ellmer::chat_openai, echo = "none", beep = FALSE)
   result <- chat$batch(get_test_prompts(1))
   expect_equal(length(result$texts()), 1)
 })
