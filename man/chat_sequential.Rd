@@ -7,7 +7,7 @@
 chat_sequential(chat_model = NULL, ...)
 }
 \arguments{
-\item{chat_model}{ellmer chat model object or function (e.g., \code{ellmer::chat_claude})}
+\item{chat_model}{ellmer chat model object or function (e.g., \code{ellmer::chat_openai})}
 
 \item{...}{Additional arguments passed to the underlying chat model (e.g., \code{system_prompt})}
 }

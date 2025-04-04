@@ -9,6 +9,7 @@ Enable sequential and parallel batch processing for [chat models](#0) supported 
 Process multiple chat interactions with:
 
 -   [Tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html)
+-   Iterative evaluation and improvement of structured data
 -   Progress tracking and recovery
 -   Automatic retry with backoff
 -   Sound notifications

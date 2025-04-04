@@ -4,7 +4,7 @@
 #' Maintains state between runs and can resume interrupted processing.
 #' For parallel processing, use `chat_future()`.
 #'
-#' @param chat_model ellmer chat model object or function (e.g., `ellmer::chat_claude`)
+#' @param chat_model ellmer chat model object or function (e.g., `ellmer::chat_openai`)
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
 #' @return A batch object (S7 class) containing
 #'   \itemize{
@@ -94,7 +94,7 @@ chat_sequential <- function(
     chat_model = NULL,
     ...) {
   if (is.null(chat_model)) {
-    stop("Define an ellmer chat model (e.g., chat_openai or chat_claude)")
+    stop("Define an ellmer chat model (e.g., chat_openai)")
   }
   
   chat_env <- new.env(parent = emptyenv())
@@ -164,7 +164,7 @@ chat_sequential <- function(
 #' Splits prompts into chunks for processing while maintaining state.
 #' For sequential processing, use `chat_sequential()`.
 #'
-#' @param chat_model ellmer chat model object or function (e.g., `ellmer::chat_claude`)
+#' @param chat_model ellmer chat model object or function (e.g., `ellmer::chat_openai`)
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
 #' @return A batch object (S7 class) containing:
 #'   \itemize{
@@ -260,7 +260,7 @@ chat_future <- function(
     chat_model = NULL,
     ...) {
   if (is.null(chat_model)) {
-    stop("Define an ellmer chat_model (e.g., chat_openai or chat_claude)")
+    stop("Define an ellmer chat_model (e.g., chat_openai)")
   }
   
   chat_env <- new.env(parent = emptyenv())
