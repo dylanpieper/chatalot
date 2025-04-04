@@ -14,15 +14,15 @@ chat_sequential(chat_model = NULL, ...)
 \value{
 A batch object (S7 class) containing
 \itemize{
-\item prompts: Original input prompts
-\item responses: Raw response data for completed prompts
-\item completed: Number of successfully processed prompts
-\item state_path: Path where batch state is saved
-\item type_spec: Type specification used for structured data
-\item texts: Function to extract text responses or structured data
-\item chats: Function to extract chat objects
-\item progress: Function to get processing status
-\item batch: Function to process a batch of prompts
+\item \strong{prompts}: Original input prompts
+\item \strong{responses}: Raw response data for completed prompts
+\item \strong{completed}: Number of successfully processed prompts
+\item \strong{state_path}: Path where batch state is saved
+\item \strong{type_spec}: Type specification used for structured data
+\item \strong{texts}: Function to extract text responses or structured data
+\item \strong{chats}: Function to extract chat objects
+\item \strong{progress}: Function to get processing status
+\item \strong{batch}: Function to process a batch of prompts
 }
 }
 \description{
@@ -50,18 +50,18 @@ batch(
 
 The batch method processes multiple prompts and returns a batch object:
 \itemize{
-\item prompts: List of prompts to process
-\item type_spec: Type specification for structured data extraction
-\item judgements: Number of judgements for data extraction accuracy
-\item state_path: Path to save state file for resuming interrupted processing
-\item progress: Show progress bar
-\item max_retries: Maximum number of retry attempts for failed requests
-\item initial_delay: Initial delay before first retry in seconds
-\item max_delay: Maximum delay between retries in seconds
-\item backoff_factor: Factor to multiply delay by after each retry
-\item beep: Whether to play a sound on completion
-\item echo: Whether to display chat outputs (when \code{progress} is \code{FALSE})
-\item ...: Additional arguments passed to the chat method
+\item \strong{prompts}: List of prompts to process
+\item \strong{type_spec}: Type specification for structured data extraction
+\item \strong{judgements}: Number of judgements for data extraction accuracy
+\item \strong{state_path}: Path to save state file for resuming interrupted processing
+\item \strong{progress}: Show progress bar
+\item \strong{max_retries}: Maximum number of retry attempts for failed requests
+\item \strong{initial_delay}: Initial delay before first retry in seconds
+\item \strong{max_delay}: Maximum delay between retries in seconds
+\item \strong{backoff_factor}: Factor to multiply delay by after each retry
+\item \strong{beep}: Whether to play a sound on completion
+\item \strong{echo}: Whether to display chat outputs (when \code{progress} is \code{FALSE})
+\item \strong{...}: Additional arguments passed to the chat method
 }
 }
 
