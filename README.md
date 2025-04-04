@@ -2,7 +2,7 @@
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://cran.r-pkg.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-Enable sequential and parallel batch processing for [chat models](#0) supported by `ellmer`.
+Enable sequential and parallel batch processing for [chat models](https://ellmer.tidyverse.org/reference/index.html#chatbots) supported by `ellmer`.
 
 ## Features
 
