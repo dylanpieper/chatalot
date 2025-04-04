@@ -248,7 +248,7 @@ chat <- chat_sequential(
 
 ### Echoing
 
-By default, a progress bar is used and `echo` is set to `FALSE` for the chat call. However, you can still configure `echo` in the `$batch` call by setting `progress` to `FALSE`. For example:
+By default, the chat `echo` is set to `FALSE` to show a progress bar. However, you can still configure `echo` in the `$batch` call by first setting `progress` to `FALSE`:
 
 ``` r
 result <- chat$batch(prompts, progress = FALSE, echo = "all")
