@@ -6,7 +6,6 @@
 #' @importFrom future plan multisession
 #' @importFrom jsonlite toJSON
 #' @importFrom purrr map_lgl pwalk map map_chr walk iwalk
-#' @importFrom R.utils withTimeout
 #' @importFrom utils str packageDescription
 #' @keywords internal
 "_PACKAGE"
