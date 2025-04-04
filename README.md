@@ -247,7 +247,7 @@ chat <- chat_sequential(
 
 By default, a progress bar is used and `echo` is set to `FALSE` for the chat call. However, you can still configure `echo` in the `$batch` call by setting `progress` to `FALSE`. For example:
 
-```{r}
+``` r
 result <- chat$batch(prompts, progress = FALSE, echo = "all")
 #> > What is R?
 #> < R is a programming language and software environment used for statistical computing,
