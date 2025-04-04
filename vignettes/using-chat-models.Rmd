@@ -2,7 +2,7 @@
 title: "Using Ellmer Chat Models"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Initializing Chat Models in hellmer}
+  %\VignetteIndexEntry{Using Ellmer Chat Models}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -19,50 +19,18 @@ knitr::opts_chunk$set(
 
 There are two ways to use [ellmer chat
 models](https://ellmer.tidyverse.org/reference/index.html) for batch
-processing. This flexibility allows you to 1) pass a function that
-creates a ready-to-go chat model or 2) pass a chat model object for more
-user control.
+processing. This flexibility allows you to 1) pass a chat model object
+or 2) pass a function. The chat object method is more flexible because
+the object can be reused.
 
-## Method 1: Passing a Function
+## Method 1: Passing an Object
 
-The first method is to pass an ellmer chat model function directly. This
-is the preferred method because it lets hellmer setup the model,
-specifically setting `echo = "none"` for cleaner console output:
-
-``` r
-library(hellmer)
-
-# Sequential processing
-chat <- chat_sequential(
-  chat_model = chat_claude,
-  system_prompt = "Reply concisely"
-)
-
-# Parallel processing
-chat <- chat_future(
-  chat_model = chat_claude,
-  system_prompt = "Reply concisely",
-  workers = 4
-)
-```
-
-In this case, hellmer will:
-
-1.  Recognize that `chat_model` is a function
-2.  Setup the model with `echo = "none"` and any additional parameters
-    you provide
-3.  Use this newly created model for batch processing
-
-## Method 2: Passing an Object
-
-The second method is to pass a chat model object. This is useful when
-you need more control over model configuration or want to reuse an
-existing model:
+The first method is to pass a chat model object. This is useful when you
+want to reuse an existing model configuration:
 
 ``` r
 library(hellmer)
 
-# Create and configure a chat model
 claude <- chat_claude(
   model = "claude-3-7-sonnet-latest",
   system_prompt = "Reply concisely",
@@ -70,17 +38,16 @@ claude <- chat_claude(
   max_tokens = 1000
 )
 
-# Sequential processing
-chat <- chat_sequential(chat_model = claude)
-
-# Parallel processing
-chat <- chat_future(
-  chat_model = claude,
-  workers = 4
-)
+chat <- chat_sequential(claude)
 ```
 
-In this case, hellmer will:
+## Method 2: Passing a Function
 
-1.  Recognize that `chat_model` is an object
-2.  Use the model as-is with its existing configuration
+The second method is to pass an ellmer chat model function directly.
+This method may be preferred if you only need to use a model once or
+aesthetically prefer not to nest functions. There is not much reason to
+use this method, but it is available for backward compatibility.
+
+``` r
+chat <- chat_sequential(chat_claude, system_prompt = "Reply concisely")
+```
