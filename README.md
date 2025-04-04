@@ -4,12 +4,12 @@
 
 Enable sequential and parallel batch processing for [chat models](#0) supported by `ellmer`.
 
-## Overview
+## Features
 
 Process multiple chat interactions with:
 
 -   [Tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html)
--   Iterative evaluation and improvement of structured data
+-   LLM-as-a-judge for structured data refinement
 -   Progress tracking and recovery
 -   Automatic retry with backoff
 -   Sound notifications
@@ -174,7 +174,7 @@ result$texts()
 #> ...
 ```
 
-To iteratively refine structured data extractions, implement LLM-as-a-judge into the chat turns using the `judgements` parameter (increases token use):
+To ask the chat model to evaluate and refine structured data extractions, implement LLM-as-a-judge into the turns of the chat using the `judgements` parameter (increases token use):
 
 ``` r
 result <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)
@@ -205,7 +205,7 @@ If `state_path` is not defined, a temporary file will be created by default.
 
 ### Automatic Retry
 
-Automatically retry failed requests with exponential backoff, which serves as a wide guardrail against errors while `ellmer` and `httr2` serve as a narrow guardrail against specific API limits.
+Automatically retry failed requests with exponential backoff, which acts as a wide guardrail against temporary API errors. `ellmer` uses `httr2` to act as a narrow guardrail against specific API errors and limits with most chat provider functions defaulting to retry one time.
 
 Be aware that this retry is a brute force approach, and as long as all other validation passes, the retry will persist. However, it will stop if it detects an authorization or API key issue.
 
