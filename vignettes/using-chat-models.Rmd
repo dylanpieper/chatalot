@@ -31,23 +31,26 @@ want to reuse an existing model configuration:
 ``` r
 library(hellmer)
 
-claude <- chat_claude(
-  model = "claude-3-7-sonnet-latest",
-  system_prompt = "Reply concisely",
-  echo = "none",
-  max_tokens = 1000
+openai <- chat_openai(
+  model = "o3-mini",
+  system_prompt = "Reply concisely, one sentence"
 )
 
-chat <- chat_sequential(claude)
+chat <- chat_sequential(openai)
 ```
 
 ## Method 2: Passing a Function
 
 The second method is to pass an ellmer chat model function directly.
 This method may be preferred if you only need to use a model once or
-aesthetically prefer not to nest functions. There is not much reason to
-use this method, but it is available for backward compatibility.
+aesthetically prefer not to nest functions. There is not any great
+reason to use this method, but it's available for backward
+compatibility.
 
 ``` r
-chat <- chat_sequential(chat_claude, system_prompt = "Reply concisely")
+chat <- chat_sequential(
+  chat_openai,
+  model = "o3-mini",
+  system_prompt = "Reply concisely, one sentence"
+)
 ```
