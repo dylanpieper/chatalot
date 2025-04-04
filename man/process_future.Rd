@@ -19,7 +19,10 @@ process_future(
   max_delay = 60,
   backoff_factor = 2,
   timeout = 60,
-  beep = TRUE
+  beep = TRUE,
+  progress = TRUE,
+  echo = FALSE,
+  ...
 )
 }
 \arguments{
@@ -52,6 +55,8 @@ process_future(
 \item{timeout}{Maximum seconds per prompt}
 
 \item{beep}{Play sound on completion/error}
+
+\item{progress}{Whether to show progress bars}
 }
 \value{
 Batch results object

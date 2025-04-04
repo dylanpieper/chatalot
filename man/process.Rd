@@ -10,13 +10,15 @@ process(
   type_spec = NULL,
   judgements = 0,
   state_path = tempfile("chat_", fileext = ".rds"),
-  echo = "none",
+  progress = TRUE,
   max_retries = 3L,
   initial_delay = 1,
   max_delay = 60,
   backoff_factor = 2,
   timeout = 60,
-  beep = TRUE
+  beep = TRUE,
+  echo = FALSE,
+  ...
 )
 }
 \arguments{
@@ -30,7 +32,7 @@ process(
 
 \item{state_path}{Path for saving state}
 
-\item{echo}{Echo level}
+\item{progress}{Whether to show progress bars}
 
 \item{max_retries}{Maximum retry attempts}
 

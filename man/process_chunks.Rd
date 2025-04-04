@@ -12,13 +12,15 @@ process_chunks(
   judgements,
   pb,
   state_path,
-  echo,
+  progress,
   beep,
   timeout = 60,
   max_retries = 3L,
   initial_delay = 1,
   max_delay = 60,
-  backoff_factor = 2
+  backoff_factor = 2,
+  echo = FALSE,
+  ...
 )
 }
 \arguments{
@@ -36,7 +38,7 @@ process_chunks(
 
 \item{state_path}{Path to save intermediate state}
 
-\item{echo}{Level of output to display ("none", "text", "all")}
+\item{progress}{Whether to show progress bars}
 
 \item{beep}{Logical indicating whether to play sounds}
 

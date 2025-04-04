@@ -12,7 +12,6 @@ Process multiple chat interactions with:
 -   Progress tracking and recovery
 -   Automatic retry with backoff
 -   Timeout handling
--   Configurable output verbosity
 -   Sound notifications
 
 ## Installation
@@ -25,7 +24,7 @@ install.packages("hellmer")
 
 ## Setup API Keys
 
-`ellmer` will look for API keys in your environmental variables. I recommend the `usethis` package to setup API keys in your `.Renviron` such as `OPENAI_API_KEY=your-key`.
+API keys allow access to chat models are are stored as environmental variables. I recommend the `usethis` package to setup API keys in your `.Renviron` such as `OPENAI_API_KEY=your-key`.
 
 ``` r
 usethis::edit_r_environ(scope = c("user", "project"))
@@ -38,10 +37,7 @@ usethis::edit_r_environ(scope = c("user", "project"))
 ``` r
 library(hellmer)
 
-chat <- chat_sequential(
-  chat_openai, 
-  system_prompt = "Reply concisely, one sentence"
-)
+chat <- chat_sequential(chat_openai(system_prompt = "Reply concisely, one sentence"))
 
 prompts <- list(
   "What is R?",
@@ -96,8 +92,7 @@ result$chats()
 ### Parallel Processing
 
 ``` r
-chat <- chat_future(chat_openai, 
-                    system_prompt = "Reply concisely, one sentence")
+chat <- chat_future(chat_openai(system_prompt = "Reply concisely, one sentence"))
 ```
 
 #### Performance vs Safety Trade-Off
@@ -213,8 +208,8 @@ If `state_path` is not defined, a temporary file will be created by default.
 Automatically retry failed requests with exponential backoff, which serves as a wide guardrail against errors while `ellmer` and `httr2` serve as a narrow guardrail against specific API limits:
 
 ``` r
-chat <- chat_sequential(
-  chat_openai,         # ellmer chat model
+result <- chat$batch(
+  prompts = prompts,   # list or vector of prompts
   max_retries = 3,     # maximum retry attempts
   initial_delay = 20,  # initial delay in seconds
   max_delay = 80,      # maximum delay between retries
@@ -243,21 +238,6 @@ chat <- chat_future(
 )
 ```
 
-### Output Control
-
-Control verbosity with the `echo` parameter (sequential only):
-
--   `"none"`: Silent operation with progress bar
--   `"text"`: Show chat responses only
--   `"all"`: Show both prompts and responses
-
-``` r
-chat <- chat_sequential(
-  chat_openai, 
-  echo = "none"
-)
-```
-
 ### Sound Notifications
 
 Toggle sound notifications on batch completion, interruption, and error:
@@ -269,11 +249,28 @@ chat <- chat_sequential(
 )
 ```
 
-### Results Methods
+### Methods
 
 -   `progress()`: Returns processing status
 -   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a type specification is provided, it returns structured data instead of plain text.
 -   `chats()`: Returns a list of chat objects
+
+### Echoing
+
+By default, a progress bar is used and `echo` is set to `FALSE` for the chat call. However, you can still configure `echo` in the `$batch` call by setting `progress` to `FALSE`. For example:
+
+```{r}
+result <- chat$batch(prompts, progress = FALSE, echo = "all")
+#> > What is R?
+#> < R is a programming language and software environment used for statistical computing,
+#> < data analysis, and graphical representation.
+#> < 
+#> > Explain base R versus tidyverse
+#> < Base R refers to the functions and paradigms built into the R language, while
+#> < tidyverse is a collection of R packages designed for data science, emphasizing 
+#> < a more consistent and human-readable syntax for data manipulation.
+#> < 
+```
 
 ## Further Reading
 

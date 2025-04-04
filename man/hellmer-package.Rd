@@ -6,7 +6,7 @@
 \alias{hellmer-package}
 \title{hellmer: Batch Processing for Chat Models}
 \description{
-Batch processing framework for 'ellmer' chat model interactions. Enables sequential and parallel processing of chat completions. Core capabilities include error handling with backoff, state persistence, progress tracking, and retry management. Parallel processing is implemented via the 'future' framework. Additional features include structured data extraction, tool integration, timeout handling, verbosity control, and sound notifications. Includes methods for returning chat texts, chat objects, progress status, and structured data.
+Batch processing framework for 'ellmer' chat models. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery, automatic retry with backoff, and timeout handling. Additional quality-of-life features include verbosity control and sound notifications. Parallel processing is implemented via the 'future' framework. Includes methods for retrieving progress status, chat texts, and chat objects.
 }
 \seealso{
 Useful links:

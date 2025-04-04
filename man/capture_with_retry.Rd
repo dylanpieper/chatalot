@@ -8,13 +8,14 @@ capture_with_retry(
   original_chat,
   prompt,
   type_spec = NULL,
-  echo = "text",
   judgements = 0,
   max_retries = 3L,
   initial_delay = 1,
   max_delay = 32,
   backoff_factor = 2,
-  timeout = 60
+  timeout = 60,
+  echo = FALSE,
+  ...
 )
 }
 \arguments{
@@ -23,8 +24,6 @@ capture_with_retry(
 \item{prompt}{Prompt text}
 
 \item{type_spec}{Type specification for structured data}
-
-\item{echo}{Echo level ("none", "text", "all")}
 
 \item{judgements}{Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
 

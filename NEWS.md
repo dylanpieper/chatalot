@@ -1,12 +1,15 @@
 # hellmer 0.1.2
 
-## New features
-* Clarified package features and methods in DESCRIPTION file.
+## Breaking changes
+* Moved parameters from `chat_sequential` and `chat_future` to `$batch()`, except for `chat_model` and `...`.
+
+* `$batch()` gains `progress` in addition to  `echo` and `...` which are passed to the chat call.
 
 # hellmer 0.1.1
 
 ## New features
 * Removed `structured_data()` method as `texts()` now handles structured data responses.
+
 * Updated package documentation for better organization and clarity.
 
 ## Experimental features

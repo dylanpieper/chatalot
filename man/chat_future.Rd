@@ -4,44 +4,10 @@
 \alias{chat_future}
 \title{Process a batch of prompts in parallel}
 \usage{
-chat_future(
-  chat_model = NULL,
-  workers = parallel::detectCores(),
-  plan = "multisession",
-  chunk_size = NULL,
-  max_chunk_attempts = 3L,
-  max_retries = 3L,
-  initial_delay = 20,
-  max_delay = 80,
-  backoff_factor = 2,
-  timeout = 60,
-  beep = TRUE,
-  ...
-)
+chat_future(chat_model = NULL, ...)
 }
 \arguments{
 \item{chat_model}{ellmer chat model function or object (e.g., \code{ellmer::chat_claude})}
-
-\item{workers}{Number of parallel workers to use (default: number of CPU cores)}
-
-\item{plan}{Processing strategy to use: "multisession" for separate R sessions
-or "multicore" for forked processes (default: "multisession")}
-
-\item{chunk_size}{Number of prompts to process in parallel at a time (default: number of prompts / 10)}
-
-\item{max_chunk_attempts}{Maximum number of retry attempts for failed chunks (default: 3L)}
-
-\item{max_retries}{Maximum number of retry attempts per prompt (default: 3L)}
-
-\item{initial_delay}{Initial delay in seconds before first retry (default: 20)}
-
-\item{max_delay}{Maximum delay in seconds between retries (default: 80)}
-
-\item{backoff_factor}{Factor to multiply delay by after each retry (default: 2)}
-
-\item{timeout}{Maximum time in seconds to wait for each prompt response (default: 2)}
-
-\item{beep}{Logical to play a sound on batch completion, interruption, and error (default: TRUE)}
 
 \item{...}{Additional arguments passed to the underlying chat model (e.g., \code{system_prompt})}
 }
@@ -56,6 +22,7 @@ A batch object (S7 class) containing:
 \item texts: Function to extract text responses (includes structured data when a type specification is provided)
 \item chats: Function to extract chat objects
 \item progress: Function to get processing status
+\item batch: Function to process a batch of prompts
 }
 }
 \description{
@@ -63,17 +30,82 @@ Processes a batch of chat prompts using parallel workers.
 Splits prompts into chunks for processing while maintaining state.
 For sequential processing, use \code{chat_sequential()}.
 }
+\section{Batch Method}{
+
+\preformatted{
+batch(
+  prompts,
+  type_spec = NULL,
+  judgements = 0,
+  state_path = tempfile("chat_", fileext = ".rds"),
+  progress = TRUE,
+  workers = parallel::detectCores(),
+  plan = "multisession",
+  chunk_size = NULL,
+  max_chunk_attempts = 3L,
+  max_retries = 3L,
+  initial_delay = 20,
+  max_delay = 80,
+  backoff_factor = 2,
+  timeout = 60,
+  beep = TRUE,
+  echo = FALSE,
+  ...
+)
+}
+
+The batch method processes multiple prompts in parallel and returns a batch object:
+\itemize{
+\item prompts: List of prompts to process
+\item type_spec: Type specification for structured data extraction
+\item judgements: Number of judgements for data extraction accuracy
+\item state_path: Path to save state file for resuming interrupted processing
+\item progress: Whether to show progress bars (default: TRUE)
+\item workers: Number of parallel workers
+\item plan: Parallel backend plan ("multisession" or "multicore")
+\item chunk_size: Size of chunks for parallel processing
+\item max_chunk_attempts: Maximum retries per failed chunk
+\item max_retries: Maximum number of retry attempts for failed requests
+\item initial_delay: Initial delay before first retry in seconds
+\item max_delay: Maximum delay between retries in seconds
+\item backoff_factor: Factor to multiply delay by after each retry
+\item timeout: Maximum time to wait per prompt in seconds
+\item beep: Whether to play a sound on completion
+\item echo: Whether to display chat outputs (when progress=FALSE)
+\item ...: Additional arguments passed to the chat method
+}
+}
+
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# Create a parallel chat processor
+# Create a parallel chat processor with function
 chat <- chat_future(chat_openai, system_prompt = "Reply concisely, one sentence")
 
+# Or with initialized model
+chat <- chat_future(chat_openai(system_prompt = "Reply concisely"))
+
 # Process a batch of prompts in parallel
-batch <- chat$batch(list(
-  "What is R?",
-  "Explain base R versus tidyverse",
-  "Explain vectors, lists, and data frames"
-))
+batch <- chat$batch(
+  list(
+    "What is R?",
+    "Explain base R versus tidyverse",
+    "Explain vectors, lists, and data frames"
+  ),
+  workers = parallel::detectCores(),
+  chunk_size = NULL,
+  plan = "multisession"
+)
+
+# Process batch with echo enabled (when progress is disabled)
+batch <- chat$batch(
+  list(
+    "What is R?",
+    "Explain base R versus tidyverse"
+  ),
+  progress = FALSE, 
+  echo = TRUE,
+  temperature = 0.7
+)
 
 # Check the progress if interrupted
 batch$progress()

@@ -4,35 +4,10 @@
 \alias{chat_sequential}
 \title{Process a batch of prompts in sequence}
 \usage{
-chat_sequential(
-  chat_model = NULL,
-  echo = "none",
-  max_retries = 3L,
-  initial_delay = 20,
-  max_delay = 80,
-  backoff_factor = 2,
-  timeout = 60,
-  beep = TRUE,
-  ...
-)
+chat_sequential(chat_model = NULL, ...)
 }
 \arguments{
 \item{chat_model}{ellmer chat model function or object (e.g., \code{ellmer::chat_claude})}
-
-\item{echo}{Level of output to display: "none" for silent operation,
-"text" for response text only, or "all" for full interaction (default: "none")}
-
-\item{max_retries}{Maximum number of retry attempts per prompt (default: 3L)}
-
-\item{initial_delay}{Initial delay in seconds before first retry (default: 20)}
-
-\item{max_delay}{Maximum delay in seconds between retries (default: 80)}
-
-\item{backoff_factor}{Factor to multiply delay by after each retry (default: 2)}
-
-\item{timeout}{Maximum time in seconds to wait for each prompt response (default: 60)}
-
-\item{beep}{Logical to play a sound on batch completion, interruption, and error (default: TRUE)}
 
 \item{...}{Additional arguments passed to the underlying chat model (e.g., \code{system_prompt})}
 }
@@ -47,6 +22,7 @@ A batch object (S7 class) containing
 \item texts: Function to extract text responses (includes structured data when a type specification is provided)
 \item chats: Function to extract chat objects
 \item progress: Function to get processing status
+\item batch: Function to process a batch of prompts
 }
 }
 \description{
@@ -54,17 +30,64 @@ Processes a batch of chat prompts one at a time in sequential order.
 Maintains state between runs and can resume interrupted processing.
 For parallel processing, use \code{chat_future()}.
 }
+\section{Batch Method}{
+
+\preformatted{
+batch(
+  prompts,
+  type_spec = NULL,
+  judgements = 0,
+  state_path = tempfile("chat_", fileext = ".rds"),
+  progress = TRUE,
+  max_retries = 3L,
+  initial_delay = 20,
+  max_delay = 80,
+  backoff_factor = 2,
+  timeout = 60,
+  beep = TRUE,
+  echo = FALSE,
+  ...
+)
+}
+
+The batch method processes multiple prompts and returns a batch object:
+\itemize{
+\item prompts: List of prompts to process
+\item type_spec: Type specification for structured data extraction
+\item judgements: Number of judgements for data extraction accuracy
+\item state_path: Path to save state file for resuming interrupted processing
+\item progress: Whether to show progress bars (default: TRUE)
+\item max_retries: Maximum number of retry attempts for failed requests
+\item initial_delay: Initial delay before first retry in seconds
+\item max_delay: Maximum delay between retries in seconds
+\item backoff_factor: Factor to multiply delay by after each retry
+\item timeout: Maximum time to wait per prompt in seconds
+\item beep: Whether to play a sound on completion
+\item echo: Whether to display chat outputs (when progress=FALSE)
+\item ...: Additional arguments passed to the chat method
+}
+}
+
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# Create a sequential chat processor
+# Create a sequential chat processor with function
 chat <- chat_sequential(chat_openai, system_prompt = "Reply concisely, one sentence")
+
+# Or with initialized model
+chat <- chat_sequential(chat_openai(system_prompt = "Reply concisely"))
 
 # Process a batch of prompts in sequence
 batch <- chat$batch(list(
   "What is R?",
   "Explain base R versus tidyverse",
   "Explain vectors, lists, and data frames"
-))
+), max_retries = 3L, initial_delay = 20, beep = TRUE)
+
+# Process batch with echo enabled (when progress is disabled)
+batch <- chat$batch(list(
+  "What is R?",
+  "Explain base R versus tidyverse"
+), progress = FALSE, echo = TRUE, temperature = 0.7)
 
 # Check the progress if interrupted
 batch$progress()

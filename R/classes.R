@@ -70,7 +70,7 @@ progress <- S7::new_generic("progress", "x")
 #' @param state_path Path to save state file
 #' @param type_spec Type specification for structured data extraction
 #' @param judgements Number of judgements in a `batch_judge()` workflow (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
-#' @param echo Level of output to display ("none", "text", "all")
+#' @param progress Whether to show progress bars (default: TRUE)
 #' @param input_type Type of input ("vector" or "list")
 #' @param max_retries Maximum number of retry attempts
 #' @param initial_delay Initial delay before first retry
@@ -80,6 +80,8 @@ progress <- S7::new_generic("progress", "x")
 #' @param workers Number of parallel workers
 #' @param plan Parallel backend plan
 #' @param state Internal state tracking
+#' @param beep Play sound on completion (default: TRUE)
+#' @param echo Whether to echo messages during processing (default: FALSE)
 #' @return Returns an S7 class object of class "batch" that represents a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides methods for:
 #' \itemize{
 #'   \item Extracting text responses via \code{texts()} (includes structured data when a type specification is provided)
@@ -114,10 +116,10 @@ batch <- S7::new_class(
       class = S7::class_list,
       validator = function(value) {
         if (length(value) == 0) {
-          "@prompts must not be empty"
+          "must not be empty"
         }
         if (!all(purrr::map_lgl(value, is.character))) {
-          "@prompts must be a list of character strings"
+          "must be a list of character strings"
         }
         NULL
       }
@@ -130,10 +132,10 @@ batch <- S7::new_class(
       class = S7::class_integer,
       validator = function(value) {
         if (length(value) != 1) {
-          "@completed must be a single integer"
+          "must be a single integer"
         }
         if (value < 0) {
-          "@completed must be non-negative"
+          "must be non-negative"
         }
         NULL
       }
@@ -144,7 +146,7 @@ batch <- S7::new_class(
       validator = function(value) {
         if (!is.null(value)) {
           if (!inherits(value, c("ellmer::TypeObject", "ellmer::Type", "ellmer::TypeArray"))) {
-            return("@type_spec must be an ellmer type specification (created with type_object(), type_array(), etc.) or NULL")
+            "must be an ellmer type specification (created with type_object(), type_array(), etc.) or NULL"
           }
         }
         NULL
@@ -154,19 +156,19 @@ batch <- S7::new_class(
       class = S7::class_integer,
       validator = function(value) {
         if (length(value) != 1) {
-          "@judgements must be a single integer"
+          "must be a single integer"
         }
         if (value < 0) {
-          "@judgements must be non-negative"
+          "must be non-negative"
         }
         NULL
       }
     ),
-    echo = S7::new_property(
-      class = S7::class_character,
+    progress = S7::new_property(
+      class = S7::class_logical,
       validator = function(value) {
-        if (!value %in% c("none", "text", "all")) {
-          "@echo must be one of 'none', 'text', or 'all'"
+        if (length(value) != 1) {
+          "must be a single logical value"
         }
         NULL
       }
@@ -175,7 +177,7 @@ batch <- S7::new_class(
       class = S7::class_character,
       validator = function(value) {
         if (!value %in% c("vector", "list")) {
-          "input_type must be either 'vector' or 'list'"
+          "must be either 'vector' or 'list'"
         } else {
           NULL
         }
@@ -185,10 +187,10 @@ batch <- S7::new_class(
       class = S7::class_integer,
       validator = function(value) {
         if (length(value) != 1) {
-          "@max_retries must be a single integer"
+          "must be a single integer"
         }
         if (value < 0) {
-          "@max_retries must be non-negative"
+          "must be non-negative"
         }
         NULL
       }
@@ -197,10 +199,10 @@ batch <- S7::new_class(
       class = S7::class_numeric,
       validator = function(value) {
         if (length(value) != 1) {
-          "@initial_delay must be a single numeric"
+          "must be a single numeric"
         }
         if (value < 0) {
-          "@initial_delay must be non-negative"
+          "must be non-negative"
         }
         NULL
       }
@@ -209,10 +211,10 @@ batch <- S7::new_class(
       class = S7::class_numeric,
       validator = function(value) {
         if (length(value) != 1) {
-          "@max_delay must be a single numeric"
+          "must be a single numeric"
         }
         if (value < 0) {
-          "@max_delay must be non-negative"
+          "must be non-negative"
         }
         NULL
       }
@@ -221,10 +223,10 @@ batch <- S7::new_class(
       class = S7::class_numeric,
       validator = function(value) {
         if (length(value) != 1) {
-          "@backoff_factor must be a single numeric"
+          "must be a single numeric"
         }
         if (value <= 1) {
-          "@backoff_factor must be greater than 1"
+          "must be greater than 1"
         }
         NULL
       }
@@ -234,10 +236,10 @@ batch <- S7::new_class(
       validator = function(value) {
         if (!is.null(value)) {
           if (length(value) != 1) {
-            "@chunk_size must be a single integer"
+            "must be a single integer"
           }
           if (value <= 0) {
-            "@chunk_size must be positive"
+            "must be positive"
           }
         }
         NULL
@@ -248,10 +250,10 @@ batch <- S7::new_class(
       validator = function(value) {
         if (!is.null(value)) {
           if (length(value) != 1) {
-            "@workers must be a single integer"
+            "must be a single integer"
           }
           if (value <= 0) {
-            "@workers must be positive"
+            "must be positive"
           }
         }
         NULL
@@ -262,9 +264,32 @@ batch <- S7::new_class(
       validator = function(value) {
         if (!is.null(value)) {
           if (!value %in% c("multisession", "multicore")) {
-            "@plan must be either 'multisession' or 'multicore'"
+            "must be either 'multisession' or 'multicore'"
           }
         }
+        NULL
+      }
+    ),
+    beep = S7::new_property(
+      class = S7::class_logical,
+      validator = function(value) {
+        if (length(value) != 1) {
+          "must be a single logical value"
+        }
+        NULL
+      }
+    ),
+    echo = S7::new_property(
+      class = S7::new_union(S7::class_logical, S7::class_character),
+      validator = function(value) {
+        if (length(value) != 1) {
+          "must be a single logical value or one of 'none', 'text', or 'all'"
+        }
+
+        if (is.character(value) && !value %in% c("none", "text", "all")) {
+          "must be a logical value or one of 'none', 'text', or 'all'"
+        }
+
         NULL
       }
     ),
@@ -274,7 +299,7 @@ batch <- S7::new_class(
         if (!is.null(value)) {
           required_fields <- c("active_workers", "failed_chunks", "retry_count")
           if (!all(required_fields %in% names(value))) {
-            return("@state must contain active_workers, failed_chunks, and retry_count")
+            "must contain active_workers, failed_chunks, and retry_count"
           }
         }
         NULL
@@ -283,11 +308,11 @@ batch <- S7::new_class(
   ),
   validator = function(self) {
     if (self@completed > length(self@prompts)) {
-      "@completed cannot be larger than number of prompts"
+      "cannot be larger than number of prompts"
     }
     if (!is.null(self@state)) {
       if (self@state$active_workers > self@workers) {
-        return("Active workers cannot exceed total workers")
+        "active workers cannot exceed total workers"
       }
     }
     NULL

@@ -36,16 +36,15 @@ create_auth_error <- function(original_error) {
 #' @param prompt Prompt text
 #' @param type_spec Type specification for structured data
 #' @param judgements Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
-#' @param echo Echo level ("none", "text", "all")
 #' @return List containing response information
 #' @keywords internal
-capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, echo = "none") {
+capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, echo = FALSE, ...) {
   response <- NULL
   structured_data <- NULL
   chat <- original_chat$clone()
   
   if (!is.null(type_spec)) {
-    result <- process_judgements(chat, prompt, type_spec, judgements, echo)
+    result <- process_judgements(chat, prompt, type_spec, judgements, echo = echo, ...)
     structured_data <- result$final
     chat <- result$chat
     
@@ -53,7 +52,7 @@ capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, ech
       stop("Received NULL structured data response")
     }
   } else {
-    response <- chat$chat(prompt)
+    response <- chat$chat(prompt, echo = echo, ...)
     
     if (is.null(response)) {
       stop("Received NULL chat response")
@@ -84,7 +83,6 @@ capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, ech
 #' @param original_chat Original chat model object
 #' @param prompt Prompt text
 #' @param type_spec Type specification for structured data
-#' @param echo Echo level ("none", "text", "all")
 #' @param judgements Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
 #' @param max_retries Maximum number of retry attempts
 #' @param initial_delay Initial delay in seconds before first retry
@@ -94,15 +92,16 @@ capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, ech
 #' @return List containing response information
 #' @keywords internal
 capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
-                               echo = "none", judgements = 0, max_retries = 3L,
+                               judgements = 0, max_retries = 3L,
                                initial_delay = 1, max_delay = 32,
-                               backoff_factor = 2, timeout = 60) {
+                               backoff_factor = 2, timeout = 60,
+                               echo = FALSE, ...) {
   retry_with_delay <- function(attempt = 1, delay = initial_delay) {
     tryCatch(
       {
         R.utils::withTimeout(
           {
-            capture(original_chat, prompt, type_spec, judgements, echo)
+            capture(original_chat, prompt, type_spec, judgements, echo = echo, ...)
           },
           timeout = timeout
         )
@@ -155,7 +154,7 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
 #' @param type_spec Type specification for structured data
 #' @param judgements Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
 #' @param state_path Path for saving state
-#' @param echo Echo level
+#' @param progress Whether to show progress bars
 #' @param beep Play sound on completion
 #' @param max_retries Maximum retry attempts
 #' @param initial_delay Initial delay before retry
@@ -170,13 +169,15 @@ process <- function(
     type_spec = NULL,
     judgements = 0,
     state_path = tempfile("chat_", fileext = ".rds"),
-    echo = "none",
+    progress = TRUE,
     max_retries = 3L,
     initial_delay = 1,
     max_delay = 60,
     backoff_factor = 2,
     timeout = 60,
-    beep = TRUE) {
+    beep = TRUE,
+    echo = FALSE,
+    ...) {
   if (file.exists(state_path)) {
     result <- readRDS(state_path)
     if (!identical(as.list(prompts), result@prompts)) {
@@ -197,7 +198,7 @@ process <- function(
       state_path = state_path,
       type_spec = type_spec,
       judgements = as.integer(judgements),
-      echo = echo,
+      progress = progress,
       input_type = orig_type,
       max_retries = as.integer(max_retries),
       initial_delay = initial_delay,
@@ -219,7 +220,7 @@ process <- function(
   }
   
   pb <- NULL
-  if (echo == "none") {
+  if (progress) {
     pb <- cli::cli_progress_bar(
       format = paste0(
         "{cli::pb_spin} Processing chats [{cli::pb_current}/{cli::pb_total}] ",
@@ -233,13 +234,15 @@ process <- function(
   tryCatch({
     for (i in (result@completed + 1L):total_prompts) {
       response <- capture_with_retry(
-        chat_obj, prompts[[i]], type_spec, echo,
+        chat_obj, prompts[[i]], type_spec,
         judgements = judgements,
         max_retries = max_retries,
         initial_delay = initial_delay,
         max_delay = max_delay,
         backoff_factor = backoff_factor,
-        timeout = timeout
+        timeout = timeout,
+        echo = echo,
+        ...
       )
       
       result@responses[[i]] <- response
@@ -302,7 +305,7 @@ process <- function(
 #' @param initial_delay Initial delay before first retry
 #' @param max_delay Maximum delay between retries
 #' @param backoff_factor Delay multiplier after each retry
-#' @param echo Level of output to display ("none", "text", "all")  
+#' @param progress Whether to show progress bars
 #' @return Batch results object
 #' @keywords internal
 process_future <- function(
@@ -321,7 +324,9 @@ process_future <- function(
     backoff_factor = 2,
     timeout = 60,
     beep = TRUE,
-    echo = "none") {
+    progress = TRUE,
+    echo = FALSE,
+    ...) {
   validate_chunk_result <- function(chunk_result, chunk_idx) {
     if (inherits(chunk_result, "error") || inherits(chunk_result, "worker_error")) {
       if (is_auth_error(chunk_result)) {
@@ -381,7 +386,7 @@ process_future <- function(
       state_path = state_path,
       type_spec = type_spec,
       judgements = as.integer(judgements),
-      echo = echo,
+      progress = progress,
       input_type = original_type,
       max_retries = max_retries,
       initial_delay = initial_delay,
@@ -414,11 +419,14 @@ process_future <- function(
   remaining_prompts <- prompts[(result@completed + 1L):total_prompts]
   chunks <- split(remaining_prompts, ceiling(seq_along(remaining_prompts) / chunk_size))
 
-  pb <- cli::cli_progress_bar(
-    format = "Processing chats [{cli::pb_current}/{cli::pb_total}] [{cli::pb_bar}] {cli::pb_percent}",
-    total = total_prompts
-  )
-  cli::cli_progress_update(id = pb, set = result@completed)
+  pb <- NULL
+  if (progress) {
+    pb <- cli::cli_progress_bar(
+      format = "Processing chats [{cli::pb_current}/{cli::pb_total}] [{cli::pb_bar}] {cli::pb_percent}",
+      total = total_prompts
+    )
+    cli::cli_progress_update(id = pb, set = result@completed)
+  }
 
   tryCatch({
     for (chunk_idx in seq_along(chunks)) {
@@ -440,13 +448,14 @@ process_future <- function(
                   worker_chat,
                   prompt,
                   type_spec,
-                  echo = echo,
                   judgements = judgements,
                   timeout = timeout,
                   max_retries = max_retries,
                   initial_delay = initial_delay,
                   max_delay = max_delay,
-                  backoff_factor = backoff_factor
+                  backoff_factor = backoff_factor,
+                  echo = echo,
+                  ...
                 )
               },
               .options = furrr::furrr_options(
@@ -488,7 +497,9 @@ process_future <- function(
 
           result@completed <- end_idx
           saveRDS(result, state_path)
-          cli::cli_progress_update(id = pb, set = result@completed)
+          if (!is.null(pb)) {
+            cli::cli_progress_update(id = pb, set = result@completed)
+          }
         } else if (retry_count < max_chunk_attempts) {
           cli::cli_alert_warning(sprintf(
             "Chunk %d failed (attempt %d/%d): %s. Retrying...",
@@ -516,7 +527,9 @@ process_future <- function(
 
     finish_successful_batch(pb, beep)
   }, error = function(e) {
-    cli::cli_progress_done(id = pb)
+    if (!is.null(pb)) {
+      cli::cli_progress_done(id = pb)
+    }
     saveRDS(result, state_path)
 
     if (inherits(e, "interrupt")) {
@@ -526,7 +539,9 @@ process_future <- function(
       stop(e)
     }
   }, interrupt = function(e) {
-    cli::cli_progress_done(id = pb)
+    if (!is.null(pb)) {
+      cli::cli_progress_done(id = pb)
+    }
     saveRDS(result, state_path)
 
     if (beep) beepr::beep("coin")
@@ -552,7 +567,7 @@ process_future <- function(
 #' @param judgements Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
 #' @param pb Progress bar object
 #' @param state_path Path to save intermediate state
-#' @param echo Level of output to display ("none", "text", "all")
+#' @param progress Whether to show progress bars
 #' @param beep Logical indicating whether to play sounds
 #' @param timeout Maximum time in seconds to wait per prompt
 #' @param max_retries Maximum number of retry attempts
@@ -561,7 +576,7 @@ process_future <- function(
 #' @param backoff_factor Factor to multiply delay by after each retry
 #' @return Updated batch object with processed results
 #' @keywords internal
-process_chunks <- function(chunks, result, chat_obj, type_spec, judgements, pb, state_path, echo, beep, timeout = 60, max_retries = 3L, initial_delay = 1, max_delay = 60, backoff_factor = 2) {
+process_chunks <- function(chunks, result, chat_obj, type_spec, judgements, pb, state_path, progress, beep, timeout = 60, max_retries = 3L, initial_delay = 1, max_delay = 60, backoff_factor = 2, echo = FALSE, ...) {
   was_interrupted <- FALSE
 
   for (chunk in chunks) {
@@ -577,13 +592,14 @@ process_chunks <- function(chunks, result, chat_obj, type_spec, judgements, pb, 
               worker_chat,
               prompt,
               type_spec,
-              echo = echo,
               judgements = judgements,
               timeout = timeout,
               max_retries = max_retries,
               initial_delay = initial_delay,
               max_delay = max_delay,
-              backoff_factor = backoff_factor
+              backoff_factor = backoff_factor,
+              echo = echo,
+              ...
             )
           },
           .progress = FALSE
@@ -616,10 +632,9 @@ process_chunks <- function(chunks, result, chat_obj, type_spec, judgements, pb, 
 #' @param prompt The prompt or text to analyze
 #' @param type_spec Type specification for structured data
 #' @param judgements Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
-#' @param echo Level of output
 #' @return List containing extraction process
 #' @keywords internal
-process_judgements <- function(chat_obj, prompt, type_spec, judgements = 0, echo = "none") {
+process_judgements <- function(chat_obj, prompt, type_spec, judgements = 0, echo = FALSE, ...) {
   result <- list(
     initial = NULL,
     evaluations = list(),
@@ -631,7 +646,8 @@ process_judgements <- function(chat_obj, prompt, type_spec, judgements = 0, echo
   result$initial <- chat$extract_data(
     prompt,
     type = type_spec,
-    echo = echo
+    echo = echo,
+    ...
   )
   
   current_extraction <- result$initial
@@ -647,7 +663,7 @@ process_judgements <- function(chat_obj, prompt, type_spec, judgements = 0, echo
         "The original prompt was:", prompt
       )
       
-      evaluation <- chat$chat(eval_prompt)
+      evaluation <- chat$chat(eval_prompt, echo = echo, ...)
       result$evaluations[[i]] <- evaluation
       
       refine_prompt <- paste(
@@ -661,7 +677,8 @@ process_judgements <- function(chat_obj, prompt, type_spec, judgements = 0, echo
       refined <- chat$extract_data(
         refine_prompt,
         type = type_spec,
-        echo = echo
+        echo = echo,
+        ...
       )
       
       result$refined[[i]] <- refined
