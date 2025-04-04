@@ -1,7 +1,7 @@
 # hellmer 0.1.2
 
 ## New Features
-* `chat_future()` more intelligently uses `chunk_size` to determine the default number of `workers` capped at the number of CPU cores.
+* `chat_future()` more intelligently uses `chunk_size` to determine the default number of `workers` capped at the number of CPU cores
 
 * `$batch()` gains `progress` in addition to  `echo` and `...` which are passed to the chat call
 
