@@ -19,7 +19,7 @@ A batch object (S7 class) containing
 \item completed: Number of successfully processed prompts
 \item state_path: Path where batch state is saved
 \item type_spec: Type specification used for structured data
-\item texts: Function to extract text responses (includes structured data when a \code{type_spec} is provided)
+\item texts: Function to extract text responses or structured data
 \item chats: Function to extract chat objects
 \item progress: Function to get processing status
 \item batch: Function to process a batch of prompts
@@ -32,20 +32,21 @@ For parallel processing, use \code{chat_future()}.
 }
 \section{Batch Method}{
 
+\preformatted{
 batch(
-prompts,
-type_spec = NULL,
-judgements = 0,
-state_path = tempfile("chat_", fileext = ".rds"),
-progress = TRUE,
-max_retries = 3L,
-initial_delay = 20,
-max_delay = 80,
-backoff_factor = 2,
-beep = TRUE,
-echo = FALSE,
-...
-)
+  prompts,
+  type_spec = NULL,
+  judgements = 0,
+  state_path = tempfile("chat_", fileext = ".rds"),
+  progress = TRUE,
+  max_retries = 3L,
+  initial_delay = 20,
+  max_delay = 80,
+  backoff_factor = 2,
+  beep = TRUE,
+  echo = FALSE,
+  ...
+}
 
 The batch method processes multiple prompts and returns a batch object:
 \itemize{
@@ -53,7 +54,7 @@ The batch method processes multiple prompts and returns a batch object:
 \item type_spec: Type specification for structured data extraction
 \item judgements: Number of judgements for data extraction accuracy
 \item state_path: Path to save state file for resuming interrupted processing
-\item progress: Whether to show progress bars (default: \code{TRUE})
+\item progress: Show progress bar
 \item max_retries: Maximum number of retry attempts for failed requests
 \item initial_delay: Initial delay before first retry in seconds
 \item max_delay: Maximum delay between retries in seconds

@@ -19,7 +19,7 @@ A batch object (S7 class) containing:
 \item completed: Number of successfully processed prompts
 \item state_path: Path where batch state is saved
 \item type_spec: Type specification used for structured data
-\item texts: Function to extract text responses (includes structured data when \code{type_spec} is provided)
+\item texts: Function to extract text responses or structured data
 \item chats: Function to extract chat objects
 \item progress: Function to get processing status
 \item batch: Function to process a batch of prompts
@@ -32,24 +32,26 @@ For sequential processing, use \code{chat_sequential()}.
 }
 \section{Batch Method}{
 
+\preformatted{
 batch(
-prompts,
-type_spec = NULL,
-judgements = 0,
-state_path = tempfile("chat_", fileext = ".rds"),
-progress = TRUE,
-workers = parallel::detectCores(),
-plan = "multisession",
-chunk_size = NULL,
-max_chunk_attempts = 3L,
-max_retries = 3L,
-initial_delay = 20,
-max_delay = 80,
-backoff_factor = 2,
-beep = TRUE,
-echo = FALSE,
-...
+  prompts,
+  type_spec = NULL,
+  judgements = 0,
+  state_path = tempfile("chat_", fileext = ".rds"),
+  progress = TRUE,
+  workers = NULL,
+  plan = "multisession",
+  chunk_size = NULL,
+  max_chunk_attempts = 3L,
+  max_retries = 3L,
+  initial_delay = 20,
+  max_delay = 80,
+  backoff_factor = 2,
+  beep = TRUE,
+  echo = FALSE,
+  ...
 )
+}
 
 The batch method processes multiple prompts in parallel and returns a batch object:
 \itemize{
@@ -57,10 +59,10 @@ The batch method processes multiple prompts in parallel and returns a batch obje
 \item type_spec: Type specification for structured data extraction
 \item judgements: Number of judgements for data extraction accuracy
 \item state_path: Path to save state file for resuming interrupted processing
-\item progress: Whether to show progress bars (default: \code{TRUE})
-\item workers: Number of parallel workers
+\item progress: Show progress bar
+\item workers: Number of parallel workers (default: number of prompts / \code{chunk_size}, capped by CPU cores)
 \item plan: Parallel backend plan ("multisession" or "multicore")
-\item chunk_size: Size of chunks for parallel processing
+\item chunk_size: Number of prompts each worker processes at a time before capturing the results (default: number of prompts / 10)
 \item max_chunk_attempts: Maximum retries per failed chunk
 \item max_retries: Maximum number of retry attempts for failed requests
 \item initial_delay: Initial delay before first retry in seconds

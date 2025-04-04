@@ -13,12 +13,13 @@
 #'     \item completed: Number of successfully processed prompts
 #'     \item state_path: Path where batch state is saved
 #'     \item type_spec: Type specification used for structured data
-#'     \item texts: Function to extract text responses (includes structured data when a `type_spec` is provided)
+#'     \item texts: Function to extract text responses or structured data
 #'     \item chats: Function to extract chat objects
 #'     \item progress: Function to get processing status
 #'     \item batch: Function to process a batch of prompts
 #'   }
 #' @section Batch Method:
+#' \preformatted{
 #' batch(
 #'   prompts,
 #'   type_spec = NULL,
@@ -32,7 +33,7 @@
 #'   beep = TRUE,
 #'   echo = FALSE,
 #'   ...
-#' )
+#' }
 #'
 #' The batch method processes multiple prompts and returns a batch object:
 #' \itemize{
@@ -40,7 +41,7 @@
 #'   \item type_spec: Type specification for structured data extraction
 #'   \item judgements: Number of judgements for data extraction accuracy
 #'   \item state_path: Path to save state file for resuming interrupted processing
-#'   \item progress: Whether to show progress bars (default: `TRUE`)
+#'   \item progress: Show progress bar
 #'   \item max_retries: Maximum number of retry attempts for failed requests
 #'   \item initial_delay: Initial delay before first retry in seconds
 #'   \item max_delay: Maximum delay between retries in seconds
@@ -171,19 +172,20 @@ chat_sequential <- function(
 #'     \item completed: Number of successfully processed prompts
 #'     \item state_path: Path where batch state is saved
 #'     \item type_spec: Type specification used for structured data
-#'     \item texts: Function to extract text responses (includes structured data when `type_spec` is provided)
+#'     \item texts: Function to extract text responses or structured data
 #'     \item chats: Function to extract chat objects
 #'     \item progress: Function to get processing status
 #'     \item batch: Function to process a batch of prompts
 #'   }
 #' @section Batch Method:
+#' \preformatted{
 #' batch(
 #'   prompts,
 #'   type_spec = NULL,
 #'   judgements = 0,
 #'   state_path = tempfile("chat_", fileext = ".rds"),
 #'   progress = TRUE,
-#'   workers = parallel::detectCores(),
+#'   workers = NULL,
 #'   plan = "multisession",
 #'   chunk_size = NULL,
 #'   max_chunk_attempts = 3L,
@@ -195,6 +197,7 @@ chat_sequential <- function(
 #'   echo = FALSE,
 #'   ...
 #' )
+#' }
 #'
 #' The batch method processes multiple prompts in parallel and returns a batch object:
 #' \itemize{
@@ -202,10 +205,10 @@ chat_sequential <- function(
 #'   \item type_spec: Type specification for structured data extraction
 #'   \item judgements: Number of judgements for data extraction accuracy
 #'   \item state_path: Path to save state file for resuming interrupted processing
-#'   \item progress: Whether to show progress bars (default: `TRUE`)
-#'   \item workers: Number of parallel workers
+#'   \item progress: Show progress bar
+#'   \item workers: Number of parallel workers (default: number of prompts / `chunk_size`, capped by CPU cores)
 #'   \item plan: Parallel backend plan ("multisession" or "multicore")
-#'   \item chunk_size: Size of chunks for parallel processing
+#'   \item chunk_size: Number of prompts each worker processes at a time before capturing the results (default: number of prompts / 10)
 #'   \item max_chunk_attempts: Maximum retries per failed chunk
 #'   \item max_retries: Maximum number of retry attempts for failed requests
 #'   \item initial_delay: Initial delay before first retry in seconds
@@ -256,7 +259,7 @@ chat_future <- function(
     chat_model = NULL,
     ...) {
   if (is.null(chat_model)) {
-    stop("Define an ellmer chat_model (e.g., chat_openai)")
+    cli::cli_abort("Define an ellmer chat_model (e.g., chat_openai)")
   }
   
   chat_env <- new.env(parent = emptyenv())
@@ -278,7 +281,7 @@ chat_future <- function(
                              judgements = 0,
                              state_path = tempfile("chat_", fileext = ".rds"),
                              progress = TRUE,
-                             workers = parallel::detectCores(),
+                             workers = NULL,
                              plan = "multisession", 
                              chunk_size = NULL,
                              max_chunk_attempts = 3L,
@@ -291,6 +294,15 @@ chat_future <- function(
                              ...) {
     
     plan <- match.arg(plan, choices = c("multisession", "multicore"))
+    
+    if (is.null(chunk_size)) {
+      chunk_size <- max(1, ceiling(length(prompts) / 10))
+    }
+    
+    if (is.null(workers)) {
+      max_cores <- parallel::detectCores()
+      workers <- min(chunk_size, max_cores)
+    }
     
     if (judgements > 0 && is.null(type_spec)) {
       cli::cli_alert_warning("Judgements parameter ({judgements}) specified but will be ignored without a type_spec")
