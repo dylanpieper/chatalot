@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Batch Processing for Chat Models">
-<meta name="description" content="Batch processing framework for ellmer chat models. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery, automatic retry with backoff, and timeout handling. Additional quality-of-life features include verbosity control and sound notifications. Parallel processing is implemented via the future framework. Includes methods for retrieving progress status, chat texts, and chat objects.">
-<meta property="og:description" content="Batch processing framework for ellmer chat models. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery, automatic retry with backoff, and timeout handling. Additional quality-of-life features include verbosity control and sound notifications. Parallel processing is implemented via the future framework. Includes methods for retrieving progress status, chat texts, and chat objects.">
+<meta name="description" content="Batch processing framework for ellmer chat models. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery, automatic retry with backoff. Additional quality-of-life features include verbosity control and sound notifications. Parallel processing is implemented via the future framework. Includes methods for retrieving progress status, chat texts, and chat objects.">
+<meta property="og:description" content="Batch processing framework for ellmer chat models. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery, automatic retry with backoff. Additional quality-of-life features include verbosity control and sound notifications. Parallel processing is implemented via the future framework. Includes methods for retrieving progress status, chat texts, and chat objects.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -66,17 +66,16 @@
 <p><a href="https://cran.r-pkg.org/package=hellmer" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
 <p>Enable sequential and parallel batch processing for <a href="#id_0">chat models</a> supported by <code>ellmer</code>.</p>
 <div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
 </h2>
 <p>Process multiple chat interactions with:</p>
 <ul>
 <li>
 <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">Tooling</a> and <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>
 </li>
+<li>LLM-as-a-judge for structured data refinement</li>
 <li>Progress tracking and recovery</li>
 <li>Automatic retry with backoff</li>
-<li>Timeout handling</li>
-<li>Configurable output verbosity</li>
 <li>Sound notifications</li>
 </ul>
 </div>
@@ -90,7 +89,7 @@
 <div class="section level2">
 <h2 id="setup-api-keys">Setup API Keys<a class="anchor" aria-label="anchor" href="#setup-api-keys"></a>
 </h2>
-<p><code>ellmer</code> will look for API keys in your environmental variables. I recommend the <code>usethis</code> package to setup API keys in your <code>.Renviron</code> such as <code>OPENAI_API_KEY=your-key</code>.</p>
+<p>API keys allow access to chat models are are stored as environmental variables. I recommend the <code>usethis</code> package to setup API keys in your <code>.Renviron</code> such as <code>OPENAI_API_KEY=your-key</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu">edit_r_environ</span><span class="op">(</span>scope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"user"</span>, <span class="st">"project"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -103,10 +102,7 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/hellmer/">hellmer</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
-<span>  <span class="va">chat_openai</span>, </span>
-<span>  system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span></span>
-<span><span class="op">)</span></span>
+<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_openai.html" class="external-link">chat_openai</a></span><span class="op">(</span>system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="st">"What is R?"</span>,</span>
@@ -158,8 +154,7 @@
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="va">chat_openai</span>, </span>
-<span>                    system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_openai.html" class="external-link">chat_openai</a></span><span class="op">(</span>system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="performance-vs-safety-trade-off">Performance vs Safety Trade-Off<a class="anchor" aria-label="anchor" href="#performance-vs-safety-trade-off"></a>
 </h4>
@@ -176,7 +171,7 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+<h2 id="features-1">Features<a class="anchor" aria-label="anchor" href="#features-1"></a>
 </h2>
 <div class="section level3">
 <h3 id="tooling">Tooling<a class="anchor" aria-label="anchor" href="#tooling"></a>
@@ -241,7 +236,7 @@
 <span><span class="co">#&gt; $neutral_score</span></span>
 <span><span class="co">#&gt; [1] 0</span></span>
 <span><span class="co">#&gt; ...</span></span></code></pre></div>
-<p>To iteratively refine structured data extractions, implement LLM-as-a-judge into the chat turns using the <code>judgements</code> parameter (increases token use):</p>
+<p>To ask the chat model to evaluate and refine structured data extractions, implement LLM-as-a-judge into the turns of the chat using the <code>judgements</code> parameter (increases token use):</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, judgements <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
@@ -269,10 +264,11 @@
 <div class="section level3">
 <h3 id="automatic-retry">Automatic Retry<a class="anchor" aria-label="anchor" href="#automatic-retry"></a>
 </h3>
-<p>Automatically retry failed requests with exponential backoff, which serves as a wide guardrail against errors while <code>ellmer</code> and <code>httr2</code> serve as a narrow guardrail against specific API limits:</p>
+<p>Automatically retry failed requests with exponential backoff, which acts as a wide guardrail against temporary API errors. <code>ellmer</code> uses <code>httr2</code> to act as a narrow guardrail against specific API errors and limits with most chat provider functions defaulting to retry one time.</p>
+<p>Be aware that this retry is a brute force approach, and as long as all other validation passes, the retry will persist. However, it will stop if it detects an authorization or API key issue.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
-<span>  <span class="va">chat_openai</span>,         <span class="co"># ellmer chat model</span></span>
+<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
+<span>  prompts <span class="op">=</span> <span class="va">prompts</span>,   <span class="co"># list or vector of prompts</span></span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3</span>,     <span class="co"># maximum retry attempts</span></span>
 <span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,  <span class="co"># initial delay in seconds</span></span>
 <span>  max_delay <span class="op">=</span> <span class="fl">80</span>,      <span class="co"># maximum delay between retries</span></span>
@@ -286,48 +282,19 @@
 <li>If it fails again, wait for (delay × <code>backoff_factor</code>)</li>
 <li>Continue until success or <code>max_retries</code> is reached</li>
 </ol>
-<p>If the code detects an authorization or API key issue, it will stop immediately.</p>
-</div>
-<div class="section level3">
-<h3 id="timeout-handling">Timeout Handling<a class="anchor" aria-label="anchor" href="#timeout-handling"></a>
-</h3>
-<p>The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the chat model functions.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_future</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  chat_openai,</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="at">system_prompt =</span> <span class="st">"Reply concisely, one sentence"</span></span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="at">timeout =</span> <span class="dv">60</span></span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>)</span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="output-control">Output Control<a class="anchor" aria-label="anchor" href="#output-control"></a>
-</h3>
-<p>Control verbosity with the <code>echo</code> parameter (sequential only):</p>
-<ul>
-<li>
-<code>"none"</code>: Silent operation with progress bar</li>
-<li>
-<code>"text"</code>: Show chat responses only</li>
-<li>
-<code>"all"</code>: Show both prompts and responses</li>
-</ul>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
-<span>  <span class="va">chat_openai</span>, </span>
-<span>  echo <span class="op">=</span> <span class="st">"none"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="sound-notifications">Sound Notifications<a class="anchor" aria-label="anchor" href="#sound-notifications"></a>
 </h3>
 <p>Toggle sound notifications on batch completion, interruption, and error:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
 <span>  <span class="va">chat_openai</span>,</span>
 <span>  beep <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="results-methods">Results Methods<a class="anchor" aria-label="anchor" href="#results-methods"></a>
+<h3 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a>
 </h3>
 <ul>
 <li>
@@ -338,13 +305,28 @@
 <code><a href="reference/chats.html">chats()</a></code>: Returns a list of chat objects</li>
 </ul>
 </div>
+<div class="section level3">
+<h3 id="echoing">Echoing<a class="anchor" aria-label="anchor" href="#echoing"></a>
+</h3>
+<p>By default, a progress bar is used and <code>echo</code> is set to <code>FALSE</code> for the chat call. However, you can still configure <code>echo</code> in the <code>$batch</code> call by setting <code>progress</code> to <code>FALSE</code>. For example:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, progress <span class="op">=</span> <span class="cn">FALSE</span>, echo <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &gt; What is R?</span></span>
+<span><span class="co">#&gt; &lt; R is a programming language and software environment used for statistical computing,</span></span>
+<span><span class="co">#&gt; &lt; data analysis, and graphical representation.</span></span>
+<span><span class="co">#&gt; &lt; </span></span>
+<span><span class="co">#&gt; &gt; Explain base R versus tidyverse</span></span>
+<span><span class="co">#&gt; &lt; Base R refers to the functions and paradigms built into the R language, while</span></span>
+<span><span class="co">#&gt; &lt; tidyverse is a collection of R packages designed for data science, emphasizing </span></span>
+<span><span class="co">#&gt; &lt; a more consistent and human-readable syntax for data manipulation.</span></span>
+<span><span class="co">#&gt; &lt; </span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="further-reading">Further Reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
 </h2>
 <ul>
-<li>
-<a href="https://dylanpieper.github.io/hellmer/articles/using-chat-models.html">Using Ellmer Chat Models</a>: Are you wondering if you can use <code><a href="https://ellmer.tidyverse.org/reference/chat_openai.html" class="external-link">chat_openai()</a></code> as a user-defined object instead of the <code>chat_openai</code> function? Of course you can! Learn more about the two methods and the default interface.</li>
+<li><a href="https://dylanpieper.github.io/hellmer/articles/using-chat-models.html">Using Ellmer Chat Models</a></li>
 </ul>
 </div>
 </div>

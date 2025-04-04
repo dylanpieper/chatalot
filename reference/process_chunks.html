@@ -57,13 +57,14 @@
 <span>  <span class="va">judgements</span>,</span>
 <span>  <span class="va">pb</span>,</span>
 <span>  <span class="va">state_path</span>,</span>
-<span>  <span class="va">echo</span>,</span>
+<span>  <span class="va">progress</span>,</span>
 <span>  <span class="va">beep</span>,</span>
-<span>  timeout <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3L</span>,</span>
 <span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  max_delay <span class="op">=</span> <span class="fl">60</span>,</span>
-<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span></span>
+<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  echo <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -99,16 +100,12 @@
 <dd><p>Path to save intermediate state</p></dd>
 
 
-<dt id="arg-echo">echo<a class="anchor" aria-label="anchor" href="#arg-echo"></a></dt>
-<dd><p>Level of output to display ("none", "text", "all")</p></dd>
+<dt id="arg-progress">progress<a class="anchor" aria-label="anchor" href="#arg-progress"></a></dt>
+<dd><p>Whether to show progress bars</p></dd>
 
 
 <dt id="arg-beep">beep<a class="anchor" aria-label="anchor" href="#arg-beep"></a></dt>
 <dd><p>Logical indicating whether to play sounds</p></dd>
-
-
-<dt id="arg-timeout">timeout<a class="anchor" aria-label="anchor" href="#arg-timeout"></a></dt>
-<dd><p>Maximum time in seconds to wait per prompt</p></dd>
 
 
 <dt id="arg-max-retries">max_retries<a class="anchor" aria-label="anchor" href="#arg-max-retries"></a></dt>

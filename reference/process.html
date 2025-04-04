@@ -55,13 +55,14 @@
 <span>  type_spec <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  judgements <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  state_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"chat_"</span>, fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span>,</span>
-<span>  echo <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3L</span>,</span>
 <span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  max_delay <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  timeout <span class="op">=</span> <span class="fl">60</span>,</span>
-<span>  beep <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  echo <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -89,8 +90,8 @@
 <dd><p>Path for saving state</p></dd>
 
 
-<dt id="arg-echo">echo<a class="anchor" aria-label="anchor" href="#arg-echo"></a></dt>
-<dd><p>Echo level</p></dd>
+<dt id="arg-progress">progress<a class="anchor" aria-label="anchor" href="#arg-progress"></a></dt>
+<dd><p>Whether to show progress bars</p></dd>
 
 
 <dt id="arg-max-retries">max_retries<a class="anchor" aria-label="anchor" href="#arg-max-retries"></a></dt>
@@ -107,10 +108,6 @@
 
 <dt id="arg-backoff-factor">backoff_factor<a class="anchor" aria-label="anchor" href="#arg-backoff-factor"></a></dt>
 <dd><p>Factor to multiply delay</p></dd>
-
-
-<dt id="arg-timeout">timeout<a class="anchor" aria-label="anchor" href="#arg-timeout"></a></dt>
-<dd><p>Maximum time to wait</p></dd>
 
 
 <dt id="arg-beep">beep<a class="anchor" aria-label="anchor" href="#arg-beep"></a></dt>

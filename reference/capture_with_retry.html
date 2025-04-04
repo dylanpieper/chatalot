@@ -53,13 +53,13 @@
 <span>  <span class="va">original_chat</span>,</span>
 <span>  <span class="va">prompt</span>,</span>
 <span>  type_spec <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  echo <span class="op">=</span> <span class="st">"text"</span>,</span>
 <span>  judgements <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3L</span>,</span>
 <span>  initial_delay <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  max_delay <span class="op">=</span> <span class="fl">32</span>,</span>
 <span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  timeout <span class="op">=</span> <span class="fl">60</span></span>
+<span>  echo <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -77,10 +77,6 @@
 
 <dt id="arg-type-spec">type_spec<a class="anchor" aria-label="anchor" href="#arg-type-spec"></a></dt>
 <dd><p>Type specification for structured data</p></dd>
-
-
-<dt id="arg-echo">echo<a class="anchor" aria-label="anchor" href="#arg-echo"></a></dt>
-<dd><p>Echo level ("none", "text", "all")</p></dd>
 
 
 <dt id="arg-judgements">judgements<a class="anchor" aria-label="anchor" href="#arg-judgements"></a></dt>
@@ -101,10 +97,6 @@
 
 <dt id="arg-backoff-factor">backoff_factor<a class="anchor" aria-label="anchor" href="#arg-backoff-factor"></a></dt>
 <dd><p>Factor to multiply delay by after each retry</p></dd>
-
-
-<dt id="arg-timeout">timeout<a class="anchor" aria-label="anchor" href="#arg-timeout"></a></dt>
-<dd><p>Timeout in seconds</p></dd>
 
 </dl></div>
     <div class="section level2">
