@@ -72,15 +72,15 @@ For sequential processing, use <code><a href="chat_sequential.html">chat_sequent
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A batch object (S7 class) containing:</p><ul><li><p>prompts: Original input prompts</p></li>
-<li><p>responses: Raw response data for completed prompts</p></li>
-<li><p>completed: Number of successfully processed prompts</p></li>
-<li><p>state_path: Path where batch state is saved</p></li>
-<li><p>type_spec: Type specification used for structured data</p></li>
-<li><p>texts: Function to extract text responses or structured data</p></li>
-<li><p>chats: Function to extract chat objects</p></li>
-<li><p>progress: Function to get processing status</p></li>
-<li><p>batch: Function to process a batch of prompts</p></li>
+    <p>A batch object (S7 class) containing:</p><ul><li><p><strong>prompts</strong>: Original input prompts</p></li>
+<li><p><strong>responses</strong>: Raw response data for completed prompts</p></li>
+<li><p><strong>completed</strong>: Number of successfully processed prompts</p></li>
+<li><p><strong>state_path</strong>: Path where batch state is saved</p></li>
+<li><p><strong>type_spec</strong>: Type specification used for structured data</p></li>
+<li><p><strong>texts</strong>: Function to extract text responses or structured data</p></li>
+<li><p><strong>chats</strong>: Function to extract chat objects</p></li>
+<li><p><strong>progress</strong>: Function to get processing status</p></li>
+<li><p><strong>batch</strong>: Function to process a batch of prompts</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="batch-method">Batch Method<a class="anchor" aria-label="anchor" href="#batch-method"></a></h2>
@@ -106,22 +106,22 @@ For sequential processing, use <code><a href="chat_sequential.html">chat_sequent
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 
-<p>The batch method processes multiple prompts in parallel and returns a batch object:</p><ul><li><p>prompts: List of prompts to process</p></li>
-<li><p>type_spec: Type specification for structured data extraction</p></li>
-<li><p>judgements: Number of judgements for data extraction accuracy</p></li>
-<li><p>state_path: Path to save state file for resuming interrupted processing</p></li>
-<li><p>progress: Show progress bar</p></li>
-<li><p>workers: Number of parallel workers (default: number of prompts / <code>chunk_size</code>, capped by CPU cores)</p></li>
-<li><p>plan: Parallel backend plan ("multisession" or "multicore")</p></li>
-<li><p>chunk_size: Number of prompts each worker processes at a time before capturing the results (default: number of prompts / 10)</p></li>
-<li><p>max_chunk_attempts: Maximum retries per failed chunk</p></li>
-<li><p>max_retries: Maximum number of retry attempts for failed requests</p></li>
-<li><p>initial_delay: Initial delay before first retry in seconds</p></li>
-<li><p>max_delay: Maximum delay between retries in seconds</p></li>
-<li><p>backoff_factor: Factor to multiply delay by after each retry</p></li>
-<li><p>beep: Whether to play a sound on completion</p></li>
-<li><p>echo: Whether to display chat outputs (when <code>progress</code> is <code>FALSE</code>)</p></li>
-<li><p>...: Additional arguments passed to the chat method</p></li>
+<p>The batch method processes multiple prompts in parallel and returns a batch object:</p><ul><li><p><strong>prompts</strong>: List of prompts to process</p></li>
+<li><p><strong>type_spec</strong>: Type specification for structured data extraction</p></li>
+<li><p><strong>judgements</strong>: Number of judgements for data extraction accuracy</p></li>
+<li><p><strong>state_path</strong>: Path to save state file for resuming interrupted processing</p></li>
+<li><p><strong>progress</strong>: Show progress bar</p></li>
+<li><p><strong>workers</strong>: Number of parallel workers (default: number of prompts / <code>chunk_size</code> capped by number of CPU cores)</p></li>
+<li><p><strong>plan</strong>: Parallel backend plan ("multisession" or "multicore")</p></li>
+<li><p><strong>chunk_size</strong>: Number of prompts each worker processes at a time before capturing the results (default: number of prompts / 10)</p></li>
+<li><p><strong>max_chunk_attempts</strong>: Maximum retries per failed chunk</p></li>
+<li><p><strong>max_retries</strong>: Maximum number of retry attempts for failed requests</p></li>
+<li><p><strong>initial_delay</strong>: Initial delay before first retry in seconds</p></li>
+<li><p><strong>max_delay</strong>: Maximum delay between retries in seconds</p></li>
+<li><p><strong>backoff_factor</strong>: Factor to multiply delay by after each retry</p></li>
+<li><p><strong>beep</strong>: Whether to play a sound on completion</p></li>
+<li><p><strong>echo</strong>: Whether to display chat outputs (when <code>progress</code> is <code>FALSE</code>)</p></li>
+<li><p><strong>...</strong>: Additional arguments passed to the chat method</p></li>
 </ul></div>
 
     <div class="section level2">
