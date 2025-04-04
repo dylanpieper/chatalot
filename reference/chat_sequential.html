@@ -77,7 +77,7 @@ For parallel processing, use <code><a href="chat_future.html">chat_future()</a><
 <li><p>completed: Number of successfully processed prompts</p></li>
 <li><p>state_path: Path where batch state is saved</p></li>
 <li><p>type_spec: Type specification used for structured data</p></li>
-<li><p>texts: Function to extract text responses (includes structured data when a <code>type_spec</code> is provided)</p></li>
+<li><p>texts: Function to extract text responses or structured data</p></li>
 <li><p>chats: Function to extract chat objects</p></li>
 <li><p>progress: Function to get processing status</p></li>
 <li><p>batch: Function to process a batch of prompts</p></li>
@@ -86,25 +86,27 @@ For parallel processing, use <code><a href="chat_future.html">chat_future()</a><
     <h2 id="batch-method">Batch Method<a class="anchor" aria-label="anchor" href="#batch-method"></a></h2>
 
 
-<p>batch(
-prompts,
-type_spec = NULL,
-judgements = 0,
-state_path = tempfile("chat_", fileext = ".rds"),
-progress = TRUE,
-max_retries = 3L,
-initial_delay = 20,
-max_delay = 80,
-backoff_factor = 2,
-beep = TRUE,
-echo = FALSE,
-...
-)</p>
+<div class="sourceCode"><pre><code>
+batch(
+  prompts,
+  type_spec = NULL,
+  judgements = 0,
+  state_path = tempfile("chat_", fileext = ".rds"),
+  progress = TRUE,
+  max_retries = 3L,
+  initial_delay = 20,
+  max_delay = 80,
+  backoff_factor = 2,
+  beep = TRUE,
+  echo = FALSE,
+  ...
+</code></pre></div>
+
 <p>The batch method processes multiple prompts and returns a batch object:</p><ul><li><p>prompts: List of prompts to process</p></li>
 <li><p>type_spec: Type specification for structured data extraction</p></li>
 <li><p>judgements: Number of judgements for data extraction accuracy</p></li>
 <li><p>state_path: Path to save state file for resuming interrupted processing</p></li>
-<li><p>progress: Whether to show progress bars (default: <code>TRUE</code>)</p></li>
+<li><p>progress: Show progress bar</p></li>
 <li><p>max_retries: Maximum number of retry attempts for failed requests</p></li>
 <li><p>initial_delay: Initial delay before first retry in seconds</p></li>
 <li><p>max_delay: Maximum delay between retries in seconds</p></li>
