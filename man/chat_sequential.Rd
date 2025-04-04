@@ -7,7 +7,7 @@
 chat_sequential(chat_model = NULL, ...)
 }
 \arguments{
-\item{chat_model}{ellmer chat model function or object (e.g., \code{ellmer::chat_claude})}
+\item{chat_model}{ellmer chat model object or function (e.g., \code{ellmer::chat_claude})}
 
 \item{...}{Additional arguments passed to the underlying chat model (e.g., \code{system_prompt})}
 }
@@ -43,7 +43,6 @@ batch(
   initial_delay = 20,
   max_delay = 80,
   backoff_factor = 2,
-  timeout = 60,
   beep = TRUE,
   echo = FALSE,
   ...
@@ -61,33 +60,41 @@ The batch method processes multiple prompts and returns a batch object:
 \item initial_delay: Initial delay before first retry in seconds
 \item max_delay: Maximum delay between retries in seconds
 \item backoff_factor: Factor to multiply delay by after each retry
-\item timeout: Maximum time to wait per prompt in seconds
 \item beep: Whether to play a sound on completion
-\item echo: Whether to display chat outputs (when progress=FALSE)
+\item echo: Whether to display chat outputs (when progress is FALSE)
 \item ...: Additional arguments passed to the chat method
 }
 }
 
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# Create a sequential chat processor with function
-chat <- chat_sequential(chat_openai, system_prompt = "Reply concisely, one sentence")
-
-# Or with initialized model
+# Create a sequential chat processor with an object
 chat <- chat_sequential(chat_openai(system_prompt = "Reply concisely"))
 
+# Or a function
+chat <- chat_sequential(chat_openai, system_prompt = "Reply concisely, one sentence")
+
 # Process a batch of prompts in sequence
-batch <- chat$batch(list(
-  "What is R?",
-  "Explain base R versus tidyverse",
-  "Explain vectors, lists, and data frames"
-), max_retries = 3L, initial_delay = 20, beep = TRUE)
+batch <- chat$batch(
+  list(
+    "What is R?",
+    "Explain base R versus tidyverse",
+    "Explain vectors, lists, and data frames"
+  ),
+  max_retries = 3L,
+  initial_delay = 20,
+  beep = TRUE
+)
 
 # Process batch with echo enabled (when progress is disabled)
-batch <- chat$batch(list(
-  "What is R?",
-  "Explain base R versus tidyverse"
-), progress = FALSE, echo = TRUE, temperature = 0.7)
+batch <- chat$batch(
+  list(
+    "What is R?",
+    "Explain base R versus tidyverse"
+  ),
+  progress = FALSE,
+  echo = TRUE
+)
 
 # Check the progress if interrupted
 batch$progress()

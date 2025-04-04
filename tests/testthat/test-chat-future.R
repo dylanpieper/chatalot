@@ -149,7 +149,6 @@ test_that("chat_future supports echo parameter and passes extra args", {
                        chunk_size = 1,
                        progress = FALSE, 
                        echo = TRUE, 
-                       temperature = 0.5,
                        beep = FALSE)
   expect_equal(length(result$texts()), 1)
 })

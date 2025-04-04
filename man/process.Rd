@@ -15,7 +15,6 @@ process(
   initial_delay = 1,
   max_delay = 60,
   backoff_factor = 2,
-  timeout = 60,
   beep = TRUE,
   echo = FALSE,
   ...
@@ -41,8 +40,6 @@ process(
 \item{max_delay}{Maximum delay between retries}
 
 \item{backoff_factor}{Factor to multiply delay}
-
-\item{timeout}{Maximum time to wait}
 
 \item{beep}{Play sound on completion}
 }

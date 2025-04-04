@@ -14,7 +14,6 @@ process_chunks(
   state_path,
   progress,
   beep,
-  timeout = 60,
   max_retries = 3L,
   initial_delay = 1,
   max_delay = 60,
@@ -41,8 +40,6 @@ process_chunks(
 \item{progress}{Whether to show progress bars}
 
 \item{beep}{Logical indicating whether to play sounds}
-
-\item{timeout}{Maximum time in seconds to wait per prompt}
 
 \item{max_retries}{Maximum number of retry attempts}
 

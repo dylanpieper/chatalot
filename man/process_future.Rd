@@ -18,7 +18,6 @@ process_future(
   initial_delay = 1,
   max_delay = 60,
   backoff_factor = 2,
-  timeout = 60,
   beep = TRUE,
   progress = TRUE,
   echo = FALSE,
@@ -51,8 +50,6 @@ process_future(
 \item{max_delay}{Maximum delay between retries}
 
 \item{backoff_factor}{Delay multiplier after each retry}
-
-\item{timeout}{Maximum seconds per prompt}
 
 \item{beep}{Play sound on completion/error}
 

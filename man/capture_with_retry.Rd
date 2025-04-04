@@ -13,7 +13,6 @@ capture_with_retry(
   initial_delay = 1,
   max_delay = 32,
   backoff_factor = 2,
-  timeout = 60,
   echo = FALSE,
   ...
 )
@@ -34,8 +33,6 @@ capture_with_retry(
 \item{max_delay}{Maximum delay in seconds between retries}
 
 \item{backoff_factor}{Factor to multiply delay by after each retry}
-
-\item{timeout}{Timeout in seconds}
 }
 \value{
 List containing response information

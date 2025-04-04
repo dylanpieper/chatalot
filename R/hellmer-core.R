@@ -88,23 +88,17 @@ capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, ech
 #' @param initial_delay Initial delay in seconds before first retry
 #' @param max_delay Maximum delay in seconds between retries
 #' @param backoff_factor Factor to multiply delay by after each retry
-#' @param timeout Timeout in seconds
 #' @return List containing response information
 #' @keywords internal
 capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
                                judgements = 0, max_retries = 3L,
                                initial_delay = 1, max_delay = 32,
-                               backoff_factor = 2, timeout = 60,
+                               backoff_factor = 2,
                                echo = FALSE, ...) {
   retry_with_delay <- function(attempt = 1, delay = initial_delay) {
     tryCatch(
       {
-        R.utils::withTimeout(
-          {
-            capture(original_chat, prompt, type_spec, judgements, echo = echo, ...)
-          },
-          timeout = timeout
-        )
+        capture(original_chat, prompt, type_spec, judgements, echo = echo, ...)
       },
       error = function(e) {
         if (inherits(e, "interrupt")) {
@@ -135,12 +129,6 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
           next_delay <- min(delay * backoff_factor, max_delay)
           retry_with_delay(attempt + 1, next_delay)
         }
-      },
-      timeout = function(e) {
-        structure(
-          list(message = sprintf("Operation timed out after %d seconds", timeout)),
-          class = c("chat_error", "error", "condition")
-        )
       }
     )
   }
@@ -160,7 +148,6 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
 #' @param initial_delay Initial delay before retry
 #' @param max_delay Maximum delay between retries
 #' @param backoff_factor Factor to multiply delay
-#' @param timeout Maximum time to wait
 #' @return Batch results object
 #' @keywords internal
 process <- function(
@@ -174,7 +161,6 @@ process <- function(
     initial_delay = 1,
     max_delay = 60,
     backoff_factor = 2,
-    timeout = 60,
     beep = TRUE,
     echo = FALSE,
     ...) {
@@ -240,7 +226,6 @@ process <- function(
         initial_delay = initial_delay,
         max_delay = max_delay,
         backoff_factor = backoff_factor,
-        timeout = timeout,
         echo = echo,
         ...
       )
@@ -299,7 +284,6 @@ process <- function(
 #' @param chunk_size Number of prompts to process in parallel at a time
 #' @param plan Parallel backend
 #' @param beep Play sound on completion/error
-#' @param timeout Maximum seconds per prompt
 #' @param max_chunk_attempts Maximum retries per failed chunk
 #' @param max_retries Maximum retries per prompt
 #' @param initial_delay Initial delay before first retry
@@ -322,7 +306,6 @@ process_future <- function(
     initial_delay = 1,
     max_delay = 60,
     backoff_factor = 2,
-    timeout = 60,
     beep = TRUE,
     progress = TRUE,
     echo = FALSE,
@@ -449,7 +432,6 @@ process_future <- function(
                   prompt,
                   type_spec,
                   judgements = judgements,
-                  timeout = timeout,
                   max_retries = max_retries,
                   initial_delay = initial_delay,
                   max_delay = max_delay,
@@ -569,14 +551,13 @@ process_future <- function(
 #' @param state_path Path to save intermediate state
 #' @param progress Whether to show progress bars
 #' @param beep Logical indicating whether to play sounds
-#' @param timeout Maximum time in seconds to wait per prompt
 #' @param max_retries Maximum number of retry attempts
 #' @param initial_delay Initial delay in seconds before first retry
 #' @param max_delay Maximum delay in seconds between retries
 #' @param backoff_factor Factor to multiply delay by after each retry
 #' @return Updated batch object with processed results
 #' @keywords internal
-process_chunks <- function(chunks, result, chat_obj, type_spec, judgements, pb, state_path, progress, beep, timeout = 60, max_retries = 3L, initial_delay = 1, max_delay = 60, backoff_factor = 2, echo = FALSE, ...) {
+process_chunks <- function(chunks, result, chat_obj, type_spec, judgements, pb, state_path, progress, beep, max_retries = 3L, initial_delay = 1, max_delay = 60, backoff_factor = 2, echo = FALSE, ...) {
   was_interrupted <- FALSE
 
   for (chunk in chunks) {
@@ -593,7 +574,6 @@ process_chunks <- function(chunks, result, chat_obj, type_spec, judgements, pb, 
               prompt,
               type_spec,
               judgements = judgements,
-              timeout = timeout,
               max_retries = max_retries,
               initial_delay = initial_delay,
               max_delay = max_delay,

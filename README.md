@@ -11,7 +11,6 @@ Process multiple chat interactions with:
 -   [Tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html)
 -   Progress tracking and recovery
 -   Automatic retry with backoff
--   Timeout handling
 -   Sound notifications
 
 ## Installation
@@ -205,7 +204,9 @@ If `state_path` is not defined, a temporary file will be created by default.
 
 ### Automatic Retry
 
-Automatically retry failed requests with exponential backoff, which serves as a wide guardrail against errors while `ellmer` and `httr2` serve as a narrow guardrail against specific API limits:
+Automatically retry failed requests with exponential backoff, which serves as a wide guardrail against errors while `ellmer` and `httr2` serve as a narrow guardrail against specific API limits.
+
+Be aware that this retry is a brute force approach, and as long as all other validation passes, the retry will persist. However, it will stop if it detects an authorization or API key issue.
 
 ``` r
 result <- chat$batch(
@@ -223,20 +224,6 @@ If a request fails, the code will:
 2.  Retry the request
 3.  If it fails again, wait for (delay × `backoff_factor`)
 4.  Continue until success or `max_retries` is reached
-
-If the code detects an authorization or API key issue, it will stop immediately.
-
-### Timeout Handling
-
-The timeout parameter specifies the maximum time to wait for a response from the chat model for each prompt. However, this parameter is still limited by the timeouts propagated up from the chat model functions.
-
-``` r
-chat <- chat_future(
-  chat_openai,
-  system_prompt = "Reply concisely, one sentence"
-  timeout = 60
-)
-```
 
 ### Sound Notifications
 

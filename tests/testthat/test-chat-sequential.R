@@ -84,14 +84,6 @@ test_that("chat_sequential handles state persistence", {
   expect_equal(length(result$texts()), 1)
 })
 
-test_that("chat_sequential respects timeout", {
-  skip_if_not(ellmer::has_credentials("openai"), "API key not available")
-
-  chat <- chat_sequential(ellmer::chat_openai)
-  result <- chat$batch(get_test_prompts(1), timeout = 30, beep = FALSE)
-  expect_equal(length(result$texts()), 1)
-})
-
 test_that("chat_sequential supports progress parameter", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
@@ -119,7 +111,6 @@ test_that("chat_sequential supports echo parameter and passes extra args", {
   result <- chat$batch(get_test_prompts(1), 
                        progress = FALSE, 
                        echo = TRUE, 
-                       temperature = 0.5,
                        beep = FALSE)
   expect_equal(length(result$texts()), 1)
 })

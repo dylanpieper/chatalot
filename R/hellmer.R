@@ -30,7 +30,6 @@
 #'   initial_delay = 20,
 #'   max_delay = 80,
 #'   backoff_factor = 2,
-#'   timeout = 60,
 #'   beep = TRUE,
 #'   echo = FALSE,
 #'   ...
@@ -48,7 +47,6 @@
 #'   \item initial_delay: Initial delay before first retry in seconds
 #'   \item max_delay: Maximum delay between retries in seconds
 #'   \item backoff_factor: Factor to multiply delay by after each retry
-#'   \item timeout: Maximum time to wait per prompt in seconds
 #'   \item beep: Whether to play a sound on completion
 #'   \item echo: Whether to display chat outputs (when progress is FALSE)
 #'   \item ...: Additional arguments passed to the chat method
@@ -122,7 +120,6 @@ chat_sequential <- function(
                              initial_delay = 20,
                              max_delay = 80,
                              backoff_factor = 2,
-                             timeout = 60,
                              beep = TRUE,
                              echo = FALSE,
                              ...) {
@@ -151,7 +148,6 @@ chat_sequential <- function(
       initial_delay = initial_delay,
       max_delay = max_delay,
       backoff_factor = backoff_factor,
-      timeout = timeout,
       beep = beep,
       echo = echo,
       ...
@@ -198,7 +194,6 @@ chat_sequential <- function(
 #'   initial_delay = 20,
 #'   max_delay = 80,
 #'   backoff_factor = 2,
-#'   timeout = 60,
 #'   beep = TRUE,
 #'   echo = FALSE,
 #'   ...
@@ -220,7 +215,6 @@ chat_sequential <- function(
 #'   \item initial_delay: Initial delay before first retry in seconds
 #'   \item max_delay: Maximum delay between retries in seconds
 #'   \item backoff_factor: Factor to multiply delay by after each retry
-#'   \item timeout: Maximum time to wait per prompt in seconds
 #'   \item beep: Whether to play a sound on completion
 #'   \item echo: Whether to display chat outputs (when progress=FALSE)
 #'   \item ...: Additional arguments passed to the chat method
@@ -296,7 +290,6 @@ chat_future <- function(
                              initial_delay = 20,
                              max_delay = 80,
                              backoff_factor = 2,
-                             timeout = 60,
                              beep = TRUE,
                              echo = FALSE,
                              ...) {
@@ -331,7 +324,6 @@ chat_future <- function(
       initial_delay = initial_delay,
       max_delay = max_delay,
       backoff_factor = backoff_factor,
-      timeout = timeout,
       beep = beep,
       progress = progress,
       echo = echo,

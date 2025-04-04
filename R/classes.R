@@ -115,12 +115,16 @@ batch <- S7::new_class(
     prompts = S7::new_property(
       class = S7::class_list,
       validator = function(value) {
-        if (length(value) == 0) {
-          "must not be empty"
+        if (is.null(value) || length(value) == 0) {
+          return("must not be NULL or empty")
         }
-        if (!all(purrr::map_lgl(value, is.character))) {
-          "must be a list of character strings"
+
+        if (!all(purrr::map_lgl(value, function(x) {
+          is.character(x) && nchar(x) > 0
+        }))) {
+          return("must be a list of non-empty character strings")
         }
+
         NULL
       }
     ),

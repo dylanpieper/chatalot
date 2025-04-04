@@ -7,8 +7,8 @@ Description: Batch processing framework for 'ellmer' chat models.
     Provides both sequential and parallel processing of chat interactions
     with features including tool calling and structured data extraction.
     Enables workflow management through progress tracking and recovery, 
-    automatic retry with backoff, and timeout handling. Additional
-    quality-of-life features include verbosity control and sound notifications.
+    automatic retry with backoff. Additional quality-of-life features 
+    include verbosity control and sound notifications.
     Parallel processing is implemented via the 'future' framework.
     Includes methods for retrieving progress status, chat texts, and chat objects.
 License: MIT + file LICENSE
@@ -29,7 +29,6 @@ Imports:
     jsonlite,
     parallel,
     purrr,
-    R.utils,
     S7,
     utils
 Depends: ellmer
