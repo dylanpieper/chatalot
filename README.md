@@ -68,34 +68,44 @@ result$progress()
 
 result$texts()
 #> [[1]]
-#> [1] "R is a programming language and software environment used for 
-#> statistical computing, data analysis, and graphical representation."
+#> [1] "R is a programming language and software environment primarily used for 
+#> statistical computing and data analysis."
 #> 
 #> [[2]]
-#> [1] "Base R refers to the original set of R functions and packages, 
-#> while tidyverse is a collection of R packages designed for data science
-#> that offer a more consistent and readable syntax."
+#> [1] "Base R refers to the R language's core packages and functionalities, 
+#> whereas Tidyverse is a collection of R packages designed for data science 
+#> that provides a more intuitive and consistent syntax."
 
 result$chats()
 #> [[1]]
-#> <Chat turns=3 tokens=22/21>
-#>  ── system ────────────────────────────────────────────────────────────
+#> <Chat OpenAI/gpt-4o turns=3 tokens=22/18>
+#> ── system [0] ───────────────────────────────────────────────────────────────
 #> Reply concisely, one sentence
-#> ── user ───────────────────────────────────────────────────────────────
+#> ── user [22] ────────────────────────────────────────────────────────────────
 #> What is R?
-#> ── assistant ──────────────────────────────────────────────────────────
-#> R is a programming language and software environment used for 
-#> statistical computing, data analysis, and graphical representation.
-#> ...
+#> ── assistant [18] ───────────────────────────────────────────────────────────
+#> R is a programming language and software environment primarily 
+#> used for statistical computing and data analysis.
+
+#> [[2]]
+#> <Chat OpenAI/gpt-4o turns=3 tokens=24/37>
+#> ── system [0] ───────────────────────────────────────────────────────────────
+#> Reply concisely, one sentence
+#> ── user [24] ────────────────────────────────────────────────────────────────
+#> Explain base R versus tidyverse
+#> ── assistant [37] ───────────────────────────────────────────────────────────
+#> Base R refers to the R language's core packages and functionalities, whereas 
+#> Tidyverse is a collection of R packages designed for data science that 
+#> provides a more intuitive and consistent syntax.
 ```
 
 ### Parallel Processing
 
+Parallel processing spins up multiple R processes to run chats at the same time.
+
 ``` r
 chat <- chat_future(chat_openai(system_prompt = "Reply concisely, one sentence"))
 ```
-
-#### Performance vs Safety Trade-Off
 
 When using parallel processing with `chat_future`, there's a trade-off between safety and performance:
 
@@ -218,13 +228,6 @@ result <- chat$batch(
   backoff_factor = 2   # multiply delay by this factor after each retry
 )
 ```
-
-If a request fails, the code will:
-
-1.  Wait for the `initial_delay`
-2.  Retry the request
-3.  If it fails again, wait for (delay × `backoff_factor`)
-4.  Continue until success or `max_retries` is reached
 
 ### Sound Notifications
 
