@@ -113,7 +113,20 @@ When using parallel processing with `chat_future`, there's a trade-off between s
 -   **Maximum Performance**: Setting `chunk_size` equal to the number of prompts results in a 4-5x faster processing speed but progress will not be saved to the disk until all chats are processed
 
 ``` r
-chat$batch(prompts, chunk_size = length(prompts))
+chat$batch(
+  prompts, 
+  chunk_size = length(prompts)
+)
+```
+
+Because `workers` = CPU cores as a heuristic for how many R Sessions to spin up, you can improve performance by multiplying the workers based on the CPU core heuristic to any factor (R Sessions):
+
+``` r
+chat$batch(
+  prompts, 
+  chunk_size = length(prompts), 
+  workers = parallel::detectCores() * 5
+)
 ```
 
 ## Features
