@@ -34,7 +34,7 @@ usethis::edit_r_environ(scope = c("user", "project"))
 
 ### Sequential Processing
 
-Sequential processing uses the current R process to call one chat at a time and save the result to the disk.
+Sequential processing uses the current R process to call one chat at a time and save the data to the disk.
 
 ``` r
 library(hellmer)
@@ -46,13 +46,13 @@ prompts <- list(
   "Explain base R versus tidyverse"
 )
 
-result <- chat$batch(prompts)
+batch <- chat$batch(prompts)
 ```
 
-Access the results:
+Access the batch results:
 
 ``` r
-result$progress()
+batch$progress()
 #> $total_prompts
 #> [1] 2
 #> 
@@ -68,7 +68,7 @@ result$progress()
 #> $state_path
 #> [1] "/var/folders/.../chat_c5383b1279ae.rds"
 
-result$texts()
+batch$texts()
 #> [[1]]
 #> [1] "R is a programming language and software environment primarily used for 
 #> statistical computing and data analysis."
@@ -78,7 +78,7 @@ result$texts()
 #> whereas Tidyverse is a collection of R packages designed for data science 
 #> that provides a more intuitive and consistent syntax."
 
-result$chats()
+batch$chats()
 #> [[1]]
 #> <Chat OpenAI/gpt-4o turns=3 tokens=22/18>
 #> ── system [0] ───────────────────────────────────────────────────────────────
@@ -105,7 +105,7 @@ result$chats()
 
 Parallel processing spins up multiple R processes, or parallel workers, to chat at the same time.
 
-By default, the upper limit for number of `workers` = `parallel::detectCores()`, and the number of prompts to process at a time is `chunk_size` = `parallel::detectCores() * 5`. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, the results are saved to the disk.
+By default, the upper limit for number of `workers` = `parallel::detectCores()`, and the number of prompts to process at a time is `chunk_size` = `parallel::detectCores() * 5`. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, the data is saved to the disk.
 
 ``` r
 chat <- chat_future(chat_openai(system_prompt = "Reply concisely, one sentence"))
@@ -114,7 +114,7 @@ chat <- chat_future(chat_openai(system_prompt = "Reply concisely, one sentence")
 For maximum performance, set `chunk_size` to the number of prompts, which is \~4-5x faster. However, progress will not be saved to the disk until all chats are processed.
 
 ``` r
-chat$batch(
+batch <- chat$batch(
   prompts, 
   chunk_size = length(prompts)
 )
@@ -145,9 +145,9 @@ prompts <- list(
   "What time is it in New York?"
 )
 
-result <- chat$batch(prompts)
+batch <- chat$batch(prompts)
 
-result$texts()
+batch$texts()
 #> [[1]]
 #> [1] "The current time in Chicago is 9:29 AM CDT."
 #> 
@@ -173,9 +173,9 @@ prompts <- list(
   "R's object-oriented system is confusing, inconsistent, and painful to use."
 )
 
-result <- chat$batch(prompts, type_spec = type_sentiment)
+batch <- chat$batch(prompts, type_spec = type_sentiment)
 
-result$texts()
+batch$texts()
 #> [[1]]
 #> $positive_score
 #> [1] 0.95
@@ -191,9 +191,9 @@ result$texts()
 To ask the chat model to evaluate and refine structured data extractions, implement iterative thinking or reasoning into the turns of the chat using the `judgements` parameter (increases token use):
 
 ``` r
-result <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)
+batch <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)
 
-result$texts()
+batch$texts()
 #> [[1]]
 #> [[1]]$positive_score
 #> [1] 0.95
@@ -213,8 +213,8 @@ result$texts()
 Batch processing automatically saves progress to an `.rds` file on the disk and allows you to resume interrupted operations:
 
 ``` r
-result <- chat$batch(prompts, state_path = "chat_state.rds")
-result$progress()
+batch <- chat$batch(prompts, state_path = "chat_state.rds")
+batch$progress()
 ```
 
 If `state_path` is not defined, a temporary file will be created by default.
@@ -226,7 +226,7 @@ Automatically retry failed requests with exponential backoff, which acts as a wi
 Be aware that this retry is a brute force approach, and as long as all other validation passes, the retry will persist. However, it will stop if it detects an authorization or API key issue.
 
 ``` r
-result <- chat$batch(
+batch <- chat$batch(
   prompts = prompts,   # list or vector of prompts
   max_retries = 3,     # maximum retry attempts
   initial_delay = 20,  # initial delay in seconds
@@ -246,18 +246,12 @@ chat <- chat_sequential(
 )
 ```
 
-### Methods
-
--   `progress()`: Returns processing status
--   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a type specification is provided, it returns structured data instead of plain text.
--   `chats()`: Returns a list of chat objects
-
 ### Echoing
 
 By default, the chat `echo` is set to `FALSE` to show a progress bar. However, you can still configure `echo` in the `$batch` call by first setting `progress` to `FALSE`:
 
 ``` r
-result <- chat$batch(prompts, progress = FALSE, echo = "all")
+batch <- chat$batch(prompts, progress = FALSE, echo = "all")
 #> > What is R?
 #> < R is a programming language and software environment used for statistical computing,
 #> < data analysis, and graphical representation.
@@ -268,6 +262,12 @@ result <- chat$batch(prompts, progress = FALSE, echo = "all")
 #> < a more consistent and human-readable syntax for data manipulation.
 #> < 
 ```
+
+### Methods
+
+-   `progress()`: Returns processing status
+-   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a type specification is provided, it returns structured data instead of plain text.
+-   `chats()`: Returns a list of chat objects
 
 ## Further Reading
 
