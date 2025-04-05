@@ -119,13 +119,13 @@ chat$batch(
 )
 ```
 
-Because `workers` = CPU cores is a heuristic for how many R Sessions to spin up, you can improve performance by multiplying the CPU cores to any factor:
+Because `workers` = CPU cores is a heuristic for how many R Sessions to spin up, you can improve performance up to 300% (upper limit of `future` without manual override)`:
 
 ``` r
 chat$batch(
   prompts, 
   chunk_size = length(prompts), 
-  workers = parallel::detectCores() * 5
+  workers = parallel::detectCores() * 3
 )
 ```
 
