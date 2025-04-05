@@ -34,7 +34,7 @@ usethis::edit_r_environ(scope = c("user", "project"))
 
 ### Sequential Processing
 
-Sequential processing uses the current R process to process and store one chat at same time.
+Sequential processing uses the current R process to call one chat at a time and save the result to the disk.
 
 ``` r
 library(hellmer)
