@@ -99,7 +99,7 @@
 <div class="section level3">
 <h3 id="sequential-processing">Sequential Processing<a class="anchor" aria-label="anchor" href="#sequential-processing"></a>
 </h3>
-<p>Sequential processing uses the current R process to call one chat at a time and save the result to the disk.</p>
+<p>Sequential processing uses the current R process to call one chat at a time and save the data to the disk.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/hellmer/">hellmer</a></span><span class="op">)</span></span>
 <span></span>
@@ -110,10 +110,10 @@
 <span>  <span class="st">"Explain base R versus tidyverse"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span></code></pre></div>
-<p>Access the results:</p>
+<span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span></code></pre></div>
+<p>Access the batch results:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">result</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">batch</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $total_prompts</span></span>
 <span><span class="co">#&gt; [1] 2</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -129,7 +129,7 @@
 <span><span class="co">#&gt; $state_path</span></span>
 <span><span class="co">#&gt; [1] "/var/folders/.../chat_c5383b1279ae.rds"</span></span>
 <span></span>
-<span><span class="va">result</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; [1] "R is a programming language and software environment primarily used for </span></span>
 <span><span class="co">#&gt; statistical computing and data analysis."</span></span>
@@ -139,7 +139,7 @@
 <span><span class="co">#&gt; whereas Tidyverse is a collection of R packages designed for data science </span></span>
 <span><span class="co">#&gt; that provides a more intuitive and consistent syntax."</span></span>
 <span></span>
-<span><span class="va">result</span><span class="op">$</span><span class="fu">chats</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">batch</span><span class="op">$</span><span class="fu">chats</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; &lt;Chat OpenAI/gpt-4o turns=3 tokens=22/18&gt;</span></span>
 <span><span class="co">#&gt; ── system [0] ───────────────────────────────────────────────────────────────</span></span>
@@ -165,12 +165,12 @@
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
 <p>Parallel processing spins up multiple R processes, or parallel workers, to chat at the same time.</p>
-<p>By default, the upper limit for number of <code>workers</code> = <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>, and the number of prompts to process at a time is <code>chunk_size</code> = <code>parallel::detectCores() * 5</code>. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, the results are saved to the disk.</p>
+<p>By default, the upper limit for number of <code>workers</code> = <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>, and the number of prompts to process at a time is <code>chunk_size</code> = <code>parallel::detectCores() * 5</code>. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, the data is saved to the disk.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_openai.html" class="external-link">chat_openai</a></span><span class="op">(</span>system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>For maximum performance, set <code>chunk_size</code> to the number of prompts, which is ~4-5x faster. However, progress will not be saved to the disk until all chats are processed.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>, </span>
 <span>  chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -202,9 +202,9 @@
 <span>  <span class="st">"What time is it in New York?"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
+<span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">result</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; [1] "The current time in Chicago is 9:29 AM CDT."</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -229,9 +229,9 @@
 <span>  <span class="st">"R's object-oriented system is confusing, inconsistent, and painful to use."</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span><span class="op">)</span></span>
+<span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">result</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; $positive_score</span></span>
 <span><span class="co">#&gt; [1] 0.95</span></span>
@@ -244,9 +244,9 @@
 <span><span class="co">#&gt; ...</span></span></code></pre></div>
 <p>To ask the chat model to evaluate and refine structured data extractions, implement iterative thinking or reasoning into the turns of the chat using the <code>judgements</code> parameter (increases token use):</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, judgements <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, judgements <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">result</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; [[1]]$positive_score</span></span>
 <span><span class="co">#&gt; [1] 0.95</span></span>
@@ -266,8 +266,8 @@
 </h3>
 <p>Batch processing automatically saves progress to an <code>.rds</code> file on the disk and allows you to resume interrupted operations:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, state_path <span class="op">=</span> <span class="st">"chat_state.rds"</span><span class="op">)</span></span>
-<span><span class="va">result</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, state_path <span class="op">=</span> <span class="st">"chat_state.rds"</span><span class="op">)</span></span>
+<span><span class="va">batch</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>If <code>state_path</code> is not defined, a temporary file will be created by default.</p>
 </div>
 <div class="section level3">
@@ -276,7 +276,7 @@
 <p>Automatically retry failed requests with exponential backoff, which acts as a wide guardrail against temporary API errors. <code>ellmer</code> uses <code>httr2</code> to act as a narrow guardrail against specific API errors and limits with most chat provider functions defaulting to retry one time.</p>
 <p>Be aware that this retry is a brute force approach, and as long as all other validation passes, the retry will persist. However, it will stop if it detects an authorization or API key issue.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
 <span>  prompts <span class="op">=</span> <span class="va">prompts</span>,   <span class="co"># list or vector of prompts</span></span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3</span>,     <span class="co"># maximum retry attempts</span></span>
 <span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,  <span class="co"># initial delay in seconds</span></span>
@@ -295,6 +295,22 @@
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
+<h3 id="echoing">Echoing<a class="anchor" aria-label="anchor" href="#echoing"></a>
+</h3>
+<p>By default, the chat <code>echo</code> is set to <code>FALSE</code> to show a progress bar. However, you can still configure <code>echo</code> in the <code>$batch</code> call by first setting <code>progress</code> to <code>FALSE</code>:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, progress <span class="op">=</span> <span class="cn">FALSE</span>, echo <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &gt; What is R?</span></span>
+<span><span class="co">#&gt; &lt; R is a programming language and software environment used for statistical computing,</span></span>
+<span><span class="co">#&gt; &lt; data analysis, and graphical representation.</span></span>
+<span><span class="co">#&gt; &lt; </span></span>
+<span><span class="co">#&gt; &gt; Explain base R versus tidyverse</span></span>
+<span><span class="co">#&gt; &lt; Base R refers to the functions and paradigms built into the R language, while</span></span>
+<span><span class="co">#&gt; &lt; tidyverse is a collection of R packages designed for data science, emphasizing </span></span>
+<span><span class="co">#&gt; &lt; a more consistent and human-readable syntax for data manipulation.</span></span>
+<span><span class="co">#&gt; &lt; </span></span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a>
 </h3>
 <ul>
@@ -305,22 +321,6 @@
 <li>
 <code><a href="reference/chats.html">chats()</a></code>: Returns a list of chat objects</li>
 </ul>
-</div>
-<div class="section level3">
-<h3 id="echoing">Echoing<a class="anchor" aria-label="anchor" href="#echoing"></a>
-</h3>
-<p>By default, the chat <code>echo</code> is set to <code>FALSE</code> to show a progress bar. However, you can still configure <code>echo</code> in the <code>$batch</code> call by first setting <code>progress</code> to <code>FALSE</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, progress <span class="op">=</span> <span class="cn">FALSE</span>, echo <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &gt; What is R?</span></span>
-<span><span class="co">#&gt; &lt; R is a programming language and software environment used for statistical computing,</span></span>
-<span><span class="co">#&gt; &lt; data analysis, and graphical representation.</span></span>
-<span><span class="co">#&gt; &lt; </span></span>
-<span><span class="co">#&gt; &gt; Explain base R versus tidyverse</span></span>
-<span><span class="co">#&gt; &lt; Base R refers to the functions and paradigms built into the R language, while</span></span>
-<span><span class="co">#&gt; &lt; tidyverse is a collection of R packages designed for data science, emphasizing </span></span>
-<span><span class="co">#&gt; &lt; a more consistent and human-readable syntax for data manipulation.</span></span>
-<span><span class="co">#&gt; &lt; </span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
