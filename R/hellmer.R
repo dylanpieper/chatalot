@@ -206,8 +206,8 @@ chat_sequential <- function(
 #'   \item **judgements**: Number of judgements for data extraction accuracy
 #'   \item **state_path**: Path to save state file for resuming interrupted processing
 #'   \item **progress**: Show progress bar
-#'   \item **workers**: Number of parallel workers (default: if prompts <= available cores, use number of prompts; otherwise, use all available cores)
-#'   \item **chunk_size**: Number of prompts each worker processes at a time (default: if prompts <= available cores, process all prompts in a single chunk; otherwise, use logarithmic scaling based on number of prompts)
+#'   \item **workers**: Number of parallel workers (default: uses all available CPU cores)
+#'   \item **chunk_size**: Number of prompts each worker processes at a time (default: CPU cores * 5)
 #'   \item **max_chunk_attempts**: Maximum retries per failed chunk
 #'   \item **max_retries**: Maximum number of retry attempts for failed requests
 #'   \item **initial_delay**: Initial delay before first retry in seconds
@@ -280,9 +280,9 @@ chat_future <- function(
                              judgements = 0,
                              state_path = tempfile("chat_", fileext = ".rds"),
                              progress = TRUE,
-                             workers = NULL,
+                             workers = parallel::detectCores(),
                              plan = "multisession", 
-                             chunk_size = NULL,
+                             chunk_size = parallel::detectCores() * 5,
                              max_chunk_attempts = 3L,
                              max_retries = 3L,
                              initial_delay = 20,
@@ -293,23 +293,6 @@ chat_future <- function(
                              ...) {
     
     plan <- match.arg(plan, choices = c("multisession", "multicore"))
-    
-    if (is.null(chunk_size) || is.null(workers)) {
-      max_cores <- parallel::detectCores()
-      
-      if (length(prompts) <= max_cores) {
-        if (is.null(workers)) workers <- length(prompts)
-        if (is.null(chunk_size)) chunk_size <- length(prompts)
-      } else {
-        if (is.null(workers)) workers <- max_cores
-        
-        if (is.null(chunk_size)) {
-          n_prompts <- length(prompts)
-          divisor <- 1 + log10(max(1, n_prompts / 10))
-          chunk_size <- max(1, ceiling(n_prompts / divisor))
-        }
-      }
-    }
     
     if (judgements > 0 && is.null(type_spec)) {
       cli::cli_alert_warning("Judgements parameter ({judgements}) specified but will be ignored without a type_spec")

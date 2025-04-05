@@ -2,10 +2,7 @@
 
 ## New Features
 
-* `chat_future()` parallel processing improvements:
-  * When prompts <= available cores: Uses one worker per prompt and processes all prompts in a single chunk
-  * When prompts > available cores: `workers` equals available cores with logarithmic chunk scaling
-  * `chunk_size` calculation: `ceiling(n_prompts / (1 + log10(max(1, n_prompts / 10))))`
+* `chat_future()` now uses uses `workers` * 5 as the default chunk size
 
 * `$batch()` gains `progress` in addition to  `echo` and `...` which are passed to the chat call
 

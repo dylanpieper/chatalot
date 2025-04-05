@@ -109,7 +109,7 @@ chat <- chat_future(chat_openai(system_prompt = "Reply concisely, one sentence")
 
 When using parallel processing with `chat_future`, there's a trade-off between safety and performance:
 
--   **Maximum Safety**: Using a smaller `chunk_size` ensures progress is saved to the disk more frequently, allowing recovery if something goes wrong (default: if prompts \<= maximum available workers == number of CPU cores as a heuristic, process all prompts in a single chunk; otherwise, uses logarithmic scaling with `ceiling(n_prompts / (1 + log10(max(1, n_prompts / 10))))`)
+-   **Maximum Safety**: Using a smaller `chunk_size` ensures progress is saved to the disk more frequently, allowing recovery if something goes wrong (default: CPU cores \* 5)
 -   **Maximum Performance**: Setting `chunk_size` equal to the number of prompts results in a 4-5x faster processing speed but progress will not be saved to the disk until all chats are processed
 
 ``` r
