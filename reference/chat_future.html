@@ -108,12 +108,11 @@ For sequential processing, use <code><a href="chat_sequential.html">chat_sequent
 
 <p>The batch method processes multiple prompts in parallel and returns a batch object:</p><ul><li><p><strong>prompts</strong>: List of prompts to process</p></li>
 <li><p><strong>type_spec</strong>: Type specification for structured data extraction</p></li>
-<li><p><strong>judgements</strong>: Number of judgements for data extraction accuracy</p></li>
+<li><p><strong>judgements</strong>: Number of judgements (i.e., thinking or reasoning) for structured data refinement</p></li>
 <li><p><strong>state_path</strong>: Path to save state file for resuming interrupted processing</p></li>
 <li><p><strong>progress</strong>: Show progress bar</p></li>
-<li><p><strong>workers</strong>: Number of parallel workers (default: number of prompts / <code>chunk_size</code> capped by number of CPU cores)</p></li>
-<li><p><strong>plan</strong>: Parallel backend plan ("multisession" or "multicore")</p></li>
-<li><p><strong>chunk_size</strong>: Number of prompts each worker processes at a time before capturing the results (default: number of prompts / 10)</p></li>
+<li><p><strong>workers</strong>: Number of parallel workers (default: CPU cores as the upper limit)</p></li>
+<li><p><strong>chunk_size</strong>: Number of prompts each worker processes at a time (default: CPU cores * 5)</p></li>
 <li><p><strong>max_chunk_attempts</strong>: Maximum retries per failed chunk</p></li>
 <li><p><strong>max_retries</strong>: Maximum number of retry attempts for failed requests</p></li>
 <li><p><strong>initial_delay</strong>: Initial delay before first retry in seconds</p></li>

@@ -73,7 +73,7 @@
 <li>
 <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">Tooling</a> and <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>
 </li>
-<li>LLM-as-a-judge for structured data refinement</li>
+<li>Judgments (i.e., thinking or reasoning) for structured data refinement</li>
 <li>Progress tracking and recovery</li>
 <li>Automatic retry with backoff</li>
 <li>Sound notifications</li>
@@ -242,7 +242,7 @@
 <span><span class="co">#&gt; $neutral_score</span></span>
 <span><span class="co">#&gt; [1] 0</span></span>
 <span><span class="co">#&gt; ...</span></span></code></pre></div>
-<p>To ask the chat model to evaluate and refine structured data extractions, implement LLM-as-a-judge into the turns of the chat using the <code>judgements</code> parameter (increases token use):</p>
+<p>To ask the chat model to evaluate and refine structured data extractions, implement iterative thinking or reasoning into the turns of the chat using the <code>judgements</code> parameter (increases token use):</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, judgements <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
