@@ -111,7 +111,7 @@ By default, the upper limit for number of `workers` = `parallel::detectCores()`,
 chat <- chat_future(chat_openai(system_prompt = "Reply concisely, one sentence"))
 ```
 
-For maximum performance, set `chunk_size` to the number of prompts, which results in \~4-5x faster processing speed. However, progress will not be saved to the disk until all chats are processed
+For maximum performance, set `chunk_size` to the number of prompts, which is \~4-5x faster. However, progress will not be saved to the disk until all chats are processed.
 
 ``` r
 chat$batch(
