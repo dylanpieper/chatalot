@@ -178,12 +178,12 @@
 <span>  <span class="va">prompts</span>, </span>
 <span>  chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Because <code>workers</code> = CPU cores is a heuristic for how many R Sessions to spin up, you can improve performance by multiplying the CPU cores to any factor:</p>
+<p>Because <code>workers</code> = CPU cores is a heuristic for how many R Sessions to spin up, you can improve performance up to 300% (upper limit of <code>future</code> without manual override):</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>, </span>
 <span>  chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span>, </span>
-<span>  workers <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span> <span class="op">*</span> <span class="fl">5</span></span>
+<span>  workers <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span> <span class="op">*</span> <span class="fl">3</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
