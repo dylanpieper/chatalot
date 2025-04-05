@@ -206,9 +206,8 @@ chat_sequential <- function(
 #'   \item **judgements**: Number of judgements for data extraction accuracy
 #'   \item **state_path**: Path to save state file for resuming interrupted processing
 #'   \item **progress**: Show progress bar
-#'   \item **workers**: Number of parallel workers (default: number of prompts / `chunk_size` capped by number of CPU cores)
-#'   \item **plan**: Parallel backend plan ("multisession" or "multicore")
-#'   \item **chunk_size**: Number of prompts each worker processes at a time before capturing the results (default: number of prompts / 10)
+#'   \item **workers**: Number of parallel workers (default: if prompts <= available cores, use number of prompts; otherwise, use all available cores)
+#'   \item **chunk_size**: Number of prompts each worker processes at a time (default: if prompts <= available cores, process all prompts in a single chunk; otherwise, use logarithmic scaling based on number of prompts)
 #'   \item **max_chunk_attempts**: Maximum retries per failed chunk
 #'   \item **max_retries**: Maximum number of retry attempts for failed requests
 #'   \item **initial_delay**: Initial delay before first retry in seconds
@@ -295,13 +294,21 @@ chat_future <- function(
     
     plan <- match.arg(plan, choices = c("multisession", "multicore"))
     
-    if (is.null(chunk_size)) {
-      chunk_size <- max(1, ceiling(length(prompts) / 10))
-    }
-    
-    if (is.null(workers)) {
+    if (is.null(chunk_size) || is.null(workers)) {
       max_cores <- parallel::detectCores()
-      workers <- min(chunk_size, max_cores)
+      
+      if (length(prompts) <= max_cores) {
+        if (is.null(workers)) workers <- length(prompts)
+        if (is.null(chunk_size)) chunk_size <- length(prompts)
+      } else {
+        if (is.null(workers)) workers <- max_cores
+        
+        if (is.null(chunk_size)) {
+          n_prompts <- length(prompts)
+          divisor <- 1 + log10(max(1, n_prompts / 10))
+          chunk_size <- max(1, ceiling(n_prompts / divisor))
+        }
+      }
     }
     
     if (judgements > 0 && is.null(type_spec)) {

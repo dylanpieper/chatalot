@@ -84,8 +84,8 @@ result$chats()
 #> ── user [22] ────────────────────────────────────────────────────────────────
 #> What is R?
 #> ── assistant [18] ───────────────────────────────────────────────────────────
-#> R is a programming language and software environment primarily 
-#> used for statistical computing and data analysis.
+#> R is a programming language and software environment primarily used for
+#> statistical computing and data analysis.
 
 #> [[2]]
 #> <Chat OpenAI/gpt-4o turns=3 tokens=24/37>
@@ -95,8 +95,8 @@ result$chats()
 #> Explain base R versus tidyverse
 #> ── assistant [37] ───────────────────────────────────────────────────────────
 #> Base R refers to the R language's core packages and functionalities, whereas 
-#> Tidyverse is a collection of R packages designed for data science that 
-#> provides a more intuitive and consistent syntax.
+#> Tidyverse is a collection of R packages designed for data science 
+#> that provides a more intuitive and consistent syntax.
 ```
 
 ### Parallel Processing
@@ -109,7 +109,7 @@ chat <- chat_future(chat_openai(system_prompt = "Reply concisely, one sentence")
 
 When using parallel processing with `chat_future`, there's a trade-off between safety and performance:
 
--   **Maximum Safety**: Using a smaller `chunk_size` ensures progress is saved to the disk more frequently, allowing recovery if something goes wrong (default: number of prompts / 10)
+-   **Maximum Safety**: Using a smaller `chunk_size` ensures progress is saved to the disk more frequently, allowing recovery if something goes wrong (default: if prompts \<= maximum available workers == number of CPU cores as a heuristic, process all prompts in a single chunk; otherwise, uses logarithmic scaling with `ceiling(n_prompts / (1 + log10(max(1, n_prompts / 10))))`)
 -   **Maximum Performance**: Setting `chunk_size` equal to the number of prompts results in a 4-5x faster processing speed but progress will not be saved to the disk until all chats are processed
 
 ``` r
@@ -201,6 +201,8 @@ result$texts()
 #> [1] 0.05
 #> ...
 ```
+
+![Console output of LLM streaming the evaluation and refinement of the structured data extractions using `progress` = `FALSE` and `echo` = `TRUE`.](man/figures/judgements.gif)
 
 ### Progress Tracking and Recovery
 

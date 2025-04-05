@@ -346,7 +346,11 @@ process_future <- function(
   original_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
 
   if (is.null(chunk_size)) {
-    chunk_size <- max(1L, ceiling(length(prompts) / 10))
+    if (length(prompts) <= 10) {
+      chunk_size <- length(prompts)
+    } else {
+      chunk_size <- max(1L, ceiling(length(prompts) / 10))
+    }
     cli::cli_alert_info("Defaulting to {.field chunk_size} of {.val {chunk_size}} prompts per chunk")
   }
 
