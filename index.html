@@ -163,13 +163,13 @@
 <div class="section level3">
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
-<p>Parallel processing spins up multiple R processes to run chats at the same time.</p>
+<p>Parallel processing spins up multiple R processes, or parallel workers, to chat at the same time. The default number of <code>workers</code> = <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code> and number of prompts to process at a time in <code>chunk_size</code> = <code>parallel::detectCores() * 5</code>. The prompts in each chunk are queued to distribute their calls across the R processes. Once the chunk is finished, the results are collected and saved to an <code>.rds</code> file.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_openai.html" class="external-link">chat_openai</a></span><span class="op">(</span>system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>When using parallel processing with <code>chat_future</code>, there’s a trade-off between safety and performance:</p>
 <ul>
 <li>
-<strong>Maximum Safety</strong>: Using a smaller <code>chunk_size</code> ensures progress is saved to the disk more frequently, allowing recovery if something goes wrong (default: CPU cores * 5)</li>
+<strong>Maximum Safety</strong>: Using a smaller <code>chunk_size</code> ensures progress is saved to the disk more frequently, allowing recovery if something goes wrong</li>
 <li>
 <strong>Maximum Performance</strong>: Setting <code>chunk_size</code> equal to the number of prompts results in a 4-5x faster processing speed but progress will not be saved to the disk until all chats are processed</li>
 </ul>
@@ -178,7 +178,7 @@
 <span>  <span class="va">prompts</span>, </span>
 <span>  chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Because <code>workers</code> = CPU cores is a heuristic for how many R Sessions to spin up, you can improve performance up to 300% (upper limit of <code>future</code> without manual override):</p>
+<p>Because <code>workers</code> = CPU cores, you can improve performance up to 300%, which is the upper limit of <code>future</code> without manual override:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>, </span>
