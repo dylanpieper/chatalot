@@ -2,7 +2,7 @@
 
 ## New Features
 
-* `chat_future()` now uses uses `workers` * 5 as the default chunk size
+* `chat_future()` now uses uses CPU cores * 5 as the default chunk size
 
 * `$batch()` gains `progress` in addition to  `echo` and `...` which are passed to the chat call
 

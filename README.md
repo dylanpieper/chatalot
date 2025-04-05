@@ -34,6 +34,8 @@ usethis::edit_r_environ(scope = c("user", "project"))
 
 ### Sequential Processing
 
+Sequential processing uses the current R process to process and store one chat at same time.
+
 ``` r
 library(hellmer)
 
@@ -102,9 +104,9 @@ result$chats()
 ### Parallel Processing
 
 Parallel processing spins up multiple R processes, or parallel workers, to chat at the same time.
-The default number of `workers` = `parallel::detectCores()` and number of prompts to process at a time in `chunk_size` = `parallel::detectCores() * 5`.
-The prompts in each chunk are queued to distribute their calls across the R processes.
-Once the chunk is finished, the results are collected and saved to an `.rds` file.
+The default upper limit for number of `workers` = `parallel::detectCores()`, and respectively, number of prompts to process at a time is `chunk_size` = `parallel::detectCores() * 5`.
+The chats for each prompt in a chunk are distributed across the available R processes.
+Once the chunk is finished, the results are collected and stored.
 
 ``` r
 chat <- chat_future(chat_openai(system_prompt = "Reply concisely, one sentence"))
@@ -113,22 +115,12 @@ chat <- chat_future(chat_openai(system_prompt = "Reply concisely, one sentence")
 When using parallel processing with `chat_future`, there's a trade-off between safety and performance:
 
 -   **Maximum Safety**: Using a smaller `chunk_size` ensures progress is saved to the disk more frequently, allowing recovery if something goes wrong
--   **Maximum Performance**: Setting `chunk_size` equal to the number of prompts results in a 4-5x faster processing speed but progress will not be saved to the disk until all chats are processed
+-   **Maximum Performance**: Setting `chunk_size` equal to the number of prompts results in a ~4-5x faster processing speed but progress will not be saved to the disk until all chats are processed
 
 ``` r
 chat$batch(
   prompts, 
   chunk_size = length(prompts)
-)
-```
-
-Because `workers` = CPU cores, you can improve performance up to 300%, which is the upper limit of `future` without manual override:
-
-``` r
-chat$batch(
-  prompts, 
-  chunk_size = length(prompts), 
-  workers = parallel::detectCores() * 3
 )
 ```
 

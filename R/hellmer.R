@@ -206,7 +206,7 @@ chat_sequential <- function(
 #'   \item **judgements**: Number of judgements for data extraction accuracy
 #'   \item **state_path**: Path to save state file for resuming interrupted processing
 #'   \item **progress**: Show progress bar
-#'   \item **workers**: Number of parallel workers (default: uses all available CPU cores)
+#'   \item **workers**: Number of parallel workers (default: CPU cores as the upper limit)
 #'   \item **chunk_size**: Number of prompts each worker processes at a time (default: CPU cores * 5)
 #'   \item **max_chunk_attempts**: Maximum retries per failed chunk
 #'   \item **max_retries**: Maximum number of retry attempts for failed requests
@@ -280,7 +280,7 @@ chat_future <- function(
                              judgements = 0,
                              state_path = tempfile("chat_", fileext = ".rds"),
                              progress = TRUE,
-                             workers = parallel::detectCores(),
+                             workers = NULL,
                              plan = "multisession", 
                              chunk_size = parallel::detectCores() * 5,
                              max_chunk_attempts = 3L,
@@ -291,6 +291,13 @@ chat_future <- function(
                              beep = TRUE,
                              echo = FALSE,
                              ...) {
+    if(is.null(workers)){
+      if(length(prompts) <= parallel::detectCores()){
+        workers <- length(prompts)
+      } else {
+        workers <- parallel::detectCores()
+      }
+    }
     
     plan <- match.arg(plan, choices = c("multisession", "multicore"))
     
