@@ -119,7 +119,7 @@ chat$batch(
 )
 ```
 
-Because `workers` = CPU cores as a heuristic for how many R Sessions to spin up, you can improve performance by multiplying the workers based on the CPU core heuristic to any factor (R Sessions):
+Because `workers` = CPU cores is a heuristic for how many R Sessions to spin up, you can improve performance by multiplying the CPU cores to any factor (R Sessions):
 
 ``` r
 chat$batch(
