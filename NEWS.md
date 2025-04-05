@@ -19,7 +19,7 @@
 * Updated package documentation for better organization and clarity
 
 ## Experimental features
-* Structured data extractions support LLM-as-a-judge to refine extracted data via the `judgements` parameter
+* Structured data extractions support judgements (i.e., iterative thinking or reasoning) to refine extracted data via the `judgements` parameter
 
 # hellmer 0.1.0
 

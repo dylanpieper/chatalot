@@ -9,7 +9,7 @@ Enable sequential and parallel batch processing for [chat models](https://ellmer
 Process multiple chat interactions with:
 
 -   [Tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html)
--   LLM-as-a-judge for structured data refinement
+-   Judgments (i.e., thinking or reasoning) for structured data refinement
 -   Progress tracking and recovery
 -   Automatic retry with backoff
 -   Sound notifications
@@ -188,7 +188,7 @@ result$texts()
 #> ...
 ```
 
-To ask the chat model to evaluate and refine structured data extractions, implement LLM-as-a-judge into the turns of the chat using the `judgements` parameter (increases token use):
+To ask the chat model to evaluate and refine structured data extractions, implement iterative thinking or reasoning into the turns of the chat using the `judgements` parameter (increases token use):
 
 ``` r
 result <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)

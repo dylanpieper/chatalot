@@ -203,7 +203,7 @@ chat_sequential <- function(
 #' \itemize{
 #'   \item **prompts**: List of prompts to process
 #'   \item **type_spec**: Type specification for structured data extraction
-#'   \item **judgements**: Number of judgements for data extraction accuracy
+#'   \item **judgements**: Number of judgements (i.e., thinking or reasoning) for structured data refinement
 #'   \item **state_path**: Path to save state file for resuming interrupted processing
 #'   \item **progress**: Show progress bar
 #'   \item **workers**: Number of parallel workers (default: CPU cores as the upper limit)

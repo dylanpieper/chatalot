@@ -57,12 +57,11 @@ The batch method processes multiple prompts in parallel and returns a batch obje
 \itemize{
 \item \strong{prompts}: List of prompts to process
 \item \strong{type_spec}: Type specification for structured data extraction
-\item \strong{judgements}: Number of judgements for data extraction accuracy
+\item \strong{judgements}: Number of judgements (i.e., thinking or reasoning) for structured data refinement
 \item \strong{state_path}: Path to save state file for resuming interrupted processing
 \item \strong{progress}: Show progress bar
-\item \strong{workers}: Number of parallel workers (default: number of prompts / \code{chunk_size} capped by number of CPU cores)
-\item \strong{plan}: Parallel backend plan ("multisession" or "multicore")
-\item \strong{chunk_size}: Number of prompts each worker processes at a time before capturing the results (default: number of prompts / 10)
+\item \strong{workers}: Number of parallel workers (default: CPU cores as the upper limit)
+\item \strong{chunk_size}: Number of prompts each worker processes at a time (default: CPU cores * 5)
 \item \strong{max_chunk_attempts}: Maximum retries per failed chunk
 \item \strong{max_retries}: Maximum number of retry attempts for failed requests
 \item \strong{initial_delay}: Initial delay before first retry in seconds
