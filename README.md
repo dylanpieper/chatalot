@@ -119,7 +119,7 @@ chat$batch(
 )
 ```
 
-Because `workers` = CPU cores is a heuristic for how many R Sessions to spin up, you can improve performance up to 300% (upper limit of `future` without manual override)`:
+Because `workers` = CPU cores is a heuristic for how many R Sessions to spin up, you can improve performance up to 300% (upper limit of `future` without manual override):
 
 ``` r
 chat$batch(
