@@ -9,7 +9,7 @@ Enable sequential and parallel batch processing for [chat models](https://ellmer
 Process multiple chat interactions with:
 
 -   [Tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html)
--   Judgments (i.e., thinking or reasoning) for structured data refinement
+-   Judgments for structured data refinement
 -   Progress tracking and recovery
 -   Automatic retry with backoff
 -   Sound notifications
@@ -111,7 +111,7 @@ By default, the upper limit for number of `workers` = `parallel::detectCores()`,
 chat <- chat_future(chat_openai(system_prompt = "Reply concisely, one sentence"))
 ```
 
-For maximum performance, set `chunk_size` to the number of prompts, which is \~4-5x faster. However, progress will not be saved to the disk until all chats are processed.
+For maximum performance, set `chunk_size` to the number of prompts (\~4-5x faster). However, data will not be saved to the disk until all chats are processed.
 
 ``` r
 batch <- chat$batch(
@@ -188,7 +188,7 @@ batch$texts()
 #> ...
 ```
 
-To ask the chat model to evaluate and refine structured data extractions, implement iterative thinking or reasoning into the turns of the chat using the `judgements` parameter (increases token use):
+To ask the chat model to evaluate and refine structured data extractions, implement model-agnostic reasoning into the turns of the chat through additional prompting using the `judgements` parameter (increases token use):
 
 ``` r
 batch <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)
