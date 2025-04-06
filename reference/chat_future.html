@@ -86,42 +86,9 @@ For sequential processing, use <code><a href="chat_sequential.html">chat_sequent
     <h2 id="batch-method">Batch Method<a class="anchor" aria-label="anchor" href="#batch-method"></a></h2>
 
 
-<div class="sourceCode"><pre><code><span></span>
-<span><span class="fu"><a href="../reference/batch.html">batch</a></span><span class="op">(</span></span>
-<span>  <span class="va">prompts</span>,</span>
-<span>  type_spec <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  judgements <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  state_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"chat_"</span>, fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span>,</span>
-<span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  workers <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  plan <span class="op">=</span> <span class="st">"multisession"</span>,</span>
-<span>  chunk_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  max_chunk_attempts <span class="op">=</span> <span class="fl">3L</span>,</span>
-<span>  max_retries <span class="op">=</span> <span class="fl">3L</span>,</span>
-<span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  max_delay <span class="op">=</span> <span class="fl">80</span>,</span>
-<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  echo <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-
-<p>The batch method processes multiple prompts in parallel and returns a batch object:</p><ul><li><p><strong>prompts</strong>: List of prompts to process</p></li>
-<li><p><strong>type_spec</strong>: Type specification for structured data extraction</p></li>
-<li><p><strong>judgements</strong>: Number of judgements (i.e., thinking or reasoning) for structured data refinement</p></li>
-<li><p><strong>state_path</strong>: Path to save state file for resuming interrupted processing</p></li>
-<li><p><strong>progress</strong>: Show progress bar</p></li>
-<li><p><strong>workers</strong>: Number of parallel workers (default: CPU cores as the upper limit)</p></li>
-<li><p><strong>chunk_size</strong>: Number of prompts each worker processes at a time (default: CPU cores * 5)</p></li>
-<li><p><strong>max_chunk_attempts</strong>: Maximum retries per failed chunk</p></li>
-<li><p><strong>max_retries</strong>: Maximum number of retry attempts for failed requests</p></li>
-<li><p><strong>initial_delay</strong>: Initial delay before first retry in seconds</p></li>
-<li><p><strong>max_delay</strong>: Maximum delay between retries in seconds</p></li>
-<li><p><strong>backoff_factor</strong>: Factor to multiply delay by after each retry</p></li>
-<li><p><strong>beep</strong>: Whether to play a sound on completion</p></li>
-<li><p><strong>echo</strong>: Whether to display chat outputs (when <code>progress</code> is <code>FALSE</code>)</p></li>
-<li><p><strong>...</strong>: Additional arguments passed to the chat method</p></li>
-</ul></div>
+<p>This function provides access to the <code><a href="batch.html">batch()</a></code> method for parallel processing of prompts.
+See <code><a href="batch.future_chat.html">?batch.future_chat</a></code> for full details of the method and its parameters.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

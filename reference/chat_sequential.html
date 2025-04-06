@@ -86,35 +86,9 @@ For parallel processing, use <code><a href="chat_future.html">chat_future()</a><
     <h2 id="batch-method">Batch Method<a class="anchor" aria-label="anchor" href="#batch-method"></a></h2>
 
 
-<div class="sourceCode"><pre><code>
-batch(
-  prompts,
-  type_spec = NULL,
-  judgements = 0,
-  state_path = tempfile("chat_", fileext = ".rds"),
-  progress = TRUE,
-  max_retries = 3L,
-  initial_delay = 20,
-  max_delay = 80,
-  backoff_factor = 2,
-  beep = TRUE,
-  echo = FALSE,
-  ...
-</code></pre></div>
-
-<p>The batch method processes multiple prompts and returns a batch object:</p><ul><li><p><strong>prompts</strong>: List of prompts to process</p></li>
-<li><p><strong>type_spec</strong>: Type specification for structured data extraction</p></li>
-<li><p><strong>judgements</strong>: Number of judgements for data extraction accuracy</p></li>
-<li><p><strong>state_path</strong>: Path to save state file for resuming interrupted processing</p></li>
-<li><p><strong>progress</strong>: Show progress bar</p></li>
-<li><p><strong>max_retries</strong>: Maximum number of retry attempts for failed requests</p></li>
-<li><p><strong>initial_delay</strong>: Initial delay before first retry in seconds</p></li>
-<li><p><strong>max_delay</strong>: Maximum delay between retries in seconds</p></li>
-<li><p><strong>backoff_factor</strong>: Factor to multiply delay by after each retry</p></li>
-<li><p><strong>beep</strong>: Whether to play a sound on completion</p></li>
-<li><p><strong>echo</strong>: Whether to display chat outputs (when <code>progress</code> is <code>FALSE</code>)</p></li>
-<li><p><strong>...</strong>: Additional arguments passed to the chat method</p></li>
-</ul></div>
+<p>This function provides access to the <code><a href="batch.html">batch()</a></code> method for sequential processing of prompts.
+See <code><a href="batch.sequential_chat.html">?batch.sequential_chat</a></code> for full details of the method and its parameters.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
