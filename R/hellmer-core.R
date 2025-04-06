@@ -42,34 +42,34 @@ capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, ech
   response <- NULL
   structured_data <- NULL
   chat <- original_chat$clone()
-  
+
   if (!is.null(type_spec)) {
     result <- process_judgements(chat, prompt, type_spec, judgements, echo = echo, ...)
     structured_data <- result$final
     chat <- result$chat
-    
+
     if (is.null(structured_data)) {
       stop("Received NULL structured data response")
     }
   } else {
     response <- chat$chat(prompt, echo = echo, ...)
-    
+
     if (is.null(response)) {
       stop("Received NULL chat response")
     }
   }
-  
+
   chat_turns <- chat$get_turns()
   tokens <- chat$tokens()
-  
+
   if (is.null(chat_turns) || length(chat_turns) == 0) {
     stop("No chat turns recorded")
   }
-  
+
   if (is.null(tokens)) {
     stop("No token information available")
   }
-  
+
   list(
     chat = chat,
     text = response,
@@ -104,11 +104,11 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
         if (inherits(e, "interrupt")) {
           stop(e)
         }
-        
+
         if (is_auth_error(e)) {
           stop(create_auth_error(e)$message)
         }
-        
+
         if (attempt > max_retries) {
           structure(
             list(
@@ -124,7 +124,7 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
             "Attempt %d failed: %s. Retrying in %.1f seconds...",
             attempt, e$message, delay
           ))
-          
+
           Sys.sleep(delay)
           next_delay <- min(delay * backoff_factor, max_delay)
           retry_with_delay(attempt + 1, next_delay)
@@ -132,7 +132,7 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
       }
     )
   }
-  
+
   retry_with_delay()
 }
 
@@ -174,7 +174,7 @@ process <- function(
   } else {
     result <- NULL
   }
-  
+
   if (is.null(result)) {
     orig_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
     result <- batch(
@@ -197,14 +197,14 @@ process <- function(
     )
     saveRDS(result, state_path)
   }
-  
+
   total_prompts <- length(prompts)
-  
+
   if (result@completed >= total_prompts) {
     cli::cli_alert_success("Complete")
     return(create_results(result))
   }
-  
+
   pb <- NULL
   if (progress) {
     pb <- cli::cli_progress_bar(
@@ -216,7 +216,7 @@ process <- function(
     )
     cli::cli_progress_update(id = pb, set = result@completed)
   }
-  
+
   tryCatch({
     for (i in (result@completed + 1L):total_prompts) {
       response <- capture_with_retry(
@@ -229,24 +229,24 @@ process <- function(
         echo = echo,
         ...
       )
-      
+
       result@responses[[i]] <- response
       result@completed <- i
       saveRDS(result, state_path)
-      
+
       if (!is.null(pb)) {
         cli::cli_progress_update(id = pb, set = i)
       }
     }
-    
+
     finish_successful_batch(pb, beep)
   }, error = function(e) {
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
     }
-    
+
     saveRDS(result, state_path)
-    
+
     if (inherits(e, "interrupt")) {
       handle_batch_interrupt(result, beep)
     } else {
@@ -257,9 +257,9 @@ process <- function(
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
     }
-    
+
     saveRDS(result, state_path)
-    
+
     if (beep) beepr::beep("coin")
     cli::cli_alert_warning(sprintf(
       "Interrupted at chat %d of %d",
@@ -270,7 +270,7 @@ process <- function(
       result <- readRDS(state_path)
     }
   })
-  
+
   create_results(result)
 }
 
@@ -344,15 +344,6 @@ process_future <- function(
   total_prompts <- length(prompts)
   prompts_list <- as.list(prompts)
   original_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
-
-  if (is.null(chunk_size)) {
-    if (length(prompts) <= 10) {
-      chunk_size <- length(prompts)
-    } else {
-      chunk_size <- max(1L, ceiling(length(prompts) / 10))
-    }
-    cli::cli_alert_info("Defaulting to {.field chunk_size} of {.val {chunk_size}} prompts per chunk")
-  }
 
   if (file.exists(state_path)) {
     result <- readRDS(state_path)
@@ -624,20 +615,20 @@ process_judgements <- function(chat_obj, prompt, type_spec, judgements = 0, echo
     evaluations = list(),
     refined = list()
   )
-  
+
   chat <- chat_obj$clone()
-  
+
   result$initial <- chat$extract_data(
     prompt,
     type = type_spec,
     echo = echo,
     ...
   )
-  
+
   current_extraction <- result$initial
-  
+
   judgement_rounds <- judgements
-  
+
   if (judgement_rounds > 0) {
     for (i in 1:judgement_rounds) {
       eval_prompt <- paste(
@@ -646,10 +637,10 @@ process_judgements <- function(chat_obj, prompt, type_spec, judgements = 0, echo
         jsonlite::toJSON(current_extraction, pretty = TRUE, auto_unbox = TRUE),
         "The original prompt was:", prompt
       )
-      
+
       evaluation <- chat$chat(eval_prompt, echo = echo, ...)
       result$evaluations[[i]] <- evaluation
-      
+
       refine_prompt <- paste(
         "Extract the following data more accurately:",
         prompt,
@@ -657,22 +648,22 @@ process_judgements <- function(chat_obj, prompt, type_spec, judgements = 0, echo
         jsonlite::toJSON(current_extraction, pretty = TRUE, auto_unbox = TRUE),
         "The prior extraction had these issues:", evaluation
       )
-      
+
       refined <- chat$extract_data(
         refine_prompt,
         type = type_spec,
         echo = echo,
         ...
       )
-      
+
       result$refined[[i]] <- refined
       current_extraction <- refined
     }
   }
-  
+
   result$final <- current_extraction
   result$chat <- chat
-  
+
   return(result)
 }
 
