@@ -59,23 +59,10 @@ capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, ech
     }
   }
 
-  chat_turns <- chat$get_turns()
-  tokens <- chat$tokens()
-
-  if (is.null(chat_turns) || length(chat_turns) == 0) {
-    stop("No chat turns recorded")
-  }
-
-  if (is.null(tokens)) {
-    stop("No token information available")
-  }
-
   list(
     chat = chat,
     text = response,
-    structured_data = structured_data,
-    turns = chat_turns,
-    tokens = tokens
+    structured_data = structured_data
   )
 }
 
@@ -376,8 +363,7 @@ process_future <- function(
       state = list(
         active_workers = 0L,
         failed_chunks = list(),
-        retry_count = 0L,
-        tokens = list()
+        retry_count = 0L
       )
     )
     saveRDS(result, state_path)
@@ -443,8 +429,7 @@ process_future <- function(
 
             list(
               success = TRUE,
-              responses = responses,
-              tokens = worker_chat$tokens()
+              responses = responses
             )
           },
           error = function(e) {
@@ -468,9 +453,6 @@ process_future <- function(
           end_idx <- result@completed + length(chunk)
 
           result@responses[start_idx:end_idx] <- chunk_result$responses
-          if (!is.null(chunk_result$tokens)) {
-            result@state$tokens[[chunk_idx]] <- chunk_result$tokens
-          }
 
           result@completed <- end_idx
           saveRDS(result, state_path)
