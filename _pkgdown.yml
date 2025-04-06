@@ -17,7 +17,7 @@ reference:
   - title: "Batch Processing"
     desc: "Methods for batch processing with different chat processors"
     contents:
-      - batch
+      - batch.class
       - batch.sequential_chat
       - batch.future_chat
       
