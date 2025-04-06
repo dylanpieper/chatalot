@@ -6,7 +6,7 @@ is_auth_error <- function(error) {
   msg <- if (inherits(error, "condition")) conditionMessage(error) else as.character(error)
 
   auth_patterns <- c(
-    "authorized", "authentication", "key",
+    "authorized", "authentic", "key",
     "token", "usage", "fund", "balance", "quota",
     "insufficient", "depleted", "exhausted",
     "account", "payment", "billing", "disabled", "suspended",
@@ -14,7 +14,7 @@ is_auth_error <- function(error) {
   )
 
   pattern <- paste(auth_patterns, collapse = "|")
-  grepl(pattern, tolower(msg), ignore.case = TRUE, perl = TRUE)
+  grepl(pattern, tolower(msg))
 }
 
 #' Create a standardized authentication error
