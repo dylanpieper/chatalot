@@ -4,7 +4,7 @@
 \alias{batch.future_chat}
 \title{Process a batch of prompts with a parallel chat}
 \usage{
-\method{batch}{future_chat}(
+batch.future_chat(
   chat_env,
   prompts,
   type_spec = NULL,
@@ -64,20 +64,4 @@ A batch object with the processed results
 }
 \description{
 Process a batch of prompts with a parallel chat
-}
-\examples{
-\dontrun{
-# Create a parallel chat processor 
-chat <- chat_future(chat_openai(system_prompt = "Reply concisely"))
-
-# Process a batch of prompts in parallel
-batch_results <- batch(chat,
-  list(
-    "What is R?",
-    "Explain base R versus tidyverse",
-    "Explain vectors, lists, and data frames"
-  ),
-  chunk_size = 3
-)
-}
 }

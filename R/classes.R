@@ -62,7 +62,7 @@ chats <- S7::new_generic("chats", "x")
 progress <- S7::new_generic("progress", "x")
 
 
-#' Batch class for managing chat processing
+#' Batch result class for managing chat processing results
 #' @name batch
 #' @param prompts List of prompts to process
 #' @param responses List to store responses

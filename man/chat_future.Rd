@@ -32,45 +32,8 @@ For sequential processing, use \code{chat_sequential()}.
 }
 \section{Batch Method}{
 
-\preformatted{
-batch(
-  prompts,
-  type_spec = NULL,
-  judgements = 0,
-  state_path = tempfile("chat_", fileext = ".rds"),
-  progress = TRUE,
-  workers = NULL,
-  plan = "multisession",
-  chunk_size = NULL,
-  max_chunk_attempts = 3L,
-  max_retries = 3L,
-  initial_delay = 20,
-  max_delay = 80,
-  backoff_factor = 2,
-  beep = TRUE,
-  echo = FALSE,
-  ...
-)
-}
-
-The batch method processes multiple prompts in parallel and returns a batch object:
-\itemize{
-\item \strong{prompts}: List of prompts to process
-\item \strong{type_spec}: Type specification for structured data extraction
-\item \strong{judgements}: Number of judgements (i.e., thinking or reasoning) for structured data refinement
-\item \strong{state_path}: Path to save state file for resuming interrupted processing
-\item \strong{progress}: Show progress bar
-\item \strong{workers}: Number of parallel workers (default: CPU cores as the upper limit)
-\item \strong{chunk_size}: Number of prompts each worker processes at a time (default: CPU cores * 5)
-\item \strong{max_chunk_attempts}: Maximum retries per failed chunk
-\item \strong{max_retries}: Maximum number of retry attempts for failed requests
-\item \strong{initial_delay}: Initial delay before first retry in seconds
-\item \strong{max_delay}: Maximum delay between retries in seconds
-\item \strong{backoff_factor}: Factor to multiply delay by after each retry
-\item \strong{beep}: Whether to play a sound on completion
-\item \strong{echo}: Whether to display chat outputs (when \code{progress} is \code{FALSE})
-\item \strong{...}: Additional arguments passed to the chat method
-}
+This function provides access to the \code{batch()} method for parallel processing of prompts.
+See \code{?batch.future_chat} for full details of the method and its parameters.
 }
 
 \examples{

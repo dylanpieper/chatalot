@@ -4,46 +4,123 @@
 \alias{batch}
 \title{Process a batch of prompts}
 \usage{
-batch(x, ...)
+batch(
+  prompts = list(),
+  responses = list(),
+  completed = integer(0),
+  state_path = character(0),
+  type_spec = NULL,
+  judgements = integer(0),
+  progress = logical(0),
+  input_type = character(0),
+  max_retries = integer(0),
+  initial_delay = integer(0),
+  max_delay = integer(0),
+  backoff_factor = integer(0),
+  chunk_size = integer(0),
+  workers = integer(0),
+  plan = character(0),
+  beep = logical(0),
+  echo = logical(0),
+  state = list()
+)
+
+batch(
+  prompts = list(),
+  responses = list(),
+  completed = integer(0),
+  state_path = character(0),
+  type_spec = NULL,
+  judgements = integer(0),
+  progress = logical(0),
+  input_type = character(0),
+  max_retries = integer(0),
+  initial_delay = integer(0),
+  max_delay = integer(0),
+  backoff_factor = integer(0),
+  chunk_size = integer(0),
+  workers = integer(0),
+  plan = character(0),
+  beep = logical(0),
+  echo = logical(0),
+  state = list()
+)
 }
 \arguments{
+\item{prompts}{List of prompts to process}
+
+\item{responses}{List to store responses}
+
+\item{completed}{Integer indicating number of completed prompts}
+
+\item{state_path}{Path to save state file}
+
+\item{type_spec}{Type specification for structured data extraction}
+
+\item{judgements}{Number of judgements in a \code{batch_judge()} workflow (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
+
+\item{progress}{Whether to show progress bars (default: TRUE)}
+
+\item{input_type}{Type of input ("vector" or "list")}
+
+\item{max_retries}{Maximum number of retry attempts}
+
+\item{initial_delay}{Initial delay before first retry}
+
+\item{max_delay}{Maximum delay between retries}
+
+\item{backoff_factor}{Factor to multiply delay by after each retry}
+
+\item{chunk_size}{Size of chunks for parallel processing}
+
+\item{workers}{Number of parallel workers}
+
+\item{plan}{Parallel backend plan}
+
+\item{beep}{Play sound on completion (default: TRUE)}
+
+\item{echo}{Whether to echo messages during processing (default: FALSE)}
+
+\item{state}{Internal state tracking}
+
 \item{x}{An object on which to dispatch the batch method}
 
 \item{...}{Additional arguments passed to specific methods}
 }
 \value{
 A batch object
+
+Returns an S7 class object of class "batch" that represents a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides methods for:
+\itemize{
+\item Extracting text responses via \code{texts()} (includes structured data when a type specification is provided)
+\item Accessing full chat objects via \code{chats()}
+\item Tracking processing progress via \code{progress()}
+}
+The batch object manages prompt processing, tracks completion status, and handles retries for failed requests.
 }
 \description{
 S3 generic function for batch processing prompts with various chat processors.
 }
-\seealso{
-\code{\link{batch.sequential_chat}}, \code{\link{batch.future_chat}}
-}
 \examples{
-\dontrun{
-# Create a sequential chat processor
+\dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Create a chat processor
 chat <- chat_sequential(chat_openai())
 
 # Process a batch of prompts
-batch_results <- batch(chat, 
-  list(
-    "What is R?",
-    "Explain base R versus tidyverse",
-    "Explain vectors, lists, and data frames"
-  )
-)
+batch <- chat$batch(list(
+  "What is R?",
+  "Explain base R versus tidyverse",
+  "Explain vectors, lists, and data frames"
+))
 
-# Create a parallel chat processor
-chat_parallel <- chat_future(chat_openai())
+# Check the progress if interrupted
+batch$progress()
 
-# Process a batch of prompts in parallel
-batch_results_parallel <- batch(chat_parallel,
-  list(
-    "What is R?",
-    "Explain base R versus tidyverse"
-  ),
-  chunk_size = 2
-)
+# Return the responses as a vector or list
+batch$texts()
+
+# Return the chat objects
+batch$chats()
+\dontshow{\}) # examplesIf}
 }
-}
+\keyword{internal}

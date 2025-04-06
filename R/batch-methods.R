@@ -17,26 +17,26 @@
 #' @return A batch object with the processed results
 #' @export
 batch.sequential_chat <- function(chat_env,
-                                 prompts,
-                                 type_spec = NULL,
-                                 judgements = 0,
-                                 state_path = tempfile("chat_", fileext = ".rds"),
-                                 progress = TRUE,
-                                 max_retries = 3L,
-                                 initial_delay = 20,
-                                 max_delay = 80,
-                                 backoff_factor = 2,
-                                 beep = TRUE,
-                                 echo = FALSE,
-                                 ...) {
+                                  prompts,
+                                  type_spec = NULL,
+                                  judgements = 0,
+                                  state_path = tempfile("chat_", fileext = ".rds"),
+                                  progress = TRUE,
+                                  max_retries = 3L,
+                                  initial_delay = 20,
+                                  max_delay = 80,
+                                  backoff_factor = 2,
+                                  beep = TRUE,
+                                  echo = FALSE,
+                                  ...) {
   if (judgements > 0 && is.null(type_spec)) {
     cli::cli_alert_warning("Judgements parameter ({judgements}) specified but will be ignored without a type_spec")
   }
-  
+
   if (!is.null(type_spec) && judgements < 0) {
     cli::cli_abort("Number of judgements must be non-negative")
   }
-  
+
   process(
     chat_obj = chat_env$chat_model,
     prompts = prompts,
@@ -77,32 +77,32 @@ batch.sequential_chat <- function(chat_env,
 #' @return A batch object with the processed results
 #' @export
 batch.future_chat <- function(chat_env,
-                             prompts,
-                             type_spec = NULL,
-                             judgements = 0,
-                             state_path = tempfile("chat_", fileext = ".rds"),
-                             workers = NULL,
-                             chunk_size = parallel::detectCores() * 5,
-                             plan = "multisession",
-                             max_chunk_attempts = 3L,
-                             max_retries = 3L,
-                             initial_delay = 20,
-                             max_delay = 80,
-                             backoff_factor = 2,
-                             beep = TRUE,
-                             progress = TRUE,
-                             echo = FALSE,
-                             ...) {
+                              prompts,
+                              type_spec = NULL,
+                              judgements = 0,
+                              state_path = tempfile("chat_", fileext = ".rds"),
+                              workers = NULL,
+                              chunk_size = parallel::detectCores() * 5,
+                              plan = "multisession",
+                              max_chunk_attempts = 3L,
+                              max_retries = 3L,
+                              initial_delay = 20,
+                              max_delay = 80,
+                              backoff_factor = 2,
+                              beep = TRUE,
+                              progress = TRUE,
+                              echo = FALSE,
+                              ...) {
   plan <- match.arg(plan, choices = c("multisession", "multicore"))
-    
+
   if (judgements > 0 && is.null(type_spec)) {
     cli::cli_alert_warning("Judgements parameter ({judgements}) specified but will be ignored without a type_spec")
   }
-  
+
   if (!is.null(type_spec) && judgements < 0) {
     cli::cli_abort("Number of judgements must be non-negative")
   }
-  
+
   process_future(
     chat_obj = chat_env$chat_model,
     prompts = prompts,
@@ -132,7 +132,7 @@ batch.future_chat <- function(chat_env,
 #' @param ... Additional arguments passed to specific methods
 #'
 #' @return A batch object
-#' @export
+#' @keywords internal
 batch <- function(x, ...) {
   UseMethod("batch")
 }

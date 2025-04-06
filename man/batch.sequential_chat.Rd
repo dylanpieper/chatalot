@@ -4,7 +4,7 @@
 \alias{batch.sequential_chat}
 \title{Process a batch of prompts with a sequential chat}
 \usage{
-\method{batch}{sequential_chat}(
+batch.sequential_chat(
   chat_env,
   prompts,
   type_spec = NULL,
@@ -52,22 +52,4 @@ A batch object with the processed results
 }
 \description{
 Process a batch of prompts with a sequential chat
-}
-\examples{
-\dontrun{
-# Create a sequential chat processor
-chat <- chat_sequential(chat_openai(system_prompt = "Reply concisely"))
-
-# Process a batch of prompts in sequence
-batch_results <- batch(chat, 
-  list(
-    "What is R?",
-    "Explain base R versus tidyverse",
-    "Explain vectors, lists, and data frames"
-  ),
-  max_retries = 3L,
-  initial_delay = 20,
-  beep = TRUE
-)
-}
 }
