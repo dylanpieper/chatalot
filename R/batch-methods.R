@@ -123,16 +123,3 @@ batch.future_chat <- function(chat_env,
     ...
   )
 }
-
-#' Process a batch of prompts
-#'
-#' S3 generic function for batch processing prompts with various chat processors.
-#'
-#' @param x An object on which to dispatch the batch method
-#' @param ... Additional arguments passed to specific methods
-#'
-#' @return A batch object
-#' @keywords internal
-batch <- function(x, ...) {
-  UseMethod("batch")
-}
