@@ -19,37 +19,8 @@
 #'     \item **batch**: Function to process a batch of prompts
 #'   }
 #' @section Batch Method:
-#' \preformatted{
-#' batch(
-#'   prompts,
-#'   type_spec = NULL,
-#'   judgements = 0,
-#'   state_path = tempfile("chat_", fileext = ".rds"),
-#'   progress = TRUE,
-#'   max_retries = 3L,
-#'   initial_delay = 20,
-#'   max_delay = 80,
-#'   backoff_factor = 2,
-#'   beep = TRUE,
-#'   echo = FALSE,
-#'   ...
-#' }
-#'
-#' The batch method processes multiple prompts and returns a batch object:
-#' \itemize{
-#'   \item **prompts**: List of prompts to process
-#'   \item **type_spec**: Type specification for structured data extraction
-#'   \item **judgements**: Number of judgements for data extraction accuracy
-#'   \item **state_path**: Path to save state file for resuming interrupted processing
-#'   \item **progress**: Show progress bar
-#'   \item **max_retries**: Maximum number of retry attempts for failed requests
-#'   \item **initial_delay**: Initial delay before first retry in seconds
-#'   \item **max_delay**: Maximum delay between retries in seconds
-#'   \item **backoff_factor**: Factor to multiply delay by after each retry
-#'   \item **beep**: Whether to play a sound on completion
-#'   \item **echo**: Whether to display chat outputs (when `progress` is `FALSE`)
-#'   \item **...**: Additional arguments passed to the chat method
-#' }
+#' This function provides access to the `batch()` method for sequential processing of prompts.
+#' See `?batch.sequential_chat` for full details of the method and its parameters.
 #'
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create a sequential chat processor with an object
@@ -122,22 +93,14 @@ chat_sequential <- function(
                              beep = TRUE,
                              echo = FALSE,
                              ...) {
-    if (judgements > 0 && is.null(type_spec)) {
-      cli::cli_alert_warning("Judgements parameter ({judgements}) specified but will be ignored without a type_spec")
-    }
-    
-    if (!is.null(type_spec) && judgements < 0) {
-      cli::cli_abort("Number of judgements must be non-negative")
-    }
-    
     if (is.null(chat_env$last_state_path)) {
       chat_env$last_state_path <- state_path
     } else {
       state_path <- chat_env$last_state_path
     }
     
-    process(
-      chat_obj = chat_env$chat_model,
+    batch.sequential_chat(
+      chat_env = chat_env,
       prompts = prompts,
       type_spec = type_spec,
       judgements = judgements,
@@ -153,7 +116,7 @@ chat_sequential <- function(
     )
   }
   
-  class(chat_env) <- c("Chat", "R6")
+  class(chat_env) <- c("sequential_chat", "Chat", "R6")
   chat_env
 }
 
@@ -178,45 +141,8 @@ chat_sequential <- function(
 #'     \item **batch**: Function to process a batch of prompts
 #'   }
 #' @section Batch Method:
-#' \preformatted{
-#' batch(
-#'   prompts,
-#'   type_spec = NULL,
-#'   judgements = 0,
-#'   state_path = tempfile("chat_", fileext = ".rds"),
-#'   progress = TRUE,
-#'   workers = NULL,
-#'   plan = "multisession",
-#'   chunk_size = NULL,
-#'   max_chunk_attempts = 3L,
-#'   max_retries = 3L,
-#'   initial_delay = 20,
-#'   max_delay = 80,
-#'   backoff_factor = 2,
-#'   beep = TRUE,
-#'   echo = FALSE,
-#'   ...
-#' )
-#' }
-#'
-#' The batch method processes multiple prompts in parallel and returns a batch object:
-#' \itemize{
-#'   \item **prompts**: List of prompts to process
-#'   \item **type_spec**: Type specification for structured data extraction
-#'   \item **judgements**: Number of judgements (i.e., thinking or reasoning) for structured data refinement
-#'   \item **state_path**: Path to save state file for resuming interrupted processing
-#'   \item **progress**: Show progress bar
-#'   \item **workers**: Number of parallel workers (default: CPU cores as the upper limit)
-#'   \item **chunk_size**: Number of prompts each worker processes at a time (default: CPU cores * 5)
-#'   \item **max_chunk_attempts**: Maximum retries per failed chunk
-#'   \item **max_retries**: Maximum number of retry attempts for failed requests
-#'   \item **initial_delay**: Initial delay before first retry in seconds
-#'   \item **max_delay**: Maximum delay between retries in seconds
-#'   \item **backoff_factor**: Factor to multiply delay by after each retry
-#'   \item **beep**: Whether to play a sound on completion
-#'   \item **echo**: Whether to display chat outputs (when `progress` is `FALSE`)
-#'   \item **...**: Additional arguments passed to the chat method
-#' }
+#' This function provides access to the `batch()` method for parallel processing of prompts.
+#' See `?batch.future_chat` for full details of the method and its parameters.
 #'
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create a parallel chat processor with an object
@@ -291,6 +217,12 @@ chat_future <- function(
                              beep = TRUE,
                              echo = FALSE,
                              ...) {
+    if (is.null(chat_env$last_state_path)) {
+      chat_env$last_state_path <- state_path
+    } else {
+      state_path <- chat_env$last_state_path
+    }
+    
     if(is.null(workers)){
       if(length(prompts) <= parallel::detectCores()){
         workers <- length(prompts)
@@ -299,24 +231,8 @@ chat_future <- function(
       }
     }
     
-    plan <- match.arg(plan, choices = c("multisession", "multicore"))
-    
-    if (judgements > 0 && is.null(type_spec)) {
-      cli::cli_alert_warning("Judgements parameter ({judgements}) specified but will be ignored without a type_spec")
-    }
-    
-    if (!is.null(type_spec) && judgements < 0) {
-      cli::cli_abort("Number of judgements must be non-negative")
-    }
-    
-    if (is.null(chat_env$last_state_path)) {
-      chat_env$last_state_path <- state_path
-    } else {
-      state_path <- chat_env$last_state_path
-    }
-    
-    process_future(
-      chat_obj = chat_env$chat_model,
+    batch.future_chat(
+      chat_env = chat_env,
       prompts = prompts,
       type_spec = type_spec,
       judgements = judgements,
@@ -336,6 +252,6 @@ chat_future <- function(
     )
   }
   
-  class(chat_env) <- c("Chat", "R6")
+  class(chat_env) <- c("future_chat", "Chat", "R6")
   chat_env
 }
