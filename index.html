@@ -73,7 +73,7 @@
 <li>
 <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">Tooling</a> and <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>
 </li>
-<li>Judgments (i.e., thinking or reasoning) for structured data refinement</li>
+<li>Judgments for structured data refinement</li>
 <li>Progress tracking and recovery</li>
 <li>Automatic retry with backoff</li>
 <li>Sound notifications</li>
@@ -168,7 +168,7 @@
 <p>By default, the upper limit for number of <code>workers</code> = <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>, and the number of prompts to process at a time is <code>chunk_size</code> = <code>parallel::detectCores() * 5</code>. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, the data is saved to the disk.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_openai.html" class="external-link">chat_openai</a></span><span class="op">(</span>system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>For maximum performance, set <code>chunk_size</code> to the number of prompts, which is ~4-5x faster. However, progress will not be saved to the disk until all chats are processed.</p>
+<p>For maximum performance, set <code>chunk_size</code> to the number of prompts (~4-5x faster). However, data will not be saved to the disk until all chats are processed.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>, </span>
@@ -242,7 +242,7 @@
 <span><span class="co">#&gt; $neutral_score</span></span>
 <span><span class="co">#&gt; [1] 0</span></span>
 <span><span class="co">#&gt; ...</span></span></code></pre></div>
-<p>To ask the chat model to evaluate and refine structured data extractions, implement iterative thinking or reasoning into the turns of the chat using the <code>judgements</code> parameter (increases token use):</p>
+<p>To ask the chat model to evaluate and refine structured data extractions, implement model-agnostic reasoning into the turns of the chat through additional prompting using the <code>judgements</code> parameter (increases token use):</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, judgements <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
