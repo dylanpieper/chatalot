@@ -1,4 +1,4 @@
-#' Check if an error is an authentication error to stop retry
+#' Check if an error is an authentication error to stop retries
 #' @param error Error message or condition
 #' @return TRUE if authentication error, FALSE otherwise
 #' @keywords internal
@@ -6,20 +6,11 @@ is_auth_error <- function(error) {
   msg <- if (inherits(error, "condition")) conditionMessage(error) else as.character(error)
 
   auth_patterns <- c(
-    # basic auth
     "unauthorized", "authentication", "invalid.*key", "api.*key",
-    "token", "fund",
-
-    # funds/tokens patterns
-    "insufficient.*(?:fund|credit|token|balance)",
-    "no.*(?:fund|credit|token|balance)",
-    "(?:fund|credit|token|balance).*depleted",
-    "(?:fund|credit|token|balance).*exhausted",
-    "(?:payment|billing).*required",
-    "exceeded.*(?:limit|quota)",
-    "usage.*(?:limit|quota)",
-    "account.*(?:suspended|disabled)",
-    "upgrade.*(?:plan|subscription)"
+    "token", "usage", "fund", "balance", "quota",
+    "insufficient", "depleted", "exhausted",
+    "account", "payment", "billing", "disabled", "suspended",
+    "upgrade", "plan", "subscription"
   )
 
   pattern <- paste(auth_patterns, collapse = "|")
