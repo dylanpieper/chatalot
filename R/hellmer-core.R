@@ -6,10 +6,10 @@ is_auth_error <- function(error) {
   msg <- if (inherits(error, "condition")) conditionMessage(error) else as.character(error)
 
   auth_patterns <- c(
-    "authorized", "authentic", "key",
+    "account", "author", "authentic", "key",
     "token", "usage", "fund", "balance", "quota",
-    "insufficient", "depleted", "exhausted",
-    "account", "payment", "billing", "disabled", "suspended",
+    "insufficient", "deplete", "exhaust",
+    "payment", "billing", "disable", "suspend",
     "upgrade", "plan", "subscription"
   )
 
