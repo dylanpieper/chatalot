@@ -1,6 +1,6 @@
 # hellmer <img src="man/figures/hellmer-hex.png" align="right" width="140"/>
 
-[![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://cran.r-pkg.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
+[![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://cran.r-project.org/web/packages/hellmer/index.html) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
 Enable sequential and parallel batch processing for [chat models](https://ellmer.tidyverse.org/reference/index.html#chatbots) supported by `ellmer`.
 
@@ -210,7 +210,7 @@ batch$texts()
 
 ### Progress Tracking and Recovery
 
-Batch processing automatically saves progress to an `.rds` file on the disk and allows you to resume interrupted operations:
+Batch processing state and progress is saved to a path to an `.rds` file on the disk and allows you to resume interrupted operations:
 
 ``` r
 batch <- chat$batch(prompts, state_path = "chat_state.rds")
