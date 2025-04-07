@@ -63,7 +63,7 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="hellmer-">hellmer <img src="reference/figures/hellmer-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#hellmer-"></a>
 </h1></div>
-<p><a href="https://cran.r-pkg.org/package=hellmer" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
+<p><a href="https://cran.r-project.org/web/packages/hellmer/index.html" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
 <p>Enable sequential and parallel batch processing for <a href="https://ellmer.tidyverse.org/reference/index.html#chatbots" class="external-link">chat models</a> supported by <code>ellmer</code>.</p>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
@@ -264,7 +264,7 @@
 <div class="section level3">
 <h3 id="progress-tracking-and-recovery">Progress Tracking and Recovery<a class="anchor" aria-label="anchor" href="#progress-tracking-and-recovery"></a>
 </h3>
-<p>Batch processing automatically saves progress to an <code>.rds</code> file on the disk and allows you to resume interrupted operations:</p>
+<p>Batch processing state and progress is saved to a path to an <code>.rds</code> file on the disk and allows you to resume interrupted operations:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, state_path <span class="op">=</span> <span class="st">"chat_state.rds"</span><span class="op">)</span></span>
 <span><span class="va">batch</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
