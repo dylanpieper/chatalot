@@ -24,7 +24,7 @@ install.packages("hellmer")
 
 ## Setup API Keys
 
-API keys allow access to chat models are are stored as environmental variables. I recommend the `usethis` package to setup API keys in your `.Renviron` such as `OPENAI_API_KEY=your-key`.
+API keys allow access to chat models and are stored as environmental variables. I recommend the `usethis` package to setup API keys in your `.Renviron` such as `OPENAI_API_KEY=your-key`.
 
 ``` r
 usethis::edit_r_environ(scope = c("user", "project"))
