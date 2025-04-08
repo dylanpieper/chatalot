@@ -273,8 +273,7 @@
 <div class="section level3">
 <h3 id="automatic-retry">Automatic Retry<a class="anchor" aria-label="anchor" href="#automatic-retry"></a>
 </h3>
-<p>Automatically retry failed requests with exponential backoff, which acts as a wide guardrail against temporary API errors. <code>ellmer</code> uses <code>httr2</code> to act as a narrow guardrail against specific API errors and limits with most chat provider functions defaulting to retry one time.</p>
-<p>Be aware that this retry is a brute force approach, and as long as all other validation passes, the retry will persist. However, it will stop if it detects an authorization or API key issue.</p>
+<p>Automatically retry failed requests with exponential backoff, which is useful to allow batch processing to persist for transient errors such as request timeout and exceeding the rate limit.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
 <span>  prompts <span class="op">=</span> <span class="va">prompts</span>,   <span class="co"># list or vector of prompts</span></span>
