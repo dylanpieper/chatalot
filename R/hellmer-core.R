@@ -11,36 +11,11 @@ is_retry_error <- function(error) {
 
   for (cls in retryable_classes) {
     if (inherits(error, cls)) {
-      return(FALSE)
+      return(TRUE)
     }
   }
 
-  if (inherits(error, "httr2_http")) {
-    return(TRUE)
-  }
-
   FALSE
-}
-
-#' Create a standardized authentication error
-#' @param original_error Original error message or condition
-#' @return Structured error information
-#' @keywords internal
-create_auth_error <- function(original_error) {
-  msg <- if (inherits(original_error, "condition")) {
-    conditionMessage(original_error)
-  } else {
-    as.character(original_error)
-  }
-
-  structure(
-    list(
-      success = FALSE,
-      error = "auth",
-      message = msg
-    ),
-    class = c("chat_auth_error", "error", "condition")
-  )
 }
 
 #' Capture chat model response with proper handling
@@ -110,9 +85,8 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
           capture(original_chat, prompt, type_spec, judgements, echo = echo, ...)
         },
         error = function(e) {
-          if (is_retry_error(e)) {
-            auth_error <- create_auth_error(e)
-            stop(auth_error$message,
+          if (!is_retry_error(e)) {
+            stop(conditionMessage(e),
               call. = FALSE, domain = "capture_with_retry"
             )
           }
@@ -318,9 +292,6 @@ process_future <- function(
     ...) {
   validate_chunk_result <- function(chunk_result, chunk_idx) {
     if (inherits(chunk_result, "error") || inherits(chunk_result, "worker_error")) {
-      if (is_retry_error(chunk_result)) {
-        stop(create_auth_error(chunk_result)$message)
-      }
       return(list(valid = FALSE, message = conditionMessage(chunk_result)))
     }
 
@@ -422,6 +393,7 @@ process_future <- function(
         retry_count <- retry_count + 1
         worker_chat <- chat_obj$clone()
 
+        # this needs to be withcallinghandler
         chunk_result <- tryCatch(
           {
             responses <- furrr::future_map(
@@ -453,10 +425,20 @@ process_future <- function(
           },
           error = function(e) {
             last_error <- e
+            if (!is_retry_error(e)) {
+              stop(conditionMessage(e),
+                call. = FALSE, domain = "process_future"
+              )
+            }
+            e_class <- class(e)[1]
+            cli::cli_alert_warning(sprintf(
+              "Error in chunk processing (%s): %s",
+              e_class, conditionMessage(e)
+            ))
             structure(
               list(
                 success = FALSE,
-                error = if (is_retry_error(e)) "auth" else "other",
+                error = "other",
                 message = conditionMessage(e)
               ),
               class = c("worker_error", "error", "condition")
@@ -478,12 +460,17 @@ process_future <- function(
           if (!is.null(pb)) {
             cli::cli_progress_update(id = pb, set = result@completed)
           }
-        } else if (retry_count < max_chunk_attempts) {
+        } else if (retry_count < max_chunk_attempts &&
+          !is.null(last_error) && is_retry_error(last_error)) {
+          delay <- min(initial_delay * (backoff_factor^(retry_count - 1)), max_delay)
           cli::cli_alert_warning(sprintf(
-            "Chunk %d failed (attempt %d/%d): %s. Retrying...",
-            chunk_idx, retry_count, max_chunk_attempts, validation$message
+            "Chunk %d failed (attempt %d/%d): %s. Retrying in %.1f seconds...",
+            chunk_idx, retry_count, max_chunk_attempts, validation$message, delay
           ))
-          Sys.sleep(2^retry_count)
+          Sys.sleep(delay)
+        } else if (!is.null(last_error) && inherits(last_error, "httr2_http")) {
+          success <- FALSE
+          break
         }
       }
 
