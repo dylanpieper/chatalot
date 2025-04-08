@@ -393,58 +393,74 @@ process_future <- function(
         retry_count <- retry_count + 1
         worker_chat <- chat_obj$clone()
 
-        # this needs to be withcallinghandler
-        chunk_result <- tryCatch(
-          {
-            responses <- furrr::future_map(
-              chunk,
-              function(prompt) {
-                capture_with_retry(
-                  worker_chat,
-                  prompt,
-                  type_spec,
-                  judgements = judgements,
-                  max_retries = max_retries,
-                  initial_delay = initial_delay,
-                  max_delay = max_delay,
-                  backoff_factor = backoff_factor,
-                  echo = echo,
-                  ...
+        chunk_result <-
+          withCallingHandlers(
+            tryCatch(
+              {
+                responses <- NULL
+                tryCatch(
+                  {
+                    responses <- furrr::future_map(
+                      chunk,
+                      function(prompt) {
+                        capture_with_retry(
+                          worker_chat,
+                          prompt,
+                          type_spec,
+                          judgements = judgements,
+                          max_retries = max_retries,
+                          initial_delay = initial_delay,
+                          max_delay = max_delay,
+                          backoff_factor = backoff_factor,
+                          echo = echo,
+                          ...
+                        )
+                      },
+                      .options = furrr::furrr_options(
+                        scheduling = 1,
+                        seed = TRUE
+                      )
+                    )
+
+                    list(
+                      success = TRUE,
+                      responses = responses
+                    )
+                  },
+                  error = function(e) {
+                    # Extract the core error message without the furrr wrapper info
+                    error_msg <- conditionMessage(e)
+                    if (grepl("Caused by error", error_msg)) {
+                      error_msg <- gsub(".*\\!\\s*", "", error_msg)
+                    }
+
+                    stop(error_msg, call. = FALSE)
+                  }
                 )
               },
-              .options = furrr::furrr_options(
-                scheduling = 1,
-                seed = TRUE
-              )
+              error = function(e) {
+                last_error <- e
+                if (!is_retry_error(e)) {
+                  stop(conditionMessage(e),
+                    call. = FALSE, domain = "process_future"
+                  )
+                }
+                e_class <- class(e)[1]
+                cli::cli_alert_warning(sprintf(
+                  "Error in chunk processing (%s): %s",
+                  e_class, conditionMessage(e)
+                ))
+                structure(
+                  list(
+                    success = FALSE,
+                    error = "other",
+                    message = conditionMessage(e)
+                  ),
+                  class = c("worker_error", "error")
+                )
+              }
             )
-
-            list(
-              success = TRUE,
-              responses = responses
-            )
-          },
-          error = function(e) {
-            last_error <- e
-            if (!is_retry_error(e)) {
-              stop(conditionMessage(e),
-                call. = FALSE, domain = "process_future"
-              )
-            }
-            e_class <- class(e)[1]
-            cli::cli_alert_warning(sprintf(
-              "Error in chunk processing (%s): %s",
-              e_class, conditionMessage(e)
-            ))
-            structure(
-              list(
-                success = FALSE,
-                error = "other",
-                message = conditionMessage(e)
-              ),
-              class = c("worker_error", "error", "condition")
-            )
-          }
-        )
+          )
 
         validation <- validate_chunk_result(chunk_result, chunk_idx)
         success <- validation$valid
