@@ -273,7 +273,7 @@
 <div class="section level3">
 <h3 id="automatic-retry">Automatic Retry<a class="anchor" aria-label="anchor" href="#automatic-retry"></a>
 </h3>
-<p>Automatically retry failed requests with exponential backoff, which is useful to allow batch processing to persist for transient errors such as request timeout and exceeding the rate limit.</p>
+<p>Automatically retry failed requests with exponential backoff, which is useful to allow batch processing to persist for transient errors such as request timeouts, exceeding rate limits, and temporary server errors.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
 <span>  prompts <span class="op">=</span> <span class="va">prompts</span>,   <span class="co"># list or vector of prompts</span></span>
