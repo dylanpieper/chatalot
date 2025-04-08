@@ -4,7 +4,7 @@
 #' Maintains state between runs and can resume interrupted processing.
 #' For parallel processing, use `chat_future()`.
 #'
-#' @param chat_model ellmer chat model object or function (e.g., `ellmer::chat_openai`)
+#' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
 #' @return A batch object (S7 class) containing
 #'   \itemize{
@@ -66,21 +66,21 @@ chat_sequential <- function(
   if (is.null(chat_model)) {
     stop("Define an ellmer chat model (e.g., chat_openai)")
   }
-  
+
   chat_env <- new.env(parent = emptyenv())
-  
+
   if (is.function(chat_model)) {
     chat_env$chat_model <- chat_model(...)
   } else {
     chat_env$chat_model <- chat_model
   }
-  
+
   for (n in names(chat_env$chat_model)) {
     chat_env[[n]] <- chat_env$chat_model[[n]]
   }
-  
+
   chat_env$last_state_path <- NULL
-  
+
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
                              judgements = 0,
@@ -98,7 +98,7 @@ chat_sequential <- function(
     } else {
       state_path <- chat_env$last_state_path
     }
-    
+
     batch.sequential_chat(
       chat_env = chat_env,
       prompts = prompts,
@@ -115,7 +115,7 @@ chat_sequential <- function(
       ...
     )
   }
-  
+
   class(chat_env) <- c("sequential_chat", "Chat", "R6")
   chat_env
 }
@@ -126,7 +126,7 @@ chat_sequential <- function(
 #' Splits prompts into chunks for processing while maintaining state.
 #' For sequential processing, use `chat_sequential()`.
 #'
-#' @param chat_model ellmer chat model object or function (e.g., `ellmer::chat_openai`)
+#' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
 #' @return A batch object (S7 class) containing:
 #'   \itemize{
@@ -167,7 +167,7 @@ chat_sequential <- function(
 #'     "What is R?",
 #'     "Explain base R versus tidyverse"
 #'   ),
-#'   progress = FALSE, 
+#'   progress = FALSE,
 #'   echo = TRUE
 #' )
 #'
@@ -186,28 +186,28 @@ chat_future <- function(
   if (is.null(chat_model)) {
     cli::cli_abort("Define an ellmer chat_model (e.g., chat_openai)")
   }
-  
+
   chat_env <- new.env(parent = emptyenv())
-  
+
   if (is.function(chat_model)) {
     chat_env$chat_model <- chat_model(...)
   } else {
     chat_env$chat_model <- chat_model
   }
-  
+
   for (n in names(chat_env$chat_model)) {
     chat_env[[n]] <- chat_env$chat_model[[n]]
   }
-  
+
   chat_env$last_state_path <- NULL
-  
+
   chat_env$batch <- function(prompts,
                              type_spec = NULL,
                              judgements = 0,
                              state_path = tempfile("chat_", fileext = ".rds"),
                              progress = TRUE,
                              workers = NULL,
-                             plan = "multisession", 
+                             plan = "multisession",
                              chunk_size = parallel::detectCores() * 5,
                              max_chunk_attempts = 3L,
                              max_retries = 3L,
@@ -222,15 +222,15 @@ chat_future <- function(
     } else {
       state_path <- chat_env$last_state_path
     }
-    
-    if(is.null(workers)){
-      if(length(prompts) <= parallel::detectCores()){
+
+    if (is.null(workers)) {
+      if (length(prompts) <= parallel::detectCores()) {
         workers <- length(prompts)
       } else {
         workers <- parallel::detectCores()
       }
     }
-    
+
     batch.future_chat(
       chat_env = chat_env,
       prompts = prompts,
@@ -251,7 +251,7 @@ chat_future <- function(
       ...
     )
   }
-  
+
   class(chat_env) <- c("future_chat", "Chat", "R6")
   chat_env
 }

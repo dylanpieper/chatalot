@@ -7,13 +7,13 @@
 capture_with_retry(
   original_chat,
   prompt,
-  type_spec = NULL,
-  judgements = 0,
-  max_retries = 3L,
-  initial_delay = 1,
-  max_delay = 32,
-  backoff_factor = 2,
-  echo = FALSE,
+  type_spec,
+  judgements,
+  max_retries,
+  initial_delay,
+  max_delay,
+  backoff_factor,
+  echo,
   ...
 )
 }
@@ -24,7 +24,7 @@ capture_with_retry(
 
 \item{type_spec}{Type specification for structured data}
 
-\item{judgements}{Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
+\item{judgements}{Number of judgements for structured data extraction resulting in refined data}
 
 \item{max_retries}{Maximum number of retry attempts}
 

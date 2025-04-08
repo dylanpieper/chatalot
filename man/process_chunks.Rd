@@ -31,7 +31,7 @@ process_chunks(
 
 \item{type_spec}{Type specification for structured data extraction}
 
-\item{judgements}{Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
+\item{judgements}{Number of judgements for structured data extraction resulting in refined data}
 
 \item{pb}{Progress bar object}
 

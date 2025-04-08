@@ -25,7 +25,12 @@ is_retry_error <- function(error) {
 #' @param judgements Number of judgements for structured data extraction resulting in refined data
 #' @return List containing response information
 #' @keywords internal
-capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, echo = FALSE, ...) {
+capture <- function(original_chat,
+                    prompt,
+                    type_spec,
+                    judgements,
+                    echo,
+                    ...) {
   response <- NULL
   structured_data <- NULL
   chat <- original_chat$clone()
@@ -73,11 +78,16 @@ capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, ech
 #' @param backoff_factor Factor to multiply delay by after each retry
 #' @return List containing response information
 #' @keywords internal
-capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
-                               judgements = 0, max_retries = 3L,
-                               initial_delay = 1, max_delay = 32,
-                               backoff_factor = 2,
-                               echo = FALSE, ...) {
+capture_with_retry <- function(original_chat,
+                               prompt,
+                               type_spec,
+                               judgements,
+                               max_retries,
+                               initial_delay,
+                               max_delay,
+                               backoff_factor,
+                               echo,
+                               ...) {
   retry_with_delay <- function(attempt = 1, delay = initial_delay) {
     withCallingHandlers(
       tryCatch(
@@ -133,16 +143,16 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
 process_sequential <- function(
     chat_obj,
     prompts,
-    type_spec = NULL,
-    judgements = 0,
-    state_path = tempfile("chat_", fileext = ".rds"),
-    progress = TRUE,
-    max_retries = 3L,
-    initial_delay = 1,
-    max_delay = 60,
-    backoff_factor = 2,
-    beep = TRUE,
-    echo = FALSE,
+    type_spec,
+    judgements,
+    state_path,
+    progress,
+    max_retries,
+    initial_delay,
+    max_delay,
+    backoff_factor,
+    beep,
+    echo,
     ...) {
   if (file.exists(state_path)) {
     result <- readRDS(state_path)
@@ -275,20 +285,20 @@ process_sequential <- function(
 process_future <- function(
     chat_obj,
     prompts,
-    type_spec = NULL,
-    judgements = 0,
-    state_path = tempfile("chat_", fileext = ".rds"),
-    workers = parallel::detectCores(),
-    chunk_size = NULL,
-    plan = "multisession",
-    max_chunk_attempts = 3L,
-    max_retries = 3L,
-    initial_delay = 1,
-    max_delay = 60,
-    backoff_factor = 2,
-    beep = TRUE,
-    progress = TRUE,
-    echo = FALSE,
+    type_spec,
+    judgements,
+    state_path,
+    workers,
+    chunk_size,
+    plan,
+    max_chunk_attempts,
+    max_retries,
+    initial_delay,
+    max_delay,
+    backoff_factor,
+    beep,
+    progress,
+    echo,
     ...) {
   validate_chunk_result <- function(chunk_result, chunk_idx) {
     if (inherits(chunk_result, "error") || inherits(chunk_result, "worker_error")) {
@@ -556,7 +566,21 @@ process_future <- function(
 #' @param backoff_factor Factor to multiply delay by after each retry
 #' @return Updated batch object with processed results
 #' @keywords internal
-process_chunks <- function(chunks, result, chat_obj, type_spec, judgements, pb, state_path, progress, beep, max_retries = 3L, initial_delay = 1, max_delay = 60, backoff_factor = 2, echo = FALSE, ...) {
+process_chunks <- function(chunks,
+                           result,
+                           chat_obj,
+                           type_spec,
+                           judgements,
+                           pb,
+                           state_path,
+                           progress,
+                           beep,
+                           max_retries,
+                           initial_delay,
+                           max_delay,
+                           backoff_factor,
+                           echo,
+                           ...) {
   was_interrupted <- FALSE
 
   for (chunk in chunks) {

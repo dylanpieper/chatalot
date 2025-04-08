@@ -7,20 +7,20 @@
 process_future(
   chat_obj,
   prompts,
-  type_spec = NULL,
-  judgements = 0,
-  state_path = tempfile("chat_", fileext = ".rds"),
-  workers = parallel::detectCores(),
-  chunk_size = NULL,
-  plan = "multisession",
-  max_chunk_attempts = 3L,
-  max_retries = 3L,
-  initial_delay = 1,
-  max_delay = 60,
-  backoff_factor = 2,
-  beep = TRUE,
-  progress = TRUE,
-  echo = FALSE,
+  type_spec,
+  judgements,
+  state_path,
+  workers,
+  chunk_size,
+  plan,
+  max_chunk_attempts,
+  max_retries,
+  initial_delay,
+  max_delay,
+  backoff_factor,
+  beep,
+  progress,
+  echo,
   ...
 )
 }
@@ -31,7 +31,7 @@ process_future(
 
 \item{type_spec}{Optional type specification for structured data extraction}
 
-\item{judgements}{Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
+\item{judgements}{Number of judgements for structured data extraction resulting in refined data}
 
 \item{state_path}{Path to save intermediate state}
 

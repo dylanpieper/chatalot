@@ -4,7 +4,14 @@
 \alias{process_judgements}
 \title{Process structured data extraction with judgement}
 \usage{
-process_judgements(chat_obj, prompt, type_spec, judgements, echo, ...)
+process_judgements(
+  chat_obj,
+  prompt,
+  type_spec,
+  judgements = 0,
+  echo = FALSE,
+  ...
+)
 }
 \arguments{
 \item{chat_obj}{Chat model object}

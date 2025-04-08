@@ -4,14 +4,7 @@
 \alias{capture}
 \title{Capture chat model response with proper handling}
 \usage{
-capture(
-  original_chat,
-  prompt,
-  type_spec = NULL,
-  judgements = 0,
-  echo = FALSE,
-  ...
-)
+capture(original_chat, prompt, type_spec, judgements, echo, ...)
 }
 \arguments{
 \item{original_chat}{Original chat model object}
@@ -20,7 +13,7 @@ capture(
 
 \item{type_spec}{Type specification for structured data}
 
-\item{judgements}{Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
+\item{judgements}{Number of judgements for structured data extraction resulting in refined data}
 }
 \value{
 List containing response information
