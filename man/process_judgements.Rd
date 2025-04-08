@@ -4,14 +4,7 @@
 \alias{process_judgements}
 \title{Process structured data extraction with judgement}
 \usage{
-process_judgements(
-  chat_obj,
-  prompt,
-  type_spec,
-  judgements = 0,
-  echo = FALSE,
-  ...
-)
+process_judgements(chat_obj, prompt, type_spec, judgements, echo, ...)
 }
 \arguments{
 \item{chat_obj}{Chat model object}
@@ -20,7 +13,7 @@ process_judgements(
 
 \item{type_spec}{Type specification for structured data}
 
-\item{judgements}{Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
+\item{judgements}{Number of judgements for structured data extraction resulting in refined data}
 }
 \value{
 List containing extraction process

@@ -11,11 +11,36 @@ is_retry_error <- function(error) {
 
   for (cls in retryable_classes) {
     if (inherits(error, cls)) {
-      return(TRUE)
+      return(FALSE)
     }
   }
 
+  if (inherits(error, "httr2_http")) {
+    return(TRUE)
+  }
+
   FALSE
+}
+
+#' Create a standardized authentication error
+#' @param original_error Original error message or condition
+#' @return Structured error information
+#' @keywords internal
+create_auth_error <- function(original_error) {
+  msg <- if (inherits(original_error, "condition")) {
+    conditionMessage(original_error)
+  } else {
+    as.character(original_error)
+  }
+
+  structure(
+    list(
+      success = FALSE,
+      error = "auth",
+      message = msg
+    ),
+    class = c("chat_auth_error", "error", "condition")
+  )
 }
 
 #' Capture chat model response with proper handling
@@ -73,16 +98,11 @@ capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, ech
 #' @param backoff_factor Factor to multiply delay by after each retry
 #' @return List containing response information
 #' @keywords internal
-capture_with_retry <- function(original_chat,
-                               prompt,
-                               type_spec = NULL,
-                               judgements = 0,
-                               max_retries = 3L,
-                               initial_delay = 1,
-                               max_delay = 32,
+capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
+                               judgements = 0, max_retries = 3L,
+                               initial_delay = 1, max_delay = 32,
                                backoff_factor = 2,
-                               echo = FALSE,
-                               ...) {
+                               echo = FALSE, ...) {
   retry_with_delay <- function(attempt = 1, delay = initial_delay) {
     withCallingHandlers(
       tryCatch(
@@ -90,8 +110,9 @@ capture_with_retry <- function(original_chat,
           capture(original_chat, prompt, type_spec, judgements, echo = echo, ...)
         },
         error = function(e) {
-          if (!is_retry_error(e)) {
-            stop(conditionMessage(e),
+          if (is_retry_error(e)) {
+            auth_error <- create_auth_error(e)
+            stop(auth_error$message,
               call. = FALSE, domain = "capture_with_retry"
             )
           }
@@ -295,6 +316,36 @@ process_future <- function(
     progress = TRUE,
     echo = FALSE,
     ...) {
+  validate_chunk_result <- function(chunk_result, chunk_idx) {
+    if (inherits(chunk_result, "error") || inherits(chunk_result, "worker_error")) {
+      if (is_retry_error(chunk_result)) {
+        stop(create_auth_error(chunk_result)$message)
+      }
+      return(list(valid = FALSE, message = conditionMessage(chunk_result)))
+    }
+
+    if (!is.list(chunk_result) || !("responses" %in% names(chunk_result))) {
+      return(list(valid = FALSE, message = sprintf("Invalid chunk structure in chunk %d", chunk_idx)))
+    }
+
+    if (length(chunk_result$responses) == 0) {
+      return(list(valid = FALSE, message = sprintf("Empty responses in chunk %d", chunk_idx)))
+    }
+
+    null_indices <- which(vapply(chunk_result$responses, is.null, logical(1)))
+    if (length(null_indices) > 0) {
+      return(list(
+        valid = FALSE,
+        message = sprintf(
+          "NULL responses at indices %s in chunk %d",
+          paste(null_indices, collapse = ", "), chunk_idx
+        )
+      ))
+    }
+
+    list(valid = TRUE, message = NULL)
+  }
+
   plan <- match.arg(plan, c("multisession", "multicore"))
   total_prompts <- length(prompts)
   prompts_list <- as.list(prompts)
@@ -361,89 +412,94 @@ process_future <- function(
   }
 
   tryCatch({
-    process_chunk_with_retry <- function(chunk_idx, chunk, attempt = 1, delay = initial_delay) {
-      worker_chat <- chat_obj$clone()
+    for (chunk_idx in seq_along(chunks)) {
+      chunk <- chunks[[chunk_idx]]
+      retry_count <- 0
+      success <- FALSE
+      last_error <- NULL
 
-      withCallingHandlers(
-        tryCatch(
+      while (!success && retry_count < max_chunk_attempts) {
+        retry_count <- retry_count + 1
+        worker_chat <- chat_obj$clone()
+
+        chunk_result <- tryCatch(
           {
-            safe_capture <- purrr::safely(function(prompt) {
-              capture_with_retry(
-                worker_chat,
-                prompt,
-                type_spec,
-                judgements = judgements,
-                max_retries = max_retries,
-                initial_delay = initial_delay,
-                max_delay = max_delay,
-                backoff_factor = backoff_factor,
-                echo = echo,
-                ...
-              )
-            })
-
-            results <- furrr::future_map(
+            responses <- furrr::future_map(
               chunk,
-              safe_capture,
+              function(prompt) {
+                capture_with_retry(
+                  worker_chat,
+                  prompt,
+                  type_spec,
+                  judgements = judgements,
+                  max_retries = max_retries,
+                  initial_delay = initial_delay,
+                  max_delay = max_delay,
+                  backoff_factor = backoff_factor,
+                  echo = echo,
+                  ...
+                )
+              },
               .options = furrr::furrr_options(
                 scheduling = 1,
                 seed = TRUE
               )
             )
 
-            errors <- purrr::map(results, "error")
-            has_error <- !purrr::every(errors, is.null)
-
-            if (has_error) {
-              error_idx <- which(!purrr::map_lgl(errors, is.null))[1]
-              stop(errors[[error_idx]])
-            }
-
-            responses <- purrr::map(results, "result")
-
-            start_idx <- result@completed + 1
-            end_idx <- result@completed + length(responses)
-            result@responses[start_idx:end_idx] <- responses
-            result@completed <- end_idx
-            saveRDS(result, state_path)
-            if (!is.null(pb)) {
-              cli::cli_progress_update(id = pb, set = result@completed)
-            }
-            return(TRUE)
+            list(
+              success = TRUE,
+              responses = responses
+            )
           },
           error = function(e) {
-            if (!is_retry_error(e)) {
-              stop(conditionMessage(e), call. = FALSE)
-            }
-
-            if (attempt > max_chunk_attempts) {
-              stop(sprintf("Failed after %d attempts. Last error: %s", max_chunk_attempts, e$message),
-                call. = FALSE, domain = "process_chunk"
-              )
-            } else {
-              cli::cli_alert_warning(sprintf(
-                "Chunk %d - Attempt %d failed: %s. Retrying in %.1f seconds...",
-                chunk_idx, attempt, e$message, delay
-              ))
-
-              Sys.sleep(delay)
-              next_delay <- min(delay * backoff_factor, max_delay)
-              process_chunk_with_retry(chunk_idx, chunk, attempt + 1, next_delay)
-            }
+            last_error <- e
+            structure(
+              list(
+                success = FALSE,
+                error = if (is_retry_error(e)) "auth" else "other",
+                message = conditionMessage(e)
+              ),
+              class = c("worker_error", "error", "condition")
+            )
           }
-        ),
-        interrupt = function(e) {
-          signalCondition(e)
-        }
-      )
-    }
+        )
 
-    for (chunk_idx in seq_along(chunks)) {
-      chunk <- chunks[[chunk_idx]]
-      success <- process_chunk_with_retry(chunk_idx, chunk)
+        validation <- validate_chunk_result(chunk_result, chunk_idx)
+        success <- validation$valid
+
+        if (success) {
+          start_idx <- result@completed + 1
+          end_idx <- result@completed + length(chunk)
+
+          result@responses[start_idx:end_idx] <- chunk_result$responses
+
+          result@completed <- end_idx
+          saveRDS(result, state_path)
+          if (!is.null(pb)) {
+            cli::cli_progress_update(id = pb, set = result@completed)
+          }
+        } else if (retry_count < max_chunk_attempts) {
+          cli::cli_alert_warning(sprintf(
+            "Chunk %d failed (attempt %d/%d): %s. Retrying...",
+            chunk_idx, retry_count, max_chunk_attempts, validation$message
+          ))
+          Sys.sleep(2^retry_count)
+        }
+      }
 
       if (!success) {
-        stop(sprintf("Chunk %d processing failed", chunk_idx))
+        error_msg <- if (!is.null(last_error)) {
+          sprintf(
+            "Chunk %d failed after %d attempts. Last error: %s",
+            chunk_idx, max_chunk_attempts, conditionMessage(last_error)
+          )
+        } else {
+          sprintf(
+            "Chunk %d failed after %d attempts: %s",
+            chunk_idx, max_chunk_attempts, validation$message
+          )
+        }
+        stop(error_msg)
       }
     }
 
@@ -497,20 +553,7 @@ process_future <- function(
 #' @param backoff_factor Factor to multiply delay by after each retry
 #' @return Updated batch object with processed results
 #' @keywords internal
-process_chunks <- function(chunks,
-                           result,
-                           chat_obj,
-                           type_spec,
-                           judgements,
-                           pb, state_path,
-                           progress,
-                           beep,
-                           max_retries,
-                           initial_delay,
-                           max_delay,
-                           backoff_factor,
-                           echo,
-                           ...) {
+process_chunks <- function(chunks, result, chat_obj, type_spec, judgements, pb, state_path, progress, beep, max_retries = 3L, initial_delay = 1, max_delay = 60, backoff_factor = 2, echo = FALSE, ...) {
   was_interrupted <- FALSE
 
   for (chunk in chunks) {
@@ -564,15 +607,10 @@ process_chunks <- function(chunks,
 #' @param chat_obj Chat model object
 #' @param prompt The prompt or text to analyze
 #' @param type_spec Type specification for structured data
-#' @param judgements Number of judgements for structured data extraction resulting in refined data
+#' @param judgements Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
 #' @return List containing extraction process
 #' @keywords internal
-process_judgements <- function(chat_obj,
-                               prompt,
-                               type_spec,
-                               judgements,
-                               echo,
-                               ...) {
+process_judgements <- function(chat_obj, prompt, type_spec, judgements = 0, echo = FALSE, ...) {
   result <- list(
     initial = NULL,
     evaluations = list(),

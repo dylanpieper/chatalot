@@ -59,7 +59,7 @@ batch.sequential_chat <- function(chat_env,
 #' @param chat_env The chat environment from chat_future
 #' @param prompts List of prompts to process
 #' @param type_spec Type specification for structured data extraction
-#' @param judgements Number of judgements for structured data extraction resulting in refined data
+#' @param judgements Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
 #' @param state_path Path to save state file
 #' @param workers Number of parallel workers
 #' @param chunk_size Number of prompts each worker processes at a time

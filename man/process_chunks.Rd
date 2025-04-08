@@ -14,11 +14,11 @@ process_chunks(
   state_path,
   progress,
   beep,
-  max_retries = 3L,
-  initial_delay = 1,
-  max_delay = 60,
-  backoff_factor = 2,
-  echo = FALSE,
+  max_retries,
+  initial_delay,
+  max_delay,
+  backoff_factor,
+  echo,
   ...
 )
 }
