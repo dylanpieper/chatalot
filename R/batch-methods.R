@@ -37,7 +37,7 @@ batch.sequential_chat <- function(chat_env,
     cli::cli_abort("Number of judgements must be non-negative")
   }
 
-  process(
+  process_sequential(
     chat_obj = chat_env$chat_model,
     prompts = prompts,
     type_spec = type_spec,

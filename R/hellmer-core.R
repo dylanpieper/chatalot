@@ -130,7 +130,7 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
 #' @param backoff_factor Factor to multiply delay
 #' @return Batch results object
 #' @keywords internal
-process <- function(
+process_sequential <- function(
     chat_obj,
     prompts,
     type_spec = NULL,
