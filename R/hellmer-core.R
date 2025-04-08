@@ -1,6 +1,6 @@
 #' Check if an error is eligible for retry
-#' @param error Error message or condition
-#' @return TRUE if eligible error, FALSE otherwise
+#' @param error An error object
+#' @return TRUE if eligible for retry, FALSE otherwise
 #' @keywords internal
 is_retry_error <- function(error) {
   retryable_classes <- c(
@@ -19,22 +19,7 @@ is_retry_error <- function(error) {
     return(TRUE)
   }
 
-  if (inherits(error, "condition")) {
-    msg <- conditionMessage(error)
-  } else {
-    msg <- as.character(error)
-  }
-
-  auth_patterns <- c(
-    "account", "author", "authentic", "key",
-    "token", "usage", "fund", "balance", "quota",
-    "insufficient", "deplete", "exhaust",
-    "payment", "billing", "disable", "suspend",
-    "upgrade", "plan", "subscription"
-  )
-
-  pattern <- paste(auth_patterns, collapse = "|")
-  grepl(pattern, tolower(msg))
+  FALSE
 }
 
 #' Create a standardized authentication error
