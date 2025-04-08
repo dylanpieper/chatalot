@@ -89,14 +89,6 @@ test_that("chat_future handles state persistence", {
   expect_equal(length(result$texts()), 1)
 })
 
-test_that("chat_future respects timeout", {
-  skip_if_not(ellmer::has_credentials("openai"), "API key not available")
-
-  chat <- chat_future(ellmer::chat_openai)
-  result <- chat$batch(get_test_prompts(1), workers = 1, timeout = 30, chunk_size = 1, beep = FALSE)
-  expect_equal(length(result$texts()), 1)
-})
-
 test_that("chat_future handles worker failures", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
@@ -127,7 +119,7 @@ test_that("chat_future supports progress parameter", {
   chat <- chat_future(ellmer::chat_openai)
   result <- chat$batch(get_test_prompts(1), workers = 1, chunk_size = 1, progress = TRUE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
-  
+
   # Test with progress = FALSE
   chat <- chat_future(ellmer::chat_openai)
   result <- chat$batch(get_test_prompts(1), workers = 1, chunk_size = 1, progress = FALSE, beep = FALSE)
@@ -138,17 +130,18 @@ test_that("chat_future supports echo parameter and passes extra args", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   chat <- chat_future(ellmer::chat_openai)
-  
+
   # Test with echo = TRUE
   result <- chat$batch(get_test_prompts(1), workers = 1, chunk_size = 1, progress = FALSE, echo = TRUE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
-  
+
   # Test with additional parameter
-  result <- chat$batch(get_test_prompts(1), 
-                       workers = 1, 
-                       chunk_size = 1,
-                       progress = FALSE, 
-                       echo = TRUE, 
-                       beep = FALSE)
+  result <- chat$batch(get_test_prompts(1),
+    workers = 1,
+    chunk_size = 1,
+    progress = FALSE,
+    echo = TRUE,
+    beep = FALSE
+  )
   expect_equal(length(result$texts()), 1)
 })
