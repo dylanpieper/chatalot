@@ -1,9 +1,29 @@
-#' Check if an error is an authentication error to stop retries
+#' Check if an error is eligible for retry
 #' @param error Error message or condition
-#' @return TRUE if authentication error, FALSE otherwise
+#' @return TRUE if eligible error, FALSE otherwise
 #' @keywords internal
-is_auth_error <- function(error) {
-  msg <- if (inherits(error, "condition")) conditionMessage(error) else as.character(error)
+is_retry_error <- function(error) {
+  retryable_classes <- c(
+    "httr2_http_408", "httr2_http_429",
+    "httr2_http_500", "httr2_http_502",
+    "httr2_http_503", "httr2_http_504"
+  )
+
+  for (cls in retryable_classes) {
+    if (inherits(error, cls)) {
+      return(FALSE)
+    }
+  }
+
+  if (inherits(error, "httr2_http")) {
+    return(TRUE)
+  }
+
+  if (inherits(error, "condition")) {
+    msg <- conditionMessage(error)
+  } else {
+    msg <- as.character(error)
+  }
 
   auth_patterns <- c(
     "account", "author", "authentic", "key",
@@ -50,27 +70,36 @@ capture <- function(original_chat, prompt, type_spec = NULL, judgements = 0, ech
   structured_data <- NULL
   chat <- original_chat$clone()
 
-  if (!is.null(type_spec)) {
-    result <- process_judgements(chat, prompt, type_spec, judgements, echo = echo, ...)
-    structured_data <- result$final
-    chat <- result$chat
+  result <- withCallingHandlers(
+    {
+      if (!is.null(type_spec)) {
+        result <- process_judgements(chat, prompt, type_spec, judgements, echo = echo, ...)
+        structured_data <- result$final
+        chat <- result$chat
 
-    if (is.null(structured_data)) {
-      stop("Received NULL structured data response")
+        if (is.null(structured_data)) {
+          stop("Received NULL structured data response")
+        }
+      } else {
+        response <- chat$chat(prompt, echo = echo, ...)
+
+        if (is.null(response)) {
+          stop("Received NULL chat response")
+        }
+      }
+
+      list(
+        chat = chat,
+        text = response,
+        structured_data = structured_data
+      )
+    },
+    interrupt = function(e) {
+      signalCondition(e)
     }
-  } else {
-    response <- chat$chat(prompt, echo = echo, ...)
-
-    if (is.null(response)) {
-      stop("Received NULL chat response")
-    }
-  }
-
-  list(
-    chat = chat,
-    text = response,
-    structured_data = structured_data
   )
+
+  return(result)
 }
 
 #' Capture chat model response with proper handling and retries
@@ -90,39 +119,37 @@ capture_with_retry <- function(original_chat, prompt, type_spec = NULL,
                                backoff_factor = 2,
                                echo = FALSE, ...) {
   retry_with_delay <- function(attempt = 1, delay = initial_delay) {
-    tryCatch(
-      {
-        capture(original_chat, prompt, type_spec, judgements, echo = echo, ...)
-      },
-      error = function(e) {
-        if (inherits(e, "interrupt")) {
-          stop(e)
-        }
+    withCallingHandlers(
+      tryCatch(
+        {
+          capture(original_chat, prompt, type_spec, judgements, echo = echo, ...)
+        },
+        error = function(e) {
+          if (is_retry_error(e)) {
+            auth_error <- create_auth_error(e)
+            stop(auth_error$message,
+              call. = FALSE, domain = "capture_with_retry"
+            )
+          }
 
-        if (is_auth_error(e)) {
-          stop(create_auth_error(e)$message)
-        }
+          if (attempt > max_retries) {
+            stop(sprintf("Failed after %d attempts. Last error: %s", max_retries, e$message),
+              call. = FALSE, domain = "capture_with_retry"
+            )
+          } else {
+            cli::cli_alert_warning(sprintf(
+              "Attempt %d failed: %s. Retrying in %.1f seconds...",
+              attempt, e$message, delay
+            ))
 
-        if (attempt > max_retries) {
-          structure(
-            list(
-              message = sprintf(
-                "Failed after %d attempts. Last error: %s",
-                max_retries, e$message
-              )
-            ),
-            class = c("chat_error", "error", "condition")
-          )
-        } else {
-          cli::cli_alert_warning(sprintf(
-            "Attempt %d failed: %s. Retrying in %.1f seconds...",
-            attempt, e$message, delay
-          ))
-
-          Sys.sleep(delay)
-          next_delay <- min(delay * backoff_factor, max_delay)
-          retry_with_delay(attempt + 1, next_delay)
+            Sys.sleep(delay)
+            next_delay <- min(delay * backoff_factor, max_delay)
+            retry_with_delay(attempt + 1, next_delay)
+          }
         }
+      ),
+      interrupt = function(e) {
+        signalCondition(e)
       }
     )
   }
@@ -306,7 +333,7 @@ process_future <- function(
     ...) {
   validate_chunk_result <- function(chunk_result, chunk_idx) {
     if (inherits(chunk_result, "error") || inherits(chunk_result, "worker_error")) {
-      if (is_auth_error(chunk_result)) {
+      if (is_retry_error(chunk_result)) {
         stop(create_auth_error(chunk_result)$message)
       }
       return(list(valid = FALSE, message = conditionMessage(chunk_result)))
@@ -444,7 +471,7 @@ process_future <- function(
             structure(
               list(
                 success = FALSE,
-                error = if (is_auth_error(e)) "auth" else "other",
+                error = if (is_retry_error(e)) "auth" else "other",
                 message = conditionMessage(e)
               ),
               class = c("worker_error", "error", "condition")

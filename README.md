@@ -221,9 +221,7 @@ If `state_path` is not defined, a temporary file will be created by default.
 
 ### Automatic Retry
 
-Automatically retry failed requests with exponential backoff, which acts as a wide guardrail against temporary API errors. `ellmer` uses `httr2` to act as a narrow guardrail against specific API errors and limits with most chat provider functions defaulting to retry one time.
-
-Be aware that this retry is a brute force approach, and as long as all other validation passes, the retry will persist. However, it will stop if it detects an authorization or API key issue.
+Automatically retry failed requests with exponential backoff, which is useful to allow batch processing to persist for transient errors such as request timeout and exceeding the rate limit.
 
 ``` r
 batch <- chat$batch(
