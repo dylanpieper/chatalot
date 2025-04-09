@@ -4,17 +4,15 @@
 #' @keywords internal
 is_retry_error <- function(error) {
   retryable_classes <- c(
-    "httr2_http_408", "httr2_http_429",
-    "httr2_http_500", "httr2_http_502",
-    "httr2_http_503", "httr2_http_504"
+    "httr2_http_429", "httr2_http_500",
+    "httr2_http_503", "httr2_http_504",
+    "httr2_http_529"
   )
-
   for (cls in retryable_classes) {
     if (inherits(error, cls)) {
       return(TRUE)
     }
   }
-
   FALSE
 }
 

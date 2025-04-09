@@ -221,7 +221,9 @@ If `state_path` is not defined, a temporary file will be created by default.
 
 ### Automatic Retry
 
-Automatically retry failed requests with exponential backoff, which is useful to allow batch processing to persist for transient errors such as request timeouts, exceeding rate limits, and temporary server errors.
+Automatically retry failed requests with exponential backoff, which is useful to allow batch processing to persist for transient errors such as exceeding rate limits and temporary server errors.
+
+Most chat provider functions in `ellmer` do retry at least one time by default, but there is no user-defined control over the retry strategy.
 
 ``` r
 batch <- chat$batch(
