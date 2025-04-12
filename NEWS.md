@@ -1,8 +1,8 @@
-# hellmer 0.1.3
+# hellmer (development)
 
 ## Internal Improvements
 
-* `is_auth_error()` is replaced by `is_retry_error()` which more accurately uses the `httr2` errors classes rather than grepl.
+* `is_auth_error()` is replaced by `is_retry_error()` which more accurately uses `httr2` errors classes rather than grepl
 
 # hellmer 0.1.2
 
