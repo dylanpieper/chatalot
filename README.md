@@ -2,7 +2,7 @@
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://cran.r-project.org/web/packages/hellmer/index.html) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-Enable sequential and parallel processing for all chat models and features provided by [ellmer](https://ellmer.tidyverse.org), favoring speed and feedback with response streaming over delayed responses from batch APIs, which are cheaper but slower and not supported by all providers.
+Enable sequential and parallel processing for all chat models and features supported by [ellmer](https://ellmer.tidyverse.org), favoring speed and feedback with response streaming over delayed responses from batch APIs, which are cheaper but slower and not supported by all LLM providers.
 
 ## Features
 
