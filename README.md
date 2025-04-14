@@ -4,11 +4,9 @@
 
 hellmer makes it easy to batch process large language model chats using [ellmer](https://ellmer.tidyverse.org). Process many chats sequentially or in parallel while maintaining access to ellmer's rich feature set including [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html). hellmer extends these features with self-evaluation for structured data refinement, which mimics reasoning in the chat.
 
-What hellmer is and is not:
+✅ hellmer provides real-time response streaming of many chats
 
-✅ Real-time response streaming of many chats
-
-❌ Batch API integration (for example, see [OpenAI's Batch API](https://platform.openai.com/docs/guides/batch))
+❌ hellmer does NOT provide batch API integration (for example, see [OpenAI's Batch API](https://platform.openai.com/docs/guides/batch))
 
 ## Installation
 
