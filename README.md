@@ -269,4 +269,4 @@ batch <- chat$batch(prompts, progress = FALSE, echo = "all")
 ## Further Reading
 
 -   [Using Ellmer Chat Models](https://dylanpieper.github.io/hellmer/articles/using-chat-models.html)
--   Reaching Consensus from Multi-Model Chats (*Coming Soon*)
+-   Compare the Similarity of LLM Responsesand Reach Consensus (*Coming Soon*)
