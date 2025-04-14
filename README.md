@@ -2,7 +2,7 @@
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://cran.r-project.org/web/packages/hellmer/index.html) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-hellmer makes it easy to batch process chats with large language models using [ellmer](https://ellmer.tidyverse.org). Process many chats sequentially or in parallel with either a single model or multiple models, while maintaining access to ellmer's rich feature set including [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html). hellmer extends these features with self-evaluation for structured data refinement, which mimics reasoning in the chat.
+hellmer makes it easy to batch process large language model chats using [ellmer](https://ellmer.tidyverse.org). Process many chats sequentially or in parallel while maintaining access to ellmer's rich feature set including [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html). hellmer extends these features with self-evaluation for structured data refinement, which mimics reasoning in the chat.
 
 What hellmer is and is not:
 
