@@ -4,9 +4,9 @@
 
 hellmer makes it easy to batch process large language model chats using [ellmer](https://ellmer.tidyverse.org). Process many chats sequentially or in parallel while maintaining access to ellmer's rich feature set including [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html). hellmer extends these features with self-evaluation for structured data refinement, which mimics reasoning in the chat.
 
-✅ hellmer provides real-time response streaming of many chats
+✅ hellmer processes many chats synchronously and supports streaming responses
 
-❌ hellmer does NOT provide batch API integration (for example, see [OpenAI's Batch API](https://platform.openai.com/docs/guides/batch))
+❌ hellmer does NOT support asynchronous batch APIs (for example, see [OpenAI's Batch API](https://platform.openai.com/docs/guides/batch))
 
 ## Installation
 
@@ -268,5 +268,5 @@ batch <- chat$batch(prompts, progress = FALSE, echo = "all")
 
 ## Further Reading
 
--   [Using Ellmer Chat Models](https://dylanpieper.github.io/hellmer/articles/using-chat-models.html)
--   Compare the Similarity of LLM Responsesand Reach Consensus (*Coming Soon*)
+-   [Using Ellmer Chat Models](https://dylanpieper.github.io/hellmer/articles/using-chat-models.html) (Vignette)
+-   [Batch and Compare the Similarity of LLM Responses in R](https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html) (Blog Post)
