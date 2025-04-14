@@ -28,6 +28,12 @@ usethis::edit_r_environ(scope = c("user", "project"))
 
 ## Basic Usage
 
+For the following examples, define a chat object to reuse across batches.
+
+``` r
+openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
+```
+
 ### Sequential Processing
 
 Sequential processing uses the current R process to call one chat at a time and save the data to the disk.
@@ -35,7 +41,7 @@ Sequential processing uses the current R process to call one chat at a time and 
 ``` r
 library(hellmer)
 
-chat <- chat_sequential(chat_openai(system_prompt = "Reply concisely, one sentence"))
+chat <- chat_sequential(openai)
 
 prompts <- list(
   "What is R?",
@@ -104,7 +110,7 @@ Parallel processing spins up multiple R processes, or parallel workers, to chat 
 By default, the upper limit for number of `workers` = `parallel::detectCores()`, and the number of prompts to process at a time is `chunk_size` = `parallel::detectCores() * 5`. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, the data is saved to the disk.
 
 ``` r
-chat <- chat_future(chat_openai(system_prompt = "Reply concisely, one sentence"))
+chat <- chat_future(openai)
 ```
 
 For maximum performance, set `chunk_size` to the number of prompts (\~4-5x faster). However, data will not be saved to the disk until all chats are processed.
@@ -236,10 +242,7 @@ batch <- chat$batch(
 Toggle sound notifications on batch completion, interruption, and error:
 
 ``` r
-chat <- chat_sequential(
-  chat_openai,
-  beep = TRUE
-)
+batch <- chat$batch(prompts, beep = TRUE)
 ```
 
 ### Echoing
