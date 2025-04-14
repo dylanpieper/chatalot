@@ -64,21 +64,9 @@
 <div class="page-header"><h1 id="hellmer-">hellmer <img src="reference/figures/hellmer-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#hellmer-"></a>
 </h1></div>
 <p><a href="https://cran.r-project.org/web/packages/hellmer/index.html" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
-<p>Enable sequential and parallel processing for all chat models and features supported by <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>, favoring speed and feedback with response streaming over delayed responses from batch APIs, which are cheaper but slower and not supported by all LLM providers.</p>
-<div class="section level2">
-<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
-</h2>
-<p>Process multiple chat interactions with:</p>
-<ul>
-<li>
-<a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">Tooling</a> and <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>
-</li>
-<li>Judgments for structured data refinement</li>
-<li>Progress tracking and recovery</li>
-<li>Automatic retry with backoff</li>
-<li>Sound notifications</li>
-</ul>
-</div>
+<p>hellmer makes it easy to batch process large language model chats using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>. Process many chats sequentially or in parallel while maintaining access to ellmer’s rich feature set including <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tooling</a> and <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>. hellmer extends these features with self-evaluation for structured data refinement, which mimics reasoning in the chat.</p>
+<p>✅ hellmer processes many chats synchronously and supports streaming responses</p>
+<p>❌ hellmer does NOT support asynchronous batch APIs (for example, see <a href="https://platform.openai.com/docs/guides/batch" class="external-link">OpenAI’s Batch API</a>)</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -96,14 +84,17 @@
 <div class="section level2">
 <h2 id="basic-usage">Basic Usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
 </h2>
+<p>For the following examples, define a chat object to reuse across batches.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">openai</span> <span class="op">&lt;-</span> <span class="fu">chat_openai</span><span class="op">(</span>system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="sequential-processing">Sequential Processing<a class="anchor" aria-label="anchor" href="#sequential-processing"></a>
 </h3>
 <p>Sequential processing uses the current R process to call one chat at a time and save the data to the disk.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/hellmer/">hellmer</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_openai.html" class="external-link">chat_openai</a></span><span class="op">(</span>system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="st">"What is R?"</span>,</span>
@@ -112,7 +103,7 @@
 <span></span>
 <span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span></code></pre></div>
 <p>Access the batch results:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $total_prompts</span></span>
 <span><span class="co">#&gt; [1] 2</span></span>
@@ -166,10 +157,10 @@
 </h3>
 <p>Parallel processing spins up multiple R processes, or parallel workers, to chat at the same time.</p>
 <p>By default, the upper limit for number of <code>workers</code> = <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>, and the number of prompts to process at a time is <code>chunk_size</code> = <code>parallel::detectCores() * 5</code>. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, the data is saved to the disk.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_openai.html" class="external-link">chat_openai</a></span><span class="op">(</span>system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>For maximum performance, set <code>chunk_size</code> to the number of prompts (~4-5x faster). However, data will not be saved to the disk until all chats are processed.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span></code></pre></div>
+<p>For maximum performance, set <code>chunk_size</code> to the number of prompts (~4-5x faster). However, data will not be saved to the disk until all chats are processed.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>, </span>
 <span>  chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
@@ -177,13 +168,13 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="features-1">Features<a class="anchor" aria-label="anchor" href="#features-1"></a>
+<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
 </h2>
 <div class="section level3">
 <h3 id="tooling">Tooling<a class="anchor" aria-label="anchor" href="#tooling"></a>
 </h3>
 <p>Register and use tools/function calling:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">get_current_time</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">tz</span> <span class="op">=</span> <span class="st">"UTC"</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, tz <span class="op">=</span> <span class="va">tz</span>, usetz <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -215,7 +206,7 @@
 <h3 id="structured-data-extraction">Structured Data Extraction<a class="anchor" aria-label="anchor" href="#structured-data-extraction"></a>
 </h3>
 <p>Extract structured data using type specifications:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">type_sentiment</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_object</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Extract sentiment scores"</span>,</span>
 <span>  positive_score <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="st">"Positive sentiment score, 0.00 to 1.00"</span><span class="op">)</span>,</span>
@@ -242,9 +233,12 @@
 <span><span class="co">#&gt; $neutral_score</span></span>
 <span><span class="co">#&gt; [1] 0</span></span>
 <span><span class="co">#&gt; ...</span></span></code></pre></div>
-<p>To ask the chat model to evaluate and refine structured data extractions, implement model-agnostic reasoning into the turns of the chat through additional prompting using the <code>judgements</code> parameter (increases token use):</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, judgements <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<div class="section level4">
+<h4 id="self-evaluation">Self-evaluation<a class="anchor" aria-label="anchor" href="#self-evaluation"></a>
+</h4>
+<p>Ask the chat model to evaluate and refine structured data extractions using the <code>eval_rounds</code> parameter (increases token use). It mimics reasoning in the chat through additional prompting:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, eval_rounds <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
@@ -257,15 +251,13 @@
 <span><span class="co">#&gt; [[1]]$neutral_score</span></span>
 <span><span class="co">#&gt; [1] 0.05</span></span>
 <span><span class="co">#&gt; ...</span></span></code></pre></div>
-<div class="float">
-<img src="reference/figures/judgements.gif" alt="Console output of LLM streaming the evaluation and refinement of the structured data extractions using progress = FALSE and echo = TRUE."><div class="figcaption">Console output of LLM streaming the evaluation and refinement of the structured data extractions using <code>progress</code> = <code>FALSE</code> and <code>echo</code> = <code>TRUE</code>.</div>
 </div>
 </div>
 <div class="section level3">
 <h3 id="progress-tracking-and-recovery">Progress Tracking and Recovery<a class="anchor" aria-label="anchor" href="#progress-tracking-and-recovery"></a>
 </h3>
 <p>Batch processing state and progress is saved to a path to an <code>.rds</code> file on the disk and allows you to resume interrupted operations:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, state_path <span class="op">=</span> <span class="st">"chat_state.rds"</span><span class="op">)</span></span>
 <span><span class="va">batch</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>If <code>state_path</code> is not defined, a temporary file will be created by default.</p>
@@ -275,7 +267,7 @@
 </h3>
 <p>Automatically retry failed requests with exponential backoff, which is useful to allow batch processing to persist for transient errors such as exceeding rate limits and temporary server errors.</p>
 <p>Most chat provider functions in <code>ellmer</code> do retry at least one time by default, but there is no user-defined control over the retry strategy.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
 <span>  prompts <span class="op">=</span> <span class="va">prompts</span>,   <span class="co"># list or vector of prompts</span></span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3</span>,     <span class="co"># maximum retry attempts</span></span>
@@ -288,17 +280,14 @@
 <h3 id="sound-notifications">Sound Notifications<a class="anchor" aria-label="anchor" href="#sound-notifications"></a>
 </h3>
 <p>Toggle sound notifications on batch completion, interruption, and error:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span></span>
-<span>  <span class="va">chat_openai</span>,</span>
-<span>  beep <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, beep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="echoing">Echoing<a class="anchor" aria-label="anchor" href="#echoing"></a>
 </h3>
-<p>By default, the chat <code>echo</code> is set to <code>FALSE</code> to show a progress bar. However, you can still configure <code>echo</code> in the <code>$batch</code> call by first setting <code>progress</code> to <code>FALSE</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<p>By default, the chat <code>echo</code> is set to <code>FALSE</code> to show a progress bar. However, you can still configure <code>echo</code> by first setting <code>progress</code> to <code>FALSE</code>:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, progress <span class="op">=</span> <span class="cn">FALSE</span>, echo <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &gt; What is R?</span></span>
 <span><span class="co">#&gt; &lt; R is a programming language and software environment used for statistical computing,</span></span>
@@ -327,7 +316,10 @@
 <h2 id="further-reading">Further Reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
 </h2>
 <ul>
-<li><a href="https://dylanpieper.github.io/hellmer/articles/using-chat-models.html">Using Ellmer Chat Models</a></li>
+<li>
+<a href="https://dylanpieper.github.io/hellmer/articles/using-chat-models.html">Using Ellmer Chat Models</a> (Vignette)</li>
+<li>
+<a href="https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html" class="external-link">Batch and Compare the Similarity of LLM Responses in R</a> (Blog Post)</li>
 </ul>
 </div>
 </div>
