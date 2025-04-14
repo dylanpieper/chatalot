@@ -31,7 +31,7 @@ batch.future_chat(
 
 \item{type_spec}{Type specification for structured data extraction}
 
-\item{judgements}{Number of judgements for structured data extraction resulting in refined data}
+\item{judgements}{Number of evaluation rounds for structured data extraction resulting in refined data}
 
 \item{state_path}{Path to save state file}
 

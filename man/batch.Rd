@@ -36,7 +36,7 @@ batch(
 
 \item{type_spec}{Type specification for structured data extraction}
 
-\item{judgements}{Number of judgements in a \code{batch_judge()} workflow (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
+\item{judgements}{Number of evaluation rounds in a structured data extraction workflow}
 
 \item{progress}{Whether to show progress bars (default: TRUE)}
 

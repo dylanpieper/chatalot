@@ -2,17 +2,13 @@
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://cran.r-project.org/web/packages/hellmer/index.html) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-Enable sequential and parallel processing for all chat models and features supported by [ellmer](https://ellmer.tidyverse.org), favoring speed and feedback with response streaming over delayed responses from batch APIs, which are cheaper but slower and not supported by all LLM providers.
+hellmer makes it easy to batch process chats with large language models using [ellmer](https://ellmer.tidyverse.org). Process many chats sequentially or in parallel with either a single model or multiple models, while maintaining access to ellmer's rich feature set including [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html). hellmer extends these features with self-evaluation for structured data refinement, which mimics reasoning in the chat.
 
-## Features
+What hellmer is and is not:
 
-Process multiple chat interactions with:
+✅ Real-time response streaming of many chats
 
--   [Tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html)
--   Judgments for structured data refinement
--   Progress tracking and recovery
--   Automatic retry with backoff
--   Sound notifications
+❌ Batch API integration (for example, see [OpenAI's Batch API](https://platform.openai.com/docs/guides/batch))
 
 ## Installation
 
@@ -188,10 +184,12 @@ batch$texts()
 #> ...
 ```
 
-To ask the chat model to evaluate and refine structured data extractions, implement model-agnostic reasoning into the turns of the chat through additional prompting using the `judgements` parameter (increases token use):
+#### Self-evaluation
+
+Ask the chat model to evaluate and refine structured data extractions using the `eval_rounds` parameter (increases token use). It mimics reasoning in the chat through additional prompting:
 
 ``` r
-batch <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)
+batch <- chat$batch(prompts, type_spec = type_sentiment, eval_rounds = 1)
 
 batch$texts()
 #> [[1]]
@@ -205,8 +203,6 @@ batch$texts()
 #> [1] 0.05
 #> ...
 ```
-
-![Console output of LLM streaming the evaluation and refinement of the structured data extractions using `progress` = `FALSE` and `echo` = `TRUE`.](man/figures/judgements.gif)
 
 ### Progress Tracking and Recovery
 
@@ -248,7 +244,7 @@ chat <- chat_sequential(
 
 ### Echoing
 
-By default, the chat `echo` is set to `FALSE` to show a progress bar. However, you can still configure `echo` in the `$batch` call by first setting `progress` to `FALSE`:
+By default, the chat `echo` is set to `FALSE` to show a progress bar. However, you can still configure `echo` by first setting `progress` to `FALSE`:
 
 ``` r
 batch <- chat$batch(prompts, progress = FALSE, echo = "all")
@@ -272,3 +268,4 @@ batch <- chat$batch(prompts, progress = FALSE, echo = "all")
 ## Further Reading
 
 -   [Using Ellmer Chat Models](https://dylanpieper.github.io/hellmer/articles/using-chat-models.html)
+-   Reaching Consensus from Multi-Model Chats (*Coming Soon*)

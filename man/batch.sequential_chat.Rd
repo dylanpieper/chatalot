@@ -27,7 +27,7 @@ batch.sequential_chat(
 
 \item{type_spec}{Type specification for structured data extraction}
 
-\item{judgements}{Number of judgements (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)}
+\item{judgements}{Number of evaluation rounds}
 
 \item{state_path}{Path to save state file}
 
