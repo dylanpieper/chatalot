@@ -2,7 +2,8 @@
 
 ## Internal Improvements
 
-* `is_auth_error()` is replaced by `is_retry_error()` which more accurately uses `httr2` errors classes rather than grepl
+* `eval_rounds` replaces the `judgements` parameter name to better reflect the purpose of the parameter
+* `is_retry_error()` replaces `is_auth_error()` which more accurately uses `httr2` errors classes rather than grepl
 
 # hellmer 0.1.2
 
@@ -25,7 +26,7 @@
 * Updated package documentation for better organization and clarity
 
 ## Experimental features
-* Structured data extractions support judgements to refine extracted data via the `judgements` parameter
+* Structured data extractions support evaluation rounds to refine extracted data via the `eval_rounds` parameter
 
 # hellmer 0.1.0
 

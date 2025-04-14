@@ -9,7 +9,7 @@ process_chunks(
   result,
   chat_obj,
   type_spec,
-  judgements,
+  eval_rounds,
   pb,
   state_path,
   progress,
@@ -31,7 +31,7 @@ process_chunks(
 
 \item{type_spec}{Type specification for structured data extraction}
 
-\item{judgements}{Number of judgements for structured data extraction resulting in refined data}
+\item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
 
 \item{pb}{Progress bar object}
 

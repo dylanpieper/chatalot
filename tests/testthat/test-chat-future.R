@@ -38,7 +38,7 @@ test_that("chat_future handles structured data extraction", {
   expect_true(all(sapply(data, function(x) !is.null(x$score))))
 })
 
-test_that("chat_future handles structured data with judgements", {
+test_that("chat_future handles structured data with eval_rounds", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   chat <- chat_future(ellmer::chat_openai)
@@ -47,7 +47,7 @@ test_that("chat_future handles structured data with judgements", {
     "This is terrible."
   )
 
-  result <- chat$batch(prompts, type_spec = get_sentiment_type_spec(), chunk_size = 1, judgements = 1, workers = 1, beep = FALSE)
+  result <- chat$batch(prompts, type_spec = get_sentiment_type_spec(), chunk_size = 1, eval_rounds = 1, workers = 1, beep = FALSE)
   data <- result$texts()
   turns <- result$chats()[[1]]$get_turns()
 
@@ -123,25 +123,5 @@ test_that("chat_future supports progress parameter", {
   # Test with progress = FALSE
   chat <- chat_future(ellmer::chat_openai)
   result <- chat$batch(get_test_prompts(1), workers = 1, chunk_size = 1, progress = FALSE, beep = FALSE)
-  expect_equal(length(result$texts()), 1)
-})
-
-test_that("chat_future supports echo parameter and passes extra args", {
-  skip_if_not(ellmer::has_credentials("openai"), "API key not available")
-
-  chat <- chat_future(ellmer::chat_openai)
-
-  # Test with echo = TRUE
-  result <- chat$batch(get_test_prompts(1), workers = 1, chunk_size = 1, progress = FALSE, echo = TRUE, beep = FALSE)
-  expect_equal(length(result$texts()), 1)
-
-  # Test with additional parameter
-  result <- chat$batch(get_test_prompts(1),
-    workers = 1,
-    chunk_size = 1,
-    progress = FALSE,
-    echo = TRUE,
-    beep = FALSE
-  )
   expect_equal(length(result$texts()), 1)
 })

@@ -8,7 +8,7 @@ capture_with_retry(
   original_chat,
   prompt,
   type_spec,
-  judgements,
+  eval_rounds,
   max_retries,
   initial_delay,
   max_delay,
@@ -24,7 +24,7 @@ capture_with_retry(
 
 \item{type_spec}{Type specification for structured data}
 
-\item{judgements}{Number of judgements for structured data extraction resulting in refined data}
+\item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
 
 \item{max_retries}{Maximum number of retry attempts}
 
