@@ -64,7 +64,7 @@
 <div class="page-header"><h1 id="hellmer-">hellmer <img src="reference/figures/hellmer-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#hellmer-"></a>
 </h1></div>
 <p><a href="https://cran.r-project.org/web/packages/hellmer/index.html" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
-<p>hellmer makes it easy to batch process large language model chats using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>. Process many chats sequentially or in parallel while maintaining access to ellmer’s rich feature set including <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tooling</a> and <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>. hellmer extends these features with self-evaluation for structured data refinement, which mimics reasoning in the chat.</p>
+<p>hellmer makes it easy to batch process large language model chats using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>. Process many chats sequentially or in parallel while supporting ellmer’s rich feature set including <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tooling</a> and <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>.</p>
 <p>✅ hellmer processes many chats synchronously and supports streaming responses</p>
 <p>❌ hellmer does NOT support asynchronous batch APIs (for example, see <a href="https://platform.openai.com/docs/guides/batch" class="external-link">OpenAI’s Batch API</a>)</p>
 <div class="section level2">
@@ -236,7 +236,7 @@
 <div class="section level4">
 <h4 id="self-evaluation">Self-evaluation<a class="anchor" aria-label="anchor" href="#self-evaluation"></a>
 </h4>
-<p>Ask the chat model to evaluate and refine structured data extractions using the <code>eval_rounds</code> parameter (increases token use). It mimics reasoning in the chat through additional prompting:</p>
+<p>Self-evaluation prompts the chat model to improve the initial or prior structured data extraction using the <code>eval_rounds</code> parameter (increases token use). You can set the number of self-evaluation rounds but be mindful of the cost and risk of diminishing returns.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, eval_rounds <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
