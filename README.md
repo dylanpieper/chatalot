@@ -2,17 +2,11 @@
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://cran.r-project.org/web/packages/hellmer/index.html) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-Enable sequential and parallel processing for all chat models and features supported by [ellmer](https://ellmer.tidyverse.org), favoring speed and feedback with response streaming over delayed responses from batch APIs, which are cheaper but slower and not supported by all LLM providers.
+hellmer makes it easy to batch process large language model chats using [ellmer](https://ellmer.tidyverse.org). Process many chats sequentially or in parallel while supporting ellmer's rich feature set including [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html).
 
-## Features
+✅ hellmer processes many chats synchronously and supports streaming responses
 
-Process multiple chat interactions with:
-
--   [Tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html)
--   Judgments for structured data refinement
--   Progress tracking and recovery
--   Automatic retry with backoff
--   Sound notifications
+❌ hellmer does NOT support asynchronous batch APIs (for example, see [OpenAI's Batch API](https://platform.openai.com/docs/guides/batch))
 
 ## Installation
 
@@ -32,6 +26,12 @@ usethis::edit_r_environ(scope = c("user", "project"))
 
 ## Basic Usage
 
+For the following examples, define a chat object to reuse across batches.
+
+``` r
+openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
+```
+
 ### Sequential Processing
 
 Sequential processing uses the current R process to call one chat at a time and save the data to the disk.
@@ -39,7 +39,7 @@ Sequential processing uses the current R process to call one chat at a time and 
 ``` r
 library(hellmer)
 
-chat <- chat_sequential(chat_openai(system_prompt = "Reply concisely, one sentence"))
+chat <- chat_sequential(openai)
 
 prompts <- list(
   "What is R?",
@@ -108,7 +108,7 @@ Parallel processing spins up multiple R processes, or parallel workers, to chat 
 By default, the upper limit for number of `workers` = `parallel::detectCores()`, and the number of prompts to process at a time is `chunk_size` = `parallel::detectCores() * 5`. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, the data is saved to the disk.
 
 ``` r
-chat <- chat_future(chat_openai(system_prompt = "Reply concisely, one sentence"))
+chat <- chat_future(openai)
 ```
 
 For maximum performance, set `chunk_size` to the number of prompts (\~4-5x faster). However, data will not be saved to the disk until all chats are processed.
@@ -188,10 +188,12 @@ batch$texts()
 #> ...
 ```
 
-To ask the chat model to evaluate and refine structured data extractions, implement model-agnostic reasoning into the turns of the chat through additional prompting using the `judgements` parameter (increases token use):
+#### Self-evaluation
+
+Self-evaluation prompts the chat model to improve the initial or prior structured data extraction using the `eval_rounds` parameter (increases token use). You can set the number of self-evaluation rounds but be mindful of the cost and risk of diminishing returns.
 
 ``` r
-batch <- chat$batch(prompts, type_spec = type_sentiment, judgements = 1)
+batch <- chat$batch(prompts, type_spec = type_sentiment, eval_rounds = 1)
 
 batch$texts()
 #> [[1]]
@@ -205,8 +207,6 @@ batch$texts()
 #> [1] 0.05
 #> ...
 ```
-
-![Console output of LLM streaming the evaluation and refinement of the structured data extractions using `progress` = `FALSE` and `echo` = `TRUE`.](man/figures/judgements.gif)
 
 ### Progress Tracking and Recovery
 
@@ -240,15 +240,12 @@ batch <- chat$batch(
 Toggle sound notifications on batch completion, interruption, and error:
 
 ``` r
-chat <- chat_sequential(
-  chat_openai,
-  beep = TRUE
-)
+batch <- chat$batch(prompts, beep = TRUE)
 ```
 
 ### Echoing
 
-By default, the chat `echo` is set to `FALSE` to show a progress bar. However, you can still configure `echo` in the `$batch` call by first setting `progress` to `FALSE`:
+By default, the chat `echo` is set to `FALSE` to show a progress bar. However, you can still configure `echo` by first setting `progress` to `FALSE`:
 
 ``` r
 batch <- chat$batch(prompts, progress = FALSE, echo = "all")
@@ -271,4 +268,5 @@ batch <- chat$batch(prompts, progress = FALSE, echo = "all")
 
 ## Further Reading
 
--   [Using Ellmer Chat Models](https://dylanpieper.github.io/hellmer/articles/using-chat-models.html)
+-   [Using Ellmer Chat Models](https://dylanpieper.github.io/hellmer/articles/using-chat-models.html) (Vignette)
+-   [Batch and Compare the Similarity of LLM Responses in R](https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html) (Blog Post)
