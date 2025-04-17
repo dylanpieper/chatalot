@@ -4,12 +4,14 @@
 \alias{finish_successful_batch}
 \title{Finish successful batch processing}
 \usage{
-finish_successful_batch(pb, beep)
+finish_successful_batch(pb, beep, progress)
 }
 \arguments{
 \item{pb}{Progress bar object}
 
 \item{beep}{Logical; whether to play success sound}
+
+\item{progress}{Whether to show progress bars}
 }
 \value{
 NULL (invisibly)

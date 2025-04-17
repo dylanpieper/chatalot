@@ -1,9 +1,3 @@
-# hellmer (development)
-
-## Internal Improvements
-
-* `is_auth_error()` is replaced by `is_retry_error()` which more accurately uses `httr2` errors classes rather than grepl
-
 # hellmer 0.1.2
 
 ## New Features
@@ -11,6 +5,10 @@
 * `chat_future()` now uses uses CPU cores * 5 as the default chunk size
 
 * `$batch()` gains `progress` in addition to  `echo` and `...` which are passed to the chat call
+
+## Internal Improvements
+
+* `is_auth_error()` is replaced by `is_retry_error()` which more accurately uses `httr2` errors classes
 
 ## Lifecycle changes
 * Removed the timeout feature as it's better handled by `option(ellmer_timeout_s = 120)` in ellmer 0.1.1
