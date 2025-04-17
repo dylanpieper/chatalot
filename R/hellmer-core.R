@@ -189,7 +189,9 @@ process_sequential <- function(
   total_prompts <- length(prompts)
 
   if (result@completed >= total_prompts) {
-    cli::cli_alert_success("Complete")
+    if (progress) {
+      cli::cli_alert_success("Complete")
+    }
     return(create_results(result))
   }
 
@@ -227,7 +229,7 @@ process_sequential <- function(
       }
     }
 
-    finish_successful_batch(pb, beep)
+    finish_successful_batch(pb, beep, progress)
   }, error = function(e) {
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
@@ -368,7 +370,9 @@ process_future <- function(
   }
 
   if (result@completed >= total_prompts) {
-    cli::cli_alert_success("Complete")
+    if (progress) {
+      cli::cli_alert_success("Complete")
+    }
     return(create_results(result))
   }
 
@@ -514,7 +518,7 @@ process_future <- function(
       }
     }
 
-    finish_successful_batch(pb, beep)
+    finish_successful_batch(pb, beep, progress)
   }, error = function(e) {
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
@@ -624,7 +628,7 @@ process_chunks <- function(chunks,
   }
 
   if (!was_interrupted) {
-    finish_successful_batch(pb, beep)
+    finish_successful_batch(pb, beep, progress)
   }
 }
 
@@ -715,13 +719,16 @@ handle_batch_interrupt <- function(result, beep) {
 #'   indicators and provide feedback
 #' @param pb Progress bar object
 #' @param beep Logical; whether to play success sound
+#' @param progress Whether to show progress bars
 #' @return NULL (invisibly)
 #' @keywords internal
-finish_successful_batch <- function(pb, beep) {
+finish_successful_batch <- function(pb, beep, progress) {
   if (!is.null(pb)) {
     cli::cli_progress_done(id = pb)
   }
-  cli::cli_alert_success("Complete")
+  if (progress) {
+    cli::cli_alert_success("Complete")
+  }
   if (beep) beepr::beep("ping")
   invisible()
 }
