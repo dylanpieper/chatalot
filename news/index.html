@@ -50,6 +50,11 @@
 <li><p><code>$batch()</code> gains <code>progress</code> in addition to <code>echo</code> and <code>...</code> which are passed to the chat call</p></li>
 </ul></div>
 <div class="section level3">
+<h3 id="internal-improvements-0-1-2">Internal Improvements<a class="anchor" aria-label="anchor" href="#internal-improvements-0-1-2"></a></h3>
+<ul><li>
+<code>is_auth_error()</code> is replaced by <code><a href="../reference/is_retry_error.html">is_retry_error()</a></code> which more accurately uses <code>httr2</code> errors classes</li>
+</ul></div>
+<div class="section level3">
 <h3 id="lifecycle-changes-0-1-2">Lifecycle changes<a class="anchor" aria-label="anchor" href="#lifecycle-changes-0-1-2"></a></h3>
 <ul><li><p>Removed the timeout feature as it’s better handled by <code>option(ellmer_timeout_s = 120)</code> in ellmer 0.1.1</p></li>
 <li><p>Moved parameters from <code><a href="../reference/chat_sequential.html">chat_sequential()</a></code> and <code><a href="../reference/chat_future.html">chat_future()</a></code> to <code>$batch()</code> except for <code>chat_model</code> and <code>...</code></p></li>
