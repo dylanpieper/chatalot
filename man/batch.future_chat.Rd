@@ -7,7 +7,7 @@
 batch.future_chat(
   chat_env,
   prompts,
-  type_spec = NULL,
+  type = NULL,
   eval_rounds = 0,
   state_path = tempfile("chat_", fileext = ".rds"),
   workers = NULL,
@@ -29,7 +29,7 @@ batch.future_chat(
 
 \item{prompts}{List of prompts to process}
 
-\item{type_spec}{Type specification for structured data extraction}
+\item{type}{Type specification for structured data extraction}
 
 \item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
 

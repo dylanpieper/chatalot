@@ -12,7 +12,7 @@
 #'     \item **responses**: Raw response data for completed prompts
 #'     \item **completed**: Number of successfully processed prompts
 #'     \item **state_path**: Path where batch state is saved
-#'     \item **type_spec**: Type specification used for structured data
+#'     \item **type**: Type specification used for structured data
 #'     \item **texts**: Function to extract text responses or structured data
 #'     \item **chats**: Function to extract chat objects
 #'     \item **progress**: Function to get processing status
@@ -82,7 +82,7 @@ chat_sequential <- function(
   chat_env$last_state_path <- NULL
 
   chat_env$batch <- function(prompts,
-                             type_spec = NULL,
+                             type = NULL,
                              eval_rounds = 0,
                              state_path = tempfile("chat_", fileext = ".rds"),
                              progress = TRUE,
@@ -102,7 +102,7 @@ chat_sequential <- function(
     batch.sequential_chat(
       chat_env = chat_env,
       prompts = prompts,
-      type_spec = type_spec,
+      type = type,
       eval_rounds = eval_rounds,
       state_path = state_path,
       progress = progress,
@@ -134,7 +134,7 @@ chat_sequential <- function(
 #'     \item **responses**: Raw response data for completed prompts
 #'     \item **completed**: Number of successfully processed prompts
 #'     \item **state_path**: Path where batch state is saved
-#'     \item **type_spec**: Type specification used for structured data
+#'     \item **type**: Type specification used for structured data
 #'     \item **texts**: Function to extract text responses or structured data
 #'     \item **chats**: Function to extract chat objects
 #'     \item **progress**: Function to get processing status
@@ -202,7 +202,7 @@ chat_future <- function(
   chat_env$last_state_path <- NULL
 
   chat_env$batch <- function(prompts,
-                             type_spec = NULL,
+                             type = NULL,
                              eval_rounds = 0,
                              state_path = tempfile("chat_", fileext = ".rds"),
                              progress = TRUE,
@@ -234,7 +234,7 @@ chat_future <- function(
     batch.future_chat(
       chat_env = chat_env,
       prompts = prompts,
-      type_spec = type_spec,
+      type = type,
       eval_rounds = eval_rounds,
       state_path = state_path,
       workers = workers,

@@ -4,21 +4,14 @@
 \alias{process_evaluations}
 \title{Process structured data extraction with evaluation}
 \usage{
-process_evaluations(
-  chat_obj,
-  prompt,
-  type_spec,
-  eval_rounds = 0,
-  echo = FALSE,
-  ...
-)
+process_evaluations(chat_obj, prompt, type, eval_rounds = 0, echo = FALSE, ...)
 }
 \arguments{
 \item{chat_obj}{Chat model object}
 
 \item{prompt}{The prompt or text to analyze}
 
-\item{type_spec}{Type specification for structured data}
+\item{type}{Type specification for structured data}
 
 \item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
 }

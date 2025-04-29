@@ -2,7 +2,7 @@
 #'
 #' @param chat_env The chat environment from chat_sequential
 #' @param prompts List of prompts to process
-#' @param type_spec Type specification for structured data extraction
+#' @param type Type specification for structured data extraction
 #' @param eval_rounds Number of evaluation rounds (1 = initial extract + 1 evaluation, 2 = initial extract + 2 evaluations, etc.)
 #' @param state_path Path to save state file
 #' @param progress Whether to show progress bars
@@ -18,7 +18,7 @@
 #' @export
 batch.sequential_chat <- function(chat_env,
                                   prompts,
-                                  type_spec = NULL,
+                                  type = NULL,
                                   eval_rounds = 0,
                                   state_path = tempfile("chat_", fileext = ".rds"),
                                   progress = TRUE,
@@ -29,18 +29,18 @@ batch.sequential_chat <- function(chat_env,
                                   beep = TRUE,
                                   echo = FALSE,
                                   ...) {
-  if (eval_rounds > 0 && is.null(type_spec)) {
-    cli::cli_alert_warning("eval_rounds parameter ({eval_rounds}) specified but will be ignored without a type_spec")
+  if (eval_rounds > 0 && is.null(type)) {
+    cli::cli_alert_warning("eval_rounds parameter ({eval_rounds}) specified but will be ignored without a type")
   }
 
-  if (!is.null(type_spec) && eval_rounds < 0) {
+  if (!is.null(type) && eval_rounds < 0) {
     cli::cli_abort("Number of eval_rounds must be non-negative")
   }
 
   process_sequential(
     chat_obj = chat_env$chat_model,
     prompts = prompts,
-    type_spec = type_spec,
+    type = type,
     eval_rounds = eval_rounds,
     state_path = state_path,
     progress = progress,
@@ -58,7 +58,7 @@ batch.sequential_chat <- function(chat_env,
 #'
 #' @param chat_env The chat environment from chat_future
 #' @param prompts List of prompts to process
-#' @param type_spec Type specification for structured data extraction
+#' @param type Type specification for structured data extraction
 #' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
 #' @param state_path Path to save state file
 #' @param workers Number of parallel workers
@@ -78,7 +78,7 @@ batch.sequential_chat <- function(chat_env,
 #' @export
 batch.future_chat <- function(chat_env,
                               prompts,
-                              type_spec = NULL,
+                              type = NULL,
                               eval_rounds = 0,
                               state_path = tempfile("chat_", fileext = ".rds"),
                               workers = NULL,
@@ -95,18 +95,18 @@ batch.future_chat <- function(chat_env,
                               ...) {
   plan <- match.arg(plan, choices = c("multisession", "multicore"))
 
-  if (eval_rounds > 0 && is.null(type_spec)) {
-    cli::cli_alert_warning("eval_rounds parameter ({eval_rounds}) specified but will be ignored without a type_spec")
+  if (eval_rounds > 0 && is.null(type)) {
+    cli::cli_alert_warning("eval_rounds parameter ({eval_rounds}) specified but will be ignored without a type")
   }
 
-  if (!is.null(type_spec) && eval_rounds < 0) {
+  if (!is.null(type) && eval_rounds < 0) {
     cli::cli_abort("Number of eval_rounds must be non-negative")
   }
 
   process_future(
     chat_obj = chat_env$chat_model,
     prompts = prompts,
-    type_spec = type_spec,
+    type = type,
     eval_rounds = eval_rounds,
     state_path = state_path,
     workers = workers,

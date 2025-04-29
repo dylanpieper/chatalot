@@ -173,7 +173,7 @@ prompts <- list(
   "R's object-oriented system is confusing, inconsistent, and painful to use."
 )
 
-batch <- chat$batch(prompts, type_spec = type_sentiment)
+batch <- chat$batch(prompts, type = type_sentiment)
 
 batch$texts()
 #> [[1]]
@@ -193,7 +193,7 @@ batch$texts()
 Self-evaluation prompts the chat model to improve the initial or prior structured data extraction using the `eval_rounds` parameter (increases token use). You can set the number of self-evaluation rounds but be mindful of the cost and risk of diminishing returns.
 
 ``` r
-batch <- chat$batch(prompts, type_spec = type_sentiment, eval_rounds = 1)
+batch <- chat$batch(prompts, type = type_sentiment, eval_rounds = 1)
 
 batch$texts()
 #> [[1]]

@@ -7,7 +7,7 @@
 batch.sequential_chat(
   chat_env,
   prompts,
-  type_spec = NULL,
+  type = NULL,
   eval_rounds = 0,
   state_path = tempfile("chat_", fileext = ".rds"),
   progress = TRUE,
@@ -25,7 +25,7 @@ batch.sequential_chat(
 
 \item{prompts}{List of prompts to process}
 
-\item{type_spec}{Type specification for structured data extraction}
+\item{type}{Type specification for structured data extraction}
 
 \item{eval_rounds}{Number of evaluation rounds (1 = initial extract + 1 evaluation, 2 = initial extract + 2 evaluations, etc.)}
 

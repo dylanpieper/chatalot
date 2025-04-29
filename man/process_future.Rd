@@ -7,7 +7,7 @@
 process_future(
   chat_obj,
   prompts,
-  type_spec,
+  type,
   eval_rounds,
   state_path,
   workers,
@@ -29,7 +29,7 @@ process_future(
 
 \item{prompts}{Vector or list of prompts to process}
 
-\item{type_spec}{Optional type specification for structured data extraction}
+\item{type}{Optional type specification for structured data extraction}
 
 \item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
 

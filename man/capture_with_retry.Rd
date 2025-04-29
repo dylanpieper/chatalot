@@ -7,7 +7,7 @@
 capture_with_retry(
   original_chat,
   prompt,
-  type_spec,
+  type,
   eval_rounds,
   max_retries,
   initial_delay,
@@ -22,7 +22,7 @@ capture_with_retry(
 
 \item{prompt}{Prompt text}
 
-\item{type_spec}{Type specification for structured data}
+\item{type}{Type specification for structured data}
 
 \item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
 

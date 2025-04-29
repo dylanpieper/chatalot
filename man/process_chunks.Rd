@@ -8,7 +8,7 @@ process_chunks(
   chunks,
   result,
   chat_obj,
-  type_spec,
+  type,
   eval_rounds,
   pb,
   state_path,
@@ -29,7 +29,7 @@ process_chunks(
 
 \item{chat_obj}{Chat model object for making API calls}
 
-\item{type_spec}{Type specification for structured data extraction}
+\item{type}{Type specification for structured data extraction}
 
 \item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
 

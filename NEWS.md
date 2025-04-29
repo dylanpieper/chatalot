@@ -1,3 +1,9 @@
+# hellmer (development)
+
+## Lifecycle changes
+* `judgements` is renamed to `eval_rounds` to better reflect the purpose of the parameter
+* `type_spec` is renamed to `type` following the latest update to ellmer (0.1.1)
+
 # hellmer 0.1.2
 
 ## New Features
@@ -7,8 +13,6 @@
 * `$batch()` gains `progress` in addition to  `echo` and `...` which are passed to the chat call
 
 ## Internal Improvements
-
-* `eval_rounds` replaces the `judgements` parameter name to better reflect the purpose of the parameter
 
 * `is_auth_error()` is replaced by `is_retry_error()` which more accurately uses `httr2` errors classes
 

@@ -66,7 +66,7 @@ progress <- S7::new_generic("progress", "x")
 #' @param responses List to store responses
 #' @param completed Integer indicating number of completed prompts
 #' @param state_path Path to save state file
-#' @param type_spec Type specification for structured data extraction
+#' @param type Type specification for structured data extraction
 #' @param eval_rounds Number of evaluation rounds in a structured data extraction (1 = initial extract + 1 evaluation, 2 = initial extract + 2 evaluations, etc.)
 #' @param progress Whether to show progress bars (default: TRUE)
 #' @param input_type Type of input ("vector" or "list")
@@ -143,7 +143,7 @@ batch <- S7::new_class(
       }
     ),
     state_path = S7::class_character | NULL,
-    type_spec = S7::new_property(
+    type = S7::new_property(
       class = S7::class_any | NULL,
       validator = function(value) {
         if (!is.null(value)) {

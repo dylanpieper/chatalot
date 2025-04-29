@@ -7,7 +7,7 @@
 process_sequential(
   chat_obj,
   prompts,
-  type_spec,
+  type,
   eval_rounds,
   state_path,
   progress,
@@ -25,7 +25,7 @@ process_sequential(
 
 \item{prompts}{List of prompts}
 
-\item{type_spec}{Type specification for structured data}
+\item{type}{Type specification for structured data}
 
 \item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
 

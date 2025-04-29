@@ -72,7 +72,7 @@ test_that("capture_with_retry handles different error types correctly", {
   result <- hellmer:::capture_with_retry(
     original_chat = mock_chat,
     prompt = "test prompt",
-    type_spec = NULL,
+    type = NULL,
     eval_rounds = 0,
     max_retries = 3,
     initial_delay = 0.01,
@@ -88,7 +88,7 @@ test_that("capture_with_retry handles different error types correctly", {
     hellmer:::capture_with_retry(
       original_chat = mock_chat,
       prompt = "test prompt",
-      type_spec = NULL,
+      type = NULL,
       eval_rounds = 0,
       max_retries = 3,
       initial_delay = 0.01,
@@ -105,7 +105,7 @@ test_that("capture_with_retry handles different error types correctly", {
     hellmer:::capture_with_retry(
       original_chat = mock_chat,
       prompt = "test prompt",
-      type_spec = NULL,
+      type = NULL,
       eval_rounds = 0,
       max_retries = 3,
       initial_delay = 0.01,

@@ -19,13 +19,13 @@ is_retry_error <- function(error) {
 #' Capture chat model response with proper handling
 #' @param original_chat Original chat model object
 #' @param prompt Prompt text
-#' @param type_spec Type specification for structured data
+#' @param type Type specification for structured data
 #' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
 #' @return List containing response information
 #' @keywords internal
 capture <- function(original_chat,
                     prompt,
-                    type_spec,
+                    type,
                     eval_rounds,
                     echo,
                     ...) {
@@ -35,8 +35,8 @@ capture <- function(original_chat,
 
   result <- withCallingHandlers(
     {
-      if (!is.null(type_spec)) {
-        result <- process_evaluations(chat, prompt, type_spec, eval_rounds, echo = echo, ...)
+      if (!is.null(type)) {
+        result <- process_evaluations(chat, prompt, type, eval_rounds, echo = echo, ...)
         structured_data <- result$final
         chat <- result$chat
 
@@ -68,7 +68,7 @@ capture <- function(original_chat,
 #' Capture chat model response with proper handling and retries
 #' @param original_chat Original chat model object
 #' @param prompt Prompt text
-#' @param type_spec Type specification for structured data
+#' @param type Type specification for structured data
 #' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
 #' @param max_retries Maximum number of retry attempts
 #' @param initial_delay Initial delay in seconds before first retry
@@ -78,7 +78,7 @@ capture <- function(original_chat,
 #' @keywords internal
 capture_with_retry <- function(original_chat,
                                prompt,
-                               type_spec,
+                               type,
                                eval_rounds,
                                max_retries,
                                initial_delay,
@@ -90,7 +90,7 @@ capture_with_retry <- function(original_chat,
     withCallingHandlers(
       tryCatch(
         {
-          capture(original_chat, prompt, type_spec, eval_rounds, echo = echo, ...)
+          capture(original_chat, prompt, type, eval_rounds, echo = echo, ...)
         },
         error = function(e) {
           if (!is_retry_error(e)) {
@@ -127,7 +127,7 @@ capture_with_retry <- function(original_chat,
 #' Process batch of prompts with progress tracking and retries
 #' @param chat_obj Chat model object
 #' @param prompts List of prompts
-#' @param type_spec Type specification for structured data
+#' @param type Type specification for structured data
 #' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
 #' @param state_path Path for saving state
 #' @param progress Whether to show progress bars
@@ -141,7 +141,7 @@ capture_with_retry <- function(original_chat,
 process_sequential <- function(
     chat_obj,
     prompts,
-    type_spec,
+    type,
     eval_rounds,
     state_path,
     progress,
@@ -170,7 +170,7 @@ process_sequential <- function(
       responses = vector("list", length(prompts)),
       completed = 0L,
       state_path = state_path,
-      type_spec = type_spec,
+      type = type,
       eval_rounds = as.integer(eval_rounds),
       progress = progress,
       input_type = orig_type,
@@ -210,7 +210,7 @@ process_sequential <- function(
   tryCatch({
     for (i in (result@completed + 1L):total_prompts) {
       response <- capture_with_retry(
-        chat_obj, prompts[[i]], type_spec,
+        chat_obj, prompts[[i]], type,
         eval_rounds = eval_rounds,
         max_retries = max_retries,
         initial_delay = initial_delay,
@@ -267,7 +267,7 @@ process_sequential <- function(
 #' Process prompts in parallel chunks with error handling and state management
 #' @param chat_obj Chat model object for API calls
 #' @param prompts Vector or list of prompts to process
-#' @param type_spec Optional type specification for structured data extraction
+#' @param type Optional type specification for structured data extraction
 #' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
 #' @param state_path Path to save intermediate state
 #' @param workers Number of parallel workers
@@ -285,7 +285,7 @@ process_sequential <- function(
 process_future <- function(
     chat_obj,
     prompts,
-    type_spec,
+    type,
     eval_rounds,
     state_path,
     workers,
@@ -349,7 +349,7 @@ process_future <- function(
       responses = vector("list", total_prompts),
       completed = 0L,
       state_path = state_path,
-      type_spec = type_spec,
+      type = type,
       eval_rounds = as.integer(eval_rounds),
       progress = progress,
       input_type = original_type,
@@ -418,7 +418,7 @@ process_future <- function(
                         capture_with_retry(
                           worker_chat,
                           prompt,
-                          type_spec,
+                          type,
                           eval_rounds = eval_rounds,
                           max_retries = max_retries,
                           initial_delay = initial_delay,
@@ -555,7 +555,7 @@ process_future <- function(
 #' @param chunks List of prompt chunks to process
 #' @param result A batch object to store results
 #' @param chat_obj Chat model object for making API calls
-#' @param type_spec Type specification for structured data extraction
+#' @param type Type specification for structured data extraction
 #' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
 #' @param pb Progress bar object
 #' @param state_path Path to save intermediate state
@@ -570,7 +570,7 @@ process_future <- function(
 process_chunks <- function(chunks,
                            result,
                            chat_obj,
-                           type_spec,
+                           type,
                            eval_rounds,
                            pb,
                            state_path,
@@ -596,7 +596,7 @@ process_chunks <- function(chunks,
             capture_with_retry(
               worker_chat,
               prompt,
-              type_spec,
+              type,
               eval_rounds = eval_rounds,
               max_retries = max_retries,
               initial_delay = initial_delay,
@@ -634,11 +634,11 @@ process_chunks <- function(chunks,
 #' Process structured data extraction with evaluation
 #' @param chat_obj Chat model object
 #' @param prompt The prompt or text to analyze
-#' @param type_spec Type specification for structured data
+#' @param type Type specification for structured data
 #' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
 #' @return List containing extraction process
 #' @keywords internal
-process_evaluations <- function(chat_obj, prompt, type_spec, eval_rounds = 0, echo = FALSE, ...) {
+process_evaluations <- function(chat_obj, prompt, type, eval_rounds = 0, echo = FALSE, ...) {
   result <- list(
     initial = NULL,
     evaluations = list(),
@@ -649,7 +649,7 @@ process_evaluations <- function(chat_obj, prompt, type_spec, eval_rounds = 0, ec
 
   result$initial <- chat$extract_data(
     prompt,
-    type = type_spec,
+    type = type,
     echo = echo,
     ...
   )
@@ -680,7 +680,7 @@ process_evaluations <- function(chat_obj, prompt, type_spec, eval_rounds = 0, ec
 
       refined <- chat$extract_data(
         refine_prompt,
-        type = type_spec,
+        type = type,
         echo = echo,
         ...
       )
@@ -742,7 +742,7 @@ create_results <- function(result) {
     responses = result@responses,
     completed = result@completed,
     state_path = result@state_path,
-    type_spec = result@type_spec
+    type = result@type
   )
 
   base_list$texts <- function() texts(result)

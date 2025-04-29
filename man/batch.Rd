@@ -9,7 +9,7 @@ batch(
   responses = list(),
   completed = integer(0),
   state_path = character(0),
-  type_spec = NULL,
+  type = NULL,
   eval_rounds = integer(0),
   progress = logical(0),
   input_type = character(0),
@@ -34,7 +34,7 @@ batch(
 
 \item{state_path}{Path to save state file}
 
-\item{type_spec}{Type specification for structured data extraction}
+\item{type}{Type specification for structured data extraction}
 
 \item{eval_rounds}{Number of evaluation rounds in a structured data extraction (1 = initial extract + 1 evaluation, 2 = initial extract + 2 evaluations, etc.)}
 
