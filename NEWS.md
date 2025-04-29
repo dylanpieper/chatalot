@@ -8,6 +8,8 @@
 
 ## Internal Improvements
 
+* `eval_rounds` replaces the `judgements` parameter name to better reflect the purpose of the parameter
+
 * `is_auth_error()` is replaced by `is_retry_error()` which more accurately uses `httr2` errors classes
 
 ## Lifecycle changes

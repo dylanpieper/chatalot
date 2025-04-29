@@ -8,7 +8,7 @@ process_future(
   chat_obj,
   prompts,
   type_spec,
-  judgements,
+  eval_rounds,
   state_path,
   workers,
   chunk_size,
@@ -31,7 +31,7 @@ process_future(
 
 \item{type_spec}{Optional type specification for structured data extraction}
 
-\item{judgements}{Number of judgements for structured data extraction resulting in refined data}
+\item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
 
 \item{state_path}{Path to save intermediate state}
 

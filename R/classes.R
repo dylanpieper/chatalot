@@ -67,7 +67,7 @@ progress <- S7::new_generic("progress", "x")
 #' @param completed Integer indicating number of completed prompts
 #' @param state_path Path to save state file
 #' @param type_spec Type specification for structured data extraction
-#' @param judgements Number of judgements in a `batch_judge()` workflow (1 = initial extract + 1 judgement, 2 = initial extract + 2 judgements, etc.)
+#' @param eval_rounds Number of evaluation rounds in a structured data extraction (1 = initial extract + 1 evaluation, 2 = initial extract + 2 evaluations, etc.)
 #' @param progress Whether to show progress bars (default: TRUE)
 #' @param input_type Type of input ("vector" or "list")
 #' @param max_retries Maximum number of retry attempts
@@ -154,7 +154,7 @@ batch <- S7::new_class(
         NULL
       }
     ),
-    judgements = S7::new_property(
+    eval_rounds = S7::new_property(
       class = S7::class_integer,
       validator = function(value) {
         if (length(value) != 1) {
