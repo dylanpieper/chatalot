@@ -220,7 +220,7 @@
 <span>  <span class="st">"R's object-oriented system is confusing, inconsistent, and painful to use."</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span><span class="op">)</span></span>
+<span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type <span class="op">=</span> <span class="va">type_sentiment</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
@@ -238,7 +238,7 @@
 </h4>
 <p>Self-evaluation prompts the chat model to improve the initial or prior structured data extraction using the <code>eval_rounds</code> parameter (increases token use). You can set the number of self-evaluation rounds but be mindful of the cost and risk of diminishing returns.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, eval_rounds <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type <span class="op">=</span> <span class="va">type_sentiment</span>, eval_rounds <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
@@ -350,7 +350,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Dylan Pieper <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Dylan Pieper <br><small class="roles"> Author, maintainer </small>   </li>
 </ul>
 </div>
 
@@ -365,7 +365,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
 </div>
 
     </footer>

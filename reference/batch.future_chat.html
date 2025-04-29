@@ -52,8 +52,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">batch.future_chat</span><span class="op">(</span></span>
 <span>  <span class="va">chat_env</span>,</span>
 <span>  <span class="va">prompts</span>,</span>
-<span>  type_spec <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  judgements <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  eval_rounds <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  state_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"chat_"</span>, fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span>,</span>
 <span>  workers <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  chunk_size <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span> <span class="op">*</span> <span class="fl">5</span>,</span>
@@ -82,12 +82,12 @@
 <dd><p>List of prompts to process</p></dd>
 
 
-<dt id="arg-type-spec">type_spec<a class="anchor" aria-label="anchor" href="#arg-type-spec"></a></dt>
+<dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p>Type specification for structured data extraction</p></dd>
 
 
-<dt id="arg-judgements">judgements<a class="anchor" aria-label="anchor" href="#arg-judgements"></a></dt>
-<dd><p>Number of judgements for structured data extraction resulting in refined data</p></dd>
+<dt id="arg-eval-rounds">eval_rounds<a class="anchor" aria-label="anchor" href="#arg-eval-rounds"></a></dt>
+<dd><p>Number of evaluation rounds for structured data extraction resulting in refined data</p></dd>
 
 
 <dt id="arg-state-path">state_path<a class="anchor" aria-label="anchor" href="#arg-state-path"></a></dt>
@@ -156,7 +156,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
 </div>
 
     </footer></div>
