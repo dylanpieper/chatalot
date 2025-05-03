@@ -3,7 +3,7 @@
 ## Internal Improvements
 * Added one-time retry to failed structured data extractions
 * Replaced progress bar percentage indicator (`cli::pb_percent`) to estimated time until completion (`cli::pb_eta`)
-* For `chat_future()`, updated the default `chunk_size ` to `parallel::detectCores()` for safer processing 
+* For `chat_future()`, updated the default `chunk_size` to `parallel::detectCores()` for safer processing 
 
 ## Lifecycle changes
 * `judgements` is renamed to `eval_rounds` to better reflect the purpose of the parameter
