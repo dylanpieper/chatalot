@@ -13,7 +13,7 @@ capture(original_chat, prompt, type, eval_rounds, echo, ...)
 
 \item{type}{Type specification for structured data}
 
-\item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
+\item{eval_rounds}{Number of evaluation rounds resulting in refined data}
 }
 \value{
 List containing response information

@@ -12,7 +12,7 @@ texts(x, ...)
 \item{...}{Additional arguments passed to methods}
 }
 \value{
-A character vector or list of text responses. If a type specification was provided to the batch, structured data objects will be returned instead.
+A character vector or list of text responses. If a type specification is provided to the batch, return structured data.
 }
 \description{
 Extract texts or structured data from a batch result

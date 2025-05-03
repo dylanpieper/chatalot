@@ -27,7 +27,7 @@ process_sequential(
 
 \item{type}{Type specification for structured data}
 
-\item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
+\item{eval_rounds}{Number of evaluation rounds resulting in refined data}
 
 \item{state_path}{Path for saving state}
 

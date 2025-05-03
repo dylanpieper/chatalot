@@ -2,7 +2,7 @@
 #' @name texts
 #' @param x A batch object
 #' @param ... Additional arguments passed to methods
-#' @return A character vector or list of text responses. If a type specification was provided to the batch, structured data objects will be returned instead.
+#' @return A character vector or list of text responses. If a type specification is provided to the batch, return structured data.
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create a chat processor
 #' chat <- chat_sequential(chat_openai())
@@ -67,7 +67,7 @@ progress <- S7::new_generic("progress", "x")
 #' @param completed Integer indicating number of completed prompts
 #' @param state_path Path to save state file
 #' @param type Type specification for structured data extraction
-#' @param eval_rounds Number of evaluation rounds in a structured data extraction (1 = initial extract + 1 evaluation, 2 = initial extract + 2 evaluations, etc.)
+#' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
 #' @param progress Whether to show progress bars (default: TRUE)
 #' @param input_type Type of input ("vector" or "list")
 #' @param max_retries Maximum number of retry attempts

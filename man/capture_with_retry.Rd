@@ -24,7 +24,7 @@ capture_with_retry(
 
 \item{type}{Type specification for structured data}
 
-\item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
+\item{eval_rounds}{Number of evaluation rounds resulting in refined data}
 
 \item{max_retries}{Maximum number of retry attempts}
 

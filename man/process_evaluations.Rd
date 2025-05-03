@@ -13,7 +13,7 @@ process_evaluations(chat_obj, prompt, type, eval_rounds = 0, echo = FALSE, ...)
 
 \item{type}{Type specification for structured data}
 
-\item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
+\item{eval_rounds}{Number of evaluation rounds resulting in refined data}
 }
 \value{
 List containing extraction process

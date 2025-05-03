@@ -208,7 +208,7 @@ chat_future <- function(
                              progress = TRUE,
                              workers = NULL,
                              plan = "multisession",
-                             chunk_size = parallel::detectCores() * 5,
+                             chunk_size = parallel::detectCores(),
                              max_chunk_attempts = 3L,
                              max_retries = 3L,
                              initial_delay = 20,

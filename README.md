@@ -103,15 +103,15 @@ batch$chats()
 
 ### Parallel Processing
 
-Parallel processing spins up multiple R processes, or parallel workers, to chat at the same time.
+Parallel processing spins up multiple R processes, or parallel workers, to chat at the same time. This method, built on the [futureverse](https://www.futureverse.org), improves speed of processing.
 
-By default, the upper limit for number of `workers` = `parallel::detectCores()`, and the number of prompts to process at a time is `chunk_size` = `parallel::detectCores() * 5`. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, the data is saved to the disk.
+The default upper limit for number of `workers` is `parallel::detectCores()`. The default `chunk_size` (i.e., number of prompts to process at a time) is also `parallel::detectCores()`. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, data is saved to the disk.
 
 ``` r
 chat <- chat_future(openai)
 ```
 
-For maximum performance, set `chunk_size` to the number of prompts (\~4-5x faster). However, data will not be saved to the disk until all chats are processed.
+For maximum processing speed, set `chunk_size` to the number of prompts. However, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
 
 ``` r
 batch <- chat$batch(

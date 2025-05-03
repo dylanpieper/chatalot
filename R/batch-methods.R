@@ -61,7 +61,7 @@ batch.sequential_chat <- function(chat_env,
 #' @param type Type specification for structured data extraction
 #' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
 #' @param state_path Path to save state file
-#' @param workers Number of parallel workers
+#' @param workers Number of parallel workers (default upper limit is `parallel::detectCores()`)
 #' @param chunk_size Number of prompts each worker processes at a time
 #' @param plan Parallel backend ("multisession" or "multicore")
 #' @param max_chunk_attempts Maximum retries per failed chunk
@@ -82,7 +82,7 @@ batch.future_chat <- function(chat_env,
                               eval_rounds = 0,
                               state_path = tempfile("chat_", fileext = ".rds"),
                               workers = NULL,
-                              chunk_size = parallel::detectCores() * 5,
+                              chunk_size = parallel::detectCores(),
                               plan = "multisession",
                               max_chunk_attempts = 3L,
                               max_retries = 3L,

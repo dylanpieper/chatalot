@@ -20,7 +20,7 @@ is_retry_error <- function(error) {
 #' @param original_chat Original chat model object
 #' @param prompt Prompt text
 #' @param type Type specification for structured data
-#' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
+#' @param eval_rounds Number of evaluation rounds resulting in refined data
 #' @return List containing response information
 #' @keywords internal
 capture <- function(original_chat,
@@ -69,7 +69,7 @@ capture <- function(original_chat,
 #' @param original_chat Original chat model object
 #' @param prompt Prompt text
 #' @param type Type specification for structured data
-#' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
+#' @param eval_rounds Number of evaluation rounds resulting in refined data
 #' @param max_retries Maximum number of retry attempts
 #' @param initial_delay Initial delay in seconds before first retry
 #' @param max_delay Maximum delay in seconds between retries
@@ -128,7 +128,7 @@ capture_with_retry <- function(original_chat,
 #' @param chat_obj Chat model object
 #' @param prompts List of prompts
 #' @param type Type specification for structured data
-#' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
+#' @param eval_rounds Number of evaluation rounds resulting in refined data
 #' @param state_path Path for saving state
 #' @param progress Whether to show progress bars
 #' @param beep Play sound on completion
@@ -268,7 +268,7 @@ process_sequential <- function(
 #' @param chat_obj Chat model object for API calls
 #' @param prompts Vector or list of prompts to process
 #' @param type Optional type specification for structured data extraction
-#' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
+#' @param eval_rounds Number of evaluation rounds resulting in refined data
 #' @param state_path Path to save intermediate state
 #' @param workers Number of parallel workers
 #' @param chunk_size Number of prompts to process in parallel at a time
@@ -556,7 +556,7 @@ process_future <- function(
 #' @param result A batch object to store results
 #' @param chat_obj Chat model object for making API calls
 #' @param type Type specification for structured data extraction
-#' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
+#' @param eval_rounds Number of evaluation rounds resulting in refined data
 #' @param pb Progress bar object
 #' @param state_path Path to save intermediate state
 #' @param progress Whether to show progress bars
@@ -635,7 +635,7 @@ process_chunks <- function(chunks,
 #' @param chat_obj Chat model object
 #' @param prompt The prompt or text to analyze
 #' @param type Type specification for structured data
-#' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
+#' @param eval_rounds Number of evaluation rounds resulting in refined data
 #' @return List containing extraction process
 #' @keywords internal
 process_evaluations <- function(chat_obj, prompt, type, eval_rounds = 0, echo = FALSE, ...) {

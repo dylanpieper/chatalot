@@ -11,7 +11,7 @@ batch.future_chat(
   eval_rounds = 0,
   state_path = tempfile("chat_", fileext = ".rds"),
   workers = NULL,
-  chunk_size = parallel::detectCores() * 5,
+  chunk_size = parallel::detectCores(),
   plan = "multisession",
   max_chunk_attempts = 3L,
   max_retries = 3L,
@@ -35,7 +35,7 @@ batch.future_chat(
 
 \item{state_path}{Path to save state file}
 
-\item{workers}{Number of parallel workers}
+\item{workers}{Number of parallel workers (default upper limit is \code{parallel::detectCores()})}
 
 \item{chunk_size}{Number of prompts each worker processes at a time}
 

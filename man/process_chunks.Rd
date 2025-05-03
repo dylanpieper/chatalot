@@ -31,7 +31,7 @@ process_chunks(
 
 \item{type}{Type specification for structured data extraction}
 
-\item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
+\item{eval_rounds}{Number of evaluation rounds resulting in refined data}
 
 \item{pb}{Progress bar object}
 

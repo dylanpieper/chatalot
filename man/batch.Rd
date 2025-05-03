@@ -36,7 +36,7 @@ batch(
 
 \item{type}{Type specification for structured data extraction}
 
-\item{eval_rounds}{Number of evaluation rounds in a structured data extraction (1 = initial extract + 1 evaluation, 2 = initial extract + 2 evaluations, etc.)}
+\item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
 
 \item{progress}{Whether to show progress bars (default: TRUE)}
 
