@@ -1,7 +1,13 @@
 # hellmer (development)
 
+## Internal Improvements
+* added one-time retry to failed structured data extractions
+
+* replaced progress bar percentage indicator (`cli::pb_percent`) to estimated time until completion (`cli::pb_eta`)
+
 ## Lifecycle changes
 * `judgements` is renamed to `eval_rounds` to better reflect the purpose of the parameter
+
 * `type_spec` is renamed to `type` following the latest update to ellmer (0.1.1)
 
 # hellmer 0.1.2

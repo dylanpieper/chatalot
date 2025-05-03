@@ -200,7 +200,7 @@ process_sequential <- function(
     pb <- cli::cli_progress_bar(
       format = paste0(
         "{cli::pb_spin} Processing chats [{cli::pb_current}/{cli::pb_total}] ",
-        "[{cli::pb_bar}] {cli::pb_percent}"
+        "[{cli::pb_bar}] {cli::pb_eta}"
       ),
       total = total_prompts
     )
@@ -388,7 +388,7 @@ process_future <- function(
   pb <- NULL
   if (progress) {
     pb <- cli::cli_progress_bar(
-      format = "Processing chats [{cli::pb_current}/{cli::pb_total}] [{cli::pb_bar}] {cli::pb_percent}",
+      format = "Processing chats [{cli::pb_current}/{cli::pb_total}] [{cli::pb_bar}] {cli::pb_eta}",
       total = total_prompts
     )
     cli::cli_progress_update(id = pb, set = result@completed)
