@@ -56,7 +56,7 @@
 <span>  eval_rounds <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  state_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"chat_"</span>, fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span>,</span>
 <span>  workers <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  chunk_size <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span> <span class="op">*</span> <span class="fl">5</span>,</span>
+<span>  chunk_size <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  plan <span class="op">=</span> <span class="st">"multisession"</span>,</span>
 <span>  max_chunk_attempts <span class="op">=</span> <span class="fl">3L</span>,</span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3L</span>,</span>
@@ -95,7 +95,7 @@
 
 
 <dt id="arg-workers">workers<a class="anchor" aria-label="anchor" href="#arg-workers"></a></dt>
-<dd><p>Number of parallel workers</p></dd>
+<dd><p>Number of parallel workers (default upper limit is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>)</p></dd>
 
 
 <dt id="arg-chunk-size">chunk_size<a class="anchor" aria-label="anchor" href="#arg-chunk-size"></a></dt>

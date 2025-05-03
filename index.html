@@ -155,11 +155,11 @@
 <div class="section level3">
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
-<p>Parallel processing spins up multiple R processes, or parallel workers, to chat at the same time.</p>
-<p>By default, the upper limit for number of <code>workers</code> = <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>, and the number of prompts to process at a time is <code>chunk_size</code> = <code>parallel::detectCores() * 5</code>. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, the data is saved to the disk.</p>
+<p>Parallel processing spins up multiple R processes, or parallel workers, to chat at the same time. This method, built on the <a href="https://www.futureverse.org" class="external-link">futureverse</a>, improves speed of processing.</p>
+<p>The default upper limit for number of <code>workers</code> is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>. The default <code>chunk_size</code> (i.e., number of prompts to process at a time) is also <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, data is saved to the disk.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span></code></pre></div>
-<p>For maximum performance, set <code>chunk_size</code> to the number of prompts (~4-5x faster). However, data will not be saved to the disk until all chats are processed.</p>
+<p>For maximum processing speed, set <code>chunk_size</code> to the number of prompts. However, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>, </span>
