@@ -647,12 +647,38 @@ process_evaluations <- function(chat_obj, prompt, type, eval_rounds = 0, echo = 
 
   chat <- chat_obj$clone()
 
-  result$initial <- chat$extract_data(
-    prompt,
-    type = type,
-    echo = echo,
-    ...
-  )
+  extract_with_retry <- function(extraction_prompt, retry_message = NULL) {
+    extracted <- tryCatch(
+      {
+        chat$extract_data(extraction_prompt, type = type, ...)
+      },
+      error = function(e) {
+        if (!is.null(retry_message)) {
+          cli::cli_alert_warning(retry_message)
+        }
+        NULL
+      }
+    )
+
+    if (is.null(extracted) && !is.null(retry_message)) {
+      extracted <- tryCatch(
+        {
+          chat$extract_data(extraction_prompt, type = type, ...)
+        },
+        error = function(e) {
+          NULL
+        }
+      )
+    }
+
+    return(extracted)
+  }
+
+  result$initial <- extract_with_retry(prompt, "Initial extraction failed, retrying...")
+
+  if (is.null(result$initial)) {
+    stop("Failed to extract structured data. Remove the 'type' argument to traceback the error.")
+  }
 
   current_extraction <- result$initial
 
@@ -660,33 +686,39 @@ process_evaluations <- function(chat_obj, prompt, type, eval_rounds = 0, echo = 
 
   if (evaluation_rounds > 0) {
     for (i in 1:evaluation_rounds) {
-      eval_prompt <- paste(
-        "What could be improved in my data extraction?",
-        "I extracted the following structured data:",
-        jsonlite::toJSON(current_extraction, pretty = TRUE, auto_unbox = TRUE),
-        "The original prompt was:", prompt
+      tryCatch(
+        {
+          eval_prompt <- paste(
+            "What could be improved in my data extraction?",
+            "I extracted the following structured data:",
+            jsonlite::toJSON(current_extraction, pretty = TRUE, auto_unbox = TRUE),
+            "The original prompt was:", prompt
+          )
+
+          evaluation <- chat$chat(eval_prompt, echo = echo, ...)
+          if (!is.null(evaluation)) {
+            result$evaluations[[i]] <- evaluation
+
+            refine_prompt <- paste(
+              "Extract the following data more accurately:",
+              prompt,
+              "The prior extraction had the following structured data:",
+              jsonlite::toJSON(current_extraction, pretty = TRUE, auto_unbox = TRUE),
+              "The prior extraction had these issues:", evaluation
+            )
+
+            refined <- extract_with_retry(refine_prompt, paste("Refinement", i, "failed, retrying..."))
+
+            if (!is.null(refined)) {
+              result$refined[[i]] <- refined
+              current_extraction <- refined
+            }
+          }
+        },
+        error = function(e) {
+          cli::cli_alert_warning(paste0("Error in evaluation round", i, ": ", conditionMessage(e)))
+        }
       )
-
-      evaluation <- chat$chat(eval_prompt, echo = echo, ...)
-      result$evaluations[[i]] <- evaluation
-
-      refine_prompt <- paste(
-        "Extract the following data more accurately:",
-        prompt,
-        "The prior extraction had the following structured data:",
-        jsonlite::toJSON(current_extraction, pretty = TRUE, auto_unbox = TRUE),
-        "The prior extraction had these issues:", evaluation
-      )
-
-      refined <- chat$extract_data(
-        refine_prompt,
-        type = type,
-        echo = echo,
-        ...
-      )
-
-      result$refined[[i]] <- refined
-      current_extraction <- refined
     }
   }
 
