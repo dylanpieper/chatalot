@@ -677,7 +677,7 @@ process_evaluations <- function(chat_obj, prompt, type, eval_rounds = 0, echo = 
   result$initial <- extract_with_retry(prompt, "Initial extraction failed, retrying...")
 
   if (is.null(result$initial)) {
-    stop("Failed to extract structured data. Remove the 'type' argument to traceback the error.")
+    stop("Structured data extraction is NULL. Try again or remove the 'type' argument to check for other errors.")
   }
 
   current_extraction <- result$initial
