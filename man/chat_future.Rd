@@ -17,7 +17,7 @@ A batch object (S7 class) containing:
 \item \strong{prompts}: Original input prompts
 \item \strong{responses}: Raw response data for completed prompts
 \item \strong{completed}: Number of successfully processed prompts
-\item \strong{state_path}: Path where batch state is saved
+\item \strong{file}: Path where batch state is saved
 \item \strong{type}: Type specification used for structured data
 \item \strong{texts}: Function to extract text responses or structured data
 \item \strong{chats}: Function to extract chat objects

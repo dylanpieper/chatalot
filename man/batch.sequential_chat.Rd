@@ -9,7 +9,7 @@ batch.sequential_chat(
   prompts,
   type = NULL,
   eval_rounds = 0,
-  state_path = tempfile("chat_", fileext = ".rds"),
+  file = tempfile("chat_", fileext = ".rds"),
   progress = TRUE,
   max_retries = 3L,
   initial_delay = 20,
@@ -29,7 +29,7 @@ batch.sequential_chat(
 
 \item{eval_rounds}{Number of evaluation rounds (1 = initial extract + 1 evaluation, 2 = initial extract + 2 evaluations, etc.)}
 
-\item{state_path}{Path to save state file}
+\item{file}{Path to save state file (.rds)}
 
 \item{progress}{Whether to show progress bars}
 

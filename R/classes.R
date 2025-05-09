@@ -65,7 +65,7 @@ progress <- S7::new_generic("progress", "x")
 #' @param prompts List of prompts to process
 #' @param responses List to store responses
 #' @param completed Integer indicating number of completed prompts
-#' @param state_path Path to save state file
+#' @param file Path to save state file (.rds)
 #' @param type Type specification for structured data extraction
 #' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
 #' @param progress Whether to show progress bars (default: TRUE)
@@ -142,7 +142,7 @@ batch <- S7::new_class(
         NULL
       }
     ),
-    state_path = S7::class_character | NULL,
+    file = S7::class_character | NULL,
     type = S7::new_property(
       class = S7::class_any | NULL,
       validator = function(value) {
@@ -364,6 +364,6 @@ S7::method(progress, batch) <- function(x) {
     completed_prompts = x@completed,
     completion_percentage = (x@completed / length(x@prompts)) * 100,
     remaining_prompts = length(x@prompts) - x@completed,
-    state_path = x@state_path
+    file = x@file
   )
 }

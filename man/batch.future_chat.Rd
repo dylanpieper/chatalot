@@ -9,7 +9,7 @@ batch.future_chat(
   prompts,
   type = NULL,
   eval_rounds = 0,
-  state_path = tempfile("chat_", fileext = ".rds"),
+  file = tempfile("chat_", fileext = ".rds"),
   workers = NULL,
   chunk_size = parallel::detectCores(),
   plan = "multisession",
@@ -33,7 +33,7 @@ batch.future_chat(
 
 \item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
 
-\item{state_path}{Path to save state file}
+\item{file}{Path to save state file}
 
 \item{workers}{Number of parallel workers (default upper limit is \code{parallel::detectCores()})}
 

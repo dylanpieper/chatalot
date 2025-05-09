@@ -9,7 +9,7 @@ process_future(
   prompts,
   type,
   eval_rounds,
-  state_path,
+  file,
   workers,
   chunk_size,
   plan,
@@ -33,7 +33,7 @@ process_future(
 
 \item{eval_rounds}{Number of evaluation rounds resulting in refined data}
 
-\item{state_path}{Path to save intermediate state}
+\item{file}{Path to save intermediate state}
 
 \item{workers}{Number of parallel workers}
 

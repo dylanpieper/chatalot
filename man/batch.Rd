@@ -8,7 +8,7 @@ batch(
   prompts = list(),
   responses = list(),
   completed = integer(0),
-  state_path = character(0),
+  file = character(0),
   type = NULL,
   eval_rounds = integer(0),
   progress = logical(0),
@@ -32,7 +32,7 @@ batch(
 
 \item{completed}{Integer indicating number of completed prompts}
 
-\item{state_path}{Path to save state file}
+\item{file}{Path to save state file (.rds)}
 
 \item{type}{Type specification for structured data extraction}
 

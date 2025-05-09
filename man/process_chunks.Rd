@@ -11,7 +11,7 @@ process_chunks(
   type,
   eval_rounds,
   pb,
-  state_path,
+  file,
   progress,
   beep,
   max_retries,
@@ -35,7 +35,7 @@ process_chunks(
 
 \item{pb}{Progress bar object}
 
-\item{state_path}{Path to save intermediate state}
+\item{file}{Path to save intermediate state}
 
 \item{progress}{Whether to show progress bars}
 

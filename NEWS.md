@@ -1,11 +1,12 @@
 # hellmer (development)
 
 ## Internal Improvements
-* Added one-time retry to failed structured data extractions
+* Added one-time retry for failed structured data extractions
 * Replaced progress bar percentage indicator (`cli::pb_percent`) to estimated time until completion (`cli::pb_eta`)
 * For `chat_future()`, updated the default `chunk_size` to `parallel::detectCores()` for safer processing 
 
 ## Lifecycle changes
+* `state_path` is renamed to `file` for consistency/simplicity
 * `judgements` is renamed to `eval_rounds` to better reflect the purpose of the parameter
 * `type_spec` is renamed to `type` following the latest update to ellmer (0.1.1)
 

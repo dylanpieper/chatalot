@@ -11,7 +11,7 @@
 #'     \item **prompts**: Original input prompts
 #'     \item **responses**: Raw response data for completed prompts
 #'     \item **completed**: Number of successfully processed prompts
-#'     \item **state_path**: Path where batch state is saved
+#'     \item **file**: Path where batch state is saved
 #'     \item **type**: Type specification used for structured data
 #'     \item **texts**: Function to extract text responses or structured data
 #'     \item **chats**: Function to extract chat objects
@@ -79,12 +79,12 @@ chat_sequential <- function(
     chat_env[[n]] <- chat_env$chat_model[[n]]
   }
 
-  chat_env$last_state_path <- NULL
+  chat_env$last_file <- NULL
 
   chat_env$batch <- function(prompts,
                              type = NULL,
                              eval_rounds = 0,
-                             state_path = tempfile("chat_", fileext = ".rds"),
+                             file = tempfile("chat_", fileext = ".rds"),
                              progress = TRUE,
                              max_retries = 3L,
                              initial_delay = 20,
@@ -93,10 +93,10 @@ chat_sequential <- function(
                              beep = TRUE,
                              echo = FALSE,
                              ...) {
-    if (is.null(chat_env$last_state_path)) {
-      chat_env$last_state_path <- state_path
+    if (is.null(chat_env$last_file)) {
+      chat_env$last_file <- file
     } else {
-      state_path <- chat_env$last_state_path
+      file <- chat_env$last_file
     }
 
     batch.sequential_chat(
@@ -104,7 +104,7 @@ chat_sequential <- function(
       prompts = prompts,
       type = type,
       eval_rounds = eval_rounds,
-      state_path = state_path,
+      file = file,
       progress = progress,
       max_retries = max_retries,
       initial_delay = initial_delay,
@@ -133,7 +133,7 @@ chat_sequential <- function(
 #'     \item **prompts**: Original input prompts
 #'     \item **responses**: Raw response data for completed prompts
 #'     \item **completed**: Number of successfully processed prompts
-#'     \item **state_path**: Path where batch state is saved
+#'     \item **file**: Path where batch state is saved
 #'     \item **type**: Type specification used for structured data
 #'     \item **texts**: Function to extract text responses or structured data
 #'     \item **chats**: Function to extract chat objects
@@ -199,12 +199,12 @@ chat_future <- function(
     chat_env[[n]] <- chat_env$chat_model[[n]]
   }
 
-  chat_env$last_state_path <- NULL
+  chat_env$last_file <- NULL
 
   chat_env$batch <- function(prompts,
                              type = NULL,
                              eval_rounds = 0,
-                             state_path = tempfile("chat_", fileext = ".rds"),
+                             file = tempfile("chat_", fileext = ".rds"),
                              progress = TRUE,
                              workers = NULL,
                              plan = "multisession",
@@ -217,10 +217,10 @@ chat_future <- function(
                              beep = TRUE,
                              echo = FALSE,
                              ...) {
-    if (is.null(chat_env$last_state_path)) {
-      chat_env$last_state_path <- state_path
+    if (is.null(chat_env$last_file)) {
+      chat_env$last_file <- file
     } else {
-      state_path <- chat_env$last_state_path
+      file <- chat_env$last_file
     }
 
     if (is.null(workers)) {
@@ -236,7 +236,7 @@ chat_future <- function(
       prompts = prompts,
       type = type,
       eval_rounds = eval_rounds,
-      state_path = state_path,
+      file = file,
       workers = workers,
       chunk_size = chunk_size,
       plan = plan,

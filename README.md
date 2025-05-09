@@ -213,7 +213,7 @@ batch$texts()
 Batch processing state and progress is saved to a path to an `.rds` file on the disk and allows you to resume interrupted operations:
 
 ``` r
-batch <- chat$batch(prompts, state_path = "chat_state.rds")
+batch <- chat$batch(prompts, file = "chat.rds")
 batch$progress()
 ```
 
@@ -223,7 +223,7 @@ If `state_path` is not defined, a temporary file will be created by default.
 
 Automatically retry failed requests with exponential backoff, which is useful to allow batch processing to persist for transient errors such as exceeding rate limits and temporary server errors.
 
-Most chat provider functions in `ellmer` do retry at least one time by default, but there is no user-defined control over the retry strategy.
+Most chat provider functions in `ellmer` retry at least one time by default, but there is no user-defined control over the retry strategy (yet).
 
 ``` r
 batch <- chat$batch(

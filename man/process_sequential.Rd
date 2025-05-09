@@ -9,7 +9,7 @@ process_sequential(
   prompts,
   type,
   eval_rounds,
-  state_path,
+  file,
   progress,
   max_retries,
   initial_delay,
@@ -29,7 +29,7 @@ process_sequential(
 
 \item{eval_rounds}{Number of evaluation rounds resulting in refined data}
 
-\item{state_path}{Path for saving state}
+\item{file}{Path to save state file (.rds)}
 
 \item{progress}{Whether to show progress bars}
 

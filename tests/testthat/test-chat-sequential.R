@@ -78,7 +78,7 @@ test_that("chat_sequential handles state persistence", {
   on.exit(unlink(temp_file))
 
   chat <- chat_sequential(ellmer::chat_openai)
-  result <- chat$batch(get_test_prompts(1), state_path = temp_file, beep = FALSE)
+  result <- chat$batch(get_test_prompts(1), file = temp_file, beep = FALSE)
 
   expect_true(file.exists(temp_file))
   expect_equal(length(result$texts()), 1)
@@ -91,7 +91,7 @@ test_that("chat_sequential supports progress parameter", {
   chat <- chat_sequential(ellmer::chat_openai)
   result <- chat$batch(get_test_prompts(1), progress = TRUE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
-  
+
   # Test with progress = FALSE
   chat <- chat_sequential(ellmer::chat_openai)
   result <- chat$batch(get_test_prompts(1), progress = FALSE, beep = FALSE)
@@ -102,16 +102,17 @@ test_that("chat_sequential supports echo parameter and passes extra args", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   chat <- chat_sequential(ellmer::chat_openai)
-  
+
   # Test with echo = TRUE
   result <- chat$batch(get_test_prompts(1), progress = FALSE, echo = TRUE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
-  
+
   # Test with additional parameter
-  result <- chat$batch(get_test_prompts(1), 
-                       progress = FALSE, 
-                       echo = TRUE, 
-                       beep = FALSE)
+  result <- chat$batch(get_test_prompts(1),
+    progress = FALSE,
+    echo = TRUE,
+    beep = FALSE
+  )
   expect_equal(length(result$texts()), 1)
 })
 

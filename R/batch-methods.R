@@ -4,7 +4,7 @@
 #' @param prompts List of prompts to process
 #' @param type Type specification for structured data extraction
 #' @param eval_rounds Number of evaluation rounds (1 = initial extract + 1 evaluation, 2 = initial extract + 2 evaluations, etc.)
-#' @param state_path Path to save state file
+#' @param file Path to save state file (.rds)
 #' @param progress Whether to show progress bars
 #' @param max_retries Maximum number of retry attempts for failed requests
 #' @param initial_delay Initial delay before first retry in seconds
@@ -20,7 +20,7 @@ batch.sequential_chat <- function(chat_env,
                                   prompts,
                                   type = NULL,
                                   eval_rounds = 0,
-                                  state_path = tempfile("chat_", fileext = ".rds"),
+                                  file = tempfile("chat_", fileext = ".rds"),
                                   progress = TRUE,
                                   max_retries = 3L,
                                   initial_delay = 20,
@@ -42,7 +42,7 @@ batch.sequential_chat <- function(chat_env,
     prompts = prompts,
     type = type,
     eval_rounds = eval_rounds,
-    state_path = state_path,
+    file = file,
     progress = progress,
     max_retries = max_retries,
     initial_delay = initial_delay,
@@ -60,7 +60,7 @@ batch.sequential_chat <- function(chat_env,
 #' @param prompts List of prompts to process
 #' @param type Type specification for structured data extraction
 #' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
-#' @param state_path Path to save state file
+#' @param file Path to save state file
 #' @param workers Number of parallel workers (default upper limit is `parallel::detectCores()`)
 #' @param chunk_size Number of prompts each worker processes at a time
 #' @param plan Parallel backend ("multisession" or "multicore")
@@ -80,7 +80,7 @@ batch.future_chat <- function(chat_env,
                               prompts,
                               type = NULL,
                               eval_rounds = 0,
-                              state_path = tempfile("chat_", fileext = ".rds"),
+                              file = tempfile("chat_", fileext = ".rds"),
                               workers = NULL,
                               chunk_size = parallel::detectCores(),
                               plan = "multisession",
@@ -108,7 +108,7 @@ batch.future_chat <- function(chat_env,
     prompts = prompts,
     type = type,
     eval_rounds = eval_rounds,
-    state_path = state_path,
+    file = file,
     workers = workers,
     chunk_size = chunk_size,
     plan = plan,

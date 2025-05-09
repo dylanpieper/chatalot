@@ -83,7 +83,7 @@ test_that("chat_future handles state persistence", {
   on.exit(unlink(temp_file))
 
   chat <- chat_future(ellmer::chat_openai)
-  result <- chat$batch(get_test_prompts(1), workers = 1, state_path = temp_file, chunk_size = 1, beep = FALSE)
+  result <- chat$batch(get_test_prompts(1), workers = 1, file = temp_file, chunk_size = 1, beep = FALSE)
 
   expect_true(file.exists(temp_file))
   expect_equal(length(result$texts()), 1)

@@ -129,7 +129,7 @@ capture_with_retry <- function(original_chat,
 #' @param prompts List of prompts
 #' @param type Type specification for structured data
 #' @param eval_rounds Number of evaluation rounds resulting in refined data
-#' @param state_path Path for saving state
+#' @param file Path to save state file (.rds)
 #' @param progress Whether to show progress bars
 #' @param beep Play sound on completion
 #' @param max_retries Maximum retry attempts
@@ -143,7 +143,7 @@ process_sequential <- function(
     prompts,
     type,
     eval_rounds,
-    state_path,
+    file,
     progress,
     max_retries,
     initial_delay,
@@ -152,11 +152,11 @@ process_sequential <- function(
     beep,
     echo,
     ...) {
-  if (file.exists(state_path)) {
-    result <- readRDS(state_path)
+  if (file.exists(file)) {
+    result <- readRDS(file)
     if (!identical(as.list(prompts), result@prompts)) {
       cli::cli_alert_warning("Prompts don't match saved state. Starting fresh.")
-      unlink(state_path)
+      unlink(file)
       result <- NULL
     }
   } else {
@@ -169,7 +169,7 @@ process_sequential <- function(
       prompts = as.list(prompts),
       responses = vector("list", length(prompts)),
       completed = 0L,
-      state_path = state_path,
+      file = file,
       type = type,
       eval_rounds = as.integer(eval_rounds),
       progress = progress,
@@ -183,7 +183,7 @@ process_sequential <- function(
       plan = NULL,
       state = NULL
     )
-    saveRDS(result, state_path)
+    saveRDS(result, file)
   }
 
   total_prompts <- length(prompts)
@@ -222,7 +222,7 @@ process_sequential <- function(
 
       result@responses[[i]] <- response
       result@completed <- i
-      saveRDS(result, state_path)
+      saveRDS(result, file)
 
       if (!is.null(pb)) {
         cli::cli_progress_update(id = pb, set = i)
@@ -235,7 +235,7 @@ process_sequential <- function(
       cli::cli_progress_done(id = pb)
     }
 
-    saveRDS(result, state_path)
+    saveRDS(result, file)
 
     if (inherits(e, "interrupt")) {
       handle_batch_interrupt(result, beep)
@@ -248,7 +248,7 @@ process_sequential <- function(
       cli::cli_progress_done(id = pb)
     }
 
-    saveRDS(result, state_path)
+    saveRDS(result, file)
 
     if (beep) beepr::beep("coin")
     cli::cli_alert_warning(sprintf(
@@ -257,7 +257,7 @@ process_sequential <- function(
     ))
   }, finally = {
     if (!exists("result")) {
-      result <- readRDS(state_path)
+      result <- readRDS(file)
     }
   })
 
@@ -269,7 +269,7 @@ process_sequential <- function(
 #' @param prompts Vector or list of prompts to process
 #' @param type Optional type specification for structured data extraction
 #' @param eval_rounds Number of evaluation rounds resulting in refined data
-#' @param state_path Path to save intermediate state
+#' @param file Path to save intermediate state
 #' @param workers Number of parallel workers
 #' @param chunk_size Number of prompts to process in parallel at a time
 #' @param plan Parallel backend
@@ -287,7 +287,7 @@ process_future <- function(
     prompts,
     type,
     eval_rounds,
-    state_path,
+    file,
     workers,
     chunk_size,
     plan,
@@ -332,11 +332,11 @@ process_future <- function(
   prompts_list <- as.list(prompts)
   original_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
 
-  if (file.exists(state_path)) {
-    result <- readRDS(state_path)
+  if (file.exists(file)) {
+    result <- readRDS(file)
     if (!identical(prompts_list, result@prompts)) {
       cli::cli_alert_warning("Prompts don't match saved state. Starting fresh.")
-      unlink(state_path)
+      unlink(file)
       result <- NULL
     }
   } else {
@@ -348,7 +348,7 @@ process_future <- function(
       prompts = prompts_list,
       responses = vector("list", total_prompts),
       completed = 0L,
-      state_path = state_path,
+      file = file,
       type = type,
       eval_rounds = as.integer(eval_rounds),
       progress = progress,
@@ -366,7 +366,7 @@ process_future <- function(
         retry_count = 0L
       )
     )
-    saveRDS(result, state_path)
+    saveRDS(result, file)
   }
 
   if (result@completed >= total_prompts) {
@@ -483,7 +483,7 @@ process_future <- function(
           result@responses[start_idx:end_idx] <- chunk_result$responses
 
           result@completed <- end_idx
-          saveRDS(result, state_path)
+          saveRDS(result, file)
           if (!is.null(pb)) {
             cli::cli_progress_update(id = pb, set = result@completed)
           }
@@ -522,7 +522,7 @@ process_future <- function(
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
     }
-    saveRDS(result, state_path)
+    saveRDS(result, file)
 
     if (inherits(e, "interrupt")) {
       handle_batch_interrupt(result, beep)
@@ -534,7 +534,7 @@ process_future <- function(
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
     }
-    saveRDS(result, state_path)
+    saveRDS(result, file)
 
     if (beep) beepr::beep("coin")
     cli::cli_alert_warning(sprintf(
@@ -543,7 +543,7 @@ process_future <- function(
     ))
   }, finally = {
     if (!exists("result")) {
-      result <- readRDS(state_path)
+      result <- readRDS(file)
     }
     future::plan(future::sequential)
   })
@@ -558,7 +558,7 @@ process_future <- function(
 #' @param type Type specification for structured data extraction
 #' @param eval_rounds Number of evaluation rounds resulting in refined data
 #' @param pb Progress bar object
-#' @param state_path Path to save intermediate state
+#' @param file Path to save intermediate state
 #' @param progress Whether to show progress bars
 #' @param beep Logical indicating whether to play sounds
 #' @param max_retries Maximum number of retry attempts
@@ -573,7 +573,7 @@ process_chunks <- function(chunks,
                            type,
                            eval_rounds,
                            pb,
-                           state_path,
+                           file,
                            progress,
                            beep,
                            max_retries,
@@ -613,7 +613,7 @@ process_chunks <- function(chunks,
         end_idx <- result@completed + length(new_responses)
         result@responses[start_idx:end_idx] <- new_responses
         result@completed <- end_idx
-        saveRDS(result, state_path)
+        saveRDS(result, file)
         if (!is.null(pb)) {
           cli::cli_progress_update(id = pb, set = end_idx)
         }
@@ -773,7 +773,7 @@ create_results <- function(result) {
     prompts = result@prompts,
     responses = result@responses,
     completed = result@completed,
-    state_path = result@state_path,
+    file = result@file,
     type = result@type
   )
 
