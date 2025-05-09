@@ -54,7 +54,7 @@
 <span>  <span class="va">prompts</span>,</span>
 <span>  type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  eval_rounds <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  state_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"chat_"</span>, fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span>,</span>
+<span>  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"chat_"</span>, fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span>,</span>
 <span>  workers <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  chunk_size <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  plan <span class="op">=</span> <span class="st">"multisession"</span>,</span>
@@ -90,7 +90,7 @@
 <dd><p>Number of evaluation rounds for structured data extraction resulting in refined data</p></dd>
 
 
-<dt id="arg-state-path">state_path<a class="anchor" aria-label="anchor" href="#arg-state-path"></a></dt>
+<dt id="arg-file">file<a class="anchor" aria-label="anchor" href="#arg-file"></a></dt>
 <dd><p>Path to save state file</p></dd>
 
 

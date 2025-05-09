@@ -54,7 +54,7 @@
 <span>  <span class="va">prompts</span>,</span>
 <span>  type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  eval_rounds <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  state_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"chat_"</span>, fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span>,</span>
+<span>  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"chat_"</span>, fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  max_retries <span class="op">=</span> <span class="fl">3L</span>,</span>
 <span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,</span>
@@ -86,8 +86,8 @@
 <dd><p>Number of evaluation rounds (1 = initial extract + 1 evaluation, 2 = initial extract + 2 evaluations, etc.)</p></dd>
 
 
-<dt id="arg-state-path">state_path<a class="anchor" aria-label="anchor" href="#arg-state-path"></a></dt>
-<dd><p>Path to save state file</p></dd>
+<dt id="arg-file">file<a class="anchor" aria-label="anchor" href="#arg-file"></a></dt>
+<dd><p>Path to save state file (.rds)</p></dd>
 
 
 <dt id="arg-progress">progress<a class="anchor" aria-label="anchor" href="#arg-progress"></a></dt>
