@@ -65,7 +65,7 @@ batch$progress()
 #> $remaining_prompts
 #> [1] 0
 #> 
-#> $state_path
+#> $file
 #> [1] "/var/folders/.../chat_c5383b1279ae.rds"
 
 batch$texts()
@@ -210,14 +210,14 @@ batch$texts()
 
 ### Progress Tracking and Recovery
 
-Batch processing state and progress is saved to a path to an `.rds` file on the disk and allows you to resume interrupted operations:
+Batch processing state and progress is saved to an `.rds` file on the disk and allows you to resume interrupted operations:
 
 ``` r
 batch <- chat$batch(prompts, file = "chat.rds")
 batch$progress()
 ```
 
-If `state_path` is not defined, a temporary file will be created by default.
+If `file` is not defined, a temporary file will be created by default.
 
 ### Automatic Retry
 
