@@ -66,7 +66,7 @@
 <p><a href="https://CRAN.R-project.org/package=hellmer" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
 <p>hellmer makes it easy to batch process large language model chats using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>. Process many chats sequentially or in parallel and use ellmer features such as <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tooling</a> and <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>.</p>
 <p>✅ hellmer processes many chats synchronously and supports streaming responses</p>
-<p>❌ hellmer does NOT support asynchronous batch APIs (for example, see <a href="https://platform.openai.com/docs/guides/batch" class="external-link">OpenAI’s Batch API</a>)</p>
+<p>❌ hellmer does NOT support asynchronous batch APIs - see ellmer’s <a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">batch_chat()</a></p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -118,39 +118,39 @@
 <span><span class="co">#&gt; [1] 0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $file</span></span>
-<span><span class="co">#&gt; [1] "/var/folders/.../chat_c5383b1279ae.rds"</span></span>
+<span><span class="co">#&gt; [1] "/var/folders/.../chat_df5c5ae85d0b.rds"</span></span>
 <span></span>
 <span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; [1] "R is a programming language and software environment primarily used for </span></span>
-<span><span class="co">#&gt; statistical computing and data analysis."</span></span>
+<span><span class="co">#&gt; statistical computing, data analysis, and graphical visualization."</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; [1] "Base R refers to the R language's core packages and functionalities, </span></span>
-<span><span class="co">#&gt; whereas Tidyverse is a collection of R packages designed for data science </span></span>
-<span><span class="co">#&gt; that provides a more intuitive and consistent syntax."</span></span>
+<span><span class="co">#&gt; [1] "Base R refers to R's built-in functions and syntax for data manipulation and</span></span>
+<span><span class="co">#&gt; analysis, while tidyverse is a collection of packages that provide a more </span></span>
+<span><span class="co">#&gt; consistent, user-friendly, and modern approach to data science workflows in R."</span></span>
 <span></span>
 <span><span class="va">batch</span><span class="op">$</span><span class="fu">chats</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; &lt;Chat OpenAI/gpt-4o turns=3 tokens=22/18&gt;</span></span>
+<span><span class="co">#&gt; &lt;Chat OpenAI/gpt-4.1 turns=3 tokens=22/21 $0.00&gt;</span></span>
 <span><span class="co">#&gt; ── system [0] ───────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; Reply concisely, one sentence</span></span>
 <span><span class="co">#&gt; ── user [22] ────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; What is R?</span></span>
-<span><span class="co">#&gt; ── assistant [18] ───────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; R is a programming language and software environment primarily used for</span></span>
-<span><span class="co">#&gt; statistical computing and data analysis.</span></span>
-<span></span>
+<span><span class="co">#&gt; ── assistant [21] ───────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; R is a programming language and software environment primarily used for </span></span>
+<span><span class="co">#&gt; statistical computing, data analysis, and graphical visualization.</span></span>
+<span><span class="co">#&gt;</span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; &lt;Chat OpenAI/gpt-4o turns=3 tokens=24/37&gt;</span></span>
+<span><span class="co">#&gt; &lt;Chat OpenAI/gpt-4.1 turns=3 tokens=24/44 $0.00&gt;</span></span>
 <span><span class="co">#&gt; ── system [0] ───────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; Reply concisely, one sentence</span></span>
 <span><span class="co">#&gt; ── user [24] ────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; Explain base R versus tidyverse</span></span>
-<span><span class="co">#&gt; ── assistant [37] ───────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; Base R refers to the R language's core packages and functionalities, whereas </span></span>
-<span><span class="co">#&gt; Tidyverse is a collection of R packages designed for data science </span></span>
-<span><span class="co">#&gt; that provides a more intuitive and consistent syntax.</span></span></code></pre></div>
+<span><span class="co">#&gt; ── assistant [44] ───────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; Base R refers to R's built-in functions and syntax for data manipulation and </span></span>
+<span><span class="co">#&gt; analysis, while tidyverse is a collection of packages that provide a more </span></span>
+<span><span class="co">#&gt; consistent, user-friendly, and modern approach to data science workflows in R.</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
@@ -165,6 +165,7 @@
 <span>  <span class="va">prompts</span>, </span>
 <span>  chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p>Consider ellmer’s <a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">parallel_chat()</a> as an alternative option.</p>
 </div>
 </div>
 <div class="section level2">
