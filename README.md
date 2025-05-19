@@ -6,7 +6,7 @@ hellmer makes it easy to batch process large language model chats using [ellmer]
 
 ✅ hellmer processes many chats synchronously and supports streaming responses
 
-❌ hellmer does NOT support asynchronous batch APIs (for example, see [OpenAI's Batch API](https://platform.openai.com/docs/guides/batch))
+❌ hellmer does NOT support asynchronous batch APIs - see ellmer's [batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html)
 
 ## Installation
 
@@ -66,39 +66,39 @@ batch$progress()
 #> [1] 0
 #> 
 #> $file
-#> [1] "/var/folders/.../chat_c5383b1279ae.rds"
+#> [1] "/var/folders/.../chat_df5c5ae85d0b.rds"
 
 batch$texts()
 #> [[1]]
 #> [1] "R is a programming language and software environment primarily used for 
-#> statistical computing and data analysis."
+#> statistical computing, data analysis, and graphical visualization."
 #> 
 #> [[2]]
-#> [1] "Base R refers to the R language's core packages and functionalities, 
-#> whereas Tidyverse is a collection of R packages designed for data science 
-#> that provides a more intuitive and consistent syntax."
+#> [1] "Base R refers to R's built-in functions and syntax for data manipulation and
+#> analysis, while tidyverse is a collection of packages that provide a more 
+#> consistent, user-friendly, and modern approach to data science workflows in R."
 
 batch$chats()
 #> [[1]]
-#> <Chat OpenAI/gpt-4o turns=3 tokens=22/18>
+#> <Chat OpenAI/gpt-4.1 turns=3 tokens=22/21 $0.00>
 #> ── system [0] ───────────────────────────────────────────────────────────────
 #> Reply concisely, one sentence
 #> ── user [22] ────────────────────────────────────────────────────────────────
 #> What is R?
-#> ── assistant [18] ───────────────────────────────────────────────────────────
-#> R is a programming language and software environment primarily used for
-#> statistical computing and data analysis.
-
+#> ── assistant [21] ───────────────────────────────────────────────────────────
+#> R is a programming language and software environment primarily used for 
+#> statistical computing, data analysis, and graphical visualization.
+#>
 #> [[2]]
-#> <Chat OpenAI/gpt-4o turns=3 tokens=24/37>
+#> <Chat OpenAI/gpt-4.1 turns=3 tokens=24/44 $0.00>
 #> ── system [0] ───────────────────────────────────────────────────────────────
 #> Reply concisely, one sentence
 #> ── user [24] ────────────────────────────────────────────────────────────────
 #> Explain base R versus tidyverse
-#> ── assistant [37] ───────────────────────────────────────────────────────────
-#> Base R refers to the R language's core packages and functionalities, whereas 
-#> Tidyverse is a collection of R packages designed for data science 
-#> that provides a more intuitive and consistent syntax.
+#> ── assistant [44] ───────────────────────────────────────────────────────────
+#> Base R refers to R's built-in functions and syntax for data manipulation and 
+#> analysis, while tidyverse is a collection of packages that provide a more 
+#> consistent, user-friendly, and modern approach to data science workflows in R.
 ```
 
 ### Parallel Processing
@@ -119,6 +119,8 @@ batch <- chat$batch(
   chunk_size = length(prompts)
 )
 ```
+
+Consider ellmer's [parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) as an alternative option.
 
 ## Features
 

@@ -650,7 +650,7 @@ process_evaluations <- function(chat_obj, prompt, type, eval_rounds = 0, echo = 
   extract_with_retry <- function(extraction_prompt, retry_message = NULL) {
     extracted <- tryCatch(
       {
-        chat$extract_data(extraction_prompt, type = type, ...)
+        chat$chat_structured(extraction_prompt, type = type, ...)
       },
       error = function(e) {
         if (!is.null(retry_message)) {
@@ -663,7 +663,7 @@ process_evaluations <- function(chat_obj, prompt, type, eval_rounds = 0, echo = 
     if (is.null(extracted) && !is.null(retry_message)) {
       extracted <- tryCatch(
         {
-          chat$extract_data(extraction_prompt, type = type, ...)
+          chat$chat_structured(extraction_prompt, type = type, ...)
         },
         error = function(e) {
           NULL

@@ -31,5 +31,5 @@ Imports:
     purrr,
     S7,
     utils
-Depends: ellmer (>= 0.1.1)
+Depends: ellmer (>= 0.2.0)
 URL: https://dylanpieper.github.io/hellmer/
