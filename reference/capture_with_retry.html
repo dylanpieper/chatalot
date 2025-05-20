@@ -52,8 +52,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">capture_with_retry</span><span class="op">(</span></span>
 <span>  <span class="va">original_chat</span>,</span>
 <span>  <span class="va">prompt</span>,</span>
-<span>  <span class="va">type</span>,</span>
-<span>  <span class="va">eval_rounds</span>,</span>
+<span>  <span class="va">type_spec</span>,</span>
+<span>  <span class="va">judgements</span>,</span>
 <span>  <span class="va">max_retries</span>,</span>
 <span>  <span class="va">initial_delay</span>,</span>
 <span>  <span class="va">max_delay</span>,</span>
@@ -75,12 +75,12 @@
 <dd><p>Prompt text</p></dd>
 
 
-<dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
+<dt id="arg-type-spec">type_spec<a class="anchor" aria-label="anchor" href="#arg-type-spec"></a></dt>
 <dd><p>Type specification for structured data</p></dd>
 
 
-<dt id="arg-eval-rounds">eval_rounds<a class="anchor" aria-label="anchor" href="#arg-eval-rounds"></a></dt>
-<dd><p>Number of evaluation rounds resulting in refined data</p></dd>
+<dt id="arg-judgements">judgements<a class="anchor" aria-label="anchor" href="#arg-judgements"></a></dt>
+<dd><p>Number of judgements for structured data extraction resulting in refined data</p></dd>
 
 
 <dt id="arg-max-retries">max_retries<a class="anchor" aria-label="anchor" href="#arg-max-retries"></a></dt>
