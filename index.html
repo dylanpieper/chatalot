@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Batch Processing for Chat Models • hellmer</title>
+<title>Synchronous Batch Processing for Chat Models • hellmer</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Batch Processing for Chat Models">
-<meta name="description" content="Batch processing framework for ellmer chat models. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery and automatic retry with backoff. Additional quality-of-life features include verbosity (or echo) control and sound notifications. Parallel processing is implemented via the future framework. Includes methods for retrieving progress status, chat texts, and chat objects.">
-<meta property="og:description" content="Batch processing framework for ellmer chat models. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery and automatic retry with backoff. Additional quality-of-life features include verbosity (or echo) control and sound notifications. Parallel processing is implemented via the future framework. Includes methods for retrieving progress status, chat texts, and chat objects.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Synchronous Batch Processing for Chat Models">
+<meta name="description" content="Synchronous batch processing framework for ellmer chat models. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery and automatic retry with backoff. Additional quality-of-life features include verbosity (or echo) control and sound notifications. Parallel processing is implemented via the future framework. Includes methods for retrieving progress status, chat texts, and chat objects.">
+<meta property="og:description" content="Synchronous batch processing framework for ellmer chat models. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery and automatic retry with backoff. Additional quality-of-life features include verbosity (or echo) control and sound notifications. Parallel processing is implemented via the future framework. Includes methods for retrieving progress status, chat texts, and chat objects.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -64,9 +64,9 @@
 <div class="page-header"><h1 id="hellmer-">hellmer <img src="reference/figures/hellmer-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#hellmer-"></a>
 </h1></div>
 <p><a href="https://CRAN.R-project.org/package=hellmer" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
-<p>hellmer makes it easy to batch process large language model chats using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>. Process many chats sequentially or in parallel and use ellmer features such as <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tooling</a> and <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>.</p>
+<p>hellmer makes it easy to synchronously batch process large language model chats in R using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>. Process many chats sequentially or in parallel and use ellmer features such as <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tooling</a> and <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>.</p>
 <p>✅ hellmer processes many chats synchronously and supports streaming responses</p>
-<p>❌ hellmer does NOT support asynchronous batch APIs (for example, see <a href="https://platform.openai.com/docs/guides/batch" class="external-link">OpenAI’s Batch API</a>)</p>
+<p>❌ hellmer does NOT support asynchronous batch APIs - see ellmer’s <a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">batch_chat()</a></p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -117,54 +117,55 @@
 <span><span class="co">#&gt; $remaining_prompts</span></span>
 <span><span class="co">#&gt; [1] 0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $state_path</span></span>
-<span><span class="co">#&gt; [1] "/var/folders/.../chat_c5383b1279ae.rds"</span></span>
+<span><span class="co">#&gt; $file</span></span>
+<span><span class="co">#&gt; [1] "/var/folders/.../chat_df5c5ae85d0b.rds"</span></span>
 <span></span>
 <span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; [1] "R is a programming language and software environment primarily used for </span></span>
-<span><span class="co">#&gt; statistical computing and data analysis."</span></span>
+<span><span class="co">#&gt; statistical computing, data analysis, and graphical visualization."</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; [1] "Base R refers to the R language's core packages and functionalities, </span></span>
-<span><span class="co">#&gt; whereas Tidyverse is a collection of R packages designed for data science </span></span>
-<span><span class="co">#&gt; that provides a more intuitive and consistent syntax."</span></span>
+<span><span class="co">#&gt; [1] "Base R refers to R's built-in functions and syntax for data manipulation and</span></span>
+<span><span class="co">#&gt; analysis, while tidyverse is a collection of packages that provide a more </span></span>
+<span><span class="co">#&gt; consistent, user-friendly, and modern approach to data science workflows in R."</span></span>
 <span></span>
 <span><span class="va">batch</span><span class="op">$</span><span class="fu">chats</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; &lt;Chat OpenAI/gpt-4o turns=3 tokens=22/18&gt;</span></span>
+<span><span class="co">#&gt; &lt;Chat OpenAI/gpt-4.1 turns=3 tokens=22/21 $0.00&gt;</span></span>
 <span><span class="co">#&gt; ── system [0] ───────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; Reply concisely, one sentence</span></span>
 <span><span class="co">#&gt; ── user [22] ────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; What is R?</span></span>
-<span><span class="co">#&gt; ── assistant [18] ───────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; R is a programming language and software environment primarily used for</span></span>
-<span><span class="co">#&gt; statistical computing and data analysis.</span></span>
-<span></span>
+<span><span class="co">#&gt; ── assistant [21] ───────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; R is a programming language and software environment primarily used for </span></span>
+<span><span class="co">#&gt; statistical computing, data analysis, and graphical visualization.</span></span>
+<span><span class="co">#&gt;</span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; &lt;Chat OpenAI/gpt-4o turns=3 tokens=24/37&gt;</span></span>
+<span><span class="co">#&gt; &lt;Chat OpenAI/gpt-4.1 turns=3 tokens=24/44 $0.00&gt;</span></span>
 <span><span class="co">#&gt; ── system [0] ───────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; Reply concisely, one sentence</span></span>
 <span><span class="co">#&gt; ── user [24] ────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; Explain base R versus tidyverse</span></span>
-<span><span class="co">#&gt; ── assistant [37] ───────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; Base R refers to the R language's core packages and functionalities, whereas </span></span>
-<span><span class="co">#&gt; Tidyverse is a collection of R packages designed for data science </span></span>
-<span><span class="co">#&gt; that provides a more intuitive and consistent syntax.</span></span></code></pre></div>
+<span><span class="co">#&gt; ── assistant [44] ───────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; Base R refers to R's built-in functions and syntax for data manipulation and </span></span>
+<span><span class="co">#&gt; analysis, while tidyverse is a collection of packages that provide a more </span></span>
+<span><span class="co">#&gt; consistent, user-friendly, and modern approach to data science workflows in R.</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
-<p>Parallel processing spins up multiple R processes, or parallel workers, to chat at the same time.</p>
-<p>By default, the upper limit for number of <code>workers</code> = <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>, and the number of prompts to process at a time is <code>chunk_size</code> = <code>parallel::detectCores() * 5</code>. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, the data is saved to the disk.</p>
+<p>Parallel processing spins up multiple R processes (workers) to chat at the same time. This method improves speed of processing and is built on the <a href="https://www.futureverse.org" class="external-link">futureverse</a>.</p>
+<p>The default upper limit for number of <code>workers</code> is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>. The default <code>chunk_size</code> is also <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code> and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, data is saved to the disk.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span></code></pre></div>
-<p>For maximum performance, set <code>chunk_size</code> to the number of prompts (~4-5x faster). However, data will not be saved to the disk until all chats are processed.</p>
+<p>For maximum processing speed, set <code>chunk_size</code> to the number of prompts. However, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>, </span>
 <span>  chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p>Consider ellmer’s <a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">parallel_chat()</a> as an alternative option.</p>
 </div>
 </div>
 <div class="section level2">
@@ -220,7 +221,7 @@
 <span>  <span class="st">"R's object-oriented system is confusing, inconsistent, and painful to use."</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span><span class="op">)</span></span>
+<span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type <span class="op">=</span> <span class="va">type_sentiment</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
@@ -238,7 +239,7 @@
 </h4>
 <p>Self-evaluation prompts the chat model to improve the initial or prior structured data extraction using the <code>eval_rounds</code> parameter (increases token use). You can set the number of self-evaluation rounds but be mindful of the cost and risk of diminishing returns.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type_spec <span class="op">=</span> <span class="va">type_sentiment</span>, eval_rounds <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type <span class="op">=</span> <span class="va">type_sentiment</span>, eval_rounds <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
@@ -256,17 +257,16 @@
 <div class="section level3">
 <h3 id="progress-tracking-and-recovery">Progress Tracking and Recovery<a class="anchor" aria-label="anchor" href="#progress-tracking-and-recovery"></a>
 </h3>
-<p>Batch processing state and progress is saved to a path to an <code>.rds</code> file on the disk and allows you to resume interrupted operations:</p>
+<p>Batch progress is saved to an <code>.rds</code> file on the disk and allows you to resume interrupted operations:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, state_path <span class="op">=</span> <span class="st">"chat_state.rds"</span><span class="op">)</span></span>
-<span><span class="va">batch</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>If <code>state_path</code> is not defined, a temporary file will be created by default.</p>
+<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, file <span class="op">=</span> <span class="st">"chat.rds"</span><span class="op">)</span></span></code></pre></div>
+<p>If <code>file</code> is not defined, a temporary file will be created by default.</p>
 </div>
 <div class="section level3">
 <h3 id="automatic-retry">Automatic Retry<a class="anchor" aria-label="anchor" href="#automatic-retry"></a>
 </h3>
 <p>Automatically retry failed requests with exponential backoff, which is useful to allow batch processing to persist for transient errors such as exceeding rate limits and temporary server errors.</p>
-<p>Most chat provider functions in <code>ellmer</code> do retry at least one time by default, but there is no user-defined control over the retry strategy.</p>
+<p>Most chat provider functions in <code>ellmer</code> retry at least one time by default, but there is no user-defined control over the retry strategy (yet).</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
 <span>  prompts <span class="op">=</span> <span class="va">prompts</span>,   <span class="co"># list or vector of prompts</span></span>
@@ -365,7 +365,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

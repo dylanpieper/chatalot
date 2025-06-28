@@ -46,8 +46,10 @@
 <h2 class="pkg-version" data-toc-text="0.1.2" id="hellmer-012">hellmer 0.1.2<a class="anchor" aria-label="anchor" href="#hellmer-012"></a></h2><p class="text-muted">CRAN release: 2025-04-17</p>
 <div class="section level3">
 <h3 id="new-features-0-1-2">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-1-2"></a></h3>
-<ul><li><p><code><a href="../reference/chat_future.html">chat_future()</a></code> now uses uses CPU cores * 5 as the default chunk size</p></li>
-<li><p><code>$batch()</code> gains <code>progress</code> in addition to <code>echo</code> and <code>...</code> which are passed to the chat call</p></li>
+<ul><li>
+<code><a href="../reference/chat_future.html">chat_future()</a></code> now uses uses CPU cores * 5 as the default chunk size</li>
+<li>
+<code>$batch()</code> gains <code>progress</code> in addition to <code>echo</code> and <code>...</code> which are passed to the chat call</li>
 </ul></div>
 <div class="section level3">
 <h3 id="internal-improvements-0-1-2">Internal Improvements<a class="anchor" aria-label="anchor" href="#internal-improvements-0-1-2"></a></h3>
@@ -56,16 +58,17 @@
 </ul></div>
 <div class="section level3">
 <h3 id="lifecycle-changes-0-1-2">Lifecycle changes<a class="anchor" aria-label="anchor" href="#lifecycle-changes-0-1-2"></a></h3>
-<ul><li><p>Removed the timeout feature as it’s better handled by <code>option(ellmer_timeout_s = 120)</code> in ellmer 0.1.1</p></li>
-<li><p>Moved parameters from <code><a href="../reference/chat_sequential.html">chat_sequential()</a></code> and <code><a href="../reference/chat_future.html">chat_future()</a></code> to <code>$batch()</code> except for <code>chat_model</code> and <code>...</code></p></li>
+<ul><li>Removed the timeout feature as it’s better handled by <code>option(ellmer_timeout_s = 120)</code> in ellmer 0.1.1</li>
+<li>Moved parameters from <code><a href="../reference/chat_sequential.html">chat_sequential()</a></code> and <code><a href="../reference/chat_future.html">chat_future()</a></code> to <code>$batch()</code> except for <code>chat_model</code> and <code>...</code>
+</li>
 </ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="hellmer-011">hellmer 0.1.1<a class="anchor" aria-label="anchor" href="#hellmer-011"></a></h2><p class="text-muted">CRAN release: 2025-03-14</p>
 <div class="section level3">
 <h3 id="new-features-0-1-1">New features<a class="anchor" aria-label="anchor" href="#new-features-0-1-1"></a></h3>
-<ul><li><p>Removed <code>structured_data()</code> method as <code><a href="../reference/texts.html">texts()</a></code> now handles structured data responses</p></li>
-<li><p>Updated package documentation for better organization and clarity</p></li>
+<ul><li>Removed <code>structured_data()</code> method as <code><a href="../reference/texts.html">texts()</a></code> now handles structured data responses</li>
+<li>Updated package documentation for better organization and clarity</li>
 </ul></div>
 <div class="section level3">
 <h3 id="experimental-features-0-1-1">Experimental features<a class="anchor" aria-label="anchor" href="#experimental-features-0-1-1"></a></h3>
@@ -88,7 +91,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
