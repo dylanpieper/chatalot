@@ -1,9 +1,9 @@
 Package: hellmer
-Title: Batch Processing for Chat Models
+Title: Synchronous Batch Processing for Chat Models
 Version: 0.1.2
 Authors@R: 
     person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
-Description: Batch processing framework for 'ellmer' chat models.
+Description: Synchronous batch processing framework for 'ellmer' chat models.
     Provides both sequential and parallel processing of chat interactions
     with features including tool calling and structured data extraction.
     Enables workflow management through progress tracking and recovery and 

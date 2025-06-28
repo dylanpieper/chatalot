@@ -2,7 +2,7 @@
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://CRAN.R-project.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-hellmer makes it easy to batch process large language model chats using [ellmer](https://ellmer.tidyverse.org). Process many chats sequentially or in parallel and use ellmer features such as [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html).
+hellmer makes it easy to synchronously batch process large language model chats in R using [ellmer](https://ellmer.tidyverse.org). Process many chats sequentially or in parallel and use ellmer features such as [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html).
 
 ✅ hellmer processes many chats synchronously and supports streaming responses
 
@@ -103,9 +103,9 @@ batch$chats()
 
 ### Parallel Processing
 
-Parallel processing spins up multiple R processes, or parallel workers, to chat at the same time. This method, built on the [futureverse](https://www.futureverse.org), improves speed of processing.
+Parallel processing spins up multiple R processes (workers) to chat at the same time. This method improves speed of processing and is built on the [futureverse](https://www.futureverse.org).
 
-The default upper limit for number of `workers` is `parallel::detectCores()`. The default `chunk_size` (i.e., number of prompts to process at a time) is also `parallel::detectCores()`. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, data is saved to the disk.
+The default upper limit for number of `workers` is `parallel::detectCores()`. The default `chunk_size` is also `parallel::detectCores()` and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, data is saved to the disk.
 
 ``` r
 chat <- chat_future(openai)
@@ -212,11 +212,10 @@ batch$texts()
 
 ### Progress Tracking and Recovery
 
-Batch processing state and progress is saved to an `.rds` file on the disk and allows you to resume interrupted operations:
+Batch progress is saved to an `.rds` file on the disk and allows you to resume interrupted operations:
 
 ``` r
 batch <- chat$batch(prompts, file = "chat.rds")
-batch$progress()
 ```
 
 If `file` is not defined, a temporary file will be created by default.

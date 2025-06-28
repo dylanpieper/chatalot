@@ -4,9 +4,9 @@
 \name{hellmer-package}
 \alias{hellmer}
 \alias{hellmer-package}
-\title{hellmer: Batch Processing for Chat Models}
+\title{hellmer: Synchronous Batch Processing for Chat Models}
 \description{
-Batch processing framework for 'ellmer' chat models. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery and automatic retry with backoff. Additional quality-of-life features include verbosity (or echo) control and sound notifications. Parallel processing is implemented via the 'future' framework. Includes methods for retrieving progress status, chat texts, and chat objects.
+Synchronous batch processing framework for 'ellmer' chat models. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery and automatic retry with backoff. Additional quality-of-life features include verbosity (or echo) control and sound notifications. Parallel processing is implemented via the 'future' framework. Includes methods for retrieving progress status, chat texts, and chat objects.
 }
 \seealso{
 Useful links:
