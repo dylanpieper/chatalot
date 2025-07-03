@@ -2,7 +2,7 @@
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://CRAN.R-project.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-hellmer makes it easy to synchronously batch process large language model chats in R using [ellmer](https://ellmer.tidyverse.org). Process many chats sequentially or in parallel and use ellmer features such as [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html).
+hellmer makes it easy to synchronously batch process large language model chats in R using [ellmer](https://ellmer.tidyverse.org). Process many chats sequentially or in parallel and use ellmer features such as [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html) with self-evaluation.
 
 ✅ hellmer processes many chats synchronously and supports streaming responses
 
@@ -126,7 +126,7 @@ Consider ellmer's [parallel_chat()](https://ellmer.tidyverse.org/reference/paral
 
 ### Tooling
 
-Register and use tools/function calling:
+Register and use [tool/function calling](https://ellmer.tidyverse.org/articles/tool-calling.html):
 
 ``` r
 get_current_time <- function(tz = "UTC") {
@@ -159,7 +159,7 @@ batch$texts()
 
 ### Structured Data Extraction
 
-Extract structured data using type specifications:
+Extract [structured data](https://ellmer.tidyverse.org/articles/structured-data.html) using type specifications:
 
 ``` r
 type_sentiment <- type_object(
@@ -192,7 +192,7 @@ batch$texts()
 
 #### Self-evaluation
 
-Self-evaluation prompts the chat model to improve the initial or prior structured data extraction using the `eval_rounds` parameter (increases token use). You can set the number of self-evaluation rounds but be mindful of the cost and risk of diminishing returns.
+Self-evaluation prompts the chat model to evaluate and refine the structured data extraction using the `eval_rounds` parameter (increases token use). You can set the number of evaluation rounds but be mindful of the cost and risk of diminishing returns.
 
 ``` r
 batch <- chat$batch(prompts, type = type_sentiment, eval_rounds = 1)
@@ -209,6 +209,14 @@ batch$texts()
 #> [1] 0.05
 #> ...
 ```
+
+Technically, the self-evaluation feature implements a two-step process:
+
+1.  **Evaluation:** The model asks itself `"What could be improved in my data extraction? I extracted the following structured data: [JSON] The original prompt was: [prompt]"`
+
+2.  **Refinement:** Based on the evaluation feedback, the model attempts a new structure data extraction with the prompt `"Extract the following data more accurately: [prompt] The prior extraction had the following structured data: [JSON] The prior extraction had these issues: [evaluation]"`
+
+This creates a multi-turn chat where the model critiques its own work and then attempts to improve based on that self-evaluation.
 
 ### Progress Tracking and Recovery
 
