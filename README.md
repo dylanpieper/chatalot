@@ -103,7 +103,7 @@ batch$chats()
 
 ### Parallel Processing
 
-**⚠️ As of ellmer 0.2.1, API keys are automatically redacted when saved to the disk, which prevents parallel processing. You must install `pak::pak("ellmer@0.2.0")` for now.**
+**⚠️ As of ellmer 0.2.1, API keys are automatically redacted when saved to the disk, which prevents parallel processing. You must install `pak::pak("ellmer@0.2.0")` for now. Consider ellmer's [parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) as an alternative option.**
 
 Parallel processing spins up multiple R processes (workers) to chat at the same time. This method improves speed of processing and is built on the [futureverse](https://www.futureverse.org).
 
@@ -121,8 +121,6 @@ batch <- chat$batch(
   chunk_size = length(prompts)
 )
 ```
-
-Consider ellmer's [parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) as an alternative option.
 
 ## Features
 
