@@ -103,6 +103,8 @@ batch$chats()
 
 ### Parallel Processing
 
+**⚠️ As of ellmer 0.2.1, API keys are automatically redacted when saved to the disk, which prevents parallel processing. You must install `pak::pak("ellmer@0.2.0")` for now.**
+
 Parallel processing spins up multiple R processes (workers) to chat at the same time. This method improves speed of processing and is built on the [futureverse](https://www.futureverse.org).
 
 The default upper limit for number of `workers` is `parallel::detectCores()`. The default `chunk_size` is also `parallel::detectCores()` and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, data is saved to the disk.
