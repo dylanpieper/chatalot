@@ -63,7 +63,6 @@ batch.sequential_chat <- function(chat_env,
 #' @param file Path to save state file
 #' @param workers Number of parallel workers (default upper limit is `parallel::detectCores()`)
 #' @param chunk_size Number of prompts each worker processes at a time
-#' @param plan Parallel backend ("multisession" or "multicore")
 #' @param max_chunk_attempts Maximum retries per failed chunk
 #' @param max_retries Maximum number of retry attempts for failed requests
 #' @param initial_delay Initial delay before first retry in seconds
@@ -83,7 +82,6 @@ batch.future_chat <- function(chat_env,
                               file = tempfile("chat_", fileext = ".rds"),
                               workers = NULL,
                               chunk_size = parallel::detectCores(),
-                              plan = "multisession",
                               max_chunk_attempts = 3L,
                               max_retries = 3L,
                               initial_delay = 20,
@@ -93,7 +91,6 @@ batch.future_chat <- function(chat_env,
                               progress = TRUE,
                               echo = FALSE,
                               ...) {
-  plan <- match.arg(plan, choices = c("multisession", "multicore"))
 
   if (eval_rounds > 0 && is.null(type)) {
     cli::cli_alert_warning("eval_rounds parameter ({eval_rounds}) specified but will be ignored without a type")
@@ -111,7 +108,6 @@ batch.future_chat <- function(chat_env,
     file = file,
     workers = workers,
     chunk_size = chunk_size,
-    plan = plan,
     max_chunk_attempts = max_chunk_attempts,
     max_retries = max_retries,
     initial_delay = initial_delay,

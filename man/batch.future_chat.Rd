@@ -12,7 +12,6 @@ batch.future_chat(
   file = tempfile("chat_", fileext = ".rds"),
   workers = NULL,
   chunk_size = parallel::detectCores(),
-  plan = "multisession",
   max_chunk_attempts = 3L,
   max_retries = 3L,
   initial_delay = 20,
@@ -38,8 +37,6 @@ batch.future_chat(
 \item{workers}{Number of parallel workers (default upper limit is \code{parallel::detectCores()})}
 
 \item{chunk_size}{Number of prompts each worker processes at a time}
-
-\item{plan}{Parallel backend ("multisession" or "multicore")}
 
 \item{max_chunk_attempts}{Maximum retries per failed chunk}
 

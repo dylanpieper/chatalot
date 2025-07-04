@@ -12,7 +12,6 @@ process_future(
   file,
   workers,
   chunk_size,
-  plan,
   max_chunk_attempts,
   max_retries,
   initial_delay,
@@ -38,8 +37,6 @@ process_future(
 \item{workers}{Number of parallel workers}
 
 \item{chunk_size}{Number of prompts to process in parallel at a time}
-
-\item{plan}{Parallel backend}
 
 \item{max_chunk_attempts}{Maximum retries per failed chunk}
 

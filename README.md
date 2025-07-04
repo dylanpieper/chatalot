@@ -6,7 +6,7 @@ hellmer makes it easy to synchronously batch process large language model chats 
 
 ✅ hellmer processes many chats synchronously and supports streaming responses
 
-❌ hellmer does NOT support asynchronous batch APIs - see ellmer's [batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html)
+❌ hellmer does NOT support asynchronous batch APIs which can be about 50% cheaper if you are willing to wait up to 24 hours for a response - see ellmer's [batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html)
 
 ## Installation
 

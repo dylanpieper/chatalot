@@ -19,7 +19,6 @@ batch(
   backoff_factor = integer(0),
   chunk_size = integer(0),
   workers = integer(0),
-  plan = character(0),
   beep = logical(0),
   echo = logical(0),
   state = list()
@@ -53,8 +52,6 @@ batch(
 \item{chunk_size}{Size of chunks for parallel processing}
 
 \item{workers}{Number of parallel workers}
-
-\item{plan}{Parallel backend plan}
 
 \item{beep}{Play sound on completion (default: TRUE)}
 

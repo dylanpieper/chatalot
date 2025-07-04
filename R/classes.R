@@ -76,7 +76,6 @@ progress <- S7::new_generic("progress", "x")
 #' @param backoff_factor Factor to multiply delay by after each retry
 #' @param chunk_size Size of chunks for parallel processing
 #' @param workers Number of parallel workers
-#' @param plan Parallel backend plan
 #' @param state Internal state tracking
 #' @param beep Play sound on completion (default: TRUE)
 #' @param echo Whether to echo messages during processing (default: FALSE)
@@ -256,17 +255,6 @@ batch <- S7::new_class(
           }
           if (value <= 0) {
             "must be positive"
-          }
-        }
-        NULL
-      }
-    ),
-    plan = S7::new_property(
-      class = S7::class_character | NULL,
-      validator = function(value) {
-        if (!is.null(value)) {
-          if (!value %in% c("multisession", "multicore")) {
-            "must be either 'multisession' or 'multicore'"
           }
         }
         NULL

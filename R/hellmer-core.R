@@ -180,7 +180,6 @@ process_sequential <- function(
       backoff_factor = backoff_factor,
       chunk_size = NULL,
       workers = NULL,
-      plan = NULL,
       state = NULL
     )
     saveRDS(result, file)
@@ -272,7 +271,6 @@ process_sequential <- function(
 #' @param file Path to save intermediate state
 #' @param workers Number of parallel workers
 #' @param chunk_size Number of prompts to process in parallel at a time
-#' @param plan Parallel backend
 #' @param beep Play sound on completion/error
 #' @param max_chunk_attempts Maximum retries per failed chunk
 #' @param max_retries Maximum retries per prompt
@@ -290,7 +288,6 @@ process_future <- function(
     file,
     workers,
     chunk_size,
-    plan,
     max_chunk_attempts,
     max_retries,
     initial_delay,
@@ -327,7 +324,6 @@ process_future <- function(
     list(valid = TRUE, message = NULL)
   }
 
-  plan <- match.arg(plan, c("multisession", "multicore"))
   total_prompts <- length(prompts)
   prompts_list <- as.list(prompts)
   original_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
@@ -359,7 +355,6 @@ process_future <- function(
       backoff_factor = backoff_factor,
       chunk_size = as.integer(chunk_size),
       workers = as.integer(workers),
-      plan = plan,
       state = list(
         active_workers = 0L,
         failed_chunks = list(),
@@ -376,11 +371,7 @@ process_future <- function(
     return(create_results(result))
   }
 
-  if (plan == "multisession") {
-    future::plan(future::multisession, workers = workers)
-  } else {
-    future::plan(future::multicore, workers = workers)
-  }
+  future::plan(future::multisession, workers = workers)
 
   remaining_prompts <- prompts[(result@completed + 1L):total_prompts]
   chunks <- split(remaining_prompts, ceiling(seq_along(remaining_prompts) / chunk_size))
