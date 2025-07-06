@@ -555,7 +555,7 @@ process_evaluations <- function(chat_obj, prompt, type, eval = FALSE, echo = FAL
       tryCatch(
         {
           eval_prompt <- paste(
-            "What could be improved in my data extraction?",
+            "Evaluate my data extraction for flaws and improvements.",
             "I extracted the following structured data:",
             jsonlite::toJSON(current_extraction, pretty = TRUE, auto_unbox = TRUE),
             "The original prompt was:", prompt

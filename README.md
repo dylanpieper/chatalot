@@ -219,9 +219,9 @@ lot$texts()
 
 Self-evaluation is a two-step process:
 
-1.  **Evaluation:** The model asks itself `"What could be improved in my data extraction? I extracted the following structured data: [JSON] The original prompt was: [prompt]"`
+1.  **Evaluation:** The model evaluates the request and first extraction with the prompt `"Evaluate my data extraction for flaws and improvements. I extracted the following structured data: [JSON] The original prompt was: [prompt]"`
 
-2.  **Refinement:** Based on the evaluation feedback, the model attempts a new structure data extraction with the prompt `"Extract the following data more accurately: [prompt] The prior extraction had the following structured data: [JSON] The prior extraction had these issues: [evaluation]"`
+2.  **Refinement:** Based on the evaluation feedback, the model extracts a refined structured data object with the prompt `"Extract the following data more accurately: [prompt] The prior extraction had the following structured data: [JSON] The prior extraction had these issues: [evaluation]"`
 
 ### Progress Saving and Recovery
 
