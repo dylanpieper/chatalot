@@ -10,7 +10,7 @@ batch(
   completed = integer(0),
   file = character(0),
   type = NULL,
-  eval_rounds = integer(0),
+  eval = logical(0),
   progress = logical(0),
   input_type = character(0),
   chunk_size = integer(0),
@@ -31,7 +31,7 @@ batch(
 
 \item{type}{Type specification for structured data extraction}
 
-\item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
+\item{eval}{If TRUE, performs one evaluation round for structured data extraction (default: FALSE)}
 
 \item{progress}{Whether to show progress bars (default: TRUE)}
 

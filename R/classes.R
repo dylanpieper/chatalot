@@ -67,7 +67,7 @@ progress <- S7::new_generic("progress", "x")
 #' @param completed Integer indicating number of completed prompts
 #' @param file Path to save state file (.rds)
 #' @param type Type specification for structured data extraction
-#' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
+#' @param eval If TRUE, performs one evaluation round for structured data extraction (default: FALSE)
 #' @param progress Whether to show progress bars (default: TRUE)
 #' @param input_type Type of input ("vector" or "list")
 #' @param chunk_size Size of chunks for parallel processing
@@ -149,14 +149,11 @@ batch <- S7::new_class(
         NULL
       }
     ),
-    eval_rounds = S7::new_property(
-      class = S7::class_integer,
+    eval = S7::new_property(
+      class = S7::class_logical,
       validator = function(value) {
         if (length(value) != 1) {
-          "must be a single integer"
-        }
-        if (value < 0) {
-          "must be non-negative"
+          "must be a single logical value"
         }
         NULL
       }

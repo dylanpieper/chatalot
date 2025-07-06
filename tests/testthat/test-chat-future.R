@@ -51,7 +51,7 @@ test_that("chat_future handles structured data with judgements", {
     "This is terrible."
   )
 
-  result <- chat$batch(prompts, type = get_sentiment_type_spec(), chunk_size = 1, eval_rounds = 1, workers = 1, beep = FALSE)
+  result <- chat$batch(prompts, type = get_sentiment_type_spec(), chunk_size = 1, eval = TRUE, workers = 1, beep = FALSE)
   data <- result$texts()
   turns <- result$chats()[[1]]$get_turns()
 

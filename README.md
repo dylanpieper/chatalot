@@ -199,10 +199,10 @@ batch$texts()
 
 #### Self-evaluation
 
-Self-evaluation prompts the chat model to evaluate and refine the structured data extraction using the `eval_rounds` parameter (increases token use). You can set the number of evaluation rounds but be mindful of the cost and risk of diminishing returns.
+Self-evaluation prompts the chat model to evaluate and refine the structured data extraction using the `eval` parameter (increases token use).
 
 ``` r
-batch <- chat$batch(prompts, type = type_sentiment, eval_rounds = 1)
+batch <- chat$batch(prompts, type = type_sentiment, eval = TRUE)
 
 batch$texts()
 #> [[1]]
@@ -222,8 +222,6 @@ Self-evaluation is a two-step process:
 1.  **Evaluation:** The model asks itself `"What could be improved in my data extraction? I extracted the following structured data: [JSON] The original prompt was: [prompt]"`
 
 2.  **Refinement:** Based on the evaluation feedback, the model attempts a new structure data extraction with the prompt `"Extract the following data more accurately: [prompt] The prior extraction had the following structured data: [JSON] The prior extraction had these issues: [evaluation]"`
-
-This feature creates a multi-turn chat where the model critiques its own work and then attempts to improve based on that self-evaluation.
 
 ### Progress Tracking and Recovery
 

@@ -7,7 +7,7 @@
 
 ## Lifecycle changes
 * `state_path` is renamed to `file` for consistency/simplicity
-* `judgements` is renamed to `eval_rounds` to better reflect the purpose of the parameter
+* `eval_rounds` is renamed to `eval` and now takes a logical value (TRUE/FALSE) instead of a number
 * `type_spec` is renamed to `type` following the latest update to ellmer (0.1.1)
 
 # hellmer 0.1.2

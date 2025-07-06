@@ -8,7 +8,7 @@ batch.future_chat(
   chat_env,
   prompts,
   type = NULL,
-  eval_rounds = 0,
+  eval = FALSE,
   file = tempfile("chat_", fileext = ".rds"),
   workers = NULL,
   chunk_size = parallel::detectCores(),
@@ -26,7 +26,7 @@ batch.future_chat(
 
 \item{type}{Type specification for structured data extraction}
 
-\item{eval_rounds}{Number of evaluation rounds for structured data extraction resulting in refined data}
+\item{eval}{If TRUE, performs one evaluation round for structured data extraction (default: FALSE)}
 
 \item{file}{Path to save state file}
 
