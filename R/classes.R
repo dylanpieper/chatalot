@@ -70,10 +70,6 @@ progress <- S7::new_generic("progress", "x")
 #' @param eval_rounds Number of evaluation rounds for structured data extraction resulting in refined data
 #' @param progress Whether to show progress bars (default: TRUE)
 #' @param input_type Type of input ("vector" or "list")
-#' @param max_retries Maximum number of retry attempts
-#' @param initial_delay Initial delay before first retry
-#' @param max_delay Maximum delay between retries
-#' @param backoff_factor Factor to multiply delay by after each retry
 #' @param chunk_size Size of chunks for parallel processing
 #' @param workers Number of parallel workers
 #' @param state Internal state tracking
@@ -85,7 +81,7 @@ progress <- S7::new_generic("progress", "x")
 #'   \item Accessing full chat objects via \code{chats()}
 #'   \item Tracking processing progress via \code{progress()}
 #' }
-#' The batch object manages prompt processing, tracks completion status, and handles retries for failed requests.
+#' The batch object manages prompt processing and tracks completion status.
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create a chat processor
 #' chat <- chat_sequential(chat_openai())
@@ -182,54 +178,6 @@ batch <- S7::new_class(
         } else {
           NULL
         }
-      }
-    ),
-    max_retries = S7::new_property(
-      class = S7::class_integer,
-      validator = function(value) {
-        if (length(value) != 1) {
-          "must be a single integer"
-        }
-        if (value < 0) {
-          "must be non-negative"
-        }
-        NULL
-      }
-    ),
-    initial_delay = S7::new_property(
-      class = S7::class_numeric,
-      validator = function(value) {
-        if (length(value) != 1) {
-          "must be a single numeric"
-        }
-        if (value < 0) {
-          "must be non-negative"
-        }
-        NULL
-      }
-    ),
-    max_delay = S7::new_property(
-      class = S7::class_numeric,
-      validator = function(value) {
-        if (length(value) != 1) {
-          "must be a single numeric"
-        }
-        if (value < 0) {
-          "must be non-negative"
-        }
-        NULL
-      }
-    ),
-    backoff_factor = S7::new_property(
-      class = S7::class_numeric,
-      validator = function(value) {
-        if (length(value) != 1) {
-          "must be a single numeric"
-        }
-        if (value <= 1) {
-          "must be greater than 1"
-        }
-        NULL
       }
     ),
     chunk_size = S7::new_property(

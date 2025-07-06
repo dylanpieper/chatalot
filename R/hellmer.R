@@ -36,8 +36,6 @@
 #'     "Explain base R versus tidyverse",
 #'     "Explain vectors, lists, and data frames"
 #'   ),
-#'   max_retries = 3L,
-#'   initial_delay = 20,
 #'   beep = TRUE
 #' )
 #'
@@ -86,10 +84,6 @@ chat_sequential <- function(
                              eval_rounds = 0,
                              file = tempfile("chat_", fileext = ".rds"),
                              progress = TRUE,
-                             max_retries = 3L,
-                             initial_delay = 20,
-                             max_delay = 80,
-                             backoff_factor = 2,
                              beep = TRUE,
                              echo = FALSE,
                              ...) {
@@ -106,10 +100,6 @@ chat_sequential <- function(
       eval_rounds = eval_rounds,
       file = file,
       progress = progress,
-      max_retries = max_retries,
-      initial_delay = initial_delay,
-      max_delay = max_delay,
-      backoff_factor = backoff_factor,
       beep = beep,
       echo = echo,
       ...
@@ -209,10 +199,6 @@ chat_future <- function(
                              workers = NULL,
                              chunk_size = parallel::detectCores(),
                              max_chunk_attempts = 3L,
-                             max_retries = 3L,
-                             initial_delay = 20,
-                             max_delay = 80,
-                             backoff_factor = 2,
                              beep = TRUE,
                              echo = FALSE,
                              ...) {
@@ -239,10 +225,6 @@ chat_future <- function(
       workers = workers,
       chunk_size = chunk_size,
       max_chunk_attempts = max_chunk_attempts,
-      max_retries = max_retries,
-      initial_delay = initial_delay,
-      max_delay = max_delay,
-      backoff_factor = backoff_factor,
       beep = beep,
       progress = progress,
       echo = echo,

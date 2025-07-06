@@ -11,10 +11,6 @@ batch.sequential_chat(
   eval_rounds = 0,
   file = tempfile("chat_", fileext = ".rds"),
   progress = TRUE,
-  max_retries = 3L,
-  initial_delay = 20,
-  max_delay = 80,
-  backoff_factor = 2,
   beep = TRUE,
   echo = FALSE,
   ...
@@ -32,14 +28,6 @@ batch.sequential_chat(
 \item{file}{Path to save state file (.rds)}
 
 \item{progress}{Whether to show progress bars}
-
-\item{max_retries}{Maximum number of retry attempts for failed requests}
-
-\item{initial_delay}{Initial delay before first retry in seconds}
-
-\item{max_delay}{Maximum delay between retries in seconds}
-
-\item{backoff_factor}{Factor to multiply delay by after each retry}
 
 \item{beep}{Whether to play a sound on completion}
 

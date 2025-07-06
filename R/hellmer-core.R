@@ -1,20 +1,3 @@
-#' Check if an error is eligible for retry
-#' @param error An error object
-#' @return TRUE if eligible for retry, FALSE otherwise
-#' @keywords internal
-is_retry_error <- function(error) {
-  retryable_classes <- c(
-    "httr2_http_429", "httr2_http_500",
-    "httr2_http_503", "httr2_http_504",
-    "httr2_http_529"
-  )
-  for (cls in retryable_classes) {
-    if (inherits(error, cls)) {
-      return(TRUE)
-    }
-  }
-  FALSE
-}
 
 #' Capture chat model response with proper handling
 #' @param original_chat Original chat model object
@@ -65,66 +48,8 @@ capture <- function(original_chat,
   return(result)
 }
 
-#' Capture chat model response with proper handling and retries
-#' @param original_chat Original chat model object
-#' @param prompt Prompt text
-#' @param type Type specification for structured data
-#' @param eval_rounds Number of evaluation rounds resulting in refined data
-#' @param max_retries Maximum number of retry attempts
-#' @param initial_delay Initial delay in seconds before first retry
-#' @param max_delay Maximum delay in seconds between retries
-#' @param backoff_factor Factor to multiply delay by after each retry
-#' @return List containing response information
-#' @keywords internal
-capture_with_retry <- function(original_chat,
-                               prompt,
-                               type,
-                               eval_rounds,
-                               max_retries,
-                               initial_delay,
-                               max_delay,
-                               backoff_factor,
-                               echo,
-                               ...) {
-  retry_with_delay <- function(attempt = 1, delay = initial_delay) {
-    withCallingHandlers(
-      tryCatch(
-        {
-          capture(original_chat, prompt, type, eval_rounds, echo = echo, ...)
-        },
-        error = function(e) {
-          if (!is_retry_error(e)) {
-            stop(conditionMessage(e),
-              call. = FALSE, domain = "capture_with_retry"
-            )
-          }
 
-          if (attempt > max_retries) {
-            stop(sprintf("Failed after %d attempts. Last error: %s", max_retries, e$message),
-              call. = FALSE, domain = "capture_with_retry"
-            )
-          } else {
-            cli::cli_alert_warning(sprintf(
-              "Attempt %d failed: %s. Retrying in %.1f seconds...",
-              attempt, e$message, delay
-            ))
-
-            Sys.sleep(delay)
-            next_delay <- min(delay * backoff_factor, max_delay)
-            retry_with_delay(attempt + 1, next_delay)
-          }
-        }
-      ),
-      interrupt = function(e) {
-        signalCondition(e)
-      }
-    )
-  }
-
-  retry_with_delay()
-}
-
-#' Process batch of prompts with progress tracking and retries
+#' Process batch of prompts with progress tracking
 #' @param chat_obj Chat model object
 #' @param prompts List of prompts
 #' @param type Type specification for structured data
@@ -132,10 +57,6 @@ capture_with_retry <- function(original_chat,
 #' @param file Path to save state file (.rds)
 #' @param progress Whether to show progress bars
 #' @param beep Play sound on completion
-#' @param max_retries Maximum retry attempts
-#' @param initial_delay Initial delay before retry
-#' @param max_delay Maximum delay between retries
-#' @param backoff_factor Factor to multiply delay
 #' @return Batch results object
 #' @keywords internal
 process_sequential <- function(
@@ -145,10 +66,6 @@ process_sequential <- function(
     eval_rounds,
     file,
     progress,
-    max_retries,
-    initial_delay,
-    max_delay,
-    backoff_factor,
     beep,
     echo,
     ...) {
@@ -174,10 +91,6 @@ process_sequential <- function(
       eval_rounds = as.integer(eval_rounds),
       progress = progress,
       input_type = orig_type,
-      max_retries = as.integer(max_retries),
-      initial_delay = initial_delay,
-      max_delay = max_delay,
-      backoff_factor = backoff_factor,
       chunk_size = NULL,
       workers = NULL,
       state = NULL
@@ -208,13 +121,9 @@ process_sequential <- function(
 
   tryCatch({
     for (i in (result@completed + 1L):total_prompts) {
-      response <- capture_with_retry(
+      response <- capture(
         chat_obj, prompts[[i]], type,
         eval_rounds = eval_rounds,
-        max_retries = max_retries,
-        initial_delay = initial_delay,
-        max_delay = max_delay,
-        backoff_factor = backoff_factor,
         echo = echo,
         ...
       )
@@ -273,10 +182,6 @@ process_sequential <- function(
 #' @param chunk_size Number of prompts to process in parallel at a time
 #' @param beep Play sound on completion/error
 #' @param max_chunk_attempts Maximum retries per failed chunk
-#' @param max_retries Maximum retries per prompt
-#' @param initial_delay Initial delay before first retry
-#' @param max_delay Maximum delay between retries
-#' @param backoff_factor Delay multiplier after each retry
 #' @param progress Whether to show progress bars
 #' @return Batch results object
 #' @keywords internal
@@ -289,10 +194,6 @@ process_future <- function(
     workers,
     chunk_size,
     max_chunk_attempts,
-    max_retries,
-    initial_delay,
-    max_delay,
-    backoff_factor,
     beep,
     progress,
     echo,
@@ -349,10 +250,6 @@ process_future <- function(
       eval_rounds = as.integer(eval_rounds),
       progress = progress,
       input_type = original_type,
-      max_retries = max_retries,
-      initial_delay = initial_delay,
-      max_delay = max_delay,
-      backoff_factor = backoff_factor,
       chunk_size = as.integer(chunk_size),
       workers = as.integer(workers),
       state = list(
@@ -406,15 +303,11 @@ process_future <- function(
                     responses <- furrr::future_map(
                       chunk,
                       function(prompt) {
-                        capture_with_retry(
+                        capture(
                           worker_chat,
                           prompt,
                           type,
                           eval_rounds = eval_rounds,
-                          max_retries = max_retries,
-                          initial_delay = initial_delay,
-                          max_delay = max_delay,
-                          backoff_factor = backoff_factor,
                           echo = echo,
                           ...
                         )
@@ -442,11 +335,9 @@ process_future <- function(
               },
               error = function(e) {
                 last_error <- e
-                if (!is_retry_error(e)) {
-                  stop(conditionMessage(e),
-                    call. = FALSE, domain = "process_future"
-                  )
-                }
+                stop(conditionMessage(e),
+                  call. = FALSE, domain = "process_future"
+                )
                 e_class <- class(e)[1]
                 cli::cli_alert_warning(sprintf(
                   "Error in chunk processing (%s): %s",
@@ -478,15 +369,7 @@ process_future <- function(
           if (!is.null(pb)) {
             cli::cli_progress_update(id = pb, set = result@completed)
           }
-        } else if (retry_count < max_chunk_attempts &&
-          !is.null(last_error) && is_retry_error(last_error)) {
-          delay <- min(initial_delay * (backoff_factor^(retry_count - 1)), max_delay)
-          cli::cli_alert_warning(sprintf(
-            "Chunk %d failed (attempt %d/%d): %s. Retrying in %.1f seconds...",
-            chunk_idx, retry_count, max_chunk_attempts, validation$message, delay
-          ))
-          Sys.sleep(delay)
-        } else if (!is.null(last_error) && inherits(last_error, "httr2_http")) {
+        } else {
           success <- FALSE
           break
         }
@@ -552,10 +435,6 @@ process_future <- function(
 #' @param file Path to save intermediate state
 #' @param progress Whether to show progress bars
 #' @param beep Logical indicating whether to play sounds
-#' @param max_retries Maximum number of retry attempts
-#' @param initial_delay Initial delay in seconds before first retry
-#' @param max_delay Maximum delay in seconds between retries
-#' @param backoff_factor Factor to multiply delay by after each retry
 #' @return Updated batch object with processed results
 #' @keywords internal
 process_chunks <- function(chunks,
@@ -567,10 +446,6 @@ process_chunks <- function(chunks,
                            file,
                            progress,
                            beep,
-                           max_retries,
-                           initial_delay,
-                           max_delay,
-                           backoff_factor,
                            echo,
                            ...) {
   was_interrupted <- FALSE
@@ -584,15 +459,11 @@ process_chunks <- function(chunks,
           chunk,
           function(prompt) {
             worker_chat <- chat_obj$clone()
-            capture_with_retry(
+            capture(
               worker_chat,
               prompt,
               type,
               eval_rounds = eval_rounds,
-              max_retries = max_retries,
-              initial_delay = initial_delay,
-              max_delay = max_delay,
-              backoff_factor = backoff_factor,
               echo = echo,
               ...
             )

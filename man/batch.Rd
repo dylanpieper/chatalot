@@ -13,10 +13,6 @@ batch(
   eval_rounds = integer(0),
   progress = logical(0),
   input_type = character(0),
-  max_retries = integer(0),
-  initial_delay = integer(0),
-  max_delay = integer(0),
-  backoff_factor = integer(0),
   chunk_size = integer(0),
   workers = integer(0),
   beep = logical(0),
@@ -41,14 +37,6 @@ batch(
 
 \item{input_type}{Type of input ("vector" or "list")}
 
-\item{max_retries}{Maximum number of retry attempts}
-
-\item{initial_delay}{Initial delay before first retry}
-
-\item{max_delay}{Maximum delay between retries}
-
-\item{backoff_factor}{Factor to multiply delay by after each retry}
-
 \item{chunk_size}{Size of chunks for parallel processing}
 
 \item{workers}{Number of parallel workers}
@@ -66,7 +54,7 @@ Returns an S7 class object of class "batch" that represents a collection of prom
 \item Accessing full chat objects via \code{chats()}
 \item Tracking processing progress via \code{progress()}
 }
-The batch object manages prompt processing, tracks completion status, and handles retries for failed requests.
+The batch object manages prompt processing and tracks completion status.
 }
 \description{
 Batch result class for managing chat processing results

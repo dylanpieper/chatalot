@@ -2,7 +2,7 @@
 % Please edit documentation in R/hellmer-core.R
 \name{process_sequential}
 \alias{process_sequential}
-\title{Process batch of prompts with progress tracking and retries}
+\title{Process batch of prompts with progress tracking}
 \usage{
 process_sequential(
   chat_obj,
@@ -11,10 +11,6 @@ process_sequential(
   eval_rounds,
   file,
   progress,
-  max_retries,
-  initial_delay,
-  max_delay,
-  backoff_factor,
   beep,
   echo,
   ...
@@ -33,20 +29,12 @@ process_sequential(
 
 \item{progress}{Whether to show progress bars}
 
-\item{max_retries}{Maximum retry attempts}
-
-\item{initial_delay}{Initial delay before retry}
-
-\item{max_delay}{Maximum delay between retries}
-
-\item{backoff_factor}{Factor to multiply delay}
-
 \item{beep}{Play sound on completion}
 }
 \value{
 Batch results object
 }
 \description{
-Process batch of prompts with progress tracking and retries
+Process batch of prompts with progress tracking
 }
 \keyword{internal}

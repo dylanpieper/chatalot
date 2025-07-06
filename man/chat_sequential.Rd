@@ -51,8 +51,6 @@ batch <- chat$batch(
     "Explain base R versus tidyverse",
     "Explain vectors, lists, and data frames"
   ),
-  max_retries = 3L,
-  initial_delay = 20,
   beep = TRUE
 )
 

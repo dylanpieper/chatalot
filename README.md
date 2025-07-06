@@ -228,22 +228,6 @@ batch <- chat$batch(prompts, file = "chat.rds")
 
 If `file` is not defined, a temporary file will be created by default.
 
-### Automatic Retry
-
-Automatically retry failed requests with exponential backoff, which is useful to allow batch processing to persist for transient errors such as exceeding rate limits and temporary server errors.
-
-Most chat provider functions in `ellmer` retry at least one time by default, but there is no user-defined control over the retry strategy (yet).
-
-``` r
-batch <- chat$batch(
-  prompts = prompts,   # list or vector of prompts
-  max_retries = 3,     # maximum retry attempts
-  initial_delay = 20,  # initial delay in seconds
-  max_delay = 80,      # maximum delay between retries
-  backoff_factor = 2   # multiply delay by this factor after each retry
-)
-```
-
 ### Sound Notifications
 
 Toggle sound notifications on batch completion, interruption, and error:

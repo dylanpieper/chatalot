@@ -13,10 +13,6 @@ process_future(
   workers,
   chunk_size,
   max_chunk_attempts,
-  max_retries,
-  initial_delay,
-  max_delay,
-  backoff_factor,
   beep,
   progress,
   echo,
@@ -39,14 +35,6 @@ process_future(
 \item{chunk_size}{Number of prompts to process in parallel at a time}
 
 \item{max_chunk_attempts}{Maximum retries per failed chunk}
-
-\item{max_retries}{Maximum retries per prompt}
-
-\item{initial_delay}{Initial delay before first retry}
-
-\item{max_delay}{Maximum delay between retries}
-
-\item{backoff_factor}{Delay multiplier after each retry}
 
 \item{beep}{Play sound on completion/error}
 

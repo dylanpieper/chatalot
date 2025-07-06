@@ -13,10 +13,6 @@ batch.future_chat(
   workers = NULL,
   chunk_size = parallel::detectCores(),
   max_chunk_attempts = 3L,
-  max_retries = 3L,
-  initial_delay = 20,
-  max_delay = 80,
-  backoff_factor = 2,
   beep = TRUE,
   progress = TRUE,
   echo = FALSE,
@@ -39,14 +35,6 @@ batch.future_chat(
 \item{chunk_size}{Number of prompts each worker processes at a time}
 
 \item{max_chunk_attempts}{Maximum retries per failed chunk}
-
-\item{max_retries}{Maximum number of retry attempts for failed requests}
-
-\item{initial_delay}{Initial delay before first retry in seconds}
-
-\item{max_delay}{Maximum delay between retries in seconds}
-
-\item{backoff_factor}{Factor to multiply delay by after each retry}
 
 \item{beep}{Whether to play a sound on completion}
 

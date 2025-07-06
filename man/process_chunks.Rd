@@ -14,10 +14,6 @@ process_chunks(
   file,
   progress,
   beep,
-  max_retries,
-  initial_delay,
-  max_delay,
-  backoff_factor,
   echo,
   ...
 )
@@ -40,14 +36,6 @@ process_chunks(
 \item{progress}{Whether to show progress bars}
 
 \item{beep}{Logical indicating whether to play sounds}
-
-\item{max_retries}{Maximum number of retry attempts}
-
-\item{initial_delay}{Initial delay in seconds before first retry}
-
-\item{max_delay}{Maximum delay in seconds between retries}
-
-\item{backoff_factor}{Factor to multiply delay by after each retry}
 }
 \value{
 Updated batch object with processed results

@@ -1,7 +1,7 @@
 # hellmer (development)
 
 ## Internal Improvements
-* Added one-time retry for failed structured data extractions
+* Added single retry for failed structured data extractions
 * Replaced progress bar percentage indicator (`cli::pb_percent`) to estimated time until completion (`cli::pb_eta`)
 * For `chat_future()`, updated the default `chunk_size` to `parallel::detectCores()` for safer processing 
 
@@ -17,7 +17,6 @@
 * `$batch()` gains `progress` in addition to  `echo` and `...` which are passed to the chat call
 
 ## Internal Improvements
-* `is_auth_error()` is replaced by `is_retry_error()` which more accurately uses `httr2` errors classes
 
 ## Lifecycle changes
 * Removed the timeout feature as it's better handled by `option(ellmer_timeout_s = 120)` in ellmer 0.1.1
