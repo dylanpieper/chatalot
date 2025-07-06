@@ -1,4 +1,4 @@
-# chatlot ![](man/figures/chatlot-hex.png){align="right" height="140"}
+# chatlot <img src="man/figures/chatlot-hex.png" align="right" width="140"/>
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://CRAN.R-project.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
