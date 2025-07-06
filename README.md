@@ -199,7 +199,13 @@ lot$texts()
 
 #### Self-evaluation
 
-Self-evaluation prompts the chat model to evaluate and refine the structured data extraction using the `eval` parameter. This feature is unique to chatlot and is an example of how you can use chatlot to orchestrate a lot of multi-turn chats.
+Self-evaluation prompts the chat model to evaluate and refine the structured data extraction using the `eval` parameter in a two-step process:
+
+1.  **Evaluation:** The model evaluates the request and first extraction with the prompt `"Evaluate my data extraction for flaws and improvements. I extracted the following structured data: [JSON] The original prompt was: [prompt]"`
+
+2.  **Refinement:** Based on the evaluation feedback, the model extracts a refined structured data object with the prompt `"Extract the following data more accurately: [prompt] The prior extraction had the following structured data: [JSON] The prior extraction had these issues: [evaluation]"`
+
+This feature is unique to chatlot and is an example of how you can use chatlot to orchestrate a lot of multi-turn chats and easily access the final responses.
 
 ``` r
 lot <- chat$lot(prompts, type = type_sentiment, eval = TRUE)
@@ -216,12 +222,6 @@ lot$texts()
 #> [1] 0.05
 #> ...
 ```
-
-Self-evaluation is a two-step process:
-
-1.  **Evaluation:** The model evaluates the request and first extraction with the prompt `"Evaluate my data extraction for flaws and improvements. I extracted the following structured data: [JSON] The original prompt was: [prompt]"`
-
-2.  **Refinement:** Based on the evaluation feedback, the model extracts a refined structured data object with the prompt `"Extract the following data more accurately: [prompt] The prior extraction had the following structured data: [JSON] The prior extraction had these issues: [evaluation]"`
 
 ### Progress Saving and Recovery
 
