@@ -1,4 +1,4 @@
-#' Process a batch of prompts with a sequential chat
+#' Process a lot of prompts with a sequential chat
 #'
 #' @param chat_env The chat environment from chat_sequential
 #' @param prompts List of prompts to process
@@ -10,9 +10,9 @@
 #' @param echo Whether to display chat outputs (when `progress` is `FALSE`)
 #' @param ... Additional arguments passed to the chat method
 #'
-#' @return A batch object with the processed results
+#' @return A lot object with the processed results
 #' @export
-batch.sequential_chat <- function(chat_env,
+lot.sequential_chat <- function(chat_env,
                                   prompts,
                                   type = NULL,
                                   eval = FALSE,
@@ -42,7 +42,7 @@ batch.sequential_chat <- function(chat_env,
   )
 }
 
-#' Process a batch of prompts with a parallel chat
+#' Process a lot of prompts with a parallel chat
 #'
 #' @param chat_env The chat environment from chat_future
 #' @param prompts List of prompts to process
@@ -57,9 +57,9 @@ batch.sequential_chat <- function(chat_env,
 #' @param echo Whether to display chat outputs (when `progress` is `FALSE`)
 #' @param ... Additional arguments passed to the chat method
 #'
-#' @return A batch object with the processed results
+#' @return A lot object with the processed results
 #' @export
-batch.future_chat <- function(chat_env,
+lot.future_chat <- function(chat_env,
                               prompts,
                               type = NULL,
                               eval = FALSE,

@@ -1,12 +1,12 @@
-#' Process a batch of prompts in sequence
+#' Process a lot of prompts in sequence
 #' @description
-#' Processes a batch of chat prompts one at a time in sequential order.
+#' Processes a lot of chat prompts one at a time in sequential order.
 #' Maintains state between runs and can resume interrupted processing.
 #' For parallel processing, use `chat_future()`.
 #'
 #' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
-#' @return A batch object (S7 class) containing
+#' @return A lot object (S7 class) containing
 #'   \itemize{
 #'     \item **prompts**: Original input prompts
 #'     \item **responses**: Raw response data for completed prompts
@@ -16,11 +16,11 @@
 #'     \item **texts**: Function to extract text responses or structured data
 #'     \item **chats**: Function to extract chat objects
 #'     \item **progress**: Function to get processing status
-#'     \item **batch**: Function to process a batch of prompts
+#'     \item **lot**: Function to process a lot of prompts
 #'   }
-#' @section Batch Method:
-#' This function provides access to the `batch()` method for sequential processing of prompts.
-#' See `?batch.sequential_chat` for full details of the method and its parameters.
+#' @section Lot Method:
+#' This function provides access to the `lot()` method for sequential processing of prompts.
+#' See `?lot.sequential_chat` for full details of the method and its parameters.
 #'
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create a sequential chat processor with an object
@@ -29,8 +29,8 @@
 #' # Or a function
 #' chat <- chat_sequential(chat_openai, system_prompt = "Reply concisely, one sentence")
 #'
-#' # Process a batch of prompts in sequence
-#' batch <- chat$batch(
+#' # Process a lot of prompts in sequence
+#' lot <- chat$lot(
 #'   list(
 #'     "What is R?",
 #'     "Explain base R versus tidyverse",
@@ -40,7 +40,7 @@
 #' )
 #'
 #' # Process batch with echo enabled (when progress is disabled)
-#' batch <- chat$batch(
+#' lot <- chat$lot(
 #'   list(
 #'     "What is R?",
 #'     "Explain base R versus tidyverse"
@@ -50,13 +50,13 @@
 #' )
 #'
 #' # Check the progress if interrupted
-#' batch$progress()
+#' lot$progress()
 #'
 #' # Return the responses
-#' batch$texts()
+#' lot$texts()
 #'
 #' # Return the chat objects
-#' batch$chats()
+#' lot$chats()
 #' @export
 chat_sequential <- function(
     chat_model = NULL,
@@ -79,7 +79,7 @@ chat_sequential <- function(
 
   chat_env$last_file <- NULL
 
-  chat_env$batch <- function(prompts,
+  chat_env$lot <- function(prompts,
                              type = NULL,
                              eval = FALSE,
                              file = tempfile("chat_", fileext = ".rds"),
@@ -93,7 +93,7 @@ chat_sequential <- function(
       file <- chat_env$last_file
     }
 
-    batch.sequential_chat(
+    lot.sequential_chat(
       chat_env = chat_env,
       prompts = prompts,
       type = type,
@@ -110,15 +110,15 @@ chat_sequential <- function(
   chat_env
 }
 
-#' Process a batch of prompts in parallel
+#' Process a lot of prompts in parallel
 #' @description
-#' Processes a batch of chat prompts using parallel workers.
+#' Processes a lot of chat prompts using parallel workers.
 #' Splits prompts into chunks for processing while maintaining state.
 #' For sequential processing, use `chat_sequential()`.
 #'
 #' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
-#' @return A batch object (S7 class) containing:
+#' @return A lot object (S7 class) containing:
 #'   \itemize{
 #'     \item **prompts**: Original input prompts
 #'     \item **responses**: Raw response data for completed prompts
@@ -128,11 +128,11 @@ chat_sequential <- function(
 #'     \item **texts**: Function to extract text responses or structured data
 #'     \item **chats**: Function to extract chat objects
 #'     \item **progress**: Function to get processing status
-#'     \item **batch**: Function to process a batch of prompts
+#'     \item **lot**: Function to process a lot of prompts
 #'   }
-#' @section Batch Method:
-#' This function provides access to the `batch()` method for parallel processing of prompts.
-#' See `?batch.future_chat` for full details of the method and its parameters.
+#' @section Lot Method:
+#' This function provides access to the `lot()` method for parallel processing of prompts.
+#' See `?lot.future_chat` for full details of the method and its parameters.
 #'
 #' @examplesIf interactive() && ellmer::has_credentials("openai")
 #' # Create a parallel chat processor with an object
@@ -141,8 +141,8 @@ chat_sequential <- function(
 #' # Or a function
 #' chat <- chat_future(chat_openai, system_prompt = "Reply concisely, one sentence")
 #'
-#' # Process a batch of prompts in parallel
-#' batch <- chat$batch(
+#' # Process a lot of prompts in parallel
+#' lot <- chat$lot(
 #'   list(
 #'     "What is R?",
 #'     "Explain base R versus tidyverse",
@@ -152,7 +152,7 @@ chat_sequential <- function(
 #' )
 #'
 #' # Process batch with echo enabled (when progress is disabled)
-#' batch <- chat$batch(
+#' lot <- chat$lot(
 #'   list(
 #'     "What is R?",
 #'     "Explain base R versus tidyverse"
@@ -162,13 +162,13 @@ chat_sequential <- function(
 #' )
 #'
 #' # Check the progress if interrupted
-#' batch$progress()
+#' lot$progress()
 #'
 #' # Return the responses
-#' batch$texts()
+#' lot$texts()
 #'
 #' # Return the chat objects
-#' batch$chats()
+#' lot$chats()
 #' @export
 chat_future <- function(
     chat_model = NULL,
@@ -191,7 +191,7 @@ chat_future <- function(
 
   chat_env$last_file <- NULL
 
-  chat_env$batch <- function(prompts,
+  chat_env$lot <- function(prompts,
                              type = NULL,
                              eval = FALSE,
                              file = tempfile("chat_", fileext = ".rds"),
@@ -216,7 +216,7 @@ chat_future <- function(
       }
     }
 
-    batch.future_chat(
+    lot.future_chat(
       chat_env = chat_env,
       prompts = prompts,
       type = type,

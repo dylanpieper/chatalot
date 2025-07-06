@@ -1,6 +1,6 @@
-#' Extract texts or structured data from a batch result
+#' Extract texts or structured data from a lot result
 #' @name texts
-#' @param x A batch object
+#' @param x A lot object
 #' @param ... Additional arguments passed to methods
 #' @return A character vector or list of text responses. If a type specification is provided to the batch, return structured data.
 #' @examplesIf ellmer::has_credentials("openai")
@@ -8,20 +8,20 @@
 #' chat <- chat_sequential(chat_openai())
 #'
 #' # Process a batch of prompts
-#' batch <- chat$batch(list(
+#' lot <- chat$lot(list(
 #'   "What is R?",
 #'   "Explain base R versus tidyverse",
 #'   "Explain vectors, lists, and data frames"
 #' ))
 #'
 #' # Extract text responses
-#' batch$texts()
+#' lot$texts()
 #' @export
 texts <- S7::new_generic("texts", "x")
 
-#' Extract chat objects from a batch result
+#' Extract chat objects from a lot result
 #' @name chats
-#' @param x A batch object
+#' @param x A lot object
 #' @param ... Additional arguments
 #' @return A list of chat objects
 #' @examplesIf ellmer::has_credentials("openai")
@@ -29,20 +29,20 @@ texts <- S7::new_generic("texts", "x")
 #' chat <- chat_sequential(chat_openai())
 #'
 #' # Process a batch of prompts
-#' batch <- chat$batch(list(
+#' lot <- chat$lot(list(
 #'   "What is R?",
 #'   "Explain base R versus tidyverse",
 #'   "Explain vectors, lists, and data frames"
 #' ))
 #'
 #' # Return the chat objects
-#' batch$chats()
+#' lot$chats()
 #' @export
 chats <- S7::new_generic("chats", "x")
 
-#' Get progress information from a batch result
+#' Get progress information from a lot result
 #' @name progress
-#' @param x A batch object
+#' @param x A lot object
 #' @param ... Additional arguments passed to methods
 #' @return A list containing progress details
 #' @examplesIf ellmer::has_credentials("openai")
@@ -50,18 +50,18 @@ chats <- S7::new_generic("chats", "x")
 #' chat <- chat_sequential(chat_openai())
 #'
 #' # Process a batch of prompts
-#' batch <- chat$batch(list(
+#' lot <- chat$lot(list(
 #'   "What is R?",
 #'   "Explain base R versus tidyverse",
 #'   "Explain vectors, lists, and data frames"
 #' ))
 #'
 #' # Check the progress
-#' batch$progress()
+#' lot$progress()
 #' @export
 progress <- S7::new_generic("progress", "x")
 
-#' Batch result class for managing chat processing results
+#' Lot result class for managing chat processing results
 #' @param prompts List of prompts to process
 #' @param responses List to store responses
 #' @param completed Integer indicating number of completed prompts
@@ -75,35 +75,35 @@ progress <- S7::new_generic("progress", "x")
 #' @param state Internal state tracking
 #' @param beep Play sound on completion (default: TRUE)
 #' @param echo Whether to echo messages during processing (default: FALSE)
-#' @return Returns an S7 class object of class "batch" that represents a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides methods for:
+#' @return Returns an S7 class object of class "lot" that represents a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides methods for:
 #' \itemize{
 #'   \item Extracting text responses via \code{texts()} (includes structured data when a type specification is provided)
 #'   \item Accessing full chat objects via \code{chats()}
 #'   \item Tracking processing progress via \code{progress()}
 #' }
-#' The batch object manages prompt processing and tracks completion status.
+#' The lot object manages prompt processing and tracks completion status.
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create a chat processor
 #' chat <- chat_sequential(chat_openai())
 #'
 #' # Process a batch of prompts
-#' batch <- chat$batch(list(
+#' lot <- chat$lot(list(
 #'   "What is R?",
 #'   "Explain base R versus tidyverse",
 #'   "Explain vectors, lists, and data frames"
 #' ))
 #'
 #' # Check the progress if interrupted
-#' batch$progress()
+#' lot$progress()
 #'
 #' # Return the responses as a vector or list
-#' batch$texts()
+#' lot$texts()
 #'
 #' # Return the chat objects
-#' batch$chats()
+#' lot$chats()
 #' @export
-batch <- S7::new_class(
-  "batch",
+lot <- S7::new_class(
+  "lot",
   properties = list(
     prompts = S7::new_property(
       class = S7::class_list,
@@ -256,7 +256,7 @@ batch <- S7::new_class(
 
 
 #' @keywords internal
-S7::method(texts, batch) <- function(x, flatten = TRUE) {
+S7::method(texts, lot) <- function(x, flatten = TRUE) {
   responses <- x@responses[seq_len(x@completed)]
 
   extract_text <- function(response) {
@@ -285,13 +285,13 @@ S7::method(texts, batch) <- function(x, flatten = TRUE) {
 }
 
 #' @keywords internal
-S7::method(chats, batch) <- function(x) {
+S7::method(chats, lot) <- function(x) {
   responses <- x@responses[seq_len(x@completed)]
   map(responses, "chat")
 }
 
 #' @keywords internal
-S7::method(progress, batch) <- function(x) {
+S7::method(progress, lot) <- function(x) {
   list(
     total_prompts = length(x@prompts),
     completed_prompts = x@completed,

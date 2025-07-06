@@ -2,12 +2,12 @@
 % Please edit documentation in R/classes.R
 \name{texts}
 \alias{texts}
-\title{Extract texts or structured data from a batch result}
+\title{Extract texts or structured data from a lot result}
 \usage{
 texts(x, ...)
 }
 \arguments{
-\item{x}{A batch object}
+\item{x}{A lot object}
 
 \item{...}{Additional arguments passed to methods}
 }
@@ -15,7 +15,7 @@ texts(x, ...)
 A character vector or list of text responses. If a type specification is provided to the batch, return structured data.
 }
 \description{
-Extract texts or structured data from a batch result
+Extract texts or structured data from a lot result
 }
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -23,13 +23,13 @@ Extract texts or structured data from a batch result
 chat <- chat_sequential(chat_openai())
 
 # Process a batch of prompts
-batch <- chat$batch(list(
+lot <- chat$lot(list(
   "What is R?",
   "Explain base R versus tidyverse",
   "Explain vectors, lists, and data frames"
 ))
 
 # Extract text responses
-batch$texts()
+lot$texts()
 \dontshow{\}) # examplesIf}
 }

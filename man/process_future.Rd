@@ -41,7 +41,7 @@ process_future(
 \item{progress}{Whether to show progress bars}
 }
 \value{
-Batch results object
+Lot results object
 }
 \description{
 Process prompts in parallel chunks with error handling and state management

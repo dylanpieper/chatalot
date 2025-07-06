@@ -49,7 +49,7 @@ capture <- function(original_chat,
 }
 
 
-#' Process batch of prompts with progress tracking
+#' Process lot of prompts with progress tracking
 #' @param chat_obj Chat model object
 #' @param prompts List of prompts
 #' @param type Type specification for structured data
@@ -57,7 +57,7 @@ capture <- function(original_chat,
 #' @param file Path to save state file (.rds)
 #' @param progress Whether to show progress bars
 #' @param beep Play sound on completion
-#' @return Batch results object
+#' @return Lot results object
 #' @keywords internal
 process_sequential <- function(
     chat_obj,
@@ -82,7 +82,7 @@ process_sequential <- function(
 
   if (is.null(result)) {
     orig_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
-    result <- batch(
+    result <- lot(
       prompts = as.list(prompts),
       responses = vector("list", length(prompts)),
       completed = 0L,
@@ -137,7 +137,7 @@ process_sequential <- function(
       }
     }
 
-    finish_successful_batch(pb, beep, progress)
+    finish_successful_lot(pb, beep, progress)
   }, error = function(e) {
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
@@ -146,7 +146,7 @@ process_sequential <- function(
     saveRDS(result, file)
 
     if (inherits(e, "interrupt")) {
-      handle_batch_interrupt(result, beep)
+      handle_lot_interrupt(result, beep)
     } else {
       if (beep) beepr::beep("wilhelm")
       stop(e)
@@ -183,7 +183,7 @@ process_sequential <- function(
 #' @param beep Play sound on completion/error
 #' @param max_chunk_attempts Maximum retries per failed chunk
 #' @param progress Whether to show progress bars
-#' @return Batch results object
+#' @return Lot results object
 #' @keywords internal
 process_future <- function(
     chat_obj,
@@ -241,7 +241,7 @@ process_future <- function(
   }
 
   if (is.null(result)) {
-    result <- batch(
+    result <- lot(
       prompts = prompts_list,
       responses = vector("list", total_prompts),
       completed = 0L,
@@ -391,7 +391,7 @@ process_future <- function(
       }
     }
 
-    finish_successful_batch(pb, beep, progress)
+    finish_successful_lot(pb, beep, progress)
   }, error = function(e) {
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
@@ -399,7 +399,7 @@ process_future <- function(
     saveRDS(result, file)
 
     if (inherits(e, "interrupt")) {
-      handle_batch_interrupt(result, beep)
+      handle_lot_interrupt(result, beep)
     } else {
       if (beep) beepr::beep("wilhelm")
       stop(e)
@@ -427,7 +427,7 @@ process_future <- function(
 
 #' Process chunks of prompts in parallel
 #' @param chunks List of prompt chunks to process
-#' @param result A batch object to store results
+#' @param result A lot object to store results
 #' @param chat_obj Chat model object for making API calls
 #' @param type Type specification for structured data extraction
 #' @param eval If TRUE, performs one evaluation round for structured data extraction
@@ -435,7 +435,7 @@ process_future <- function(
 #' @param file Path to save intermediate state
 #' @param progress Whether to show progress bars
 #' @param beep Logical indicating whether to play sounds
-#' @return Updated batch object with processed results
+#' @return Updated lot object with processed results
 #' @keywords internal
 process_chunks <- function(chunks,
                            result,
@@ -482,14 +482,14 @@ process_chunks <- function(chunks,
       },
       interrupt = function(e) {
         was_interrupted <<- TRUE
-        handle_batch_interrupt(result, beep)
+        handle_lot_interrupt(result, beep)
         invokeRestart("abort")
       }
     )
   }
 
   if (!was_interrupted) {
-    finish_successful_batch(pb, beep, progress)
+    finish_successful_lot(pb, beep, progress)
   }
 }
 
@@ -590,14 +590,14 @@ process_evaluations <- function(chat_obj, prompt, type, eval = FALSE, echo = FAL
   return(result)
 }
 
-#' Handle batch interruption
-#' @name handle_batch_interrupt
-#' @usage handle_batch_interrupt(result, beep)
-#' @param result A batch object containing processing state
+#' Handle lot interruption
+#' @name handle_lot_interrupt
+#' @usage handle_lot_interrupt(result, beep)
+#' @param result A lot object containing processing state
 #' @param beep Logical indicating whether to play a sound
 #' @return NULL (called for side effects)
 #' @keywords internal
-handle_batch_interrupt <- function(result, beep) {
+handle_lot_interrupt <- function(result, beep) {
   cli::cli_alert_warning(
     sprintf(
       "Interrupted at chat %d of %d",
@@ -607,15 +607,15 @@ handle_batch_interrupt <- function(result, beep) {
   if (beep) beepr::beep("coin")
 }
 
-#' Finish successful batch processing
-#' @description Called after successful completion of batch processing to update progress
+#' Finish successful lot processing
+#' @description Called after successful completion of lot processing to update progress
 #'   indicators and provide feedback
 #' @param pb Progress bar object
 #' @param beep Logical; whether to play success sound
 #' @param progress Whether to show progress bars
 #' @return NULL (invisibly)
 #' @keywords internal
-finish_successful_batch <- function(pb, beep, progress) {
+finish_successful_lot <- function(pb, beep, progress) {
   if (!is.null(pb)) {
     cli::cli_progress_done(id = pb)
   }
@@ -626,9 +626,9 @@ finish_successful_batch <- function(pb, beep, progress) {
   invisible()
 }
 
-#' Create results object from batch
-#' @param result Batch object
-#' @return Results object with class "batch"
+#' Create results object from lot
+#' @param result Lot object
+#' @return Results object with class "lot"
 #' @keywords internal
 create_results <- function(result) {
   base_list <- list(
@@ -643,5 +643,5 @@ create_results <- function(result) {
   base_list$chats <- function() chats(result)
   base_list$progress <- function() progress(result)
 
-  structure(base_list, class = "batch")
+  structure(base_list, class = "lot")
 }

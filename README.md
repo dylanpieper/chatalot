@@ -4,11 +4,11 @@
 
 chatlot synchronously processes lots of large language model chats in R using [ellmer](https://ellmer.tidyverse.org) with features such as [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html).
 
-Similar tools:
+chatlot is similar to existing ellmer tools with key differences:
 
--   ellmer's [parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - synchronously processes lots of chats in parallel but with limited features
+-   ellmer's [parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously processes lots of chats in parallel but does not allow you to save or recover your progress
 
--   ellmer's [batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - asynchronously batch processes lots of chats, which can be about 50% cheaper if you are willing to wait up to 24 hours for a response
+-   ellmer's [batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously batch processes lots of chats, which can be \~50% cheaper if you are willing to wait up to 24 hours for a response (not a chatlot feature)
 
 ## Installation
 
@@ -49,13 +49,13 @@ prompts <- list(
   "Explain base R versus tidyverse"
 )
 
-batch <- chat$batch(prompts)
+lot <- chat$lot(prompts)
 ```
 
-Access the batch results:
+Access the lot results:
 
 ``` r
-batch$progress()
+lot$progress()
 #> $total_prompts
 #> [1] 2
 #> 
@@ -71,7 +71,7 @@ batch$progress()
 #> $file
 #> [1] "/var/folders/.../chat_df5c5ae85d0b.rds"
 
-batch$texts()
+lot$texts()
 #> [[1]]
 #> [1] "R is a programming language and software environment primarily used for 
 #> statistical computing, data analysis, and graphical visualization."
@@ -81,7 +81,7 @@ batch$texts()
 #> analysis, while tidyverse is a collection of packages that provide a more 
 #> consistent, user-friendly, and modern approach to data science workflows in R."
 
-batch$chats()
+lot$chats()
 #> [[1]]
 #> <Chat OpenAI/gpt-4.1 turns=3 tokens=22/21 $0.00>
 #> ── system [0] ───────────────────────────────────────────────────────────────
@@ -123,7 +123,7 @@ chat <- chat_future(openai)
 For maximum processing speed, set `chunk_size` to the number of prompts. However, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
 
 ``` r
-batch <- chat$batch(
+lot <- chat$lot(
   prompts, 
   chunk_size = length(prompts)
 )
@@ -154,9 +154,9 @@ prompts <- list(
   "What time is it in New York?"
 )
 
-batch <- chat$batch(prompts)
+lot <- chat$lot(prompts)
 
-batch$texts()
+lot$texts()
 #> [[1]]
 #> [1] "The current time in Chicago is 9:29 AM CDT."
 #> 
@@ -182,9 +182,9 @@ prompts <- list(
   "R's object-oriented system is confusing, inconsistent, and painful to use."
 )
 
-batch <- chat$batch(prompts, type = type_sentiment)
+lot <- chat$lot(prompts, type = type_sentiment)
 
-batch$texts()
+lot$texts()
 #> [[1]]
 #> $positive_score
 #> [1] 0.95
@@ -202,9 +202,9 @@ batch$texts()
 Self-evaluation prompts the chat model to evaluate and refine the structured data extraction using the `eval` parameter (increases token use).
 
 ``` r
-batch <- chat$batch(prompts, type = type_sentiment, eval = TRUE)
+lot <- chat$lot(prompts, type = type_sentiment, eval = TRUE)
 
-batch$texts()
+lot$texts()
 #> [[1]]
 #> [[1]]$positive_score
 #> [1] 0.95
@@ -223,22 +223,22 @@ Self-evaluation is a two-step process:
 
 2.  **Refinement:** Based on the evaluation feedback, the model attempts a new structure data extraction with the prompt `"Extract the following data more accurately: [prompt] The prior extraction had the following structured data: [JSON] The prior extraction had these issues: [evaluation]"`
 
-### Progress Tracking and Recovery
+### Progress Saving and Recovery
 
-Batch progress is saved to an `.rds` file on the disk and allows you to resume interrupted operations:
+Progress is saved to an `.rds` file on the disk and allows you to easily resume interrupted operations:
 
 ``` r
-batch <- chat$batch(prompts, file = "chat.rds")
+lot <- chat$lot(prompts, file = "chat.rds")
 ```
 
 If `file` is not defined, a temporary file will be created by default.
 
 ### Sound Notifications
 
-Toggle sound notifications on batch completion, interruption, and error:
+Toggle sound notifications on lot completion, interruption, and error:
 
 ``` r
-batch <- chat$batch(prompts, beep = TRUE)
+lot <- chat$lot(prompts, beep = TRUE)
 ```
 
 ### Echoing
@@ -246,7 +246,7 @@ batch <- chat$batch(prompts, beep = TRUE)
 By default, the chat `echo` is set to `FALSE` to show a progress bar. However, you can still configure `echo` by first setting `progress` to `FALSE`:
 
 ``` r
-batch <- chat$batch(prompts, progress = FALSE, echo = "all")
+lot <- chat$lot(prompts, progress = FALSE, echo = "all")
 #> > What is R?
 #> < R is a programming language and software environment used for statistical computing,
 #> < data analysis, and graphical representation.

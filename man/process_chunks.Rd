@@ -21,7 +21,7 @@ process_chunks(
 \arguments{
 \item{chunks}{List of prompt chunks to process}
 
-\item{result}{A batch object to store results}
+\item{result}{A lot object to store results}
 
 \item{chat_obj}{Chat model object for making API calls}
 
@@ -38,7 +38,7 @@ process_chunks(
 \item{beep}{Logical indicating whether to play sounds}
 }
 \value{
-Updated batch object with processed results
+Updated lot object with processed results
 }
 \description{
 Process chunks of prompts in parallel

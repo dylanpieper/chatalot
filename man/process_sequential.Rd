@@ -2,7 +2,7 @@
 % Please edit documentation in R/chatlot-core.R
 \name{process_sequential}
 \alias{process_sequential}
-\title{Process batch of prompts with progress tracking}
+\title{Process lot of prompts with progress tracking}
 \usage{
 process_sequential(
   chat_obj,
@@ -32,9 +32,9 @@ process_sequential(
 \item{beep}{Play sound on completion}
 }
 \value{
-Batch results object
+Lot results object
 }
 \description{
-Process batch of prompts with progress tracking
+Process lot of prompts with progress tracking
 }
 \keyword{internal}

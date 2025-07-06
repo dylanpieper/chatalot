@@ -2,7 +2,7 @@
 % Please edit documentation in R/chatlot.R
 \name{chat_sequential}
 \alias{chat_sequential}
-\title{Process a batch of prompts in sequence}
+\title{Process a lot of prompts in sequence}
 \usage{
 chat_sequential(chat_model = NULL, ...)
 }
@@ -12,7 +12,7 @@ chat_sequential(chat_model = NULL, ...)
 \item{...}{Additional arguments passed to the underlying chat model (e.g., \code{system_prompt})}
 }
 \value{
-A batch object (S7 class) containing
+A lot object (S7 class) containing
 \itemize{
 \item \strong{prompts}: Original input prompts
 \item \strong{responses}: Raw response data for completed prompts
@@ -22,18 +22,18 @@ A batch object (S7 class) containing
 \item \strong{texts}: Function to extract text responses or structured data
 \item \strong{chats}: Function to extract chat objects
 \item \strong{progress}: Function to get processing status
-\item \strong{batch}: Function to process a batch of prompts
+\item \strong{lot}: Function to process a lot of prompts
 }
 }
 \description{
-Processes a batch of chat prompts one at a time in sequential order.
+Processes a lot of chat prompts one at a time in sequential order.
 Maintains state between runs and can resume interrupted processing.
 For parallel processing, use \code{chat_future()}.
 }
-\section{Batch Method}{
+\section{Lot Method}{
 
-This function provides access to the \code{batch()} method for sequential processing of prompts.
-See \code{?batch.sequential_chat} for full details of the method and its parameters.
+This function provides access to the \code{lot()} method for sequential processing of prompts.
+See \code{?lot.sequential_chat} for full details of the method and its parameters.
 }
 
 \examples{
@@ -44,8 +44,8 @@ chat <- chat_sequential(chat_openai(system_prompt = "Reply concisely"))
 # Or a function
 chat <- chat_sequential(chat_openai, system_prompt = "Reply concisely, one sentence")
 
-# Process a batch of prompts in sequence
-batch <- chat$batch(
+# Process a lot of prompts in sequence
+lot <- chat$lot(
   list(
     "What is R?",
     "Explain base R versus tidyverse",
@@ -55,7 +55,7 @@ batch <- chat$batch(
 )
 
 # Process batch with echo enabled (when progress is disabled)
-batch <- chat$batch(
+lot <- chat$lot(
   list(
     "What is R?",
     "Explain base R versus tidyverse"
@@ -65,12 +65,12 @@ batch <- chat$batch(
 )
 
 # Check the progress if interrupted
-batch$progress()
+lot$progress()
 
 # Return the responses
-batch$texts()
+lot$texts()
 
 # Return the chat objects
-batch$chats()
+lot$chats()
 \dontshow{\}) # examplesIf}
 }

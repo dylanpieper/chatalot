@@ -2,17 +2,17 @@
 % Please edit documentation in R/chatlot-core.R
 \name{create_results}
 \alias{create_results}
-\title{Create results object from batch}
+\title{Create results object from lot}
 \usage{
 create_results(result)
 }
 \arguments{
-\item{result}{Batch object}
+\item{result}{Lot object}
 }
 \value{
-Results object with class "batch"
+Results object with class "lot"
 }
 \description{
-Create results object from batch
+Create results object from lot
 }
 \keyword{internal}
