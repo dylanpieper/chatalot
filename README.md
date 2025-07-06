@@ -110,7 +110,7 @@ batch$chats()
 
 **✅ Parallel processing will work if you install `pak::pak("ellmer@0.2.0")`.**
 
----
+------------------------------------------------------------------------
 
 Parallel processing spins up multiple R processes (workers) to chat at the same time. This method improves speed of processing and is built on the [futureverse](https://www.futureverse.org).
 
