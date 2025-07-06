@@ -64,9 +64,9 @@
 <div class="page-header"><h1 id="hellmer-">hellmer <img src="reference/figures/hellmer-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#hellmer-"></a>
 </h1></div>
 <p><a href="https://CRAN.R-project.org/package=hellmer" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
-<p>hellmer makes it easy to synchronously batch process large language model chats in R using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>. Process many chats sequentially or in parallel and use ellmer features such as <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tooling</a> and <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>.</p>
+<p>hellmer makes it easy to synchronously batch process large language model chats in R using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>. Process many chats sequentially or in parallel and use ellmer features such as <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tooling</a> and <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a> with self-evaluation.</p>
 <p>✅ hellmer processes many chats synchronously and supports streaming responses</p>
-<p>❌ hellmer does NOT support asynchronous batch APIs - see ellmer’s <a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">batch_chat()</a></p>
+<p>❌ hellmer does NOT support asynchronous batch APIs which can be about 50% cheaper if you are willing to wait up to 24 hours for a response - see ellmer’s <a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">batch_chat()</a></p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -155,6 +155,7 @@
 <div class="section level3">
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
+<p><strong>⚠️ As of ellmer 0.2.1, API keys are automatically redacted when saved to the disk, which prevents parallel processing. You must install <code>pak::pak("ellmer@0.2.0")</code> for now. Consider ellmer’s <a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">parallel_chat()</a> as an alternative option.</strong></p>
 <p>Parallel processing spins up multiple R processes (workers) to chat at the same time. This method improves speed of processing and is built on the <a href="https://www.futureverse.org" class="external-link">futureverse</a>.</p>
 <p>The default upper limit for number of <code>workers</code> is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>. The default <code>chunk_size</code> is also <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code> and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, data is saved to the disk.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -165,7 +166,6 @@
 <span>  <span class="va">prompts</span>, </span>
 <span>  chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Consider ellmer’s <a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">parallel_chat()</a> as an alternative option.</p>
 </div>
 </div>
 <div class="section level2">
@@ -174,7 +174,7 @@
 <div class="section level3">
 <h3 id="tooling">Tooling<a class="anchor" aria-label="anchor" href="#tooling"></a>
 </h3>
-<p>Register and use tools/function calling:</p>
+<p>Register and use <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool/function calling</a>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">get_current_time</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">tz</span> <span class="op">=</span> <span class="st">"UTC"</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, tz <span class="op">=</span> <span class="va">tz</span>, usetz <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -206,7 +206,7 @@
 <div class="section level3">
 <h3 id="structured-data-extraction">Structured Data Extraction<a class="anchor" aria-label="anchor" href="#structured-data-extraction"></a>
 </h3>
-<p>Extract structured data using type specifications:</p>
+<p>Extract <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data</a> using type specifications:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">type_sentiment</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_object</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Extract sentiment scores"</span>,</span>
@@ -237,7 +237,7 @@
 <div class="section level4">
 <h4 id="self-evaluation">Self-evaluation<a class="anchor" aria-label="anchor" href="#self-evaluation"></a>
 </h4>
-<p>Self-evaluation prompts the chat model to improve the initial or prior structured data extraction using the <code>eval_rounds</code> parameter (increases token use). You can set the number of self-evaluation rounds but be mindful of the cost and risk of diminishing returns.</p>
+<p>Self-evaluation prompts the chat model to evaluate and refine the structured data extraction using the <code>eval_rounds</code> parameter (increases token use). You can set the number of evaluation rounds but be mindful of the cost and risk of diminishing returns.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type <span class="op">=</span> <span class="va">type_sentiment</span>, eval_rounds <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
@@ -252,6 +252,12 @@
 <span><span class="co">#&gt; [[1]]$neutral_score</span></span>
 <span><span class="co">#&gt; [1] 0.05</span></span>
 <span><span class="co">#&gt; ...</span></span></code></pre></div>
+<p>Technically, the self-evaluation feature implements a two-step process:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Evaluation:</strong> The model asks itself <code>"What could be improved in my data extraction? I extracted the following structured data: [JSON] The original prompt was: [prompt]"</code></p></li>
+<li><p><strong>Refinement:</strong> Based on the evaluation feedback, the model attempts a new structure data extraction with the prompt <code>"Extract the following data more accurately: [prompt] The prior extraction had the following structured data: [JSON] The prior extraction had these issues: [evaluation]"</code></p></li>
+</ol>
+<p>This creates a multi-turn chat where the model critiques its own work and then attempts to improve based on that self-evaluation.</p>
 </div>
 </div>
 <div class="section level3">
