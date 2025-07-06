@@ -4,11 +4,11 @@
 
 chatlot synchronously processes lots of large language model chats in R using [ellmer](https://ellmer.tidyverse.org) with features such as [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html).
 
-chatlot is similar to existing ellmer tools with key differences:
+chatlot is similar to existing ellmer tools:
 
--   ellmer's [parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously processes lots of chats in parallel but does not allow you to save or recover your progress
+-   ellmer's [parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously processes lots of chats in parallel. This tool is simple and fast but does not allow you to save or recover your progress.
 
--   ellmer's [batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously batch processes lots of chats, which can be \~50% cheaper if you are willing to wait up to 24 hours for a response (not a chatlot feature)
+-   ellmer's [batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously batch processes lots of chats. This tool is about 50% cheaper if you are willing to wait up to 24 hours for a response.
 
 ## Installation
 
@@ -199,7 +199,7 @@ lot$texts()
 
 #### Self-evaluation
 
-Self-evaluation prompts the chat model to evaluate and refine the structured data extraction using the `eval` parameter (increases token use).
+Self-evaluation prompts the chat model to evaluate and refine the structured data extraction using the `eval` parameter. This feature is unique to chatlot and is an example of how you can use chatlot to orchestrate a lot of multi-turn chats.
 
 ``` r
 lot <- chat$lot(prompts, type = type_sentiment, eval = TRUE)
