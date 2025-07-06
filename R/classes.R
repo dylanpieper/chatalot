@@ -254,8 +254,25 @@ lot <- S7::new_class(
   }
 )
 
+#' Convert list to dataframe if structure allows
+#'
+#' @param x A list object
+#' @return A dataframe if conversion possible, otherwise original list
+#' @keywords internal
+#' @noRd
+list_to_df <- function(x) {
+  # check if list structure is suitable for dataframe conversion
+  if (is.list(x) &&
+    all(sapply(x, is.list)) &&
+    length(unique(lapply(x, names))) == 1) {
+    do.call(rbind, lapply(x, data.frame))
+  } else {
+    x
+  }
+}
 
 #' @keywords internal
+#' @noRd
 S7::method(texts, lot) <- function(x, flatten = TRUE) {
   responses <- x@responses[seq_len(x@completed)]
 
@@ -280,17 +297,19 @@ S7::method(texts, lot) <- function(x, flatten = TRUE) {
   if (x@input_type == "vector" && flatten && all(purrr::map_lgl(values, is.character))) {
     return(unlist(values))
   } else {
-    return(values)
+    return(list_to_df(values))
   }
 }
 
 #' @keywords internal
+#' @noRd
 S7::method(chats, lot) <- function(x) {
   responses <- x@responses[seq_len(x@completed)]
   map(responses, "chat")
 }
 
 #' @keywords internal
+#' @noRd
 S7::method(progress, lot) <- function(x) {
   list(
     total_prompts = length(x@prompts),

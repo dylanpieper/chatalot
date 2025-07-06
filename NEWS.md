@@ -1,6 +1,7 @@
 # chatlot (development)
 
 ## Internal Improvements
+* `$texts()` returns a data frame for structured data when possible
 * Added single retry for failed structured data extractions
 * Replaced progress bar percentage indicator (`cli::pb_percent`) to estimated time until completion (`cli::pb_eta`)
 * For `chat_future()`, updated the default `chunk_size` to `parallel::detectCores()` for safer processing 

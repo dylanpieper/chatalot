@@ -8,4 +8,5 @@
 #' @importFrom purrr map_lgl pwalk map map_chr walk iwalk
 #' @importFrom utils str packageDescription
 #' @keywords internal
+#' @noRd
 "_PACKAGE"

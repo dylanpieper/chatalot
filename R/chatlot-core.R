@@ -1,4 +1,3 @@
-
 #' Capture chat model response with proper handling
 #' @param original_chat Original chat model object
 #' @param prompt Prompt text
@@ -6,6 +5,7 @@
 #' @param eval If TRUE, performs one evaluation round for structured data extraction
 #' @return List containing response information
 #' @keywords internal
+#' @noRd
 capture <- function(original_chat,
                     prompt,
                     type,
@@ -59,6 +59,7 @@ capture <- function(original_chat,
 #' @param beep Play sound on completion
 #' @return Lot results object
 #' @keywords internal
+#' @noRd
 process_sequential <- function(
     chat_obj,
     prompts,
@@ -185,6 +186,7 @@ process_sequential <- function(
 #' @param progress Whether to show progress bars
 #' @return Lot results object
 #' @keywords internal
+#' @noRd
 process_future <- function(
     chat_obj,
     prompts,
@@ -437,6 +439,7 @@ process_future <- function(
 #' @param beep Logical indicating whether to play sounds
 #' @return Updated lot object with processed results
 #' @keywords internal
+#' @noRd
 process_chunks <- function(chunks,
                            result,
                            chat_obj,
@@ -500,6 +503,7 @@ process_chunks <- function(chunks,
 #' @param eval If TRUE, performs one evaluation round for structured data extraction
 #' @return List containing extraction process
 #' @keywords internal
+#' @noRd
 process_evaluations <- function(chat_obj, prompt, type, eval = FALSE, echo = FALSE, ...) {
   result <- list(
     initial = NULL,
@@ -597,6 +601,7 @@ process_evaluations <- function(chat_obj, prompt, type, eval = FALSE, echo = FAL
 #' @param beep Logical indicating whether to play a sound
 #' @return NULL (called for side effects)
 #' @keywords internal
+#' @noRd
 handle_lot_interrupt <- function(result, beep) {
   cli::cli_alert_warning(
     sprintf(
@@ -615,6 +620,7 @@ handle_lot_interrupt <- function(result, beep) {
 #' @param progress Whether to show progress bars
 #' @return NULL (invisibly)
 #' @keywords internal
+#' @noRd
 finish_successful_lot <- function(pb, beep, progress) {
   if (!is.null(pb)) {
     cli::cli_progress_done(id = pb)
@@ -630,6 +636,7 @@ finish_successful_lot <- function(pb, beep, progress) {
 #' @param result Lot object
 #' @return Results object with class "lot"
 #' @keywords internal
+#' @noRd
 create_results <- function(result) {
   base_list <- list(
     prompts = result@prompts,
