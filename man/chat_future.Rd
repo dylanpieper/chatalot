@@ -37,7 +37,7 @@ See \code{?batch.future_chat} for full details of the method and its parameters.
 }
 
 \examples{
-\dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive() && ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Create a parallel chat processor with an object
 chat <- chat_future(chat_openai(system_prompt = "Reply concisely"))
 

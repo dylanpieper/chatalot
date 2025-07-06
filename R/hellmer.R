@@ -134,7 +134,7 @@ chat_sequential <- function(
 #' This function provides access to the `batch()` method for parallel processing of prompts.
 #' See `?batch.future_chat` for full details of the method and its parameters.
 #'
-#' @examplesIf ellmer::has_credentials("openai")
+#' @examplesIf interactive() && ellmer::has_credentials("openai")
 #' # Create a parallel chat processor with an object
 #' chat <- chat_future(chat_openai(system_prompt = "Reply concisely"))
 #'

@@ -1,9 +1,9 @@
-Package: hellmer
+Package: chatlot
 Title: Synchronous Batch Processing for Chat Models
 Version: 0.1.2
 Authors@R: 
     person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
-Description: Synchronous batch processing framework for 'ellmer' chat models.
+Description: Synchronous process lots of large language model chats with 'ellmer'.
     Provides both sequential and parallel processing of chat interactions
     with features including tool calling and structured data extraction.
     Enables workflow management through progress tracking and recovery and 
@@ -32,4 +32,4 @@ Imports:
     S7,
     utils
 Depends: ellmer (>= 0.2.0)
-URL: https://dylanpieper.github.io/hellmer/
+URL: https://dylanpieper.github.io/chatlot/

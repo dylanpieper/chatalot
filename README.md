@@ -1,19 +1,22 @@
-# hellmer <img src="man/figures/hellmer-hex.png" align="right" width="140"/>
+# chatlot ![](man/figures/chatlot-hex.png){align="right" width="140"}
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://CRAN.R-project.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-hellmer makes it easy to synchronously batch process large language model chats in R using [ellmer](https://ellmer.tidyverse.org). Process many chats sequentially or in parallel and use ellmer features such as [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html) with self-evaluation.
+chatlot synchronously processes lots of large language model chats in R using [ellmer](https://ellmer.tidyverse.org) with features such as [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html).
 
-✅ hellmer processes many chats synchronously and supports streaming responses
+Similar tools:
 
-❌ hellmer does NOT support asynchronous batch APIs which can be about 50% cheaper if you are willing to wait up to 24 hours for a response - see ellmer's [batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html)
+-   ellmer's [parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - synchronously processes lots of chats in parallel but with limited features
+
+-   ellmer's [batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - asynchronously batch processes lots of chats, which can be about 50% cheaper if you are willing to wait up to 24 hours for a response
 
 ## Installation
 
-You can install the package from CRAN with:
+You can install the development or CRAN version of the package with:
 
 ``` r
-install.packages("hellmer")
+# pak::pak("dylanpieper/chatlot")
+pak::pak("chatlot")
 ```
 
 ## Setup API Keys
@@ -37,7 +40,7 @@ openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
 Sequential processing uses the current R process to call one chat at a time and save the data to the disk.
 
 ``` r
-library(hellmer)
+library(chatlot)
 
 chat <- chat_sequential(openai)
 
@@ -103,7 +106,7 @@ batch$chats()
 
 ### Parallel Processing
 
-**⚠️ As of ellmer 0.2.1, API keys are automatically redacted when saved to the disk, which prevents parallel processing. You must install `pak::pak("ellmer@0.2.0")` for now. Consider ellmer's [parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) as an alternative option.**
+**⚠️ Parallel processing is temporarily unavailable in ellmer 0.2.1 due to changes in the API key handling. It will work if you install `pak::pak("ellmer@0.2.0")`.**
 
 Parallel processing spins up multiple R processes (workers) to chat at the same time. This method improves speed of processing and is built on the [futureverse](https://www.futureverse.org).
 
@@ -210,13 +213,13 @@ batch$texts()
 #> ...
 ```
 
-Technically, the self-evaluation feature implements a two-step process:
+Self-evaluation is a two-step process:
 
 1.  **Evaluation:** The model asks itself `"What could be improved in my data extraction? I extracted the following structured data: [JSON] The original prompt was: [prompt]"`
 
 2.  **Refinement:** Based on the evaluation feedback, the model attempts a new structure data extraction with the prompt `"Extract the following data more accurately: [prompt] The prior extraction had the following structured data: [JSON] The prior extraction had these issues: [evaluation]"`
 
-This creates a multi-turn chat where the model critiques its own work and then attempts to improve based on that self-evaluation.
+This feature creates a multi-turn chat where the model critiques its own work and then attempts to improve based on that self-evaluation.
 
 ### Progress Tracking and Recovery
 
@@ -261,5 +264,4 @@ batch <- chat$batch(prompts, progress = FALSE, echo = "all")
 
 ## Further Reading
 
--   [Using Ellmer Chat Models](https://dylanpieper.github.io/hellmer/articles/using-chat-models.html) (Vignette)
 -   [Batch and Compare the Similarity of LLM Responses in R](https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html) (Blog Post)
