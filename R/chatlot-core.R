@@ -305,7 +305,7 @@ process_future <- function(
                     responses <- furrr::future_map(
                       chunk,
                       function(prompt) {
-                        capture(
+                        chatlot:::capture(
                           worker_chat,
                           prompt,
                           type,
@@ -462,7 +462,7 @@ process_chunks <- function(chunks,
           chunk,
           function(prompt) {
             worker_chat <- chat_obj$clone()
-            capture(
+            chatlot:::capture(
               worker_chat,
               prompt,
               type,
