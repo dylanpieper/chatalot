@@ -223,9 +223,9 @@ lot$texts()
 #> ...
 ```
 
-### Progress Saving and Recovery
+### Progress Tracking and Recovery
 
-Progress is saved to an `.rds` file on the disk and allows you to easily resume interrupted operations:
+Progress is tracked in `chat$progress()` and saved to an `.rds` file on the disk, which allows you to easily resume interrupted operations:
 
 ``` r
 lot <- chat$lot(prompts, file = "chat.rds")
