@@ -1,9 +1,9 @@
 Package: chatlot
-Title: Synchronous Batch Processing for Chat Models
+Title: Process Lots of Chats
 Version: 0.1.2
 Authors@R: 
     person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
-Description: Synchronous process lots of large language model chats with 'ellmer'.
+Description: Process lots of large language model chats with 'ellmer'.
     Provides both sequential and parallel processing of chat interactions
     with features including tool calling and structured data extraction.
     Enables workflow management through progress tracking and recovery and 
