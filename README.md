@@ -8,7 +8,7 @@ chatlot is similar to existing ellmer tools:
 
 -   ellmer's [parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously processes lots of chats in parallel. This tool is simple and fast but does not allow you to save or recover your progress.
 
--   ellmer's [batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously batch processes lots of chats. This tool is about 50% cheaper if you are willing to wait up to 24 hours for a response.
+-   ellmer's [batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously batch processes lots of chats from select providers. This tool is about 50% cheaper if you wait up to 24 hours for a response.
 
 ## Installation
 
