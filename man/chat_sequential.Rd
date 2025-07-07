@@ -42,7 +42,7 @@ See \code{?process.sequential_chat} for full details of the method and its param
 chat <- chat_sequential(chat_openai(system_prompt = "Reply concisely"))
 
 # Process prompts
-process_result <- chat$process(
+response <- chat$process(
   list(
     "What is R?",
     "Explain base R versus tidyverse",
@@ -51,13 +51,13 @@ process_result <- chat$process(
 )
 
 
-# Check progress if interrupted
-process_result$progress()
-
 # Return responses
-process_result$texts()
+response$texts()
 
 # Return chat objects
-process_result$chats()
+response$chats()
+
+# Check progress if interrupted
+response$progress()
 \dontshow{\}) # examplesIf}
 }
