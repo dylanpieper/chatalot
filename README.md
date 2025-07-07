@@ -2,7 +2,9 @@
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://CRAN.R-project.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-chatlot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org). Use sequential and parallel processing workflows with advanced features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), progress tracking with recovery options, and quality-of-life features such as sound notifications and verbosity controls.
+chatlot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org).
+
+Easily setup sequential and parallel processing workflows with advanced features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), progress tracking with recovery options, and quality-of-life features such as sound notifications and verbosity controls.
 
 chatlot is similar to existing ellmer tools:
 
@@ -136,7 +138,7 @@ lot$texts()
 Extract [structured data](https://ellmer.tidyverse.org/articles/structured-data.html) using type specifications:
 
 ``` r
-prompts <- list(
+prompts <- c(
   "I go by Alex. 42 years on this planet and counting.",
   "Pleased to meet you! I'm Jamal, age 27.",
   "They call me Li Wei. Nineteen years young.",
@@ -186,11 +188,13 @@ lot <- chat$lot(prompts, beep = TRUE)
 By default, the chat `echo` is set to `FALSE` to show a progress bar. However, you can still configure `echo` by first setting `progress` to `FALSE`:
 
 ``` r
+prompts <- c(
+  "What is R?",
+  "Explain base R versus tidyverse"
+)
+
 lot <- chat$lot(
-  c(
-    "What is R?",
-    "Explain base R versus tidyverse"
-  ),
+  prompts,
   progress = FALSE,
   echo = TRUE
 )
