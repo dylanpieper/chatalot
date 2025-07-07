@@ -156,7 +156,7 @@ lot <- chat$lot(
 )
 
 lot$texts()
-#> name age
+#>     name age
 #> 1   Alex  42
 #> 2  Jamal  27
 #> 3 Li Wei  19
