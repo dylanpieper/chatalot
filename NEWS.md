@@ -7,11 +7,13 @@
 * For `chat_future()`, updated the default `chunk_size` to `parallel::detectCores()` for safer processing 
 
 ## Lifecycle changes
-* Renamed package from `hellmer` to `chatlot` to better describe package
-* `batch` method is renamed to `lot` to match the new package name
+* Renamed package from hellmer to chatlot
+* `lot` is renamed to `process` for consistent verb use
+* `batch` is renamed to `lot` to match the new package name
 * `state_path` is renamed to `file` for consistency/simplicity
 * `type_spec` is renamed to `type` following the latest update to ellmer (0.1.1)
 * Removed evaluation functionality because of poor performance
+* Removed retry functionality in anticipation of robust changes to ellmer (development)
 
 # chatlot 0.1.2
 

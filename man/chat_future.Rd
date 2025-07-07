@@ -12,7 +12,7 @@ chat_future(chat_model = NULL, ...)
 \item{...}{Additional arguments passed to the underlying chat model (e.g., \code{system_prompt})}
 }
 \value{
-A lot object (S7 class) containing:
+A process object (S7 class) containing:
 \itemize{
 \item \strong{prompts}: Original input prompts
 \item \strong{responses}: Raw response data for completed prompts
@@ -22,7 +22,7 @@ A lot object (S7 class) containing:
 \item \strong{texts}: Function to extract text responses or structured data
 \item \strong{chats}: Function to extract chat objects
 \item \strong{progress}: Function to get processing status
-\item \strong{lot}: Function to process a lot of prompts
+\item \strong{process}: Function to process a lot of prompts
 }
 }
 \description{
@@ -30,10 +30,10 @@ Processes a lot of chat prompts using parallel workers.
 Splits prompts into chunks for processing while maintaining state.
 For sequential processing, use \code{chat_sequential()}.
 }
-\section{Lot Method}{
+\section{Process Method}{
 
-This function provides access to the \code{lot()} method for parallel processing of prompts.
-See \code{?lot.future_chat} for full details of the method and its parameters.
+This function provides access to the \code{process()} method for parallel processing of prompts.
+See \code{?process.future_chat} for full details of the method and its parameters.
 }
 
 \examples{
@@ -42,7 +42,7 @@ See \code{?lot.future_chat} for full details of the method and its parameters.
 chat <- chat_future(chat_openai(system_prompt = "Reply concisely"))
 
 # Process prompts
-lot <- chat$lot(
+process_result <- chat$process(
   list(
     "What is R?",
     "Explain base R versus tidyverse",
@@ -51,12 +51,12 @@ lot <- chat$lot(
 )
 
 # Check progress if interrupted
-lot$progress()
+process_result$progress()
 
 # Return responses
-lot$texts()
+process_result$texts()
 
 # Return chat objects
-lot$chats()
+process_result$chats()
 \dontshow{\}) # examplesIf}
 }

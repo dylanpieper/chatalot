@@ -6,7 +6,7 @@ test_that("chat_future initialization and result class works", {
   expect_true(inherits(chat, "Chat"))
   expect_true(inherits(chat, "R6"))
 
-  result <- chat$lot(get_test_prompts(1), beep = FALSE)
+  result <- chat$process(get_test_prompts(1), beep = FALSE)
   expect_true(inherits(result$chats()[[1]], c("Chat", "R6")))
 })
 
@@ -15,10 +15,10 @@ test_that("chat_future processes chunks correctly", {
   skip_on_ci()
 
   chat <- chat_future(ellmer::chat_openai)
-  result <- chat$lot(get_test_prompts(2), workers = 1, chunk_size = 1, beep = FALSE)
+  result <- chat$process(get_test_prompts(2), workers = 1, chunk_size = 1, beep = FALSE)
 
   expect_type(result, "list")
-  expect_s3_class(result, "lot")
+  expect_s3_class(result, "process")
   expect_equal(length(result$texts()), 2)
   expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
 })
@@ -33,7 +33,7 @@ test_that("chat_future handles structured data extraction", {
     "This is terrible."
   )
 
-  result <- chat$lot(prompts, type = get_sentiment_type_spec(), workers = 1, chunk_size = 1, beep = FALSE)
+  result <- chat$process(prompts, type = get_sentiment_type_spec(), workers = 1, chunk_size = 1, beep = FALSE)
   data <- result$texts()
 
   expect_s3_class(data, "data.frame")
@@ -49,7 +49,7 @@ test_that("chat_future works with tools", {
   chat <- chat_future(ellmer::chat_openai)
   chat$register_tool(get_square_tool())
 
-  result <- chat$lot(
+  result <- chat$process(
     list(
       "What is the square of 3?",
       "Calculate the square of 5."
@@ -70,7 +70,7 @@ test_that("chat_future handles state persistence", {
   on.exit(unlink(temp_file))
 
   chat <- chat_future(ellmer::chat_openai)
-  result <- chat$lot(get_test_prompts(1), workers = 1, file = temp_file, chunk_size = 1, beep = FALSE)
+  result <- chat$process(get_test_prompts(1), workers = 1, file = temp_file, chunk_size = 1, beep = FALSE)
 
   expect_true(file.exists(temp_file))
   expect_equal(length(result$texts()), 1)
@@ -95,7 +95,7 @@ test_that("chat_future handles worker failures", {
   })
 
   expect_error(
-    chat$lot(get_test_prompts(1), workers = 1, chunk_size = 1, beep = FALSE),
+    chat$process(get_test_prompts(1), workers = 1, chunk_size = 1, beep = FALSE),
     regexp = NULL
   )
 })
@@ -106,12 +106,12 @@ test_that("chat_future supports progress parameter", {
 
   # Test with progress = TRUE
   chat <- chat_future(ellmer::chat_openai)
-  result <- chat$lot(get_test_prompts(1), workers = 1, chunk_size = 1, progress = TRUE, beep = FALSE)
+  result <- chat$process(get_test_prompts(1), workers = 1, chunk_size = 1, progress = TRUE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
 
   # Test with progress = FALSE
   chat <- chat_future(ellmer::chat_openai)
-  result <- chat$lot(get_test_prompts(1), workers = 1, chunk_size = 1, progress = FALSE, beep = FALSE)
+  result <- chat$process(get_test_prompts(1), workers = 1, chunk_size = 1, progress = FALSE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
 })
 
@@ -122,11 +122,11 @@ test_that("chat_future supports echo parameter and passes extra args", {
   chat <- chat_future(ellmer::chat_openai)
 
   # Test with echo = TRUE
-  result <- chat$lot(get_test_prompts(1), workers = 1, chunk_size = 1, progress = FALSE, echo = TRUE, beep = FALSE)
+  result <- chat$process(get_test_prompts(1), workers = 1, chunk_size = 1, progress = FALSE, echo = TRUE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
 
   # Test with additional parameter
-  result <- chat$lot(get_test_prompts(1),
+  result <- chat$process(get_test_prompts(1),
     workers = 1,
     chunk_size = 1,
     progress = FALSE,

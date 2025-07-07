@@ -67,7 +67,7 @@ capture <- function(original_chat,
 #' @param file Path to save state file (.rds)
 #' @param progress Whether to show progress bars
 #' @param beep Play sound on completion
-#' @return Lot results object
+#' @return Process results object
 #' @keywords internal
 #' @noRd
 process_sequential <- function(
@@ -92,7 +92,7 @@ process_sequential <- function(
 
   if (is.null(result)) {
     orig_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
-    result <- lot(
+    result <- process(
       prompts = as.list(prompts),
       responses = vector("list", length(prompts)),
       completed = 0L,
@@ -190,7 +190,7 @@ process_sequential <- function(
 #' @param beep Play sound on completion/error
 #' @param max_chunk_attempts Maximum retries per failed chunk
 #' @param progress Whether to show progress bars
-#' @return Lot results object
+#' @return Process results object
 #' @keywords internal
 #' @noRd
 process_future <- function(
@@ -248,7 +248,7 @@ process_future <- function(
   }
 
   if (is.null(result)) {
-    result <- lot(
+    result <- process(
       prompts = prompts_list,
       responses = vector("list", total_prompts),
       completed = 0L,
@@ -432,14 +432,14 @@ process_future <- function(
 
 #' Process chunks of prompts in parallel
 #' @param chunks List of prompt chunks to process
-#' @param result A lot object to store results
+#' @param result A process object to store results
 #' @param chat_obj Chat model object for making API calls
 #' @param type Type specification for structured data extraction
 #' @param pb Progress bar object
 #' @param file Path to save intermediate state
 #' @param progress Whether to show progress bars
 #' @param beep Logical indicating whether to play sounds
-#' @return Updated lot object with processed results
+#' @return Updated process object with processed results
 #' @keywords internal
 #' @noRd
 process_chunks <- function(chunks,
@@ -500,7 +500,7 @@ process_chunks <- function(chunks,
 #' Handle lot interruption
 #' @name handle_lot_interrupt
 #' @usage handle_lot_interrupt(result, beep)
-#' @param result A lot object containing processing state
+#' @param result A process object containing processing state
 #' @param beep Logical indicating whether to play a sound
 #' @return NULL (called for side effects)
 #' @keywords internal
@@ -535,9 +535,9 @@ finish_successful_lot <- function(pb, beep, progress) {
   invisible()
 }
 
-#' Create results object from lot
-#' @param result Lot object
-#' @return Results object with class "lot"
+#' Create results object from process
+#' @param result Process object
+#' @return Results object with class "process"
 #' @keywords internal
 #' @noRd
 create_results <- function(result) {
@@ -553,5 +553,5 @@ create_results <- function(result) {
   base_list$chats <- function() chats(result)
   base_list$progress <- function() progress(result)
 
-  structure(base_list, class = "lot")
+  structure(base_list, class = "process")
 }

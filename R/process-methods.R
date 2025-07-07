@@ -9,16 +9,16 @@
 #' @param echo Whether to display chat outputs (when `progress` is `FALSE`)
 #' @param ... Additional arguments passed to the chat method
 #'
-#' @return A lot object with the processed results
+#' @return A process object with the processed results
 #' @export
-lot.sequential_chat <- function(chat_env,
-                                  prompts,
-                                  type = NULL,
-                                  file = tempfile("chat_", fileext = ".rds"),
-                                  progress = TRUE,
-                                  beep = TRUE,
-                                  echo = FALSE,
-                                  ...) {
+process.sequential_chat <- function(chat_env,
+                                    prompts,
+                                    type = NULL,
+                                    file = tempfile("chat_", fileext = ".rds"),
+                                    progress = TRUE,
+                                    beep = TRUE,
+                                    echo = FALSE,
+                                    ...) {
   process_sequential(
     chat_obj = chat_env$chat_model,
     prompts = prompts,
@@ -45,19 +45,19 @@ lot.sequential_chat <- function(chat_env,
 #' @param echo Whether to display chat outputs (when `progress` is `FALSE`)
 #' @param ... Additional arguments passed to the chat method
 #'
-#' @return A lot object with the processed results
+#' @return A process object with the processed results
 #' @export
-lot.future_chat <- function(chat_env,
-                              prompts,
-                              type = NULL,
-                              file = tempfile("chat_", fileext = ".rds"),
-                              workers = NULL,
-                              chunk_size = parallel::detectCores(),
-                              max_chunk_attempts = 3L,
-                              beep = TRUE,
-                              progress = TRUE,
-                              echo = FALSE,
-                              ...) {
+process.future_chat <- function(chat_env,
+                                prompts,
+                                type = NULL,
+                                file = tempfile("chat_", fileext = ".rds"),
+                                workers = NULL,
+                                chunk_size = parallel::detectCores(),
+                                max_chunk_attempts = 3L,
+                                beep = TRUE,
+                                progress = TRUE,
+                                echo = FALSE,
+                                ...) {
   process_future(
     chat_obj = chat_env$chat_model,
     prompts = prompts,

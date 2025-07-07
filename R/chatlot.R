@@ -6,7 +6,7 @@
 #'
 #' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
-#' @return A lot object (S7 class) containing
+#' @return A process object (S7 class) containing
 #'   \itemize{
 #'     \item **prompts**: Original input prompts
 #'     \item **responses**: Raw response data for completed prompts
@@ -16,18 +16,18 @@
 #'     \item **texts**: Function to extract text responses or structured data
 #'     \item **chats**: Function to extract chat objects
 #'     \item **progress**: Function to get processing status
-#'     \item **lot**: Function to process a lot of prompts
+#'     \item **process**: Function to process a lot of prompts
 #'   }
-#' @section Lot Method:
-#' This function provides access to the `lot()` method for sequential processing of prompts.
-#' See `?lot.sequential_chat` for full details of the method and its parameters.
+#' @section Process Method:
+#' This function provides access to the `process()` method for sequential processing of prompts.
+#' See `?process.sequential_chat` for full details of the method and its parameters.
 #'
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create chat processor
 #' chat <- chat_sequential(chat_openai(system_prompt = "Reply concisely"))
 #'
 #' # Process prompts
-#' lot <- chat$lot(
+#' response <- chat$process(
 #'   list(
 #'     "What is R?",
 #'     "Explain base R versus tidyverse",
@@ -36,14 +36,14 @@
 #' )
 #'
 #'
-#' # Check progress if interrupted
-#' lot$progress()
-#'
 #' # Return responses
-#' lot$texts()
+#' response$texts()
 #'
 #' # Return chat objects
-#' lot$chats()
+#' response$chats()
+#'
+#' # Check progress if interrupted
+#' response$progress()
 #' @export
 chat_sequential <- function(
     chat_model = NULL,
@@ -66,20 +66,20 @@ chat_sequential <- function(
 
   chat_env$last_file <- NULL
 
-  chat_env$lot <- function(prompts,
-                           type = NULL,
-                           file = tempfile("chat_", fileext = ".rds"),
-                           progress = TRUE,
-                           beep = TRUE,
-                           echo = FALSE,
-                           ...) {
+  chat_env$process <- function(prompts,
+                               type = NULL,
+                               file = tempfile("chat_", fileext = ".rds"),
+                               progress = TRUE,
+                               beep = TRUE,
+                               echo = FALSE,
+                               ...) {
     if (is.null(chat_env$last_file)) {
       chat_env$last_file <- file
     } else {
       file <- chat_env$last_file
     }
 
-    lot.sequential_chat(
+    process.sequential_chat(
       chat_env = chat_env,
       prompts = prompts,
       type = type,
@@ -103,7 +103,7 @@ chat_sequential <- function(
 #'
 #' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
-#' @return A lot object (S7 class) containing:
+#' @return A process object (S7 class) containing:
 #'   \itemize{
 #'     \item **prompts**: Original input prompts
 #'     \item **responses**: Raw response data for completed prompts
@@ -113,18 +113,18 @@ chat_sequential <- function(
 #'     \item **texts**: Function to extract text responses or structured data
 #'     \item **chats**: Function to extract chat objects
 #'     \item **progress**: Function to get processing status
-#'     \item **lot**: Function to process a lot of prompts
+#'     \item **process**: Function to process a lot of prompts
 #'   }
-#' @section Lot Method:
-#' This function provides access to the `lot()` method for parallel processing of prompts.
-#' See `?lot.future_chat` for full details of the method and its parameters.
+#' @section Process Method:
+#' This function provides access to the `process()` method for parallel processing of prompts.
+#' See `?process.future_chat` for full details of the method and its parameters.
 #'
 #' @examplesIf interactive() && ellmer::has_credentials("openai")
 #' # Create chat processor
 #' chat <- chat_future(chat_openai(system_prompt = "Reply concisely"))
 #'
 #' # Process prompts
-#' lot <- chat$lot(
+#' response <- chat$process(
 #'   list(
 #'     "What is R?",
 #'     "Explain base R versus tidyverse",
@@ -132,14 +132,14 @@ chat_sequential <- function(
 #'   )
 #' )
 #'
-#' # Check progress if interrupted
-#' lot$progress()
-#'
 #' # Return responses
-#' lot$texts()
+#' response$texts()
 #'
 #' # Return chat objects
-#' lot$chats()
+#' response$chats()
+#' 
+#' Check progress if interrupted
+#' response$progress()
 #' @export
 chat_future <- function(
     chat_model = NULL,
@@ -162,16 +162,16 @@ chat_future <- function(
 
   chat_env$last_file <- NULL
 
-  chat_env$lot <- function(prompts,
-                           type = NULL,
-                           file = tempfile("chat_", fileext = ".rds"),
-                           progress = TRUE,
-                           workers = NULL,
-                           chunk_size = parallel::detectCores(),
-                           max_chunk_attempts = 3L,
-                           beep = TRUE,
-                           echo = FALSE,
-                           ...) {
+  chat_env$process <- function(prompts,
+                               type = NULL,
+                               file = tempfile("chat_", fileext = ".rds"),
+                               progress = TRUE,
+                               workers = NULL,
+                               chunk_size = parallel::detectCores(),
+                               max_chunk_attempts = 3L,
+                               beep = TRUE,
+                               echo = FALSE,
+                               ...) {
     if (is.null(chat_env$last_file)) {
       chat_env$last_file <- file
     } else {
@@ -186,7 +186,7 @@ chat_future <- function(
       }
     }
 
-    lot.future_chat(
+    process.future_chat(
       chat_env = chat_env,
       prompts = prompts,
       type = type,

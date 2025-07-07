@@ -5,7 +5,7 @@ test_that("chat_sequential initialization and result class works", {
   expect_true(inherits(chat, "Chat"))
   expect_true(inherits(chat, "R6"))
 
-  result <- chat$lot(get_test_prompts(1), beep = FALSE)
+  result <- chat$process(get_test_prompts(1), beep = FALSE)
   expect_true(inherits(result$chats()[[1]], c("Chat", "R6")))
 })
 
@@ -13,10 +13,10 @@ test_that("chat_sequential processes prompts correctly", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   chat <- chat_sequential(ellmer::chat_openai)
-  result <- chat$lot(get_test_prompts(2), beep = FALSE)
+  result <- chat$process(get_test_prompts(2), beep = FALSE)
 
   expect_type(result, "list")
-  expect_s3_class(result, "lot")
+  expect_s3_class(result, "process")
   expect_equal(length(result$texts()), 2)
   expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
 })
@@ -30,7 +30,7 @@ test_that("chat_sequential handles structured data extraction", {
     "This is terrible."
   )
 
-  result <- chat$lot(prompts, type = get_sentiment_type_spec(), beep = FALSE)
+  result <- chat$process(prompts, type = get_sentiment_type_spec(), beep = FALSE)
   data <- result$texts()
 
   expect_s3_class(data, "data.frame")
@@ -45,7 +45,7 @@ test_that("chat_sequential works with tools", {
   chat <- chat_sequential(ellmer::chat_openai)
   chat$register_tool(get_square_tool())
 
-  result <- chat$lot(list(
+  result <- chat$process(list(
     "What is the square of 3?",
     "Calculate the square of 5."
   ), beep = FALSE)
@@ -60,7 +60,7 @@ test_that("chat_sequential handles state persistence", {
   on.exit(unlink(temp_file))
 
   chat <- chat_sequential(ellmer::chat_openai)
-  result <- chat$lot(get_test_prompts(1), file = temp_file, beep = FALSE)
+  result <- chat$process(get_test_prompts(1), file = temp_file, beep = FALSE)
 
   expect_true(file.exists(temp_file))
   expect_equal(length(result$texts()), 1)
@@ -71,12 +71,12 @@ test_that("chat_sequential supports progress parameter", {
 
   # Test with progress = TRUE
   chat <- chat_sequential(ellmer::chat_openai)
-  result <- chat$lot(get_test_prompts(1), progress = TRUE, beep = FALSE)
+  result <- chat$process(get_test_prompts(1), progress = TRUE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
 
   # Test with progress = FALSE
   chat <- chat_sequential(ellmer::chat_openai)
-  result <- chat$lot(get_test_prompts(1), progress = FALSE, beep = FALSE)
+  result <- chat$process(get_test_prompts(1), progress = FALSE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
 })
 
@@ -86,11 +86,11 @@ test_that("chat_sequential supports echo parameter and passes extra args", {
   chat <- chat_sequential(ellmer::chat_openai)
 
   # Test with echo = TRUE
-  result <- chat$lot(get_test_prompts(1), progress = FALSE, echo = TRUE, beep = FALSE)
+  result <- chat$process(get_test_prompts(1), progress = FALSE, echo = TRUE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
 
   # Test with additional parameter
-  result <- chat$lot(get_test_prompts(1),
+  result <- chat$process(get_test_prompts(1),
     progress = FALSE,
     echo = TRUE,
     beep = FALSE
@@ -116,7 +116,7 @@ test_that("chat_sequential handles errors gracefully", {
   })
 
   expect_error(
-    chat$lot(get_test_prompts(1), beep = FALSE),
+    chat$process(get_test_prompts(1), beep = FALSE),
     regexp = NULL
   )
 })

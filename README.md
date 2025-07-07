@@ -53,13 +53,13 @@ prompts <- c(
   "Which words to know in Portugese as a tourist?"
 )
 
-lot <- chat$lot(prompts)
+response <- chat$process(prompts)
 ```
 
 Access the responses:
 
 ``` r
-lot$texts()
+response$texts()
 #> [1] "Plan ahead to include a mix of historic cities, coastal escapes, 
 #> local cuisine, and authentic cultural experiences while keeping time 
 #> for spontaneous discoveries."
@@ -97,7 +97,7 @@ chat <- chat_future(openai)
 For maximum processing speed, set `chunk_size` to the number of prompts. However, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
 
 ``` r
-lot <- chat$lot(
+response <- chat$process(
   prompts, 
   chunk_size = length(prompts)
 )
@@ -125,9 +125,9 @@ chat$register_tool(tool(
   cities = type_array("City names", type_string())
 ))
 
-lot <- chat$lot(interpolate("Give me a weather update for {{weather$city}}?"))
+response <- chat$process(interpolate("Give me a weather update for {{weather$city}}?"))
 
-lot$texts()
+response$texts()
 #> [1] "In Chicago, it's cool with heavy rain and strong winds."                   
 #> [2] "The current weather in NYC is hot with no rain and light winds."           
 #> [3] "Lisbon currently has an overcast sky, warm temperatures, and strong winds."
@@ -147,7 +147,7 @@ prompts <- c(
   "Kwame here - just hit the big 5-0 this year."
 )
 
-lot <- chat$lot(
+response <- chat$process(
   prompts,
   type = type_object(
     name = type_string(),
@@ -155,7 +155,7 @@ lot <- chat$lot(
   )
 )
 
-lot$texts()
+response$texts()
 #>     name age
 #> 1   Alex  42
 #> 2  Jamal  27
@@ -170,7 +170,7 @@ lot$texts()
 Progress is tracked in `chat$progress()` and saved to an `.rds` file on the disk, which allows you to easily resume interrupted operations:
 
 ``` r
-lot <- chat$lot(prompts, file = "chat.rds")
+response <- chat$process(prompts, file = "chat.rds")
 ```
 
 If `file` is not defined, a temporary file will be created by default.
@@ -180,7 +180,7 @@ If `file` is not defined, a temporary file will be created by default.
 Toggle sound notifications on completion, interruption, and error:
 
 ``` r
-lot <- chat$lot(prompts, beep = TRUE)
+response <- chat$process(prompts, beep = TRUE)
 ```
 
 ### Verbosity
@@ -193,7 +193,7 @@ prompts <- c(
   "Explain base R versus tidyverse"
 )
 
-lot <- chat$lot(
+response <- chat$process(
   prompts,
   progress = FALSE,
   echo = TRUE
