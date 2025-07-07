@@ -14,12 +14,12 @@ reference:
       - chat_sequential
       - chat_future
       
-  - title: "Batch Processing"
-    desc: "Methods for batch processing with different chat processors"
+  - title: "Lot Processing"
+    desc: "Methods for chat processors"
     contents:
-      - batch
-      - batch.sequential_chat
-      - batch.future_chat
+      - lot
+      - lot.sequential_chat
+      - lot.future_chat
       
   - title: "Progress Tracking"
     desc: "Functions for monitoring progress"
