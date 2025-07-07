@@ -145,7 +145,7 @@ process_sequential <- function(
       }
     }
 
-    finish_successful_lot(pb, beep, progress)
+    finish_process(pb, beep, progress)
   }, error = function(e) {
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
@@ -154,7 +154,7 @@ process_sequential <- function(
     saveRDS(result, file)
 
     if (inherits(e, "interrupt")) {
-      handle_lot_interrupt(result, beep)
+      handle_interrupt(result, beep)
     } else {
       if (beep) beepr::beep("wilhelm")
       stop(e)
@@ -396,7 +396,7 @@ process_future <- function(
       }
     }
 
-    finish_successful_lot(pb, beep, progress)
+    finish_process(pb, beep, progress)
   }, error = function(e) {
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
@@ -404,7 +404,7 @@ process_future <- function(
     saveRDS(result, file)
 
     if (inherits(e, "interrupt")) {
-      handle_lot_interrupt(result, beep)
+      handle_interrupt(result, beep)
     } else {
       if (beep) beepr::beep("wilhelm")
       stop(e)
@@ -485,27 +485,27 @@ process_chunks <- function(chunks,
       },
       interrupt = function(e) {
         was_interrupted <<- TRUE
-        handle_lot_interrupt(result, beep)
+        handle_interrupt(result, beep)
         invokeRestart("abort")
       }
     )
   }
 
   if (!was_interrupted) {
-    finish_successful_lot(pb, beep, progress)
+    finish_process(pb, beep, progress)
   }
 }
 
 
-#' Handle lot interruption
-#' @name handle_lot_interrupt
-#' @usage handle_lot_interrupt(result, beep)
+#' Handle interruption
+#' @name handle_interrupt
+#' @usage handle_interrupt(result, beep)
 #' @param result A process object containing processing state
 #' @param beep Logical indicating whether to play a sound
 #' @return NULL (called for side effects)
 #' @keywords internal
 #' @noRd
-handle_lot_interrupt <- function(result, beep) {
+handle_interrupt <- function(result, beep) {
   cli::cli_alert_warning(
     sprintf(
       "Interrupted at chat %d of %d",
@@ -515,16 +515,16 @@ handle_lot_interrupt <- function(result, beep) {
   if (beep) beepr::beep("coin")
 }
 
-#' Finish successful lot processing
-#' @description Called after successful completion of lot processing to update progress
-#'   indicators and provide feedback
+#' Finish successful processing
+#' @description Called after successful completion of processing to update progress
+#'   indicators and play a success sound
 #' @param pb Progress bar object
 #' @param beep Logical; whether to play success sound
 #' @param progress Whether to show progress bars
 #' @return NULL (invisibly)
 #' @keywords internal
 #' @noRd
-finish_successful_lot <- function(pb, beep, progress) {
+finish_process <- function(pb, beep, progress) {
   if (!is.null(pb)) {
     cli::cli_progress_done(id = pb)
   }
