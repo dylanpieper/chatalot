@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Synchronous Batch Processing for Chat Models • hellmer</title>
+<title>Process Lots of Chats • chatlot</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Synchronous Batch Processing for Chat Models">
-<meta name="description" content="Synchronous batch processing framework for ellmer chat models. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery and automatic retry with backoff. Additional quality-of-life features include verbosity (or echo) control and sound notifications. Parallel processing is implemented via the future framework. Includes methods for retrieving progress status, chat texts, and chat objects.">
-<meta property="og:description" content="Synchronous batch processing framework for ellmer chat models. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery and automatic retry with backoff. Additional quality-of-life features include verbosity (or echo) control and sound notifications. Parallel processing is implemented via the future framework. Includes methods for retrieving progress status, chat texts, and chat objects.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Process Lots of Chats">
+<meta name="description" content="Process lots of large language model chats with ellmer. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery. Additional quality-of-life features include verbosity (or echo) control and sound notifications. Parallel processing is implemented using future. Includes methods for retrieving progress status, chat texts, and chat objects.">
+<meta property="og:description" content="Process lots of large language model chats with ellmer. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow management through progress tracking and recovery. Additional quality-of-life features include verbosity (or echo) control and sound notifications. Parallel processing is implemented using future. Includes methods for retrieving progress status, chat texts, and chat objects.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,7 +20,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="index.html">hellmer</a>
+    <a class="navbar-brand me-2" href="index.html">chatlot</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
@@ -32,12 +32,6 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/using-chat-models.html">Using Ellmer Chat Models</a></li>
-  </ul>
-</li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -61,18 +55,23 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="hellmer-">hellmer <img src="reference/figures/hellmer-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#hellmer-"></a>
+<div class="page-header"><h1 id="chatlot-">chatlot <img src="reference/figures/chatlot-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#chatlot-"></a>
 </h1></div>
 <p><a href="https://CRAN.R-project.org/package=hellmer" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
-<p>hellmer makes it easy to synchronously batch process large language model chats in R using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>. Process many chats sequentially or in parallel and use ellmer features such as <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tooling</a> and <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a> with self-evaluation.</p>
-<p>✅ hellmer processes many chats synchronously and supports streaming responses</p>
-<p>❌ hellmer does NOT support asynchronous batch APIs which can be about 50% cheaper if you are willing to wait up to 24 hours for a response - see ellmer’s <a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">batch_chat()</a></p>
+<p>chatlot synchronously processes a lot of large language model chats in R using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>.</p>
+<p>Easily setup sequential and parallel processing workflows with advanced features including <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a>, <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>, progress tracking with recovery options, and quality-of-life features such as sound notifications and verbosity controls.</p>
+<p>chatlot is similar to existing ellmer tools:</p>
+<ul>
+<li><p><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a> - Synchronously processes lots of chats in parallel. This tool is simple and fast but has limited features with no option to save or recover your progress.</p></li>
+<li><p><a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a> - Asynchronously batch processes lots of chats from select providers. This tool is about 50% cheaper if you wait up to 24 hours for a response.</p></li>
+</ul>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the package from CRAN with:</p>
+<p>You can install the development or CRAN version of the package with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"hellmer"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># pak::pak("dylanpieper/chatlot")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"chatlot"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="setup-api-keys">Setup API Keys<a class="anchor" aria-label="anchor" href="#setup-api-keys"></a>
@@ -90,79 +89,53 @@
 <div class="section level3">
 <h3 id="sequential-processing">Sequential Processing<a class="anchor" aria-label="anchor" href="#sequential-processing"></a>
 </h3>
-<p>Sequential processing uses the current R process to call one chat at a time and save the data to the disk.</p>
+<p>Sequential processing calls one chat at a time and saves the data to the disk.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/hellmer/">hellmer</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatlot/" class="external-link">chatlot</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="st">"What is R?"</span>,</span>
-<span>  <span class="st">"Explain base R versus tidyverse"</span></span>
+<span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"How to have the best vacation in Portugal?"</span>,</span>
+<span>  <span class="st">"When is the best time of year to visit Portugal?"</span>,</span>
+<span>  <span class="st">"What foods to expect as a tourist in Portugal?"</span>,</span>
+<span>  <span class="st">"Which words to know in Portugese as a tourist?"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span></code></pre></div>
-<p>Access the batch results:</p>
+<span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span></code></pre></div>
+<p>Access the responses:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">batch</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $total_prompts</span></span>
-<span><span class="co">#&gt; [1] 2</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $completed_prompts</span></span>
-<span><span class="co">#&gt; [1] 2</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $completion_percentage</span></span>
-<span><span class="co">#&gt; [1] 100</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $remaining_prompts</span></span>
-<span><span class="co">#&gt; [1] 0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $file</span></span>
-<span><span class="co">#&gt; [1] "/var/folders/.../chat_df5c5ae85d0b.rds"</span></span>
-<span></span>
-<span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; [1] "R is a programming language and software environment primarily used for </span></span>
-<span><span class="co">#&gt; statistical computing, data analysis, and graphical visualization."</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; [1] "Base R refers to R's built-in functions and syntax for data manipulation and</span></span>
-<span><span class="co">#&gt; analysis, while tidyverse is a collection of packages that provide a more </span></span>
-<span><span class="co">#&gt; consistent, user-friendly, and modern approach to data science workflows in R."</span></span>
-<span></span>
-<span><span class="va">batch</span><span class="op">$</span><span class="fu">chats</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; &lt;Chat OpenAI/gpt-4.1 turns=3 tokens=22/21 $0.00&gt;</span></span>
-<span><span class="co">#&gt; ── system [0] ───────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; Reply concisely, one sentence</span></span>
-<span><span class="co">#&gt; ── user [22] ────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; What is R?</span></span>
-<span><span class="co">#&gt; ── assistant [21] ───────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; R is a programming language and software environment primarily used for </span></span>
-<span><span class="co">#&gt; statistical computing, data analysis, and graphical visualization.</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; &lt;Chat OpenAI/gpt-4.1 turns=3 tokens=24/44 $0.00&gt;</span></span>
-<span><span class="co">#&gt; ── system [0] ───────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; Reply concisely, one sentence</span></span>
-<span><span class="co">#&gt; ── user [24] ────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; Explain base R versus tidyverse</span></span>
-<span><span class="co">#&gt; ── assistant [44] ───────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; Base R refers to R's built-in functions and syntax for data manipulation and </span></span>
-<span><span class="co">#&gt; analysis, while tidyverse is a collection of packages that provide a more </span></span>
-<span><span class="co">#&gt; consistent, user-friendly, and modern approach to data science workflows in R.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">lot</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Plan ahead to include a mix of historic cities, coastal escapes, </span></span>
+<span><span class="co">#&gt; local cuisine, and authentic cultural experiences while keeping time </span></span>
+<span><span class="co">#&gt; for spontaneous discoveries."</span></span>
+<span><span class="co">#&gt;                                                   </span></span>
+<span><span class="co">#&gt; [2] "The best time to visit Portugal is during the shoulder seasons of spring </span></span>
+<span><span class="co">#&gt; (March-May) and fall (September-October) when the weather is pleasant and </span></span>
+<span><span class="co">#&gt; there are fewer crowds."       </span></span>
+<span><span class="co">#&gt;                                                     </span></span>
+<span><span class="co">#&gt; [3] "As a tourist in Portugal, you can expect a rich variety of seafood </span></span>
+<span><span class="co">#&gt; (like cod and grilled fish), hearty grilled meats, savory stews, delectable </span></span>
+<span><span class="co">#&gt; pastries such as pastel de nata, and locally produced wines and cheeses." </span></span>
+<span><span class="co">#&gt;              </span></span>
+<span><span class="co">#&gt; [4] "Essential words include \"olá\" for hello, \"por favor\" for please, </span></span>
+<span><span class="co">#&gt; \"obrigado/obrigada\" for thank you, \"sim\" and \"não\" for yes and no, </span></span>
+<span><span class="co">#&gt; \"desculpe\" to apologize, \"quanto?\" for asking price, </span></span>
+<span><span class="co">#&gt; and \"banheiro\" for bathroom."</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
-<p><strong>⚠️ As of ellmer 0.2.1, API keys are automatically redacted when saved to the disk, which prevents parallel processing. You must install <code>pak::pak("ellmer@0.2.0")</code> for now. Consider ellmer’s <a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">parallel_chat()</a> as an alternative option.</strong></p>
-<p>Parallel processing spins up multiple R processes (workers) to chat at the same time. This method improves speed of processing and is built on the <a href="https://www.futureverse.org" class="external-link">futureverse</a>.</p>
+<p><strong>⚠️ Parallel processing is temporarily unavailable in ellmer 0.2.1 due to changes in the API key handling.</strong></p>
+<p><strong>✅ Parallel processing will work if you install <code>pak::pak("ellmer@0.2.0")</code>.</strong></p>
+<hr>
+<p>Parallel processing uses <a href="https://www.futureverse.org" class="external-link">future</a> to create multiple R processes (workers) to chat at the same time. This method improves speed of processing.</p>
 <p>The default upper limit for number of <code>workers</code> is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>. The default <code>chunk_size</code> is also <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code> and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, data is saved to the disk.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span></code></pre></div>
 <p>For maximum processing speed, set <code>chunk_size</code> to the number of prompts. However, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>, </span>
 <span>  chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -176,134 +149,96 @@
 </h3>
 <p>Register and use <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool/function calling</a>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">get_current_time</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">tz</span> <span class="op">=</span> <span class="st">"UTC"</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, tz <span class="op">=</span> <span class="va">tz</span>, usetz <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">chat</span><span class="op">$</span><span class="fu">register_tool</span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/tool.html" class="external-link">tool</a></span><span class="op">(</span></span>
-<span>  <span class="va">get_current_time</span>,</span>
-<span>  <span class="st">"Gets the current time in the given time zone."</span>,</span>
-<span>  tz <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_string</a></span><span class="op">(</span></span>
-<span>    <span class="st">"The time zone to get the current time in. Defaults to `\"UTC\"`."</span>,</span>
-<span>    required <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="st">"What time is it in Chicago?"</span>,</span>
-<span>  <span class="st">"What time is it in New York?"</span></span>
+<code class="sourceCode R"><span><span class="va">weather</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  city <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Chicago"</span>, <span class="st">"NYC"</span>, <span class="st">"Lisbon"</span><span class="op">)</span>,</span>
+<span>  raining <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"heavy"</span>, <span class="st">"none"</span>, <span class="st">"overcast"</span><span class="op">)</span>,</span>
+<span>  temperature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cool"</span>, <span class="st">"hot"</span>, <span class="st">"warm"</span><span class="op">)</span>,</span>
+<span>  wind <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strong"</span>, <span class="st">"weak"</span>, <span class="st">"strong"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
+<span><span class="va">get_weather</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">cities</span><span class="op">)</span> <span class="va">weather</span><span class="op">[</span><span class="va">weather</span><span class="op">$</span><span class="va">city</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">cities</span>, <span class="op">]</span></span>
 <span></span>
-<span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; [1] "The current time in Chicago is 9:29 AM CDT."</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; [1] "The current time in New York is 10:29 AM EDT."</span></span></code></pre></div>
+<span><span class="va">chat</span><span class="op">$</span><span class="fu">register_tool</span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/tool.html" class="external-link">tool</a></span><span class="op">(</span></span>
+<span>  <span class="va">get_weather</span>,</span>
+<span>  <span class="st">"Report on weather conditions."</span>,</span>
+<span>  cities <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_array</a></span><span class="op">(</span><span class="st">"City names"</span>, <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_string</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/interpolate.html" class="external-link">interpolate</a></span><span class="op">(</span><span class="st">"Give me a weather update for {{weather$city}}?"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">lot</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "In Chicago, it's cool with heavy rain and strong winds."                   </span></span>
+<span><span class="co">#&gt; [2] "The current weather in NYC is hot with no rain and light winds."           </span></span>
+<span><span class="co">#&gt; [3] "Lisbon currently has an overcast sky, warm temperatures, and strong winds."</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="structured-data-extraction">Structured Data Extraction<a class="anchor" aria-label="anchor" href="#structured-data-extraction"></a>
 </h3>
 <p>Extract <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data</a> using type specifications:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">type_sentiment</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_object</a></span><span class="op">(</span></span>
-<span>  <span class="st">"Extract sentiment scores"</span>,</span>
-<span>  positive_score <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="st">"Positive sentiment score, 0.00 to 1.00"</span><span class="op">)</span>,</span>
-<span>  negative_score <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="st">"Negative sentiment score, 0.00 to 1.00"</span><span class="op">)</span>,</span>
-<span>  neutral_score <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="st">"Neutral sentiment score, 0.00 to 1.00"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"I go by Alex. 42 years on this planet and counting."</span>,</span>
+<span>  <span class="st">"Pleased to meet you! I'm Jamal, age 27."</span>,</span>
+<span>  <span class="st">"They call me Li Wei. Nineteen years young."</span>,</span>
+<span>  <span class="st">"Fatima here. Just celebrated my 35th birthday last week."</span>,</span>
+<span>  <span class="st">"The name's Robert - 51 years old and proud of it."</span>,</span>
+<span>  <span class="st">"Kwame here - just hit the big 5-0 this year."</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="st">"The R community is really supportive and welcoming."</span>,</span>
-<span>  <span class="st">"R has both base functions and tidyverse functions for data manipulation."</span>,</span>
-<span>  <span class="st">"R's object-oriented system is confusing, inconsistent, and painful to use."</span></span>
+<span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span></span>
+<span>  <span class="va">prompts</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_object</a></span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_string</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    age <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_number</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type <span class="op">=</span> <span class="va">type_sentiment</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; $positive_score</span></span>
-<span><span class="co">#&gt; [1] 0.95</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $negative_score</span></span>
-<span><span class="co">#&gt; [1] 0.05</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $neutral_score</span></span>
-<span><span class="co">#&gt; [1] 0</span></span>
-<span><span class="co">#&gt; ...</span></span></code></pre></div>
-<div class="section level4">
-<h4 id="self-evaluation">Self-evaluation<a class="anchor" aria-label="anchor" href="#self-evaluation"></a>
-</h4>
-<p>Self-evaluation prompts the chat model to evaluate and refine the structured data extraction using the <code>eval_rounds</code> parameter (increases token use). You can set the number of evaluation rounds but be mindful of the cost and risk of diminishing returns.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, type <span class="op">=</span> <span class="va">type_sentiment</span>, eval_rounds <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">batch</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; [[1]]$positive_score</span></span>
-<span><span class="co">#&gt; [1] 0.95</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [[1]]$negative_score</span></span>
-<span><span class="co">#&gt; [1] 0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [[1]]$neutral_score</span></span>
-<span><span class="co">#&gt; [1] 0.05</span></span>
-<span><span class="co">#&gt; ...</span></span></code></pre></div>
-<p>Technically, the self-evaluation feature implements a two-step process:</p>
-<ol style="list-style-type: decimal">
-<li><p><strong>Evaluation:</strong> The model asks itself <code>"What could be improved in my data extraction? I extracted the following structured data: [JSON] The original prompt was: [prompt]"</code></p></li>
-<li><p><strong>Refinement:</strong> Based on the evaluation feedback, the model attempts a new structure data extraction with the prompt <code>"Extract the following data more accurately: [prompt] The prior extraction had the following structured data: [JSON] The prior extraction had these issues: [evaluation]"</code></p></li>
-</ol>
-<p>This creates a multi-turn chat where the model critiques its own work and then attempts to improve based on that self-evaluation.</p>
-</div>
+<span><span class="va">lot</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     name age</span></span>
+<span><span class="co">#&gt; 1   Alex  42</span></span>
+<span><span class="co">#&gt; 2  Jamal  27</span></span>
+<span><span class="co">#&gt; 3 Li Wei  19</span></span>
+<span><span class="co">#&gt; 4 Fatima  35</span></span>
+<span><span class="co">#&gt; 5 Robert  51</span></span>
+<span><span class="co">#&gt; 6  Kwame  50</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="progress-tracking-and-recovery">Progress Tracking and Recovery<a class="anchor" aria-label="anchor" href="#progress-tracking-and-recovery"></a>
 </h3>
-<p>Batch progress is saved to an <code>.rds</code> file on the disk and allows you to resume interrupted operations:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, file <span class="op">=</span> <span class="st">"chat.rds"</span><span class="op">)</span></span></code></pre></div>
+<p>Progress is tracked in <code>chat$progress()</code> and saved to an <code>.rds</code> file on the disk, which allows you to easily resume interrupted operations:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span><span class="va">prompts</span>, file <span class="op">=</span> <span class="st">"chat.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>If <code>file</code> is not defined, a temporary file will be created by default.</p>
-</div>
-<div class="section level3">
-<h3 id="automatic-retry">Automatic Retry<a class="anchor" aria-label="anchor" href="#automatic-retry"></a>
-</h3>
-<p>Automatically retry failed requests with exponential backoff, which is useful to allow batch processing to persist for transient errors such as exceeding rate limits and temporary server errors.</p>
-<p>Most chat provider functions in <code>ellmer</code> retry at least one time by default, but there is no user-defined control over the retry strategy (yet).</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span></span>
-<span>  prompts <span class="op">=</span> <span class="va">prompts</span>,   <span class="co"># list or vector of prompts</span></span>
-<span>  max_retries <span class="op">=</span> <span class="fl">3</span>,     <span class="co"># maximum retry attempts</span></span>
-<span>  initial_delay <span class="op">=</span> <span class="fl">20</span>,  <span class="co"># initial delay in seconds</span></span>
-<span>  max_delay <span class="op">=</span> <span class="fl">80</span>,      <span class="co"># maximum delay between retries</span></span>
-<span>  backoff_factor <span class="op">=</span> <span class="fl">2</span>   <span class="co"># multiply delay by this factor after each retry</span></span>
-<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="sound-notifications">Sound Notifications<a class="anchor" aria-label="anchor" href="#sound-notifications"></a>
 </h3>
-<p>Toggle sound notifications on batch completion, interruption, and error:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, beep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>Toggle sound notifications on completion, interruption, and error:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span><span class="va">prompts</span>, beep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="echoing">Echoing<a class="anchor" aria-label="anchor" href="#echoing"></a>
+<h3 id="verbosity">Verbosity<a class="anchor" aria-label="anchor" href="#verbosity"></a>
 </h3>
 <p>By default, the chat <code>echo</code> is set to <code>FALSE</code> to show a progress bar. However, you can still configure <code>echo</code> by first setting <code>progress</code> to <code>FALSE</code>:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">batch</span><span class="op">(</span><span class="va">prompts</span>, progress <span class="op">=</span> <span class="cn">FALSE</span>, echo <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &gt; What is R?</span></span>
-<span><span class="co">#&gt; &lt; R is a programming language and software environment used for statistical computing,</span></span>
-<span><span class="co">#&gt; &lt; data analysis, and graphical representation.</span></span>
-<span><span class="co">#&gt; &lt; </span></span>
-<span><span class="co">#&gt; &gt; Explain base R versus tidyverse</span></span>
-<span><span class="co">#&gt; &lt; Base R refers to the functions and paradigms built into the R language, while</span></span>
-<span><span class="co">#&gt; &lt; tidyverse is a collection of R packages designed for data science, emphasizing </span></span>
-<span><span class="co">#&gt; &lt; a more consistent and human-readable syntax for data manipulation.</span></span>
-<span><span class="co">#&gt; &lt; </span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"What is R?"</span>,</span>
+<span>  <span class="st">"Explain base R versus tidyverse"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span></span>
+<span>  <span class="va">prompts</span>,</span>
+<span>  progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  echo <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; R is a programming language and software environment used for </span></span>
+<span><span class="co">#&gt; statistical computing and graphics.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Base R consists of the core functionalities built into R, </span></span>
+<span><span class="co">#&gt; while tidyverse is a collection of packages that offer a more</span></span>
+<span><span class="co">#&gt; consistent, readable, and streamlined approach to data manipulation, </span></span>
+<span><span class="co">#&gt; visualization, and analysis.</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a>
@@ -312,7 +247,7 @@
 <li>
 <code><a href="reference/progress.html">progress()</a></code>: Returns processing status</li>
 <li>
-<code><a href="reference/texts.html">texts()</a></code>: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a type specification is provided, it returns structured data instead of plain text.</li>
+<code><a href="reference/texts.html">texts()</a></code>: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a <code>type</code> is provided, a list with one element for each prompt. When <code>type</code> is an consistent object, returns a data frame with one row for each prompt, and one column for each property.</li>
 <li>
 <code><a href="reference/chats.html">chats()</a></code>: Returns a list of chat objects</li>
 </ul>
@@ -323,8 +258,6 @@
 </h2>
 <ul>
 <li>
-<a href="https://dylanpieper.github.io/hellmer/articles/using-chat-models.html">Using Ellmer Chat Models</a> (Vignette)</li>
-<li>
 <a href="https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html" class="external-link">Batch and Compare the Similarity of LLM Responses in R</a> (Blog Post)</li>
 </ul>
 </div>
@@ -332,7 +265,6 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://cloud.r-project.org/package=hellmer" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/dylanpieper/hellmer" class="external-link">Browse source code</a></li>
 </ul>
 </div>
@@ -349,7 +281,7 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing hellmer</a></li>
+<li><a href="authors.html#citation">Citing chatlot</a></li>
 </ul>
 </div>
 
