@@ -67,7 +67,6 @@ progress <- S7::new_generic("progress", "x")
 #' @param completed Integer indicating number of completed prompts
 #' @param file Path to save state file (.rds)
 #' @param type Type specification for structured data extraction
-#' @param eval If TRUE, performs one evaluation round for structured data extraction (default: FALSE)
 #' @param progress Whether to show progress bars (default: TRUE)
 #' @param input_type Type of input ("vector" or "list")
 #' @param chunk_size Size of chunks for parallel processing
@@ -145,15 +144,6 @@ lot <- S7::new_class(
           if (!inherits(value, c("ellmer::TypeObject", "ellmer::Type", "ellmer::TypeArray"))) {
             "must be an ellmer type specification (created with type_object(), type_array(), etc.) or NULL"
           }
-        }
-        NULL
-      }
-    ),
-    eval = S7::new_property(
-      class = S7::class_logical,
-      validator = function(value) {
-        if (length(value) != 1) {
-          "must be a single logical value"
         }
         NULL
       }
@@ -305,7 +295,7 @@ S7::method(texts, lot) <- function(x, flatten = TRUE) {
 #' @noRd
 S7::method(chats, lot) <- function(x) {
   responses <- x@responses[seq_len(x@completed)]
-  map(responses, "chat")
+  purrr::map(responses, "chat")
 }
 
 #' @keywords internal

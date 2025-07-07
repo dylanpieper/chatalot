@@ -10,7 +10,6 @@ lot(
   completed = integer(0),
   file = character(0),
   type = NULL,
-  eval = logical(0),
   progress = logical(0),
   input_type = character(0),
   chunk_size = integer(0),
@@ -30,8 +29,6 @@ lot(
 \item{file}{Path to save state file (.rds)}
 
 \item{type}{Type specification for structured data extraction}
-
-\item{eval}{If TRUE, performs one evaluation round for structured data extraction (default: FALSE)}
 
 \item{progress}{Whether to show progress bars (default: TRUE)}
 

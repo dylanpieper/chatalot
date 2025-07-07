@@ -2,14 +2,12 @@
 #' @param original_chat Original chat model object
 #' @param prompt Prompt text
 #' @param type Type specification for structured data
-#' @param eval If TRUE, performs one evaluation round for structured data extraction
 #' @return List containing response information
 #' @keywords internal
 #' @noRd
 capture <- function(original_chat,
                     prompt,
                     type,
-                    eval,
                     echo,
                     ...) {
   response <- NULL
@@ -19,12 +17,25 @@ capture <- function(original_chat,
   result <- withCallingHandlers(
     {
       if (!is.null(type)) {
-        result <- process_evaluations(chat, prompt, type, eval, echo = echo, ...)
-        structured_data <- result$final
-        chat <- result$chat
+        structured_data <- tryCatch(
+          {
+            chat$chat_structured(prompt, type = type, ...)
+          },
+          error = function(e) {
+            cli::cli_alert_warning("Initial extraction failed, retrying...")
+            tryCatch(
+              {
+                chat$chat_structured(prompt, type = type, ...)
+              },
+              error = function(e) {
+                NULL
+              }
+            )
+          }
+        )
 
         if (is.null(structured_data)) {
-          stop("Received NULL structured data response")
+          stop("Structured data extraction is NULL. Try again or remove the 'type' argument to check for other errors.")
         }
       } else {
         response <- chat$chat(prompt, echo = echo, ...)
@@ -53,7 +64,6 @@ capture <- function(original_chat,
 #' @param chat_obj Chat model object
 #' @param prompts List of prompts
 #' @param type Type specification for structured data
-#' @param eval If TRUE, performs one evaluation round for structured data extraction
 #' @param file Path to save state file (.rds)
 #' @param progress Whether to show progress bars
 #' @param beep Play sound on completion
@@ -64,7 +74,6 @@ process_sequential <- function(
     chat_obj,
     prompts,
     type,
-    eval,
     file,
     progress,
     beep,
@@ -89,7 +98,6 @@ process_sequential <- function(
       completed = 0L,
       file = file,
       type = type,
-      eval = eval,
       progress = progress,
       input_type = orig_type,
       chunk_size = NULL,
@@ -124,7 +132,6 @@ process_sequential <- function(
     for (i in (result@completed + 1L):total_prompts) {
       response <- capture(
         chat_obj, prompts[[i]], type,
-        eval = eval,
         echo = echo,
         ...
       )
@@ -177,7 +184,6 @@ process_sequential <- function(
 #' @param chat_obj Chat model object for API calls
 #' @param prompts Vector or list of prompts to process
 #' @param type Optional type specification for structured data extraction
-#' @param eval If TRUE, performs one evaluation round for structured data extraction
 #' @param file Path to save intermediate state
 #' @param workers Number of parallel workers
 #' @param chunk_size Number of prompts to process in parallel at a time
@@ -191,7 +197,6 @@ process_future <- function(
     chat_obj,
     prompts,
     type,
-    eval,
     file,
     workers,
     chunk_size,
@@ -249,7 +254,6 @@ process_future <- function(
       completed = 0L,
       file = file,
       type = type,
-      eval = eval,
       progress = progress,
       input_type = original_type,
       chunk_size = as.integer(chunk_size),
@@ -309,7 +313,6 @@ process_future <- function(
                           worker_chat,
                           prompt,
                           type,
-                          eval = eval,
                           echo = echo,
                           ...
                         )
@@ -432,7 +435,6 @@ process_future <- function(
 #' @param result A lot object to store results
 #' @param chat_obj Chat model object for making API calls
 #' @param type Type specification for structured data extraction
-#' @param eval If TRUE, performs one evaluation round for structured data extraction
 #' @param pb Progress bar object
 #' @param file Path to save intermediate state
 #' @param progress Whether to show progress bars
@@ -444,7 +446,6 @@ process_chunks <- function(chunks,
                            result,
                            chat_obj,
                            type,
-                           eval,
                            pb,
                            file,
                            progress,
@@ -466,7 +467,6 @@ process_chunks <- function(chunks,
               worker_chat,
               prompt,
               type,
-              eval = eval,
               echo = echo,
               ...
             )
@@ -496,103 +496,6 @@ process_chunks <- function(chunks,
   }
 }
 
-#' Process structured data extraction with evaluation
-#' @param chat_obj Chat model object
-#' @param prompt The prompt or text to analyze
-#' @param type Type specification for structured data
-#' @param eval If TRUE, performs one evaluation round for structured data extraction
-#' @return List containing extraction process
-#' @keywords internal
-#' @noRd
-process_evaluations <- function(chat_obj, prompt, type, eval = FALSE, echo = FALSE, ...) {
-  result <- list(
-    initial = NULL,
-    evaluations = list(),
-    refined = list()
-  )
-
-  chat <- chat_obj$clone()
-
-  extract_with_retry <- function(extraction_prompt, retry_message = NULL) {
-    extracted <- tryCatch(
-      {
-        chat$chat_structured(extraction_prompt, type = type, ...)
-      },
-      error = function(e) {
-        if (!is.null(retry_message)) {
-          cli::cli_alert_warning(retry_message)
-        }
-        NULL
-      }
-    )
-
-    if (is.null(extracted) && !is.null(retry_message)) {
-      extracted <- tryCatch(
-        {
-          chat$chat_structured(extraction_prompt, type = type, ...)
-        },
-        error = function(e) {
-          NULL
-        }
-      )
-    }
-
-    return(extracted)
-  }
-
-  result$initial <- extract_with_retry(prompt, "Initial extraction failed, retrying...")
-
-  if (is.null(result$initial)) {
-    stop("Structured data extraction is NULL. Try again or remove the 'type' argument to check for other errors.")
-  }
-
-  current_extraction <- result$initial
-
-  evaluation_rounds <- if (eval) 1 else 0
-
-  if (evaluation_rounds > 0) {
-    for (i in 1:evaluation_rounds) {
-      tryCatch(
-        {
-          eval_prompt <- paste(
-            "Evaluate my data extraction for flaws and improvements.",
-            "I extracted the following structured data:",
-            jsonlite::toJSON(current_extraction, pretty = TRUE, auto_unbox = TRUE),
-            "The original prompt was:", prompt
-          )
-
-          evaluation <- chat$chat(eval_prompt, echo = echo, ...)
-          if (!is.null(evaluation)) {
-            result$evaluations[[i]] <- evaluation
-
-            refine_prompt <- paste(
-              "Extract the following data more accurately:",
-              prompt,
-              "The prior extraction had the following structured data:",
-              jsonlite::toJSON(current_extraction, pretty = TRUE, auto_unbox = TRUE),
-              "The prior extraction had these issues:", evaluation
-            )
-
-            refined <- extract_with_retry(refine_prompt, paste("Refinement", i, "failed, retrying..."))
-
-            if (!is.null(refined)) {
-              result$refined[[i]] <- refined
-              current_extraction <- refined
-            }
-          }
-        },
-        error = function(e) {
-          cli::cli_alert_warning(paste0("Error in evaluation round", i, ": ", conditionMessage(e)))
-        }
-      )
-    }
-  }
-
-  result$final <- current_extraction
-  result$chat <- chat
-
-  return(result)
-}
 
 #' Handle lot interruption
 #' @name handle_lot_interrupt

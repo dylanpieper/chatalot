@@ -81,7 +81,6 @@ chat_sequential <- function(
 
   chat_env$lot <- function(prompts,
                              type = NULL,
-                             eval = FALSE,
                              file = tempfile("chat_", fileext = ".rds"),
                              progress = TRUE,
                              beep = TRUE,
@@ -97,7 +96,6 @@ chat_sequential <- function(
       chat_env = chat_env,
       prompts = prompts,
       type = type,
-      eval = eval,
       file = file,
       progress = progress,
       beep = beep,
@@ -193,7 +191,6 @@ chat_future <- function(
 
   chat_env$lot <- function(prompts,
                              type = NULL,
-                             eval = FALSE,
                              file = tempfile("chat_", fileext = ".rds"),
                              progress = TRUE,
                              workers = NULL,
@@ -220,7 +217,6 @@ chat_future <- function(
       chat_env = chat_env,
       prompts = prompts,
       type = type,
-      eval = eval,
       file = file,
       workers = workers,
       chunk_size = chunk_size,

@@ -33,29 +33,11 @@ test_that("chat_sequential handles structured data extraction", {
   result <- chat$lot(prompts, type = get_sentiment_type_spec(), beep = FALSE)
   data <- result$texts()
 
-  expect_type(data, "list")
-  expect_length(data, 2)
-  expect_true(all(sapply(data, function(x) !is.null(x$score))))
+  expect_s3_class(data, "data.frame")
+  expect_equal(nrow(data), 2)
+  expect_true(all(!is.na(data$score)))
 })
 
-test_that("chat_sequential handles structured data with judgements", {
-  skip_if_not(ellmer::has_credentials("openai"), "API key not available")
-
-  chat <- chat_sequential(ellmer::chat_openai)
-  prompts <- list(
-    "I love this!",
-    "This is terrible."
-  )
-
-  result <- chat$lot(prompts, type = get_sentiment_type_spec(), eval = TRUE, beep = FALSE)
-  data <- result$texts()
-  turns <- result$chats()[[1]]$get_turns()
-
-  expect_type(data, "list")
-  expect_length(data, 2)
-  expect_length(turns, 6)
-  expect_true(all(sapply(data, function(x) !is.null(x$score))))
-})
 
 test_that("chat_sequential works with tools", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")

@@ -8,7 +8,6 @@ lot.future_chat(
   chat_env,
   prompts,
   type = NULL,
-  eval = FALSE,
   file = tempfile("chat_", fileext = ".rds"),
   workers = NULL,
   chunk_size = parallel::detectCores(),
@@ -25,8 +24,6 @@ lot.future_chat(
 \item{prompts}{List of prompts to process}
 
 \item{type}{Type specification for structured data extraction}
-
-\item{eval}{If TRUE, performs one evaluation round for structured data extraction (default: FALSE)}
 
 \item{file}{Path to save state file}
 

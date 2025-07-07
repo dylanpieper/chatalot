@@ -3,7 +3,6 @@
 #' @param chat_env The chat environment from chat_sequential
 #' @param prompts List of prompts to process
 #' @param type Type specification for structured data extraction
-#' @param eval If TRUE, performs one evaluation round for structured data extraction (default: FALSE)
 #' @param file Path to save state file (.rds)
 #' @param progress Whether to show progress bars
 #' @param beep Whether to play a sound on completion
@@ -15,25 +14,15 @@
 lot.sequential_chat <- function(chat_env,
                                   prompts,
                                   type = NULL,
-                                  eval = FALSE,
                                   file = tempfile("chat_", fileext = ".rds"),
                                   progress = TRUE,
                                   beep = TRUE,
                                   echo = FALSE,
                                   ...) {
-  if (eval && is.null(type)) {
-    cli::cli_alert_warning("eval parameter specified but will be ignored without a type")
-  }
-
-  if (!is.null(type) && !is.logical(eval)) {
-    cli::cli_abort("eval parameter must be logical (TRUE/FALSE)")
-  }
-
   process_sequential(
     chat_obj = chat_env$chat_model,
     prompts = prompts,
     type = type,
-    eval = eval,
     file = file,
     progress = progress,
     beep = beep,
@@ -47,7 +36,6 @@ lot.sequential_chat <- function(chat_env,
 #' @param chat_env The chat environment from chat_future
 #' @param prompts List of prompts to process
 #' @param type Type specification for structured data extraction
-#' @param eval If TRUE, performs one evaluation round for structured data extraction (default: FALSE)
 #' @param file Path to save state file
 #' @param workers Number of parallel workers (default upper limit is `parallel::detectCores()`)
 #' @param chunk_size Number of prompts each worker processes at a time
@@ -62,7 +50,6 @@ lot.sequential_chat <- function(chat_env,
 lot.future_chat <- function(chat_env,
                               prompts,
                               type = NULL,
-                              eval = FALSE,
                               file = tempfile("chat_", fileext = ".rds"),
                               workers = NULL,
                               chunk_size = parallel::detectCores(),
@@ -71,20 +58,10 @@ lot.future_chat <- function(chat_env,
                               progress = TRUE,
                               echo = FALSE,
                               ...) {
-
-  if (eval && is.null(type)) {
-    cli::cli_alert_warning("eval parameter specified but will be ignored without a type")
-  }
-
-  if (!is.null(type) && !is.logical(eval)) {
-    cli::cli_abort("eval parameter must be logical (TRUE/FALSE)")
-  }
-
   process_future(
     chat_obj = chat_env$chat_model,
     prompts = prompts,
     type = type,
-    eval = eval,
     file = file,
     workers = workers,
     chunk_size = chunk_size,

@@ -2,13 +2,13 @@
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://CRAN.R-project.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-chatlot synchronously processes lots of large language model chats in R using [ellmer](https://ellmer.tidyverse.org) with features such as [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html).
+chatlot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org). Use sequential and parallel processing workflows with advanced features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), progress tracking with recovery options, and quality-of-life features such as sound notifications and verbosity controls.
 
 chatlot is similar to existing ellmer tools:
 
--   ellmer's [parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously processes lots of chats in parallel. This tool is simple and fast but does not allow you to save or recover your progress.
+-   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously processes lots of chats in parallel. This tool is simple and fast but has limited features with no option to save or recover your progress.
 
--   ellmer's [batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously batch processes lots of chats from select providers. This tool is about 50% cheaper if you wait up to 24 hours for a response.
+-   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously batch processes lots of chats from select providers. This tool is about 50% cheaper if you wait up to 24 hours for a response.
 
 ## Installation
 
@@ -37,71 +37,43 @@ openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
 
 ### Sequential Processing
 
-Sequential processing uses the current R process to call one chat at a time and save the data to the disk.
+Sequential processing calls one chat at a time and saves the data to the disk.
 
 ``` r
 library(chatlot)
 
 chat <- chat_sequential(openai)
 
-prompts <- list(
-  "What is R?",
-  "Explain base R versus tidyverse"
+prompts <- c(
+  "How to have the best vacation in Portugal?",
+  "When is the best time of year to visit Portugal?",
+  "What foods to expect as a tourist in Portugal?",
+  "Which words to know in Portugese as a tourist?"
 )
 
 lot <- chat$lot(prompts)
 ```
 
-Access the lot results:
+Access the responses:
 
 ``` r
-lot$progress()
-#> $total_prompts
-#> [1] 2
-#> 
-#> $completed_prompts
-#> [1] 2
-#> 
-#> $completion_percentage
-#> [1] 100
-#> 
-#> $remaining_prompts
-#> [1] 0
-#> 
-#> $file
-#> [1] "/var/folders/.../chat_df5c5ae85d0b.rds"
-
 lot$texts()
-#> [[1]]
-#> [1] "R is a programming language and software environment primarily used for 
-#> statistical computing, data analysis, and graphical visualization."
-#> 
-#> [[2]]
-#> [1] "Base R refers to R's built-in functions and syntax for data manipulation and
-#> analysis, while tidyverse is a collection of packages that provide a more 
-#> consistent, user-friendly, and modern approach to data science workflows in R."
-
-lot$chats()
-#> [[1]]
-#> <Chat OpenAI/gpt-4.1 turns=3 tokens=22/21 $0.00>
-#> ── system [0] ───────────────────────────────────────────────────────────────
-#> Reply concisely, one sentence
-#> ── user [22] ────────────────────────────────────────────────────────────────
-#> What is R?
-#> ── assistant [21] ───────────────────────────────────────────────────────────
-#> R is a programming language and software environment primarily used for 
-#> statistical computing, data analysis, and graphical visualization.
-#>
-#> [[2]]
-#> <Chat OpenAI/gpt-4.1 turns=3 tokens=24/44 $0.00>
-#> ── system [0] ───────────────────────────────────────────────────────────────
-#> Reply concisely, one sentence
-#> ── user [24] ────────────────────────────────────────────────────────────────
-#> Explain base R versus tidyverse
-#> ── assistant [44] ───────────────────────────────────────────────────────────
-#> Base R refers to R's built-in functions and syntax for data manipulation and 
-#> analysis, while tidyverse is a collection of packages that provide a more 
-#> consistent, user-friendly, and modern approach to data science workflows in R.
+#> [1] "Plan ahead to include a mix of historic cities, coastal escapes, 
+#> local cuisine, and authentic cultural experiences while keeping time 
+#> for spontaneous discoveries."
+#>                                                   
+#> [2] "The best time to visit Portugal is during the shoulder seasons of spring 
+#> (March-May) and fall (September-October) when the weather is pleasant and 
+#> there are fewer crowds."       
+#>                                                     
+#> [3] "As a tourist in Portugal, you can expect a rich variety of seafood 
+#> (like cod and grilled fish), hearty grilled meats, savory stews, delectable 
+#> pastries such as pastel de nata, and locally produced wines and cheeses." 
+#>              
+#> [4] "Essential words include \"olá\" for hello, \"por favor\" for please, 
+#> \"obrigado/obrigada\" for thank you, \"sim\" and \"não\" for yes and no, 
+#> \"desculpe\" to apologize, \"quanto?\" for asking price, 
+#> and \"banheiro\" for bathroom."
 ```
 
 ### Parallel Processing
@@ -112,7 +84,7 @@ lot$chats()
 
 ------------------------------------------------------------------------
 
-Parallel processing spins up multiple R processes (workers) to chat at the same time. This method improves speed of processing and is built on the [futureverse](https://www.futureverse.org).
+Parallel processing uses [future](https://www.futureverse.org) to create multiple R processes (workers) to chat at the same time. This method improves speed of processing.
 
 The default upper limit for number of `workers` is `parallel::detectCores()`. The default `chunk_size` is also `parallel::detectCores()` and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, data is saved to the disk.
 
@@ -136,32 +108,27 @@ lot <- chat$lot(
 Register and use [tool/function calling](https://ellmer.tidyverse.org/articles/tool-calling.html):
 
 ``` r
-get_current_time <- function(tz = "UTC") {
-  format(Sys.time(), tz = tz, usetz = TRUE)
-}
-
-chat$register_tool(tool(
-  get_current_time,
-  "Gets the current time in the given time zone.",
-  tz = type_string(
-    "The time zone to get the current time in. Defaults to `\"UTC\"`.",
-    required = FALSE
-  )
-))
-
-prompts <- list(
-  "What time is it in Chicago?",
-  "What time is it in New York?"
+weather <- data.frame(
+  city = c("Chicago", "NYC", "Lisbon"),
+  raining = c("heavy", "none", "overcast"),
+  temperature = c("cool", "hot", "warm"),
+  wind = c("strong", "weak", "strong")
 )
 
-lot <- chat$lot(prompts)
+get_weather <- function(cities) weather[weather$city %in% cities, ]
+
+chat$register_tool(tool(
+  get_weather,
+  "Report on weather conditions.",
+  cities = type_array("City names", type_string())
+))
+
+lot <- chat$lot(interpolate("Give me a weather update for {{weather$city}}?"))
 
 lot$texts()
-#> [[1]]
-#> [1] "The current time in Chicago is 9:29 AM CDT."
-#> 
-#> [[2]]
-#> [1] "The current time in New York is 10:29 AM EDT."
+#> [1] "In Chicago, it's cool with heavy rain and strong winds."                   
+#> [2] "The current weather in NYC is hot with no rain and light winds."           
+#> [3] "Lisbon currently has an overcast sky, warm temperatures, and strong winds."
 ```
 
 ### Structured Data Extraction
@@ -169,58 +136,31 @@ lot$texts()
 Extract [structured data](https://ellmer.tidyverse.org/articles/structured-data.html) using type specifications:
 
 ``` r
-type_sentiment <- type_object(
-  "Extract sentiment scores",
-  positive_score = type_number("Positive sentiment score, 0.00 to 1.00"),
-  negative_score = type_number("Negative sentiment score, 0.00 to 1.00"),
-  neutral_score = type_number("Neutral sentiment score, 0.00 to 1.00")
-)
-
 prompts <- list(
-  "The R community is really supportive and welcoming.",
-  "R has both base functions and tidyverse functions for data manipulation.",
-  "R's object-oriented system is confusing, inconsistent, and painful to use."
+  "I go by Alex. 42 years on this planet and counting.",
+  "Pleased to meet you! I'm Jamal, age 27.",
+  "They call me Li Wei. Nineteen years young.",
+  "Fatima here. Just celebrated my 35th birthday last week.",
+  "The name's Robert - 51 years old and proud of it.",
+  "Kwame here - just hit the big 5-0 this year."
 )
 
-lot <- chat$lot(prompts, type = type_sentiment)
+lot <- chat$lot(
+  prompts,
+  type = type_object(
+    name = type_string(),
+    age = type_number()
+  )
+)
 
 lot$texts()
-#> [[1]]
-#> $positive_score
-#> [1] 0.95
-#> 
-#> $negative_score
-#> [1] 0.05
-#> 
-#> $neutral_score
-#> [1] 0
-#> ...
-```
-
-#### Self-evaluation
-
-Self-evaluation prompts the chat model to evaluate and refine the structured data extraction using the `eval` parameter in a two-step process:
-
-1.  **Evaluation:** The model evaluates the request and first extraction with the prompt `"Evaluate my data extraction for flaws and improvements. I extracted the following structured data: [JSON] The original prompt was: [prompt]"`
-
-2.  **Refinement:** Based on the evaluation feedback, the model extracts a refined structured data object with the prompt `"Extract the following data more accurately: [prompt] The prior extraction had the following structured data: [JSON] The prior extraction had these issues: [evaluation]"`
-
-This feature is unique to chatlot and is an example of how you can use chatlot to orchestrate a lot of multi-turn chats and easily access the final responses.
-
-``` r
-lot <- chat$lot(prompts, type = type_sentiment, eval = TRUE)
-
-lot$texts()
-#> [[1]]
-#> [[1]]$positive_score
-#> [1] 0.95
-#> 
-#> [[1]]$negative_score
-#> [1] 0
-#> 
-#> [[1]]$neutral_score
-#> [1] 0.05
-#> ...
+#> name age
+#> 1   Alex  42
+#> 2  Jamal  27
+#> 3 Li Wei  19
+#> 4 Fatima  35
+#> 5 Robert  51
+#> 6  Kwame  50
 ```
 
 ### Progress Tracking and Recovery
@@ -235,27 +175,34 @@ If `file` is not defined, a temporary file will be created by default.
 
 ### Sound Notifications
 
-Toggle sound notifications on lot completion, interruption, and error:
+Toggle sound notifications on completion, interruption, and error:
 
 ``` r
 lot <- chat$lot(prompts, beep = TRUE)
 ```
 
-### Echoing
+### Verbosity
 
 By default, the chat `echo` is set to `FALSE` to show a progress bar. However, you can still configure `echo` by first setting `progress` to `FALSE`:
 
 ``` r
-lot <- chat$lot(prompts, progress = FALSE, echo = "all")
+lot <- chat$lot(
+  c(
+    "What is R?",
+    "Explain base R versus tidyverse"
+  ),
+  progress = FALSE,
+  echo = "all"
+)
 #> > What is R?
 #> < R is a programming language and software environment used for statistical computing,
 #> < data analysis, and graphical representation.
-#> < 
+#> <
 #> > Explain base R versus tidyverse
 #> < Base R refers to the functions and paradigms built into the R language, while
-#> < tidyverse is a collection of R packages designed for data science, emphasizing 
+#> < tidyverse is a collection of R packages designed for data science, emphasizing
 #> < a more consistent and human-readable syntax for data manipulation.
-#> < 
+#> <
 ```
 
 ### Methods

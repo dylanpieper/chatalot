@@ -9,9 +9,9 @@
 ## Lifecycle changes
 * Renamed package from `hellmer` to `chatlot` to better describe package
 * `batch` method is renamed to `lot` to match the new package name
-* `eval_rounds` is renamed to `eval` and now takes a logical value (TRUE/FALSE) instead of a number
 * `state_path` is renamed to `file` for consistency/simplicity
 * `type_spec` is renamed to `type` following the latest update to ellmer (0.1.1)
+* Removed self-evaluation functionality because of poor performance
 
 # chatlot 0.1.2
 
@@ -31,8 +31,6 @@
 * Removed `structured_data()` method as `texts()` now handles structured data responses
 * Updated package documentation for better organization and clarity
 
-## Experimental features
-* Structured data extractions support judgements to refine extracted data via the `judgements` parameter
 
 # chatlot 0.1.0
 
