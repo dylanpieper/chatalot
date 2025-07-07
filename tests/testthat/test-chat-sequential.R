@@ -5,7 +5,7 @@ test_that("chat_sequential initialization and result class works", {
   expect_true(inherits(chat, "Chat"))
   expect_true(inherits(chat, "R6"))
 
-  result <- chat$batch(get_test_prompts(1), beep = FALSE)
+  result <- chat$lot(get_test_prompts(1), beep = FALSE)
   expect_true(inherits(result$chats()[[1]], c("Chat", "R6")))
 })
 
@@ -13,10 +13,10 @@ test_that("chat_sequential processes prompts correctly", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   chat <- chat_sequential(ellmer::chat_openai)
-  result <- chat$batch(get_test_prompts(2), beep = FALSE)
+  result <- chat$lot(get_test_prompts(2), beep = FALSE)
 
   expect_type(result, "list")
-  expect_s3_class(result, "batch")
+  expect_s3_class(result, "lot")
   expect_equal(length(result$texts()), 2)
   expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
 })
@@ -30,32 +30,14 @@ test_that("chat_sequential handles structured data extraction", {
     "This is terrible."
   )
 
-  result <- chat$batch(prompts, type = get_sentiment_type_spec(), beep = FALSE)
+  result <- chat$lot(prompts, type = get_sentiment_type_spec(), beep = FALSE)
   data <- result$texts()
 
-  expect_type(data, "list")
-  expect_length(data, 2)
-  expect_true(all(sapply(data, function(x) !is.null(x$score))))
+  expect_s3_class(data, "data.frame")
+  expect_equal(nrow(data), 2)
+  expect_true(all(!is.na(data$score)))
 })
 
-test_that("chat_sequential handles structured data with judgements", {
-  skip_if_not(ellmer::has_credentials("openai"), "API key not available")
-
-  chat <- chat_sequential(ellmer::chat_openai)
-  prompts <- list(
-    "I love this!",
-    "This is terrible."
-  )
-
-  result <- chat$batch(prompts, type = get_sentiment_type_spec(), eval_rounds = 1, beep = FALSE)
-  data <- result$texts()
-  turns <- result$chats()[[1]]$get_turns()
-
-  expect_type(data, "list")
-  expect_length(data, 2)
-  expect_length(turns, 6)
-  expect_true(all(sapply(data, function(x) !is.null(x$score))))
-})
 
 test_that("chat_sequential works with tools", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
@@ -63,7 +45,7 @@ test_that("chat_sequential works with tools", {
   chat <- chat_sequential(ellmer::chat_openai)
   chat$register_tool(get_square_tool())
 
-  result <- chat$batch(list(
+  result <- chat$lot(list(
     "What is the square of 3?",
     "Calculate the square of 5."
   ), beep = FALSE)
@@ -78,7 +60,7 @@ test_that("chat_sequential handles state persistence", {
   on.exit(unlink(temp_file))
 
   chat <- chat_sequential(ellmer::chat_openai)
-  result <- chat$batch(get_test_prompts(1), file = temp_file, beep = FALSE)
+  result <- chat$lot(get_test_prompts(1), file = temp_file, beep = FALSE)
 
   expect_true(file.exists(temp_file))
   expect_equal(length(result$texts()), 1)
@@ -89,12 +71,12 @@ test_that("chat_sequential supports progress parameter", {
 
   # Test with progress = TRUE
   chat <- chat_sequential(ellmer::chat_openai)
-  result <- chat$batch(get_test_prompts(1), progress = TRUE, beep = FALSE)
+  result <- chat$lot(get_test_prompts(1), progress = TRUE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
 
   # Test with progress = FALSE
   chat <- chat_sequential(ellmer::chat_openai)
-  result <- chat$batch(get_test_prompts(1), progress = FALSE, beep = FALSE)
+  result <- chat$lot(get_test_prompts(1), progress = FALSE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
 })
 
@@ -104,11 +86,11 @@ test_that("chat_sequential supports echo parameter and passes extra args", {
   chat <- chat_sequential(ellmer::chat_openai)
 
   # Test with echo = TRUE
-  result <- chat$batch(get_test_prompts(1), progress = FALSE, echo = TRUE, beep = FALSE)
+  result <- chat$lot(get_test_prompts(1), progress = FALSE, echo = TRUE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
 
   # Test with additional parameter
-  result <- chat$batch(get_test_prompts(1),
+  result <- chat$lot(get_test_prompts(1),
     progress = FALSE,
     echo = TRUE,
     beep = FALSE
@@ -134,7 +116,7 @@ test_that("chat_sequential handles errors gracefully", {
   })
 
   expect_error(
-    chat$batch(get_test_prompts(1), beep = FALSE),
+    chat$lot(get_test_prompts(1), beep = FALSE),
     regexp = NULL
   )
 })

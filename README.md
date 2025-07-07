@@ -1,19 +1,24 @@
-# hellmer <img src="man/figures/hellmer-hex.png" align="right" width="140"/>
+# chatlot <img src="man/figures/chatlot-hex.png" align="right" width="140"/>
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://CRAN.R-project.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-hellmer makes it easy to synchronously batch process large language model chats in R using [ellmer](https://ellmer.tidyverse.org). Process many chats sequentially or in parallel and use ellmer features such as [tooling](https://ellmer.tidyverse.org/articles/tool-calling.html) and [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html) with self-evaluation.
+chatlot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org).
 
-✅ hellmer processes many chats synchronously and supports streaming responses
+Easily setup sequential and parallel processing workflows with advanced features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), progress tracking with recovery options, and quality-of-life features such as sound notifications and verbosity controls.
 
-❌ hellmer does NOT support asynchronous batch APIs which can be about 50% cheaper if you are willing to wait up to 24 hours for a response - see ellmer's [batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html)
+chatlot is similar to existing ellmer tools:
+
+-   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously processes lots of chats in parallel. This tool is simple and fast but has limited features with no option to save or recover your progress.
+
+-   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously batch processes lots of chats from select providers. This tool is about 50% cheaper if you wait up to 24 hours for a response.
 
 ## Installation
 
-You can install the package from CRAN with:
+You can install the development or CRAN version of the package with:
 
 ``` r
-install.packages("hellmer")
+# pak::pak("dylanpieper/chatlot")
+pak::pak("chatlot")
 ```
 
 ## Setup API Keys
@@ -34,78 +39,54 @@ openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
 
 ### Sequential Processing
 
-Sequential processing uses the current R process to call one chat at a time and save the data to the disk.
+Sequential processing calls one chat at a time and saves the data to the disk.
 
 ``` r
-library(hellmer)
+library(chatlot)
 
 chat <- chat_sequential(openai)
 
-prompts <- list(
-  "What is R?",
-  "Explain base R versus tidyverse"
+prompts <- c(
+  "How to have the best vacation in Portugal?",
+  "When is the best time of year to visit Portugal?",
+  "What foods to expect as a tourist in Portugal?",
+  "Which words to know in Portugese as a tourist?"
 )
 
-batch <- chat$batch(prompts)
+lot <- chat$lot(prompts)
 ```
 
-Access the batch results:
+Access the responses:
 
 ``` r
-batch$progress()
-#> $total_prompts
-#> [1] 2
-#> 
-#> $completed_prompts
-#> [1] 2
-#> 
-#> $completion_percentage
-#> [1] 100
-#> 
-#> $remaining_prompts
-#> [1] 0
-#> 
-#> $file
-#> [1] "/var/folders/.../chat_df5c5ae85d0b.rds"
-
-batch$texts()
-#> [[1]]
-#> [1] "R is a programming language and software environment primarily used for 
-#> statistical computing, data analysis, and graphical visualization."
-#> 
-#> [[2]]
-#> [1] "Base R refers to R's built-in functions and syntax for data manipulation and
-#> analysis, while tidyverse is a collection of packages that provide a more 
-#> consistent, user-friendly, and modern approach to data science workflows in R."
-
-batch$chats()
-#> [[1]]
-#> <Chat OpenAI/gpt-4.1 turns=3 tokens=22/21 $0.00>
-#> ── system [0] ───────────────────────────────────────────────────────────────
-#> Reply concisely, one sentence
-#> ── user [22] ────────────────────────────────────────────────────────────────
-#> What is R?
-#> ── assistant [21] ───────────────────────────────────────────────────────────
-#> R is a programming language and software environment primarily used for 
-#> statistical computing, data analysis, and graphical visualization.
-#>
-#> [[2]]
-#> <Chat OpenAI/gpt-4.1 turns=3 tokens=24/44 $0.00>
-#> ── system [0] ───────────────────────────────────────────────────────────────
-#> Reply concisely, one sentence
-#> ── user [24] ────────────────────────────────────────────────────────────────
-#> Explain base R versus tidyverse
-#> ── assistant [44] ───────────────────────────────────────────────────────────
-#> Base R refers to R's built-in functions and syntax for data manipulation and 
-#> analysis, while tidyverse is a collection of packages that provide a more 
-#> consistent, user-friendly, and modern approach to data science workflows in R.
+lot$texts()
+#> [1] "Plan ahead to include a mix of historic cities, coastal escapes, 
+#> local cuisine, and authentic cultural experiences while keeping time 
+#> for spontaneous discoveries."
+#>                                                   
+#> [2] "The best time to visit Portugal is during the shoulder seasons of spring 
+#> (March-May) and fall (September-October) when the weather is pleasant and 
+#> there are fewer crowds."       
+#>                                                     
+#> [3] "As a tourist in Portugal, you can expect a rich variety of seafood 
+#> (like cod and grilled fish), hearty grilled meats, savory stews, delectable 
+#> pastries such as pastel de nata, and locally produced wines and cheeses." 
+#>              
+#> [4] "Essential words include \"olá\" for hello, \"por favor\" for please, 
+#> \"obrigado/obrigada\" for thank you, \"sim\" and \"não\" for yes and no, 
+#> \"desculpe\" to apologize, \"quanto?\" for asking price, 
+#> and \"banheiro\" for bathroom."
 ```
 
 ### Parallel Processing
 
-**⚠️ As of ellmer 0.2.1, API keys are automatically redacted when saved to the disk, which prevents parallel processing. You must install `pak::pak("ellmer@0.2.0")` for now. Consider ellmer's [parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) as an alternative option.**
+**⚠️ Parallel processing is temporarily unavailable in ellmer 0.2.1 due to changes in the API key handling.**
 
-Parallel processing spins up multiple R processes (workers) to chat at the same time. This method improves speed of processing and is built on the [futureverse](https://www.futureverse.org).
+**✅ Parallel processing will work if you install `pak::pak("ellmer@0.2.0")`.**
+
+------------------------------------------------------------------------
+
+Parallel processing uses [future](https://www.futureverse.org) to create multiple R processes (workers) to chat at the same time. This method improves speed of processing.
 
 The default upper limit for number of `workers` is `parallel::detectCores()`. The default `chunk_size` is also `parallel::detectCores()` and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, data is saved to the disk.
 
@@ -116,7 +97,7 @@ chat <- chat_future(openai)
 For maximum processing speed, set `chunk_size` to the number of prompts. However, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
 
 ``` r
-batch <- chat$batch(
+lot <- chat$lot(
   prompts, 
   chunk_size = length(prompts)
 )
@@ -129,32 +110,27 @@ batch <- chat$batch(
 Register and use [tool/function calling](https://ellmer.tidyverse.org/articles/tool-calling.html):
 
 ``` r
-get_current_time <- function(tz = "UTC") {
-  format(Sys.time(), tz = tz, usetz = TRUE)
-}
-
-chat$register_tool(tool(
-  get_current_time,
-  "Gets the current time in the given time zone.",
-  tz = type_string(
-    "The time zone to get the current time in. Defaults to `\"UTC\"`.",
-    required = FALSE
-  )
-))
-
-prompts <- list(
-  "What time is it in Chicago?",
-  "What time is it in New York?"
+weather <- data.frame(
+  city = c("Chicago", "NYC", "Lisbon"),
+  raining = c("heavy", "none", "overcast"),
+  temperature = c("cool", "hot", "warm"),
+  wind = c("strong", "weak", "strong")
 )
 
-batch <- chat$batch(prompts)
+get_weather <- function(cities) weather[weather$city %in% cities, ]
 
-batch$texts()
-#> [[1]]
-#> [1] "The current time in Chicago is 9:29 AM CDT."
-#> 
-#> [[2]]
-#> [1] "The current time in New York is 10:29 AM EDT."
+chat$register_tool(tool(
+  get_weather,
+  "Report on weather conditions.",
+  cities = type_array("City names", type_string())
+))
+
+lot <- chat$lot(interpolate("Give me a weather update for {{weather$city}}?"))
+
+lot$texts()
+#> [1] "In Chicago, it's cool with heavy rain and strong winds."                   
+#> [2] "The current weather in NYC is hot with no rain and light winds."           
+#> [3] "Lisbon currently has an overcast sky, warm temperatures, and strong winds."
 ```
 
 ### Structured Data Extraction
@@ -162,120 +138,81 @@ batch$texts()
 Extract [structured data](https://ellmer.tidyverse.org/articles/structured-data.html) using type specifications:
 
 ``` r
-type_sentiment <- type_object(
-  "Extract sentiment scores",
-  positive_score = type_number("Positive sentiment score, 0.00 to 1.00"),
-  negative_score = type_number("Negative sentiment score, 0.00 to 1.00"),
-  neutral_score = type_number("Neutral sentiment score, 0.00 to 1.00")
+prompts <- c(
+  "I go by Alex. 42 years on this planet and counting.",
+  "Pleased to meet you! I'm Jamal, age 27.",
+  "They call me Li Wei. Nineteen years young.",
+  "Fatima here. Just celebrated my 35th birthday last week.",
+  "The name's Robert - 51 years old and proud of it.",
+  "Kwame here - just hit the big 5-0 this year."
 )
 
-prompts <- list(
-  "The R community is really supportive and welcoming.",
-  "R has both base functions and tidyverse functions for data manipulation.",
-  "R's object-oriented system is confusing, inconsistent, and painful to use."
+lot <- chat$lot(
+  prompts,
+  type = type_object(
+    name = type_string(),
+    age = type_number()
+  )
 )
 
-batch <- chat$batch(prompts, type = type_sentiment)
-
-batch$texts()
-#> [[1]]
-#> $positive_score
-#> [1] 0.95
-#> 
-#> $negative_score
-#> [1] 0.05
-#> 
-#> $neutral_score
-#> [1] 0
-#> ...
+lot$texts()
+#>     name age
+#> 1   Alex  42
+#> 2  Jamal  27
+#> 3 Li Wei  19
+#> 4 Fatima  35
+#> 5 Robert  51
+#> 6  Kwame  50
 ```
-
-#### Self-evaluation
-
-Self-evaluation prompts the chat model to evaluate and refine the structured data extraction using the `eval_rounds` parameter (increases token use). You can set the number of evaluation rounds but be mindful of the cost and risk of diminishing returns.
-
-``` r
-batch <- chat$batch(prompts, type = type_sentiment, eval_rounds = 1)
-
-batch$texts()
-#> [[1]]
-#> [[1]]$positive_score
-#> [1] 0.95
-#> 
-#> [[1]]$negative_score
-#> [1] 0
-#> 
-#> [[1]]$neutral_score
-#> [1] 0.05
-#> ...
-```
-
-Technically, the self-evaluation feature implements a two-step process:
-
-1.  **Evaluation:** The model asks itself `"What could be improved in my data extraction? I extracted the following structured data: [JSON] The original prompt was: [prompt]"`
-
-2.  **Refinement:** Based on the evaluation feedback, the model attempts a new structure data extraction with the prompt `"Extract the following data more accurately: [prompt] The prior extraction had the following structured data: [JSON] The prior extraction had these issues: [evaluation]"`
-
-This creates a multi-turn chat where the model critiques its own work and then attempts to improve based on that self-evaluation.
 
 ### Progress Tracking and Recovery
 
-Batch progress is saved to an `.rds` file on the disk and allows you to resume interrupted operations:
+Progress is tracked in `chat$progress()` and saved to an `.rds` file on the disk, which allows you to easily resume interrupted operations:
 
 ``` r
-batch <- chat$batch(prompts, file = "chat.rds")
+lot <- chat$lot(prompts, file = "chat.rds")
 ```
 
 If `file` is not defined, a temporary file will be created by default.
 
-### Automatic Retry
-
-Automatically retry failed requests with exponential backoff, which is useful to allow batch processing to persist for transient errors such as exceeding rate limits and temporary server errors.
-
-Most chat provider functions in `ellmer` retry at least one time by default, but there is no user-defined control over the retry strategy (yet).
-
-``` r
-batch <- chat$batch(
-  prompts = prompts,   # list or vector of prompts
-  max_retries = 3,     # maximum retry attempts
-  initial_delay = 20,  # initial delay in seconds
-  max_delay = 80,      # maximum delay between retries
-  backoff_factor = 2   # multiply delay by this factor after each retry
-)
-```
-
 ### Sound Notifications
 
-Toggle sound notifications on batch completion, interruption, and error:
+Toggle sound notifications on completion, interruption, and error:
 
 ``` r
-batch <- chat$batch(prompts, beep = TRUE)
+lot <- chat$lot(prompts, beep = TRUE)
 ```
 
-### Echoing
+### Verbosity
 
 By default, the chat `echo` is set to `FALSE` to show a progress bar. However, you can still configure `echo` by first setting `progress` to `FALSE`:
 
 ``` r
-batch <- chat$batch(prompts, progress = FALSE, echo = "all")
-#> > What is R?
-#> < R is a programming language and software environment used for statistical computing,
-#> < data analysis, and graphical representation.
-#> < 
-#> > Explain base R versus tidyverse
-#> < Base R refers to the functions and paradigms built into the R language, while
-#> < tidyverse is a collection of R packages designed for data science, emphasizing 
-#> < a more consistent and human-readable syntax for data manipulation.
-#> < 
+prompts <- c(
+  "What is R?",
+  "Explain base R versus tidyverse"
+)
+
+lot <- chat$lot(
+  prompts,
+  progress = FALSE,
+  echo = TRUE
+)
+#> R is a programming language and software environment used for 
+#> statistical computing and graphics.
+#> 
+#> Base R consists of the core functionalities built into R, 
+#> while tidyverse is a collection of packages that offer a more
+#> consistent, readable, and streamlined approach to data manipulation, 
+#> visualization, and analysis.
 ```
 
 ### Methods
 
 -   `progress()`: Returns processing status
--   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a type specification is provided, it returns structured data instead of plain text.
+-   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a `type` is provided, a list with one element for each prompt. When `type` is an consistent object, returns a data frame with one row for each prompt, and one column for each property.
 -   `chats()`: Returns a list of chat objects
 
 ## Further Reading
 
--   [Using Ellmer Chat Models](https://dylanpieper.github.io/hellmer/articles/using-chat-models.html) (Vignette)
 -   [Batch and Compare the Similarity of LLM Responses in R](https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html) (Blog Post)

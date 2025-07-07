@@ -1,35 +1,30 @@
-Package: hellmer
-Title: Synchronous Batch Processing for Chat Models
+Package: chatlot
+Title: Process Lots of Chats
 Version: 0.1.2
 Authors@R: 
     person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
-Description: Synchronous batch processing framework for 'ellmer' chat models.
+Description: Process lots of large language model chats with 'ellmer'.
     Provides both sequential and parallel processing of chat interactions
     with features including tool calling and structured data extraction.
-    Enables workflow management through progress tracking and recovery and 
-    automatic retry with backoff. Additional quality-of-life features 
-    include verbosity (or echo) control and sound notifications.
-    Parallel processing is implemented via the 'future' framework.
+    Enables workflow management through progress tracking and recovery. 
+    Additional quality-of-life features include verbosity (or echo) control 
+    and sound notifications. Parallel processing is implemented using 'future'.
     Includes methods for retrieving progress status, chat texts, and chat objects.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
-    testthat (>= 3.0.0),
-    knitr,
-    rmarkdown
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
-VignetteBuilder: knitr
 Imports: 
     beepr,
     cli,
     future,
     furrr,
-    jsonlite,
     parallel,
     purrr,
     S7,
     utils
 Depends: ellmer (>= 0.2.0)
-URL: https://dylanpieper.github.io/hellmer/
+URL: https://dylanpieper.github.io/chatlot/

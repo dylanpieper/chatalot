@@ -2,12 +2,12 @@
 % Please edit documentation in R/classes.R
 \name{progress}
 \alias{progress}
-\title{Get progress information from a batch result}
+\title{Get progress information from a lot result}
 \usage{
 progress(x, ...)
 }
 \arguments{
-\item{x}{A batch object}
+\item{x}{A lot object}
 
 \item{...}{Additional arguments passed to methods}
 }
@@ -15,7 +15,7 @@ progress(x, ...)
 A list containing progress details
 }
 \description{
-Get progress information from a batch result
+Get progress information from a lot result
 }
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -23,13 +23,13 @@ Get progress information from a batch result
 chat <- chat_sequential(chat_openai())
 
 # Process a batch of prompts
-batch <- chat$batch(list(
+lot <- chat$lot(list(
   "What is R?",
   "Explain base R versus tidyverse",
   "Explain vectors, lists, and data frames"
 ))
 
 # Check the progress
-batch$progress()
+lot$progress()
 \dontshow{\}) # examplesIf}
 }
