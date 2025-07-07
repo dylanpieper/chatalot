@@ -38,39 +38,25 @@ See \code{?lot.future_chat} for full details of the method and its parameters.
 
 \examples{
 \dontshow{if (interactive() && ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# Create a parallel chat processor with an object
+# Create chat processor
 chat <- chat_future(chat_openai(system_prompt = "Reply concisely"))
 
-# Or a function
-chat <- chat_future(chat_openai, system_prompt = "Reply concisely, one sentence")
-
-# Process a lot of prompts in parallel
+# Process prompts
 lot <- chat$lot(
   list(
     "What is R?",
     "Explain base R versus tidyverse",
     "Explain vectors, lists, and data frames"
-  ),
-  chunk_size = 3
+  )
 )
 
-# Process batch with echo enabled (when progress is disabled)
-lot <- chat$lot(
-  list(
-    "What is R?",
-    "Explain base R versus tidyverse"
-  ),
-  progress = FALSE,
-  echo = TRUE
-)
-
-# Check the progress if interrupted
+# Check progress if interrupted
 lot$progress()
 
-# Return the responses
+# Return responses
 lot$texts()
 
-# Return the chat objects
+# Return chat objects
 lot$chats()
 \dontshow{\}) # examplesIf}
 }

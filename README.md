@@ -192,17 +192,15 @@ lot <- chat$lot(
     "Explain base R versus tidyverse"
   ),
   progress = FALSE,
-  echo = "all"
+  echo = TRUE
 )
-#> > What is R?
-#> < R is a programming language and software environment used for statistical computing,
-#> < data analysis, and graphical representation.
-#> <
-#> > Explain base R versus tidyverse
-#> < Base R refers to the functions and paradigms built into the R language, while
-#> < tidyverse is a collection of R packages designed for data science, emphasizing
-#> < a more consistent and human-readable syntax for data manipulation.
-#> <
+#> R is a programming language and software environment used for 
+#> statistical computing and graphics.
+#> 
+#> Base R consists of the core functionalities built into R, 
+#> while tidyverse is a collection of packages that offer a more
+#> consistent, readable, and streamlined approach to data manipulation, 
+#> visualization, and analysis.
 ```
 
 ### Methods

@@ -23,39 +23,26 @@
 #' See `?lot.sequential_chat` for full details of the method and its parameters.
 #'
 #' @examplesIf ellmer::has_credentials("openai")
-#' # Create a sequential chat processor with an object
+#' # Create chat processor
 #' chat <- chat_sequential(chat_openai(system_prompt = "Reply concisely"))
 #'
-#' # Or a function
-#' chat <- chat_sequential(chat_openai, system_prompt = "Reply concisely, one sentence")
-#'
-#' # Process a lot of prompts in sequence
+#' # Process prompts
 #' lot <- chat$lot(
 #'   list(
 #'     "What is R?",
 #'     "Explain base R versus tidyverse",
 #'     "Explain vectors, lists, and data frames"
-#'   ),
-#'   beep = TRUE
+#'   )
 #' )
 #'
-#' # Process batch with echo enabled (when progress is disabled)
-#' lot <- chat$lot(
-#'   list(
-#'     "What is R?",
-#'     "Explain base R versus tidyverse"
-#'   ),
-#'   progress = FALSE,
-#'   echo = TRUE
-#' )
 #'
-#' # Check the progress if interrupted
+#' # Check progress if interrupted
 #' lot$progress()
 #'
-#' # Return the responses
+#' # Return responses
 #' lot$texts()
 #'
-#' # Return the chat objects
+#' # Return chat objects
 #' lot$chats()
 #' @export
 chat_sequential <- function(
@@ -80,12 +67,12 @@ chat_sequential <- function(
   chat_env$last_file <- NULL
 
   chat_env$lot <- function(prompts,
-                             type = NULL,
-                             file = tempfile("chat_", fileext = ".rds"),
-                             progress = TRUE,
-                             beep = TRUE,
-                             echo = FALSE,
-                             ...) {
+                           type = NULL,
+                           file = tempfile("chat_", fileext = ".rds"),
+                           progress = TRUE,
+                           beep = TRUE,
+                           echo = FALSE,
+                           ...) {
     if (is.null(chat_env$last_file)) {
       chat_env$last_file <- file
     } else {
@@ -133,39 +120,25 @@ chat_sequential <- function(
 #' See `?lot.future_chat` for full details of the method and its parameters.
 #'
 #' @examplesIf interactive() && ellmer::has_credentials("openai")
-#' # Create a parallel chat processor with an object
+#' # Create chat processor
 #' chat <- chat_future(chat_openai(system_prompt = "Reply concisely"))
 #'
-#' # Or a function
-#' chat <- chat_future(chat_openai, system_prompt = "Reply concisely, one sentence")
-#'
-#' # Process a lot of prompts in parallel
+#' # Process prompts
 #' lot <- chat$lot(
 #'   list(
 #'     "What is R?",
 #'     "Explain base R versus tidyverse",
 #'     "Explain vectors, lists, and data frames"
-#'   ),
-#'   chunk_size = 3
+#'   )
 #' )
 #'
-#' # Process batch with echo enabled (when progress is disabled)
-#' lot <- chat$lot(
-#'   list(
-#'     "What is R?",
-#'     "Explain base R versus tidyverse"
-#'   ),
-#'   progress = FALSE,
-#'   echo = TRUE
-#' )
-#'
-#' # Check the progress if interrupted
+#' # Check progress if interrupted
 #' lot$progress()
 #'
-#' # Return the responses
+#' # Return responses
 #' lot$texts()
 #'
-#' # Return the chat objects
+#' # Return chat objects
 #' lot$chats()
 #' @export
 chat_future <- function(
@@ -190,15 +163,15 @@ chat_future <- function(
   chat_env$last_file <- NULL
 
   chat_env$lot <- function(prompts,
-                             type = NULL,
-                             file = tempfile("chat_", fileext = ".rds"),
-                             progress = TRUE,
-                             workers = NULL,
-                             chunk_size = parallel::detectCores(),
-                             max_chunk_attempts = 3L,
-                             beep = TRUE,
-                             echo = FALSE,
-                             ...) {
+                           type = NULL,
+                           file = tempfile("chat_", fileext = ".rds"),
+                           progress = TRUE,
+                           workers = NULL,
+                           chunk_size = parallel::detectCores(),
+                           max_chunk_attempts = 3L,
+                           beep = TRUE,
+                           echo = FALSE,
+                           ...) {
     if (is.null(chat_env$last_file)) {
       chat_env$last_file <- file
     } else {

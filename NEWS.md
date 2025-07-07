@@ -11,7 +11,7 @@
 * `batch` method is renamed to `lot` to match the new package name
 * `state_path` is renamed to `file` for consistency/simplicity
 * `type_spec` is renamed to `type` following the latest update to ellmer (0.1.1)
-* Removed self-evaluation functionality because of poor performance
+* Removed evaluation functionality because of poor performance
 
 # chatlot 0.1.2
 
