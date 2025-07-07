@@ -309,7 +309,7 @@ process_future <- function(
                     responses <- furrr::future_map(
                       chunk,
                       function(prompt) {
-                        chatlot:::capture(
+                        capture_fn(
                           worker_chat,
                           prompt,
                           type,
@@ -319,7 +319,8 @@ process_future <- function(
                       },
                       .options = furrr::furrr_options(
                         scheduling = 1,
-                        seed = TRUE
+                        seed = TRUE,
+                        globals = list(capture_fn = capture)
                       )
                     )
 
@@ -463,7 +464,7 @@ process_chunks <- function(chunks,
           chunk,
           function(prompt) {
             worker_chat <- chat_obj$clone()
-            chatlot:::capture(
+            capture_fn(
               worker_chat,
               prompt,
               type,
@@ -471,7 +472,10 @@ process_chunks <- function(chunks,
               ...
             )
           },
-          .progress = FALSE
+          .progress = FALSE,
+          .options = furrr::furrr_options(
+            globals = list(capture_fn = capture)
+          )
         )
 
         start_idx <- result@completed + 1
