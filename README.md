@@ -167,7 +167,7 @@ response$texts()
 
 ### Progress Tracking and Recovery
 
-Progress is tracked in `chat$progress()` and saved to an `.rds` file on the disk, which allows you to easily resume interrupted operations:
+Progress is tracked in `response$progress()` and saved to an `.rds` file on the disk, which allows you to easily resume interrupted operations:
 
 ``` r
 response <- chat$process(prompts, file = "chat.rds")
