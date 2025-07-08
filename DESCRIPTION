@@ -1,9 +1,9 @@
-Package: chatlot
-Title: Process Lots of Chats
+Package: chatalot
+Title: Process a Lot of Chats
 Version: 0.1.2
 Authors@R: 
     person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
-Description: Process lots of large language model chats with 'ellmer'.
+Description: Process a lot of large language model chats with 'ellmer'.
     Provides both sequential and parallel processing of chat interactions
     with features including tool calling and structured data extraction.
     Enables workflow persistence through checkpoint and resume. 
