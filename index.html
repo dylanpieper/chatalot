@@ -96,32 +96,27 @@
 <span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"How to have the best vacation in Portugal?"</span>,</span>
-<span>  <span class="st">"When is the best time of year to visit Portugal?"</span>,</span>
-<span>  <span class="st">"What foods to expect as a tourist in Portugal?"</span>,</span>
-<span>  <span class="st">"Which words to know in Portugese as a tourist?"</span></span>
+<span>  <span class="st">"What roles do people have in a castle?"</span>,</span>
+<span>  <span class="st">"Why are castles needed?"</span>,</span>
+<span>  <span class="st">"When was the first castle built?"</span>,</span>
+<span>  <span class="st">"Where are most castles located?"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span></code></pre></div>
 <p>Access the responses:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Plan ahead to include a mix of historic cities, coastal escapes, </span></span>
-<span><span class="co">#&gt; local cuisine, and authentic cultural experiences while keeping time </span></span>
-<span><span class="co">#&gt; for spontaneous discoveries."</span></span>
-<span><span class="co">#&gt;                                                   </span></span>
-<span><span class="co">#&gt; [2] "The best time to visit Portugal is during the shoulder seasons of spring </span></span>
-<span><span class="co">#&gt; (March-May) and fall (September-October) when the weather is pleasant and </span></span>
-<span><span class="co">#&gt; there are fewer crowds."       </span></span>
-<span><span class="co">#&gt;                                                     </span></span>
-<span><span class="co">#&gt; [3] "As a tourist in Portugal, you can expect a rich variety of seafood </span></span>
-<span><span class="co">#&gt; (like cod and grilled fish), hearty grilled meats, savory stews, delectable </span></span>
-<span><span class="co">#&gt; pastries such as pastel de nata, and locally produced wines and cheeses." </span></span>
-<span><span class="co">#&gt;              </span></span>
-<span><span class="co">#&gt; [4] "Essential words include \"olá\" for hello, \"por favor\" for please, </span></span>
-<span><span class="co">#&gt; \"obrigado/obrigada\" for thank you, \"sim\" and \"não\" for yes and no, </span></span>
-<span><span class="co">#&gt; \"desculpe\" to apologize, \"quanto?\" for asking price, </span></span>
-<span><span class="co">#&gt; and \"banheiro\" for bathroom."</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "In a castle, people served as rulers, warriors, administrators, </span></span>
+<span><span class="co">#&gt; craftsmen, and servants who managed its defense, governance, and daily upkeep."</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [2] "Castles have historically been built for defense and power consolidation,</span></span>
+<span><span class="co">#&gt; and today they serve as cultural landmarks that preserve our heritage </span></span>
+<span><span class="co">#&gt; and attract tourism."</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [3] "There isn’t a definitive \"first castle,\" but the earliest structures</span></span>
+<span><span class="co">#&gt; resembling castles emerged in medieval Europe around the 9th century."</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [4] "Most castles are located in Europe, particularly in historically turbulent regions like the United Kingdom, France, and Germany."     </span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
