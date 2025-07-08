@@ -102,10 +102,10 @@
 <span>  <span class="st">"Which words to know in Portugese as a tourist?"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span></code></pre></div>
 <p>Access the responses:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lot</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">response</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Plan ahead to include a mix of historic cities, coastal escapes, </span></span>
 <span><span class="co">#&gt; local cuisine, and authentic cultural experiences while keeping time </span></span>
 <span><span class="co">#&gt; for spontaneous discoveries."</span></span>
@@ -135,7 +135,7 @@
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span></code></pre></div>
 <p>For maximum processing speed, set <code>chunk_size</code> to the number of prompts. However, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>, </span>
 <span>  chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -164,9 +164,9 @@
 <span>  cities <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_array</a></span><span class="op">(</span><span class="st">"City names"</span>, <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_string</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/interpolate.html" class="external-link">interpolate</a></span><span class="op">(</span><span class="st">"Give me a weather update for {{weather$city}}?"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/interpolate.html" class="external-link">interpolate</a></span><span class="op">(</span><span class="st">"Give me a weather update for {{weather$city}}?"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">lot</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">response</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "In Chicago, it's cool with heavy rain and strong winds."                   </span></span>
 <span><span class="co">#&gt; [2] "The current weather in NYC is hot with no rain and light winds."           </span></span>
 <span><span class="co">#&gt; [3] "Lisbon currently has an overcast sky, warm temperatures, and strong winds."</span></span></code></pre></div>
@@ -185,7 +185,7 @@
 <span>  <span class="st">"Kwame here - just hit the big 5-0 this year."</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span></span>
+<span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_object</a></span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_string</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -193,7 +193,7 @@
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">lot</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">response</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     name age</span></span>
 <span><span class="co">#&gt; 1   Alex  42</span></span>
 <span><span class="co">#&gt; 2  Jamal  27</span></span>
@@ -205,9 +205,9 @@
 <div class="section level3">
 <h3 id="progress-tracking-and-recovery">Progress Tracking and Recovery<a class="anchor" aria-label="anchor" href="#progress-tracking-and-recovery"></a>
 </h3>
-<p>Progress is tracked in <code>chat$progress()</code> and saved to an <code>.rds</code> file on the disk, which allows you to easily resume interrupted operations:</p>
+<p>Progress is tracked in <code>response$progress()</code> and saved to an <code>.rds</code> file on the disk, which allows you to easily resume interrupted operations:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span><span class="va">prompts</span>, file <span class="op">=</span> <span class="st">"chat.rds"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, file <span class="op">=</span> <span class="st">"chat.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>If <code>file</code> is not defined, a temporary file will be created by default.</p>
 </div>
 <div class="section level3">
@@ -215,7 +215,7 @@
 </h3>
 <p>Toggle sound notifications on completion, interruption, and error:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span><span class="va">prompts</span>, beep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, beep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="verbosity">Verbosity<a class="anchor" aria-label="anchor" href="#verbosity"></a>
@@ -227,7 +227,7 @@
 <span>  <span class="st">"Explain base R versus tidyverse"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span></span>
+<span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  echo <span class="op">=</span> <span class="cn">TRUE</span></span>

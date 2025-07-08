@@ -68,7 +68,7 @@ For parallel processing, use <code><a href="chat_future.html">chat_future()</a><
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A lot object (S7 class) containing</p><ul><li><p><strong>prompts</strong>: Original input prompts</p></li>
+    <p>A process object (S7 class) containing</p><ul><li><p><strong>prompts</strong>: Original input prompts</p></li>
 <li><p><strong>responses</strong>: Raw response data for completed prompts</p></li>
 <li><p><strong>completed</strong>: Number of successfully processed prompts</p></li>
 <li><p><strong>file</strong>: Path where batch state is saved</p></li>
@@ -76,14 +76,14 @@ For parallel processing, use <code><a href="chat_future.html">chat_future()</a><
 <li><p><strong>texts</strong>: Function to extract text responses or structured data</p></li>
 <li><p><strong>chats</strong>: Function to extract chat objects</p></li>
 <li><p><strong>progress</strong>: Function to get processing status</p></li>
-<li><p><strong>lot</strong>: Function to process a lot of prompts</p></li>
+<li><p><strong>process</strong>: Function to process a lot of prompts</p></li>
 </ul></div>
     <div class="section level2">
-    <h2 id="lot-method">Lot Method<a class="anchor" aria-label="anchor" href="#lot-method"></a></h2>
+    <h2 id="process-method">Process Method<a class="anchor" aria-label="anchor" href="#process-method"></a></h2>
 
 
-<p>This function provides access to the <code><a href="lot.html">lot()</a></code> method for sequential processing of prompts.
-See <code><a href="lot.sequential_chat.html">?lot.sequential_chat</a></code> for full details of the method and its parameters.</p>
+<p>This function provides access to the <code><a href="process.html">process()</a></code> method for sequential processing of prompts.
+See <code><a href="process.sequential_chat.html">?process.sequential_chat</a></code> for full details of the method and its parameters.</p>
     </div>
 
     <div class="section level2">
@@ -93,7 +93,7 @@ See <code><a href="lot.sequential_chat.html">?lot.sequential_chat</a></code> for
 <span class="r-in"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu">chat_sequential</span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/chat_openai.html" class="external-link">chat_openai</a></span><span class="op">(</span>system_prompt <span class="op">=</span> <span class="st">"Reply concisely"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Process prompts</span></span></span>
-<span class="r-in"><span><span class="va">lot</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">lot</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="st">"What is R?"</span>,</span></span>
 <span class="r-in"><span>    <span class="st">"Explain base R versus tidyverse"</span>,</span></span>
@@ -102,14 +102,14 @@ See <code><a href="lot.sequential_chat.html">?lot.sequential_chat</a></code> for
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Check progress if interrupted</span></span></span>
-<span class="r-in"><span><span class="va">lot</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Return responses</span></span></span>
-<span class="r-in"><span><span class="va">lot</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">response</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Return chat objects</span></span></span>
-<span class="r-in"><span><span class="va">lot</span><span class="op">$</span><span class="fu">chats</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">response</span><span class="op">$</span><span class="fu">chats</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Check progress if interrupted</span></span></span>
+<span class="r-in"><span><span class="va">response</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
