@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Process Lots of Chats • chatlot</title>
+<title>Process a Lot of Chats • chatalot</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Process Lots of Chats">
-<meta name="description" content="Process lots of large language model chats with ellmer. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow persistence through checkpoint and resume. Additional quality-of-life features include sound notifications and verbosity options. Parallel processing is implemented using future. Includes methods for retrieving progress status, chat texts, and chat objects.">
-<meta property="og:description" content="Process lots of large language model chats with ellmer. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow persistence through checkpoint and resume. Additional quality-of-life features include sound notifications and verbosity options. Parallel processing is implemented using future. Includes methods for retrieving progress status, chat texts, and chat objects.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Process a Lot of Chats">
+<meta name="description" content="Process a lot of large language model chats with ellmer. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow persistence through checkpoint and resume. Additional quality-of-life features include sound notifications and verbosity options. Parallel processing is implemented using future. Includes methods for retrieving progress status, chat texts, and chat objects.">
+<meta property="og:description" content="Process a lot of large language model chats with ellmer. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow persistence through checkpoint and resume. Additional quality-of-life features include sound notifications and verbosity options. Parallel processing is implemented using future. Includes methods for retrieving progress status, chat texts, and chat objects.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,7 +20,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="index.html">chatlot</a>
+    <a class="navbar-brand me-2" href="index.html">chatalot</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
@@ -55,12 +55,12 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="chatlot-">chatlot <img src="reference/figures/chatlot-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#chatlot-"></a>
+<div class="page-header"><h1 id="chatalot-">chatalot <img src="reference/figures/chatalot-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#chatalot-"></a>
 </h1></div>
 <p><a href="https://CRAN.R-project.org/package=hellmer" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
-<p>chatlot synchronously processes a lot of large language model chats in R using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>.</p>
+<p>chatalot synchronously processes a lot of large language model chats in R using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>.</p>
 <p>Easily setup sequential and parallel processing workflows with features including <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a>, <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>, checkpoint and resume, sound notifications, and verbosity options.</p>
-<p>chatlot is similar to existing ellmer tools:</p>
+<p>chatalot is similar to existing ellmer tools:</p>
 <ul>
 <li><p><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a> - Synchronously processes lots of chats in parallel. This tool is simple and fast but has limited features with no option to save data at checkpoints or resume if interuppted.</p></li>
 <li><p><a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a> - Asynchronously batch processes lots of chats from select providers. This tool is about 50% cheaper if you wait up to 24 hours for a response.</p></li>
@@ -70,8 +70,8 @@
 </h2>
 <p>You can install the development or CRAN version of the package with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># pak::pak("dylanpieper/chatlot")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"chatlot"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># pak::pak("dylanpieper/chatalot")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"chatalot"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="setup-api-keys">Setup API Keys<a class="anchor" aria-label="anchor" href="#setup-api-keys"></a>
@@ -91,7 +91,7 @@
 </h3>
 <p>Sequential processing processes one chat at a time and saves the data to the disk after receiving each response.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatlot/">chatlot</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatlot/">chatalot</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span>
 <span></span>
@@ -281,7 +281,7 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing chatlot</a></li>
+<li><a href="authors.html#citation">Citing chatalot</a></li>
 </ul>
 </div>
 
