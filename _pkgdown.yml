@@ -1,7 +1,7 @@
-url: https://dylanpieper.github.io/chatlot/
+url: https://dylanpieper.github.io/chatalot/
 repo:
   url:
-    home: https://github.com/dylanpieper/chatlot
+    home: https://github.com/dylanpieper/chatalot
 template:
   bootstrap: 5
   light-switch: true
