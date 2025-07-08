@@ -2,7 +2,7 @@
 #' @param original_chat Original chat model object
 #' @param prompt Prompt text
 #' @param type Type specification for structured data
-#' @return List containing response information
+#' @return List containing response (chat, text, and structured data)
 #' @keywords internal
 #' @noRd
 capture <- function(original_chat,
@@ -58,7 +58,6 @@ capture <- function(original_chat,
 
   return(result)
 }
-
 
 #' Process lot of prompts with progress tracking
 #' @param chat_obj Chat model object
@@ -288,6 +287,8 @@ process_future <- function(
     cli::cli_progress_update(id = pb, set = result@completed)
   }
 
+  capture_future <- capture
+
   tryCatch({
     for (chunk_idx in seq_along(chunks)) {
       chunk <- chunks[[chunk_idx]]
@@ -309,7 +310,7 @@ process_future <- function(
                     responses <- furrr::future_map(
                       chunk,
                       function(prompt) {
-                        capture_fn(
+                        capture_future(
                           worker_chat,
                           prompt,
                           type,
@@ -319,8 +320,7 @@ process_future <- function(
                       },
                       .options = furrr::furrr_options(
                         scheduling = 1,
-                        seed = TRUE,
-                        globals = list(capture_fn = capture)
+                        seed = TRUE
                       )
                     )
 
@@ -454,6 +454,7 @@ process_chunks <- function(chunks,
                            echo,
                            ...) {
   was_interrupted <- FALSE
+  capture_future <- capture
 
   for (chunk in chunks) {
     if (was_interrupted) break
@@ -464,7 +465,7 @@ process_chunks <- function(chunks,
           chunk,
           function(prompt) {
             worker_chat <- chat_obj$clone()
-            capture_fn(
+            capture_future(
               worker_chat,
               prompt,
               type,
@@ -472,10 +473,7 @@ process_chunks <- function(chunks,
               ...
             )
           },
-          .progress = FALSE,
-          .options = furrr::furrr_options(
-            globals = list(capture_fn = capture)
-          )
+          .progress = FALSE
         )
 
         start_idx <- result@completed + 1

@@ -56,7 +56,7 @@ response$texts()
 # Return chat objects
 response$chats()
 
-Check progress if interrupted
+# Check progress if interrupted
 response$progress()
 \dontshow{\}) # examplesIf}
 }

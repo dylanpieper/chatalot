@@ -137,8 +137,8 @@ chat_sequential <- function(
 #'
 #' # Return chat objects
 #' response$chats()
-#' 
-#' Check progress if interrupted
+#'
+#' # Check progress if interrupted
 #' response$progress()
 #' @export
 chat_future <- function(
