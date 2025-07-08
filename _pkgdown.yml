@@ -17,9 +17,9 @@ reference:
   - title: "Lot Processing"
     desc: "Methods for chat processors"
     contents:
-      - lot
-      - lot.sequential_chat
-      - lot.future_chat
+      - process
+      - process.sequential_chat
+      - process.future_chat
       
   - title: "Progress Tracking"
     desc: "Functions for monitoring progress"
@@ -31,4 +31,3 @@ reference:
     contents:
       - chats
       - texts
-      
