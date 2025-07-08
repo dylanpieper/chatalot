@@ -4,7 +4,7 @@
 
 chatalot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org).
 
-Easily setup sequential and parallel processing workflows with features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), checkpoint and resume, sound notifications, and verbosity options.
+Easily setup sequential and parallel processing workflows with features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), checkpoint and resume, sound notification, and more.
 
 chatalot is similar to existing ellmer tools:
 
