@@ -1,6 +1,6 @@
 Package: chatalot
 Title: Process a Lot of Chats
-Version: 0.1.2
+Version: 0.2.0
 Authors@R: 
     person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
 Description: Process a lot of large language model chats with 'ellmer'.

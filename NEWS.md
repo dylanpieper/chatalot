@@ -1,4 +1,4 @@
-# chatlot (development)
+# chatalot 0.2.0
 
 ## Internal Improvements
 * `$texts()` returns a data frame for structured data when possible
