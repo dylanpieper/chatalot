@@ -47,10 +47,10 @@ library(chatalot)
 chat <- chat_sequential(openai)
 
 prompts <- c(
-  "How to have the best vacation in Portugal?",
-  "When is the best time of year to visit Portugal?",
-  "What foods to expect as a tourist in Portugal?",
-  "Which words to know in Portugese as a tourist?"
+  "What roles do people have in a castle?",
+  "Why are castles needed?",
+  "When was the first castle built?",
+  "Where are most castles located?"
 )
 
 response <- chat$process(prompts)
@@ -60,22 +60,17 @@ Access the responses:
 
 ``` r
 response$texts()
-#> [1] "Plan ahead to include a mix of historic cities, coastal escapes, 
-#> local cuisine, and authentic cultural experiences while keeping time 
-#> for spontaneous discoveries."
-#>                                                   
-#> [2] "The best time to visit Portugal is during the shoulder seasons of spring 
-#> (March-May) and fall (September-October) when the weather is pleasant and 
-#> there are fewer crowds."       
-#>                                                     
-#> [3] "As a tourist in Portugal, you can expect a rich variety of seafood 
-#> (like cod and grilled fish), hearty grilled meats, savory stews, delectable 
-#> pastries such as pastel de nata, and locally produced wines and cheeses." 
-#>              
-#> [4] "Essential words include \"olá\" for hello, \"por favor\" for please, 
-#> \"obrigado/obrigada\" for thank you, \"sim\" and \"não\" for yes and no, 
-#> \"desculpe\" to apologize, \"quanto?\" for asking price, 
-#> and \"banheiro\" for bathroom."
+#> [1] "In a castle, people served as rulers, warriors, administrators, 
+#> craftsmen, and servants who managed its defense, governance, and daily upkeep."
+#> 
+#> [2] "Castles have historically been built for defense and power consolidation,
+#> and today they serve as cultural landmarks that preserve our heritage 
+#> and attract tourism."
+#> 
+#> [3] "There isn’t a definitive \"first castle,\" but the earliest structures
+#> resembling castles emerged in medieval Europe around the 9th century."
+#> 
+#> [4] "Most castles are located in Europe, particularly in historically turbulent regions like the United Kingdom, France, and Germany."     
 ```
 
 ### Parallel Processing
