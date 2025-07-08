@@ -4,7 +4,7 @@
 
 chatlot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org).
 
-Easily setup sequential and parallel processing workflows with advanced features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), progress tracking with recovery options, and quality-of-life features such as sound notifications and verbosity controls.
+Easily setup sequential and parallel processing workflows with features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), checkpoint and resume, sound notifications, and verbosity options.
 
 chatlot is similar to existing ellmer tools:
 
@@ -39,7 +39,7 @@ openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
 
 ### Sequential Processing
 
-Sequential processing calls one chat at a time and saves the data to the disk.
+Sequential processing processes one chat at a time and saves the data to the disk after receiving each response.
 
 ``` r
 library(chatlot)
@@ -88,7 +88,7 @@ response$texts()
 
 Parallel processing uses [future](https://www.futureverse.org) to create multiple R processes (workers) to chat at the same time. This method improves speed of processing.
 
-The default upper limit for number of `workers` is `parallel::detectCores()`. The default `chunk_size` is also `parallel::detectCores()` and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. When a chunk is finished, data is saved to the disk.
+The default upper limit for number of `workers` is `parallel::detectCores()`. The default `chunk_size` is also `parallel::detectCores()` and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. After a chunk is finished, data is saved to the disk.
 
 ``` r
 chat <- chat_future(openai)
@@ -165,9 +165,9 @@ response$texts()
 #> 6  Kwame  50
 ```
 
-### Progress Tracking and Recovery
+### Checkpoint and Resume
 
-Progress is tracked in `response$progress()` and saved to an `.rds` file on the disk, which allows you to easily resume interrupted operations:
+Progress is tracked in `response$progress()` and checkpoints are saved to an `.rds` file on the disk, which allows you to easily resume interrupted operations:
 
 ``` r
 response <- chat$process(prompts, file = "chat.rds")
@@ -183,7 +183,7 @@ Toggle sound notifications on completion, interruption, and error:
 response <- chat$process(prompts, beep = TRUE)
 ```
 
-### Verbosity
+### Verbosity Options
 
 By default, the chat `echo` is set to `FALSE` to show a progress bar. However, you can still configure `echo` by first setting `progress` to `FALSE`:
 
