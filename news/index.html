@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">chatalot</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,33 @@
 
     </div>
 
-  </main></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="chatalot-020">chatalot 0.2.0<a class="anchor" aria-label="anchor" href="#chatalot-020"></a></h2>
+<div class="section level3">
+<h3 id="internal-improvements-0-2-0">Internal Improvements<a class="anchor" aria-label="anchor" href="#internal-improvements-0-2-0"></a></h3>
+<ul><li>
+<code>$texts()</code> returns a data frame for structured data when possible</li>
+<li>Added single retry for failed structured data extractions</li>
+<li>Replaced progress bar percentage indicator (<code><a href="https://cli.r-lib.org/reference/progress-variables.html" class="external-link">cli::pb_percent</a></code>) to estimated time until completion (<code><a href="https://cli.r-lib.org/reference/progress-variables.html" class="external-link">cli::pb_eta</a></code>)</li>
+<li>For <code><a href="../reference/chat_future.html">chat_future()</a></code>, updated the default <code>chunk_size</code> to <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code> for safer processing</li>
+</ul></div>
+<div class="section level3">
+<h3 id="lifecycle-changes-0-2-0">Lifecycle changes<a class="anchor" aria-label="anchor" href="#lifecycle-changes-0-2-0"></a></h3>
+<ul><li>Renamed package from hellmer to chatalot</li>
+<li>
+<code>lot</code> is renamed to <code>process</code> for consistent verb use</li>
+<li>
+<code>batch</code> is renamed to <code>lot</code> to match the new package name</li>
+<li>
+<code>state_path</code> is renamed to <code>file</code> for consistency/simplicity</li>
+<li>
+<code>type_spec</code> is renamed to <code>type</code> following the latest update to ellmer (0.1.1)</li>
+<li>Removed evaluation functionality because of poor performance</li>
+<li>Removed retry functionality in anticipation of robust changes to ellmer (development)</li>
+</ul></div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
