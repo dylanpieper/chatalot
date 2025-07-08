@@ -7,7 +7,7 @@
 * For `chat_future()`, updated the default `chunk_size` to `parallel::detectCores()` for safer processing 
 
 ## Lifecycle changes
-* Renamed package from hellmer to chatlot
+* Renamed package from hellmer to chatalot
 * `lot` is renamed to `process` for consistent verb use
 * `batch` is renamed to `lot` to match the new package name
 * `state_path` is renamed to `file` for consistency/simplicity

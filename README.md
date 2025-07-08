@@ -1,12 +1,12 @@
-# chatlot <img src="man/figures/chatlot-hex.png" align="right" width="140"/>
+# chatalot <img src="man/figures/chatalot-hex.png" align="right" width="140"/>
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://CRAN.R-project.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-chatlot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org).
+chatalot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org).
 
 Easily setup sequential and parallel processing workflows with features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), checkpoint and resume, sound notifications, and verbosity options.
 
-chatlot is similar to existing ellmer tools:
+chatalot is similar to existing ellmer tools:
 
 -   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously processes lots of chats in parallel. This tool is simple and fast but has limited features with no option to save data at checkpoints or resume if interuppted.
 
@@ -17,8 +17,8 @@ chatlot is similar to existing ellmer tools:
 You can install the development or CRAN version of the package with:
 
 ``` r
-# pak::pak("dylanpieper/chatlot")
-pak::pak("chatlot")
+# pak::pak("dylanpieper/chatalot")
+pak::pak("chatalot")
 ```
 
 ## Setup API Keys
@@ -42,7 +42,7 @@ openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
 Sequential processing processes one chat at a time and saves the data to the disk after receiving each response.
 
 ``` r
-library(chatlot)
+library(chatalot)
 
 chat <- chat_sequential(openai)
 
