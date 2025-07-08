@@ -4,7 +4,7 @@
 
 chatalot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org).
 
-Easily setup sequential and parallel processing workflows with features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), checkpoint and resume, sound notification, and more.
+Easily setup sequential and parallel processing workflows with features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), save and resume, sound notification, and more.
 
 chatalot is similar to existing ellmer tools:
 
@@ -161,9 +161,9 @@ response$texts()
 #> 6  Kwame  50
 ```
 
-### Checkpoint and Resume
+### Save and Resume
 
-Progress is tracked in `response$progress()` and checkpoints are saved to an `.rds` file on the disk, which allows you to easily resume interrupted operations:
+Progress is tracked in `response$progress()` and saved to an `.rds` file on the disk, which allows you to easily resume interrupted operations:
 
 ``` r
 response <- chat$process(prompts, file = "chat.rds")

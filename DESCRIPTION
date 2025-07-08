@@ -6,10 +6,10 @@ Authors@R:
 Description: Process a lot of large language model chats with 'ellmer'.
     Provides both sequential and parallel processing of chat interactions
     with features including tool calling and structured data extraction.
-    Enables workflow persistence through checkpoint and resume. 
+    Enables workflow persistence by saving data to the disk.
     Additional quality-of-life features include sound notifications and
     verbosity options. Parallel processing is implemented using 'future'.
-    Includes methods for retrieving progress status, chat texts, and chat objects.
+    Includes methods for retrieving responses (texts and chats) and progress.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
