@@ -126,8 +126,8 @@
 <div class="section level3">
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
-<p><strong>⚠️ Parallel processing is unavailable in ellmer 0.2.1 due to redacting the API from chat objects with no callback, but this issue is temporary and will be fixed in ellmer.</strong></p>
-<p><strong>✅ Parallel processing will work if you install <code>pak::pak("ellmer@0.2.0")</code>, but be aware that this version of ellmer saves your API keys in chat objects.</strong></p>
+<p><strong>⚠️ Parallel processing is unavailable in ellmer 0.2.1 due to redacting API keys from chat objects with no callback, but this issue is temporary and will be fixed in ellmer.</strong></p>
+<p><strong>✅ Parallel processing will work if you install <code>pak::pak("ellmer@0.2.0")</code>, but be aware that this version of ellmer exposes API keys in chat objects.</strong></p>
 <hr>
 <p>Parallel processing uses <a href="https://www.futureverse.org" class="external-link">future</a> to create multiple R processes (workers) to chat at the same time. This method improves speed of processing.</p>
 <p>The default upper limit for number of <code>workers</code> is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>. The default <code>chunk_size</code> is also <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code> and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. After a chunk is finished, data is saved to the disk.</p>
