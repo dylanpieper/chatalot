@@ -80,9 +80,9 @@ response$texts()
 
 ### Parallel Processing
 
-**⚠️ Parallel processing is temporarily unavailable in ellmer 0.2.1 due to changes in the API key handling.**
+**⚠️ Parallel processing is unavailable in ellmer 0.2.1 due to redacting the API from chat objects with no callback, but this issue is temporary and will be fixed in ellmer.**
 
-**✅ Parallel processing will work if you install `pak::pak("ellmer@0.2.0")`.**
+**✅ Parallel processing will work if you install `pak::pak("ellmer@0.2.0")`, but be aware that this version of ellmer saves your API keys in chat objects.**
 
 ------------------------------------------------------------------------
 
