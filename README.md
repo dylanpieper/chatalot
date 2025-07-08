@@ -8,7 +8,7 @@ Easily setup sequential and parallel processing workflows with features includin
 
 chatlot is similar to existing ellmer tools:
 
--   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously processes lots of chats in parallel. This tool is simple and fast but has limited features with no option to save or recover your progress.
+-   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously processes lots of chats in parallel. This tool is simple and fast but has limited features with no option to save data at checkpoints or resume if interuppted.
 
 -   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously batch processes lots of chats from select providers. This tool is about 50% cheaper if you wait up to 24 hours for a response.
 
