@@ -70,7 +70,8 @@ response$texts()
 #> [3] "There isn’t a definitive \"first castle,\" but the earliest structures
 #> resembling castles emerged in medieval Europe around the 9th century."
 #> 
-#> [4] "Most castles are located in Europe, particularly in historically turbulent regions like the United Kingdom, France, and Germany."     
+#> [4] "Most castles are located in Europe, particularly in historically
+#> turbulent regions like the United Kingdom, France, and Germany."     
 ```
 
 ### Parallel Processing
