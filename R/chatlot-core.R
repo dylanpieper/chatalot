@@ -215,9 +215,8 @@ process_future <- function(
     ...) {
   if (is_new_ellmer()) {
     cli::cli_abort(c(
-      "`chat_future()` currently does not work in ellmer > 0.2.0",
-      "!" = "This issue is caused by redacting API keys from chat objects with no callback",
-      "i" = "This issue is temporary and will be fixed in a future ellmer release",
+      "`chat_future()` currently does not work in ellmer {packageVersion('ellmer')}",
+      "!" = "This issue is temporary and will be fixed in a future ellmer release",
       "v" = "`chat_future()` will work if you install {.code pak::pak('ellmer@0.2.0')}",
       "!" = "Be aware that ellmer 0.2.0 exposes API keys in chat objects"
     ))
