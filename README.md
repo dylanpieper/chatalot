@@ -97,9 +97,9 @@ If using `length(prompts)`, be aware that data will not be saved to the disk unt
 
 ## Features
 
-### Tooling
+### Tool Calling
 
-Register and use [tool/function calling](https://ellmer.tidyverse.org/articles/tool-calling.html):
+Register and use [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html) to let the LLM use R functions:
 
 ``` r
 weather <- data.frame(
