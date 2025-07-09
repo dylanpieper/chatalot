@@ -103,7 +103,7 @@ Register and use [tool/function calling](https://ellmer.tidyverse.org/articles/t
 
 ``` r
 weather <- data.frame(
-  city = c("Chicago", "NYC", "Lisbon"),
+  city = c("Chicago", "New York", "Lisbon"),
   raining = c("heavy", "none", "overcast"),
   temperature = c("cool", "hot", "warm"),
   wind = c("strong", "weak", "strong")
@@ -117,12 +117,12 @@ chat$register_tool(tool(
   cities = type_array("City names", type_string())
 ))
 
-response <- chat$process(interpolate("Give me a weather update for {{weather$city}}?"))
+response <- chat$process(interpolate("Give me a brief weather update for {{weather$city}}?"))
 
 response$texts()
-#> [1] "In Chicago, it's cool with heavy rain and strong winds."                   
-#> [2] "The current weather in NYC is hot with no rain and light winds."           
-#> [3] "Lisbon currently has an overcast sky, warm temperatures, and strong winds."
+#> [1] "Chicago is experiencing heavy rain, cool temperatures, and strong winds."         
+#> [2] "New York is experiencing hot conditions with no rain and light winds."           
+#> [3] "In Lisbon, the weather is overcast with warm temperatures and strong winds."
 ```
 
 ### Structured Data Extraction
