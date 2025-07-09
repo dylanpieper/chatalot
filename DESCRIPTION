@@ -1,5 +1,5 @@
 Package: chatalot
-Title: Process a Lot of Chats
+Title: Process a Lot of LLM Chats
 Version: 0.2.0
 Authors@R: 
     person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
@@ -26,5 +26,5 @@ Imports:
     purrr,
     S7,
     utils
-Depends: ellmer (>= 0.2.0)
-URL: https://dylanpieper.github.io/chatlot/
+Depends: ellmer (== 0.2.0)
+URL: https://dylanpieper.github.io/chatalot/

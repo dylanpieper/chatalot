@@ -1,3 +1,12 @@
+#' Check if the installed version of ellmer is newer than 0.2.0
+#'
+#' @return Logical indicating whether the installed version is greater than 0.2.0
+#' @keywords internal
+#' @noRd
+is_new_ellmer <- function() {
+  utils::packageVersion("ellmer") > "0.2.0"
+}
+
 #' Capture chat model response with proper handling
 #' @param original_chat Original chat model object
 #' @param prompt Prompt text
@@ -204,6 +213,16 @@ process_future <- function(
     progress,
     echo,
     ...) {
+  if (is_new_ellmer()) {
+    cli::cli_abort(c(
+      "`chat_future()` currently does not work in ellmer > 0.2.0",
+      "!" = "This issue is caused by redacting API keys from chat objects with no callback",
+      "i" = "This issue is temporary and will be fixed in a future ellmer release",
+      "v" = "`chat_future()` will work if you install {.code pak::pak('ellmer@0.2.0')}",
+      "!" = "Be aware that ellmer 0.2.0 exposes API keys in chat objects"
+    ))
+  }
+
   validate_chunk_result <- function(chunk_result, chunk_idx) {
     if (inherits(chunk_result, "error") || inherits(chunk_result, "worker_error")) {
       return(list(valid = FALSE, message = conditionMessage(chunk_result)))

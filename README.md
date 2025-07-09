@@ -4,13 +4,13 @@
 
 chatalot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org).
 
-Easily setup sequential and parallel processing workflows with features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), save and resume, sound notification, and more.
+Easily setup sequential and parallel processing workflows with features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), save and resume, sound notifications, and more.
 
 chatalot is similar to existing ellmer tools:
 
--   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously processes lots of chats in parallel. This tool is simple and fast but has limited features with no option to save data at checkpoints or resume if interuppted.
+-   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously processes a lot of chats in parallel. This tool is simple and fast but has limited features with no option to save data and resume if interrupted.
 
--   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously batch processes lots of chats from select providers. This tool is about 50% cheaper if you wait up to 24 hours for a response.
+-   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously batch processes a lot of chats from select providers. This tool is about 50% cheaper if you wait up to 24 hours for a response.
 
 ## Installation
 
@@ -75,12 +75,6 @@ response$texts()
 ```
 
 ### Parallel Processing
-
-**⚠️ Parallel processing is unavailable in ellmer 0.2.1 due to redacting API keys from chat objects with no callback, but this issue is temporary and will be fixed in ellmer.**
-
-**✅ Parallel processing will work if you install `pak::pak("ellmer@0.2.0")`, but be aware that this version of ellmer exposes API keys in chat objects.**
-
-------------------------------------------------------------------------
 
 Parallel processing uses [future](https://www.futureverse.org) to create multiple R processes (workers) to chat at the same time. This method improves speed of processing.
 
