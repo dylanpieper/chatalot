@@ -117,7 +117,7 @@ chat$register_tool(tool(
   cities = type_array("City names", type_string())
 ))
 
-response <- chat$process(interpolate("Give me a brief weather update for {{weather$city}}?"))
+response <- chat$process(interpolate("Brief weather update for {{weather$city}}?"))
 
 response$texts()
 #> [1] "Chicago is experiencing heavy rain, cool temperatures, and strong winds."         
