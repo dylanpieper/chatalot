@@ -39,7 +39,7 @@ openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
 
 ### Sequential Processing
 
-Sequential processing processes one chat at a time and saves the data to the disk after receiving each response:
+Sequential processing requests one chat at a time. Sequential processing is slow but safe, because you can save each response, one at a time:
 
 ``` r
 library(chatalot)
@@ -76,13 +76,13 @@ response$texts()
 
 ### Parallel Processing
 
-Parallel processing uses [future](https://www.futureverse.org) to create multiple R processes (workers) to chat at the same time, which makes it faster than sequential processing:
+Parallel processing requests multiple chats at a time across multiple R processes using [future](https://future.futureverse.org):
 
 ``` r
 chat <- chat_future(openai)
 ```
 
-The default upper limit for number of `workers` is `parallel::detectCores()`. The default `chunk_size` is also `parallel::detectCores()` and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. After a chunk is finished, data is saved to the disk.
+It is fast but must be interrupted to collect and save the responses. That is why the chats are distributed across the processes in chunks (e.g., 10 prompts). Once a chunk is finished, the responses are saved to the disk. The default upper limit for number of `workers` is `parallel::detectCores()`. The default `chunk_size` is also `parallel::detectCores()`, and defines the number of prompts to process at a time.
 
 For maximum processing speed, set `chunk_size` to the number of prompts:
 
@@ -93,7 +93,7 @@ response <- chat$process(
 )
 ```
 
-However, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
+If using `length(prompts)`, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
 
 ## Features
 
