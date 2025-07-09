@@ -5,6 +5,7 @@
 * Added single retry for failed structured data extractions
 * Replaced progress bar percentage indicator (`cli::pb_percent`) to estimated time until completion (`cli::pb_eta`)
 * For `chat_future()`, updated the default `chunk_size` to `parallel::detectCores()` for safer processing 
+* For `chat_future()`, detect ellmer > 0.2.0 and abort due to API key redaction (temporary until callback is added)
 
 ## Lifecycle changes
 * Renamed package from hellmer to chatalot
@@ -15,7 +16,7 @@
 * Removed evaluation functionality because of poor performance
 * Removed retry functionality in anticipation of robust changes to ellmer (development)
 
-# chatlot 0.1.2
+# hellmer 0.1.2
 
 ## New Features
 * `chat_future()` now uses uses CPU cores * 5 as the default chunk size
@@ -27,14 +28,14 @@
 * Removed the timeout feature as it's better handled by `option(ellmer_timeout_s = 120)` in ellmer 0.1.1
 * Moved parameters from `chat_sequential()` and `chat_future()` to `$batch()` except for `chat_model` and `...`
 
-# chatlot 0.1.1
+# hellmer 0.1.1
 
 ## New features
 * Removed `structured_data()` method as `texts()` now handles structured data responses
 * Updated package documentation for better organization and clarity
 
 
-# chatlot 0.1.0
+# hellmer 0.1.0
 
 ## New features
 * Initial CRAN submission
