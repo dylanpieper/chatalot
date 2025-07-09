@@ -23,7 +23,7 @@ pak::pak("chatalot")
 
 ## Setup API Keys
 
-API keys allow access to chat models and are stored as environmental variables. I recommend the `usethis` package to setup API keys in your `.Renviron` such as `OPENAI_API_KEY=your-key`.
+API keys allow access to chat models and are stored as environmental variables. I recommend the `usethis` package to setup API keys in your `.Renviron` such as `OPENAI_API_KEY=your-key`:
 
 ``` r
 usethis::edit_r_environ(scope = c("user", "project"))
@@ -31,7 +31,7 @@ usethis::edit_r_environ(scope = c("user", "project"))
 
 ## Basic Usage
 
-For the following examples, define a chat object to reuse across batches.
+For the following examples, define a chat object to reuse across batches:
 
 ``` r
 openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
@@ -39,7 +39,7 @@ openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
 
 ### Sequential Processing
 
-Sequential processing processes one chat at a time and saves the data to the disk after receiving each response.
+Sequential processing processes one chat at a time and saves the data to the disk after receiving each response:
 
 ``` r
 library(chatalot)
@@ -76,15 +76,15 @@ response$texts()
 
 ### Parallel Processing
 
-Parallel processing uses [future](https://www.futureverse.org) to create multiple R processes (workers) to chat at the same time. This method improves speed of processing.
-
-The default upper limit for number of `workers` is `parallel::detectCores()`. The default `chunk_size` is also `parallel::detectCores()` and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. After a chunk is finished, data is saved to the disk.
+Parallel processing uses [future](https://www.futureverse.org) to create multiple R processes (workers) to chat at the same time, which makes it faster than sequential processing:
 
 ``` r
 chat <- chat_future(openai)
 ```
 
-For maximum processing speed, set `chunk_size` to the number of prompts. However, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
+The default upper limit for number of `workers` is `parallel::detectCores()`. The default `chunk_size` is also `parallel::detectCores()` and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. After a chunk is finished, data is saved to the disk.
+
+For maximum processing speed, set `chunk_size` to the number of prompts:
 
 ``` r
 response <- chat$process(
@@ -92,6 +92,8 @@ response <- chat$process(
   chunk_size = length(prompts)
 )
 ```
+
+However, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
 
 ## Features
 
