@@ -76,20 +76,20 @@
 <div class="section level2">
 <h2 id="setup-api-keys">Setup API Keys<a class="anchor" aria-label="anchor" href="#setup-api-keys"></a>
 </h2>
-<p>API keys allow access to chat models and are stored as environmental variables. I recommend the <code>usethis</code> package to setup API keys in your <code>.Renviron</code> such as <code>OPENAI_API_KEY=your-key</code>.</p>
+<p>API keys allow access to chat models and are stored as environmental variables. I recommend the <code>usethis</code> package to setup API keys in your <code>.Renviron</code> such as <code>OPENAI_API_KEY=your-key</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu">edit_r_environ</span><span class="op">(</span>scope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"user"</span>, <span class="st">"project"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="basic-usage">Basic Usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
 </h2>
-<p>For the following examples, define a chat object to reuse across batches.</p>
+<p>For the following examples, define a chat object to reuse:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">openai</span> <span class="op">&lt;-</span> <span class="fu">chat_openai</span><span class="op">(</span>system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="sequential-processing">Sequential Processing<a class="anchor" aria-label="anchor" href="#sequential-processing"></a>
 </h3>
-<p>Sequential processing processes one chat at a time and saves the data to the disk after receiving each response.</p>
+<p>Sequential processing processes one chat at a time and saves the data to the disk after receiving each response:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatalot/">chatalot</a></span><span class="op">)</span></span>
 <span></span>
@@ -122,16 +122,17 @@
 <div class="section level3">
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
-<p>Parallel processing uses <a href="https://www.futureverse.org" class="external-link">future</a> to create multiple R processes (workers) to chat at the same time. This method improves speed of processing.</p>
-<p>The default upper limit for number of <code>workers</code> is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>. The default <code>chunk_size</code> is also <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code> and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. After a chunk is finished, data is saved to the disk.</p>
+<p>Parallel processing uses <a href="https://www.futureverse.org" class="external-link">future</a> to create multiple R processes (workers) to chat at the same time, which makes it faster than sequential processing:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span></code></pre></div>
-<p>For maximum processing speed, set <code>chunk_size</code> to the number of prompts. However, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.</p>
+<p>The default upper limit for number of <code>workers</code> is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>. The default <code>chunk_size</code> is also <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code> and defines the number of prompts to process at a time. Each chat in a chunk is distributed across the available R processes. After a chunk is finished, data is saved to the disk.</p>
+<p>For maximum processing speed, set <code>chunk_size</code> to the number of prompts:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>, </span>
 <span>  chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p>However, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.</p>
 </div>
 </div>
 <div class="section level2">
