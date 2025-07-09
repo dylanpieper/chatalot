@@ -213,15 +213,6 @@ process_future <- function(
     progress,
     echo,
     ...) {
-  if (is_new_ellmer()) {
-    cli::cli_abort(c(
-      "`chat_future()` currently does not work in ellmer {packageVersion('ellmer')}",
-      "!" = "This issue is temporary and will be fixed in a future ellmer release",
-      "v" = "`chat_future()` will work if you install {.code pak::pak('ellmer@0.2.0')}",
-      "!" = "Be aware that ellmer 0.2.0 exposes API keys in chat objects"
-    ))
-  }
-
   validate_chunk_result <- function(chunk_result, chunk_idx) {
     if (inherits(chunk_result, "error") || inherits(chunk_result, "worker_error")) {
       return(list(valid = FALSE, message = conditionMessage(chunk_result)))
