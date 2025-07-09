@@ -31,7 +31,7 @@ usethis::edit_r_environ(scope = c("user", "project"))
 
 ## Basic Usage
 
-For the following examples, define a chat object to reuse across batches:
+For the following examples, define a chat object to reuse:
 
 ``` r
 openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
