@@ -26,5 +26,5 @@ Imports:
     purrr,
     S7,
     utils
-Depends: ellmer (== 0.2.0)
+Depends: ellmer (>= 0.2.0)
 URL: https://dylanpieper.github.io/chatalot/

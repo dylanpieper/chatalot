@@ -1,3 +1,7 @@
+is_new_ellmer <- function() {
+  utils::packageVersion("ellmer") > "0.2.0"
+}
+
 get_test_prompts <- function(n = 3) {
   prompts <- list(
     "What is 2+2?",
