@@ -104,9 +104,9 @@ Register and use [tool calling](https://ellmer.tidyverse.org/articles/tool-calli
 ``` r
 weather <- data.frame(
   city = c("Chicago", "New York", "Lisbon"),
-  raining = c("heavy", "none", "overcast"),
-  temperature = c("cool", "hot", "warm"),
-  wind = c("strong", "weak", "strong")
+  raining = c("Heavy", "None", "Overcast"),
+  temperature = c("Cool", "Hot", "Warm"),
+  wind = c("Strong", "Weak", "Strong")
 )
 
 get_weather <- function(cities) weather[weather$city %in% cities, ]
@@ -120,8 +120,8 @@ chat$register_tool(tool(
 response <- chat$process(interpolate("Brief weather update for {{weather$city}}?"))
 
 response$texts()
-#> [1] "Chicago is experiencing heavy rain, cool temperatures, and strong winds."         
-#> [2] "New York is experiencing hot conditions with no rain and light winds."           
+#> [1] "Chicago is experiencing heavy rain, cool temperatures, and strong winds."
+#> [2] "New York is experiencing hot conditions with no rain and light winds."
 #> [3] "In Lisbon, the weather is overcast with warm temperatures and strong winds."
 ```
 
