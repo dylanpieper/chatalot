@@ -145,9 +145,9 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">weather</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  city <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Chicago"</span>, <span class="st">"New York"</span>, <span class="st">"Lisbon"</span><span class="op">)</span>,</span>
-<span>  raining <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"heavy"</span>, <span class="st">"none"</span>, <span class="st">"overcast"</span><span class="op">)</span>,</span>
-<span>  temperature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cool"</span>, <span class="st">"hot"</span>, <span class="st">"warm"</span><span class="op">)</span>,</span>
-<span>  wind <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strong"</span>, <span class="st">"weak"</span>, <span class="st">"strong"</span><span class="op">)</span></span>
+<span>  raining <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Heavy"</span>, <span class="st">"None"</span>, <span class="st">"Overcast"</span><span class="op">)</span>,</span>
+<span>  temperature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cool"</span>, <span class="st">"Hot"</span>, <span class="st">"Warm"</span><span class="op">)</span>,</span>
+<span>  wind <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Strong"</span>, <span class="st">"Weak"</span>, <span class="st">"Strong"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">get_weather</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">cities</span><span class="op">)</span> <span class="va">weather</span><span class="op">[</span><span class="va">weather</span><span class="op">$</span><span class="va">city</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">cities</span>, <span class="op">]</span></span>
@@ -161,8 +161,8 @@
 <span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/interpolate.html" class="external-link">interpolate</a></span><span class="op">(</span><span class="st">"Brief weather update for {{weather$city}}?"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">response</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Chicago is experiencing heavy rain, cool temperatures, and strong winds."         </span></span>
-<span><span class="co">#&gt; [2] "New York is experiencing hot conditions with no rain and light winds."           </span></span>
+<span><span class="co">#&gt; [1] "Chicago is experiencing heavy rain, cool temperatures, and strong winds."</span></span>
+<span><span class="co">#&gt; [2] "New York is experiencing hot conditions with no rain and light winds."</span></span>
 <span><span class="co">#&gt; [3] "In Lisbon, the weather is overcast with warm temperatures and strong winds."</span></span></code></pre></div>
 </div>
 <div class="section level3">
