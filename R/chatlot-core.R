@@ -26,37 +26,22 @@ capture <- function(original_chat,
   result <- withCallingHandlers(
     {
       if (!is.null(type)) {
-        structured_data <- tryCatch(
-          {
-            chat$chat_structured(prompt, type = type, ...)
-          },
-          error = function(e) {
-            cli::cli_alert_warning("Initial extraction failed, retrying...")
-            tryCatch(
-              {
-                chat$chat_structured(prompt, type = type, ...)
-              },
-              error = function(e) {
-                NULL
-              }
-            )
-          }
-        )
+        structured_data <- chat$chat_structured(prompt, type = type, ...)
 
         if (is.null(structured_data)) {
-          stop("Structured data extraction is NULL. Try again or remove the 'type' argument to check for other errors.")
+          stop("Received NULL structured data extraction")
         }
       } else {
-        response <- chat$chat(prompt, echo = echo, ...)
+        chat_response <- chat$chat(prompt, echo = echo, ...)
 
-        if (is.null(response)) {
+        if (is.null(chat_response)) {
           stop("Received NULL chat response")
         }
       }
 
       list(
         chat = chat,
-        text = response,
+        text = chat_response,
         structured_data = structured_data
       )
     },
