@@ -19,7 +19,7 @@ capture <- function(original_chat,
                     type,
                     echo,
                     ...) {
-  response <- NULL
+  chat_response <- NULL
   structured_data <- NULL
   chat <- original_chat$clone()
 
