@@ -82,9 +82,9 @@ Parallel processing requests multiple chats at a time across multiple R processe
 chat <- chat_future(openai)
 ```
 
-It is fast but must be interrupted to collect and save the responses. That is why the chats are distributed across the processes in chunks (e.g., 10 prompts). Once a chunk is finished, the responses are saved to the disk. The default upper limit for number of `workers` is `parallel::detectCores()`. The default `chunk_size` is also `parallel::detectCores()`, and defines the number of prompts to process at a time.
+This method is fast but must be interrupted to capture the responses, which is why the chats are distributed across the processes in chunks (e.g., 10 prompts). Once a chunk is finished, the responses are saved to the disk. The default upper limit for number of `workers` is `parallel::detectCores()`.
 
-For maximum processing speed, set `chunk_size` to the number of prompts:
+The default `chunk_size` is also `parallel::detectCores()`, and defines the number of prompts to process at a time. For maximum processing speed, set `chunk_size` to the number of prompts:
 
 ``` r
 response <- chat$process(
@@ -205,6 +205,6 @@ response <- chat$process(
 -   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a `type` is provided, a list with one element for each prompt. When `type` is an consistent object, returns a data frame with one row for each prompt, and one column for each property.
 -   `chats()`: Returns a list of chat objects
 
-## Further Reading
+## Extras
 
 -   [Batch and Compare the Similarity of LLM Responses in R](https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html) (Blog Post)
