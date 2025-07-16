@@ -125,8 +125,7 @@
 <p>Parallel processing requests multiple chats at a time across multiple R processes using <a href="https://future.futureverse.org" class="external-link">future</a>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span></code></pre></div>
-<p>It is fast but must be interrupted to collect and save the responses. That is why the chats are distributed across the processes in chunks (e.g., 10 prompts). Once a chunk is finished, the responses are saved to the disk. The default upper limit for number of <code>workers</code> is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>. The default <code>chunk_size</code> is also <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>, and defines the number of prompts to process at a time.</p>
-<p>For maximum processing speed, set <code>chunk_size</code> to the number of prompts:</p>
+<p>Chats are distributed across the processes in chunks (e.g., 10 prompts) as the checkpoint for capturing the responses from the R processes. Once a chunk is finished, the responses are saved to the disk. The default <code>chunk_size</code> is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>—which is 10 on my Mac Mini M4—and sets the number of prompts to process at a time. For the fastest processing, set <code>chunk_size</code> to the number of prompts:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>, </span>
@@ -248,7 +247,7 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="further-reading">Further Reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
+<h2 id="extras">Extras<a class="anchor" aria-label="anchor" href="#extras"></a>
 </h2>
 <ul>
 <li>
