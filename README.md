@@ -82,9 +82,7 @@ Parallel processing requests multiple chats at a time across multiple R processe
 chat <- chat_future(openai)
 ```
 
-This method is fast but must be interrupted to capture the responses, which is why the chats are distributed across the processes in chunks (e.g., 10 prompts). Once a chunk is finished, the responses are saved to the disk. The default upper limit for number of `workers` is `parallel::detectCores()`.
-
-The default `chunk_size` is also `parallel::detectCores()`, and defines the number of prompts to process at a time. For maximum processing speed, set `chunk_size` to the number of prompts:
+Chats are distributed across the processes in chunks (e.g., 10 prompts) as the checkpoint for capturing the responses from the R processes. Once a chunk is finished, the responses are saved to the disk. The default `chunk_size` is `parallel::detectCores()`—which is 10 on my Mac Mini M4—and sets the number of prompts to process at a time. For the fastest processing, set `chunk_size` to the number of prompts:
 
 ``` r
 response <- chat$process(
