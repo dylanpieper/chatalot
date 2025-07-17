@@ -1,4 +1,4 @@
-#' Extract texts or structured data from a process result
+#' Extract texts or structured data from a process response
 #' @name texts
 #' @param x A process object
 #' @param ... Additional arguments passed to methods
@@ -8,18 +8,18 @@
 #' chat <- chat_sequential(chat_openai())
 #'
 #' # Process a batch of prompts
-#' process_result <- chat$process(list(
+#' response <- chat$process(list(
 #'   "What is R?",
 #'   "Explain base R versus tidyverse",
 #'   "Explain vectors, lists, and data frames"
 #' ))
 #'
 #' # Extract text responses
-#' process_result$texts()
+#' response$texts()
 #' @export
 texts <- S7::new_generic("texts", "x")
 
-#' Extract chat objects from a process result
+#' Extract chat objects from a process response
 #' @name chats
 #' @param x A process object
 #' @param ... Additional arguments
@@ -29,18 +29,18 @@ texts <- S7::new_generic("texts", "x")
 #' chat <- chat_sequential(chat_openai())
 #'
 #' # Process a batch of prompts
-#' process_result <- chat$process(list(
+#' response <- chat$process(list(
 #'   "What is R?",
 #'   "Explain base R versus tidyverse",
 #'   "Explain vectors, lists, and data frames"
 #' ))
 #'
 #' # Return the chat objects
-#' process_result$chats()
+#' response$chats()
 #' @export
 chats <- S7::new_generic("chats", "x")
 
-#' Get progress information from a process result
+#' Get progress information from a process response
 #' @name progress
 #' @param x A process object
 #' @param ... Additional arguments passed to methods
@@ -50,18 +50,18 @@ chats <- S7::new_generic("chats", "x")
 #' chat <- chat_sequential(chat_openai())
 #'
 #' # Process a batch of prompts
-#' process_result <- chat$process(list(
+#' response <- chat$process(list(
 #'   "What is R?",
 #'   "Explain base R versus tidyverse",
 #'   "Explain vectors, lists, and data frames"
 #' ))
 #'
 #' # Check the progress
-#' process_result$progress()
+#' response$progress()
 #' @export
 progress <- S7::new_generic("progress", "x")
 
-#' Process result class for managing chat processing results
+#' Process response class for managing chat processing
 #' @param prompts List of prompts to process
 #' @param responses List to store responses
 #' @param completed Integer indicating number of completed prompts
@@ -86,20 +86,20 @@ progress <- S7::new_generic("progress", "x")
 #' chat <- chat_sequential(chat_openai())
 #'
 #' # Process a batch of prompts
-#' process_result <- chat$process(list(
+#' response <- chat$process(list(
 #'   "What is R?",
 #'   "Explain base R versus tidyverse",
 #'   "Explain vectors, lists, and data frames"
 #' ))
 #'
 #' # Check the progress if interrupted
-#' process_result$progress()
+#' response$progress()
 #'
 #' # Return the responses as a vector or list
-#' process_result$texts()
+#' response$texts()
 #'
 #' # Return the chat objects
-#' process_result$chats()
+#' response$chats()
 #' @export
 process <- S7::new_class(
   "process",

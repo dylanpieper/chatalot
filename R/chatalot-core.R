@@ -23,7 +23,7 @@ capture <- function(original_chat,
   structured_data <- NULL
   chat <- original_chat$clone()
 
-  result <- withCallingHandlers(
+  chats_obj <- withCallingHandlers(
     {
       if (!is.null(type)) {
         structured_data <- chat$chat_structured(prompt, type = type, ...)
@@ -50,7 +50,7 @@ capture <- function(original_chat,
     }
   )
 
-  return(result)
+  return(chats_obj)
 }
 
 #' Process lot of prompts with progress tracking
@@ -73,19 +73,19 @@ process_sequential <- function(
     echo,
     ...) {
   if (file.exists(file)) {
-    result <- readRDS(file)
-    if (!identical(as.list(prompts), result@prompts)) {
+    chats_obj <- readRDS(file)
+    if (!identical(as.list(prompts), chats_obj@prompts)) {
       cli::cli_alert_warning("Prompts don't match saved state. Starting fresh.")
       unlink(file)
-      result <- NULL
+      chats_obj <- NULL
     }
   } else {
-    result <- NULL
+    chats_obj <- NULL
   }
 
-  if (is.null(result)) {
+  if (is.null(chats_obj)) {
     orig_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
-    result <- process(
+    chats_obj <- process(
       prompts = as.list(prompts),
       responses = vector("list", length(prompts)),
       completed = 0L,
@@ -97,16 +97,16 @@ process_sequential <- function(
       workers = NULL,
       state = NULL
     )
-    saveRDS(result, file)
+    saveRDS(chats_obj, file)
   }
 
   total_prompts <- length(prompts)
 
-  if (result@completed >= total_prompts) {
+  if (chats_obj@completed >= total_prompts) {
     if (progress) {
       cli::cli_alert_success("Complete")
     }
-    return(create_results(result))
+    return(finish_chats_obj(chats_obj))
   }
 
   pb <- NULL
@@ -118,20 +118,20 @@ process_sequential <- function(
       ),
       total = total_prompts
     )
-    cli::cli_progress_update(id = pb, set = result@completed)
+    cli::cli_progress_update(id = pb, set = chats_obj@completed)
   }
 
   tryCatch({
-    for (i in (result@completed + 1L):total_prompts) {
+    for (i in (chats_obj@completed + 1L):total_prompts) {
       response <- capture(
         chat_obj, prompts[[i]], type,
         echo = echo,
         ...
       )
 
-      result@responses[[i]] <- response
-      result@completed <- i
-      saveRDS(result, file)
+      chats_obj@responses[[i]] <- response
+      chats_obj@completed <- i
+      saveRDS(chats_obj, file)
 
       if (!is.null(pb)) {
         cli::cli_progress_update(id = pb, set = i)
@@ -144,10 +144,10 @@ process_sequential <- function(
       cli::cli_progress_done(id = pb)
     }
 
-    saveRDS(result, file)
+    saveRDS(chats_obj, file)
 
     if (inherits(e, "interrupt")) {
-      handle_interrupt(result, beep)
+      handle_interrupt(chats_obj, beep)
     } else {
       if (beep) beepr::beep("wilhelm")
       stop(e)
@@ -157,20 +157,20 @@ process_sequential <- function(
       cli::cli_progress_done(id = pb)
     }
 
-    saveRDS(result, file)
+    saveRDS(chats_obj, file)
 
     if (beep) beepr::beep("coin")
     cli::cli_alert_warning(sprintf(
       "Interrupted at chat %d of %d",
-      result@completed, total_prompts
+      chats_obj@completed, total_prompts
     ))
   }, finally = {
-    if (!exists("result")) {
-      result <- readRDS(file)
+    if (!exists("chats_obj")) {
+      chats_obj <- readRDS(file)
     }
   })
 
-  create_results(result)
+  finish_chats_obj(chats_obj)
 }
 
 #' Process prompts in parallel chunks with error handling and state management
@@ -198,20 +198,20 @@ process_future <- function(
     progress,
     echo,
     ...) {
-  validate_chunk_result <- function(chunk_result, chunk_idx) {
-    if (inherits(chunk_result, "error") || inherits(chunk_result, "worker_error")) {
-      return(list(valid = FALSE, message = conditionMessage(chunk_result)))
+  validate_chunk <- function(chunk_chats_obj, chunk_idx) {
+    if (inherits(chunk_chats_obj, "error") || inherits(chunk_chats_obj, "worker_error")) {
+      return(list(valid = FALSE, message = conditionMessage(chunk_chats_obj)))
     }
 
-    if (!is.list(chunk_result) || !("responses" %in% names(chunk_result))) {
+    if (!is.list(chunk_chats_obj) || !("responses" %in% names(chunk_chats_obj))) {
       return(list(valid = FALSE, message = sprintf("Invalid chunk structure in chunk %d", chunk_idx)))
     }
 
-    if (length(chunk_result$responses) == 0) {
+    if (length(chunk_chats_obj$responses) == 0) {
       return(list(valid = FALSE, message = sprintf("Empty responses in chunk %d", chunk_idx)))
     }
 
-    null_indices <- which(vapply(chunk_result$responses, is.null, logical(1)))
+    null_indices <- which(vapply(chunk_chats_obj$responses, is.null, logical(1)))
     if (length(null_indices) > 0) {
       return(list(
         valid = FALSE,
@@ -230,18 +230,18 @@ process_future <- function(
   original_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
 
   if (file.exists(file)) {
-    result <- readRDS(file)
-    if (!identical(prompts_list, result@prompts)) {
+    chats_obj <- readRDS(file)
+    if (!identical(prompts_list, chats_obj@prompts)) {
       cli::cli_alert_warning("Prompts don't match saved state. Starting fresh.")
       unlink(file)
-      result <- NULL
+      chats_obj <- NULL
     }
   } else {
-    result <- NULL
+    chats_obj <- NULL
   }
 
-  if (is.null(result)) {
-    result <- process(
+  if (is.null(chats_obj)) {
+    chats_obj <- process(
       prompts = prompts_list,
       responses = vector("list", total_prompts),
       completed = 0L,
@@ -257,19 +257,19 @@ process_future <- function(
         retry_count = 0L
       )
     )
-    saveRDS(result, file)
+    saveRDS(chats_obj, file)
   }
 
-  if (result@completed >= total_prompts) {
+  if (chats_obj@completed >= total_prompts) {
     if (progress) {
       cli::cli_alert_success("Complete")
     }
-    return(create_results(result))
+    return(finish_chats_obj(chats_obj))
   }
 
   future::plan(future::multisession, workers = workers)
 
-  remaining_prompts <- prompts[(result@completed + 1L):total_prompts]
+  remaining_prompts <- prompts[(chats_obj@completed + 1L):total_prompts]
   chunks <- split(remaining_prompts, ceiling(seq_along(remaining_prompts) / chunk_size))
 
   pb <- NULL
@@ -278,7 +278,7 @@ process_future <- function(
       format = "Processing chats [{cli::pb_current}/{cli::pb_total}] [{cli::pb_bar}] {cli::pb_eta}",
       total = total_prompts
     )
-    cli::cli_progress_update(id = pb, set = result@completed)
+    cli::cli_progress_update(id = pb, set = chats_obj@completed)
   }
 
   capture_future <- capture
@@ -294,7 +294,7 @@ process_future <- function(
         retry_count <- retry_count + 1
         worker_chat <- chat_obj$clone()
 
-        chunk_result <-
+        chunk_chats_obj <-
           withCallingHandlers(
             tryCatch(
               {
@@ -355,19 +355,19 @@ process_future <- function(
             )
           )
 
-        validation <- validate_chunk_result(chunk_result, chunk_idx)
+        validation <- validate_chunk(chunk_chats_obj, chunk_idx)
         success <- validation$valid
 
         if (success) {
-          start_idx <- result@completed + 1
-          end_idx <- result@completed + length(chunk)
+          start_idx <- chats_obj@completed + 1
+          end_idx <- chats_obj@completed + length(chunk)
 
-          result@responses[start_idx:end_idx] <- chunk_result$responses
+          chats_obj@responses[start_idx:end_idx] <- chunk_chats_obj$responses
 
-          result@completed <- end_idx
-          saveRDS(result, file)
+          chats_obj@completed <- end_idx
+          saveRDS(chats_obj, file)
           if (!is.null(pb)) {
-            cli::cli_progress_update(id = pb, set = result@completed)
+            cli::cli_progress_update(id = pb, set = chats_obj@completed)
           }
         } else {
           success <- FALSE
@@ -396,10 +396,10 @@ process_future <- function(
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
     }
-    saveRDS(result, file)
+    saveRDS(chats_obj, file)
 
     if (inherits(e, "interrupt")) {
-      handle_interrupt(result, beep)
+      handle_interrupt(chats_obj, beep)
     } else {
       if (beep) beepr::beep("wilhelm")
       stop(e)
@@ -408,26 +408,26 @@ process_future <- function(
     if (!is.null(pb)) {
       cli::cli_progress_done(id = pb)
     }
-    saveRDS(result, file)
+    saveRDS(chats_obj, file)
 
     if (beep) beepr::beep("coin")
     cli::cli_alert_warning(sprintf(
       "Interrupted at chat %d of %d",
-      result@completed, total_prompts
+      chats_obj@completed, total_prompts
     ))
   }, finally = {
-    if (!exists("result")) {
-      result <- readRDS(file)
+    if (!exists("chats_obj")) {
+      chats_obj <- readRDS(file)
     }
     future::plan(future::sequential)
   })
 
-  create_results(result)
+  finish_chats_obj(chats_obj)
 }
 
 #' Process chunks of prompts in parallel
 #' @param chunks List of prompt chunks to process
-#' @param result A process object to store results
+#' @param chats_obj A process object to store results
 #' @param chat_obj Chat model object for making API calls
 #' @param type Type specification for structured data extraction
 #' @param pb Progress bar object
@@ -438,7 +438,7 @@ process_future <- function(
 #' @keywords internal
 #' @noRd
 process_chunks <- function(chunks,
-                           result,
+                           chats_obj,
                            chat_obj,
                            type,
                            pb,
@@ -470,18 +470,18 @@ process_chunks <- function(chunks,
           .progress = FALSE
         )
 
-        start_idx <- result@completed + 1
-        end_idx <- result@completed + length(new_responses)
-        result@responses[start_idx:end_idx] <- new_responses
-        result@completed <- end_idx
-        saveRDS(result, file)
+        start_idx <- chats_obj@completed + 1
+        end_idx <- chats_obj@completed + length(new_responses)
+        chats_obj@responses[start_idx:end_idx] <- new_responses
+        chats_obj@completed <- end_idx
+        saveRDS(chats_obj, file)
         if (!is.null(pb)) {
           cli::cli_progress_update(id = pb, set = end_idx)
         }
       },
       interrupt = function(e) {
         was_interrupted <<- TRUE
-        handle_interrupt(result, beep)
+        handle_interrupt(chats_obj, beep)
         invokeRestart("abort")
       }
     )
@@ -495,17 +495,17 @@ process_chunks <- function(chunks,
 
 #' Handle interruption
 #' @name handle_interrupt
-#' @usage handle_interrupt(result, beep)
-#' @param result A process object containing processing state
+#' @usage handle_interrupt(chats_obj, beep)
+#' @param chats_obj A process object containing processing state
 #' @param beep Logical indicating whether to play a sound
 #' @return NULL (called for side effects)
 #' @keywords internal
 #' @noRd
-handle_interrupt <- function(result, beep) {
+handle_interrupt <- function(chats_obj, beep) {
   cli::cli_alert_warning(
     sprintf(
       "Interrupted at chat %d of %d",
-      result@completed, length(result@prompts)
+      chats_obj@completed, length(chats_obj@prompts)
     )
   )
   if (beep) beepr::beep("coin")
@@ -531,23 +531,23 @@ finish_process <- function(pb, beep, progress) {
   invisible()
 }
 
-#' Create results object from process
-#' @param result Process object
-#' @return Results object with class "process"
+#' Finish chats object by converting it to a list and assigning functions
+#' @param chats_obj Process object
+#' @return List with class "process"
 #' @keywords internal
 #' @noRd
-create_results <- function(result) {
-  base_list <- list(
-    prompts = result@prompts,
-    responses = result@responses,
-    completed = result@completed,
-    file = result@file,
-    type = result@type
+finish_chats_obj <- function(chats_obj) {
+  chats_list <- list(
+    prompts = chats_obj@prompts,
+    responses = chats_obj@responses,
+    completed = chats_obj@completed,
+    file = chats_obj@file,
+    type = chats_obj@type
   )
 
-  base_list$texts <- function() texts(result)
-  base_list$chats <- function() chats(result)
-  base_list$progress <- function() progress(result)
+  chats_list$texts <- function() texts(chats_obj)
+  chats_list$chats <- function() chats(chats_obj)
+  chats_list$progress <- function() progress(chats_obj)
 
-  structure(base_list, class = "process")
+  structure(chats_list, class = "process")
 }
