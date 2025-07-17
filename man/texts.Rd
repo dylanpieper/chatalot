@@ -2,7 +2,7 @@
 % Please edit documentation in R/classes.R
 \name{texts}
 \alias{texts}
-\title{Extract texts or structured data from a process result}
+\title{Extract texts or structured data from a process response}
 \usage{
 texts(x, ...)
 }
@@ -15,7 +15,7 @@ texts(x, ...)
 A character vector or list of text responses. If a type specification is provided to the batch, return structured data.
 }
 \description{
-Extract texts or structured data from a process result
+Extract texts or structured data from a process response
 }
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -23,13 +23,13 @@ Extract texts or structured data from a process result
 chat <- chat_sequential(chat_openai())
 
 # Process a batch of prompts
-process_result <- chat$process(list(
+response <- chat$process(list(
   "What is R?",
   "Explain base R versus tidyverse",
   "Explain vectors, lists, and data frames"
 ))
 
 # Extract text responses
-process_result$texts()
+response$texts()
 \dontshow{\}) # examplesIf}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/classes.R
 \name{process}
 \alias{process}
-\title{Process result class for managing chat processing results}
+\title{Process response class for managing chat processing}
 \usage{
 process(
   prompts = list(),
@@ -54,7 +54,7 @@ Returns an S7 class object of class "process" that represents a collection of pr
 The process object manages prompt processing and tracks completion status.
 }
 \description{
-Process result class for managing chat processing results
+Process response class for managing chat processing
 }
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -62,19 +62,19 @@ Process result class for managing chat processing results
 chat <- chat_sequential(chat_openai())
 
 # Process a batch of prompts
-process_result <- chat$process(list(
+response <- chat$process(list(
   "What is R?",
   "Explain base R versus tidyverse",
   "Explain vectors, lists, and data frames"
 ))
 
 # Check the progress if interrupted
-process_result$progress()
+response$progress()
 
 # Return the responses as a vector or list
-process_result$texts()
+response$texts()
 
 # Return the chat objects
-process_result$chats()
+response$chats()
 \dontshow{\}) # examplesIf}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/classes.R
 \name{progress}
 \alias{progress}
-\title{Get progress information from a process result}
+\title{Get progress information from a process response}
 \usage{
 progress(x, ...)
 }
@@ -15,7 +15,7 @@ progress(x, ...)
 A list containing progress details
 }
 \description{
-Get progress information from a process result
+Get progress information from a process response
 }
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -23,13 +23,13 @@ Get progress information from a process result
 chat <- chat_sequential(chat_openai())
 
 # Process a batch of prompts
-process_result <- chat$process(list(
+response <- chat$process(list(
   "What is R?",
   "Explain base R versus tidyverse",
   "Explain vectors, lists, and data frames"
 ))
 
 # Check the progress
-process_result$progress()
+response$progress()
 \dontshow{\}) # examplesIf}
 }

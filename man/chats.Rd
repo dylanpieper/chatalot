@@ -2,7 +2,7 @@
 % Please edit documentation in R/classes.R
 \name{chats}
 \alias{chats}
-\title{Extract chat objects from a process result}
+\title{Extract chat objects from a process response}
 \usage{
 chats(x, ...)
 }
@@ -15,7 +15,7 @@ chats(x, ...)
 A list of chat objects
 }
 \description{
-Extract chat objects from a process result
+Extract chat objects from a process response
 }
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -23,13 +23,13 @@ Extract chat objects from a process result
 chat <- chat_sequential(chat_openai())
 
 # Process a batch of prompts
-process_result <- chat$process(list(
+response <- chat$process(list(
   "What is R?",
   "Explain base R versus tidyverse",
   "Explain vectors, lists, and data frames"
 ))
 
 # Return the chat objects
-process_result$chats()
+response$chats()
 \dontshow{\}) # examplesIf}
 }
