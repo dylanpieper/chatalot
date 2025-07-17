@@ -176,7 +176,7 @@ chat_future <- function(
                                file = tempfile("chat_", fileext = ".rds"),
                                progress = TRUE,
                                workers = NULL,
-                               chunk_size = parallel::detectCores(),
+                               chunk_size = 10,
                                max_chunk_attempts = 3L,
                                beep = TRUE,
                                echo = FALSE,

@@ -4,7 +4,7 @@
 * `$texts()` returns a data frame for structured data when possible
 * Added single retry for failed structured data extractions
 * Replaced progress bar percentage indicator (`cli::pb_percent`) to estimated time until completion (`cli::pb_eta`)
-* For `chat_future()`, updated the default `chunk_size` to `parallel::detectCores()` for safer processing 
+* For `chat_future()`, updated the default `chunk_size` to a fixed value of 10 prompts
 * For `chat_future()`, detect ellmer > 0.2.0 and abort due to API key redaction (temporary until callback is added)
 
 ## Lifecycle changes

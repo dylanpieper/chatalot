@@ -38,7 +38,7 @@ process.sequential_chat <- function(chat_env,
 #' @param type Type specification for structured data extraction
 #' @param file Path to save state file
 #' @param workers Number of parallel workers (default upper limit is `parallel::detectCores()`)
-#' @param chunk_size Number of prompts each worker processes at a time
+#' @param chunk_size Number of prompts each worker processes at a time (default: 10)
 #' @param max_chunk_attempts Maximum retries per failed chunk
 #' @param progress Whether to show progress bars
 #' @param beep Whether to play a sound on completion
@@ -52,7 +52,7 @@ process.future_chat <- function(chat_env,
                                 type = NULL,
                                 file = tempfile("chat_", fileext = ".rds"),
                                 workers = NULL,
-                                chunk_size = parallel::detectCores(),
+                                chunk_size = 10,
                                 max_chunk_attempts = 3L,
                                 beep = TRUE,
                                 progress = TRUE,

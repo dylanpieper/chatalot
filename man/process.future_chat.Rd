@@ -10,7 +10,7 @@ process.future_chat(
   type = NULL,
   file = tempfile("chat_", fileext = ".rds"),
   workers = NULL,
-  chunk_size = parallel::detectCores(),
+  chunk_size = 10,
   max_chunk_attempts = 3L,
   beep = TRUE,
   progress = TRUE,
@@ -29,7 +29,7 @@ process.future_chat(
 
 \item{workers}{Number of parallel workers (default upper limit is \code{parallel::detectCores()})}
 
-\item{chunk_size}{Number of prompts each worker processes at a time}
+\item{chunk_size}{Number of prompts each worker processes at a time (default: 10)}
 
 \item{max_chunk_attempts}{Maximum retries per failed chunk}
 
