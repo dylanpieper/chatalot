@@ -48,23 +48,9 @@
 chat_sequential <- function(
     chat_model = NULL,
     ...) {
-  if (is.null(chat_model)) {
-    stop("Define an ellmer chat model (e.g., chat_openai)")
-  }
-
-  chat_env <- new.env(parent = emptyenv())
-
-  if (is.function(chat_model)) {
-    chat_env$chat_model <- chat_model(...)
-  } else {
-    chat_env$chat_model <- chat_model
-  }
-
-  for (n in names(chat_env$chat_model)) {
-    chat_env[[n]] <- chat_env$chat_model[[n]]
-  }
-
-  chat_env$last_file <- NULL
+  validate_chat_model(chat_model)
+  
+  chat_env <- create_chat_env(chat_model, ...)
 
   chat_env$process <- function(prompts,
                                type = NULL,
@@ -73,11 +59,7 @@ chat_sequential <- function(
                                beep = TRUE,
                                echo = FALSE,
                                ...) {
-    if (is.null(chat_env$last_file)) {
-      chat_env$last_file <- file
-    } else {
-      file <- chat_env$last_file
-    }
+    file <- handle_file_persistence(chat_env, file)
 
     process.sequential_chat(
       chat_env = chat_env,
@@ -157,19 +139,7 @@ chat_future <- function(
     cli::cli_abort("Define an ellmer chat_model (e.g., chat_openai)")
   }
 
-  chat_env <- new.env(parent = emptyenv())
-
-  if (is.function(chat_model)) {
-    chat_env$chat_model <- chat_model(...)
-  } else {
-    chat_env$chat_model <- chat_model
-  }
-
-  for (n in names(chat_env$chat_model)) {
-    chat_env[[n]] <- chat_env$chat_model[[n]]
-  }
-
-  chat_env$last_file <- NULL
+  chat_env <- create_chat_env(chat_model, ...)
 
   chat_env$process <- function(prompts,
                                type = NULL,
@@ -181,11 +151,7 @@ chat_future <- function(
                                beep = TRUE,
                                echo = FALSE,
                                ...) {
-    if (is.null(chat_env$last_file)) {
-      chat_env$last_file <- file
-    } else {
-      file <- chat_env$last_file
-    }
+    file <- handle_file_persistence(chat_env, file)
 
     if (is.null(workers)) {
       if (length(prompts) <= parallel::detectCores()) {
