@@ -23,13 +23,7 @@ capture <- function(original_chat,
   structured_data <- NULL
   chat <- original_chat$clone()
 
-  if (is.character(prompt) && length(prompt) == 1) {
-    args <- list(prompt)
-  } else if (is.vector(prompt) && length(prompt) > 1) {
-    args <- as.list(prompt)
-  } else {
-    args <- list(prompt)
-  }
+  args <- as.list(prompt)
 
   chats_obj <- withCallingHandlers(
     {
