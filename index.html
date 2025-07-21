@@ -59,7 +59,7 @@
 </h1></div>
 <p><a href="https://CRAN.R-project.org/package=hellmer" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
 <p>chatalot synchronously processes a lot of large language model chats in R using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>.</p>
-<p>Easily setup sequential and parallel processing workflows with features including <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a>, <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>, save and resume, sound notifications, and more.</p>
+<p>Easily setup sequential and parallel processing workflows with features including mixed content (<a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">images</a> and <a href="https://ellmer.tidyverse.org/reference/content_pdf_file.html" class="external-link">PDFs</a>), <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a>, <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>, save and resume, sound notifications, and more.</p>
 <p>chatalot is similar to existing ellmer tools:</p>
 <ul>
 <li><p><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a> - Synchronously processes a lot of chats in parallel. This tool is simple and fast but has limited features with no option to save data and resume if interrupted.</p></li>
@@ -138,10 +138,37 @@
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
 </h2>
 <div class="section level3">
+<h3 id="mixed-content">Mixed Content<a class="anchor" aria-label="anchor" href="#mixed-content"></a>
+</h3>
+<p>Process prompts that combine text and content (e.g., <a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">images</a> and <a href="https://ellmer.tidyverse.org/reference/content_pdf_file.html" class="external-link">PDFs</a>) using ellmer content functions:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatalot/">chatalot</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">base_prompt</span> <span class="op">&lt;-</span> <span class="st">"What do you see in the image?"</span></span>
+<span><span class="va">complex_prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">base_prompt</span>, <span class="fu"><a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">content_image_url</a></span><span class="op">(</span><span class="st">"https://www.r-project.org/Rlogo.png"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">base_prompt</span>, <span class="fu"><a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">content_image_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"httr2.png"</span>, package <span class="op">=</span> <span class="st">"ellmer"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">complex_prompts</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">response</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; [1] "The image shows the logo for R, a programming language and software environment </span></span>
+<span><span class="co">#&gt; used for statistical computing and graphics, featuring a stylized blue \"R\" </span></span>
+<span><span class="co">#&gt; inside a gray oval or ring."</span></span>
+<span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt; [1] "The image shows a logo for \"httr2\" featuring a stylized red baseball batter</span></span>
+<span><span class="co">#&gt; silhouette on a dark blue hexagonal background."</span></span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="tool-calling">Tool Calling<a class="anchor" aria-label="anchor" href="#tool-calling"></a>
 </h3>
 <p>Register and use <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a> to let the LLM use R functions:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">weather</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  city <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Chicago"</span>, <span class="st">"New York"</span>, <span class="st">"Lisbon"</span><span class="op">)</span>,</span>
 <span>  raining <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Heavy"</span>, <span class="st">"None"</span>, <span class="st">"Overcast"</span><span class="op">)</span>,</span>
@@ -168,7 +195,7 @@
 <h3 id="structured-data-extraction">Structured Data Extraction<a class="anchor" aria-label="anchor" href="#structured-data-extraction"></a>
 </h3>
 <p>Extract <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data</a> using type specifications:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"I go by Alex. 42 years on this planet and counting."</span>,</span>
 <span>  <span class="st">"Pleased to meet you! I'm Jamal, age 27."</span>,</span>
@@ -199,7 +226,7 @@
 <h3 id="save-and-resume">Save and Resume<a class="anchor" aria-label="anchor" href="#save-and-resume"></a>
 </h3>
 <p>Progress is tracked in <code>response$progress()</code> and saved to an <code>.rds</code> file on the disk, which allows you to easily resume interrupted operations:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, file <span class="op">=</span> <span class="st">"chat.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>If <code>file</code> is not defined, a temporary file will be created by default.</p>
 </div>
@@ -207,14 +234,14 @@
 <h3 id="sound-notifications">Sound Notifications<a class="anchor" aria-label="anchor" href="#sound-notifications"></a>
 </h3>
 <p>Toggle sound notifications on completion, interruption, and error:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, beep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="verbosity-options">Verbosity Options<a class="anchor" aria-label="anchor" href="#verbosity-options"></a>
 </h3>
 <p>By default, the chat <code>echo</code> is set to <code>FALSE</code> to show a progress bar. However, you can still configure <code>echo</code> by first setting <code>progress</code> to <code>FALSE</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"What is R?"</span>,</span>
 <span>  <span class="st">"Explain base R versus tidyverse"</span></span>
