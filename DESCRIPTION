@@ -4,8 +4,8 @@ Version: 0.2.0
 Authors@R: 
     person("Dylan", "Pieper", , "dylanpieper@gmail.com", role = c("aut", "cre"))
 Description: Process a lot of large language model chats with 'ellmer'.
-    Provides both sequential and parallel processing of chat interactions
-    with features including tool calling and structured data extraction.
+    Provides both sequential and parallel chat processors with support 
+    for tool calling, structured data extraction, and uploaded content.
     Enables workflow persistence by saving data to the disk.
     Additional quality-of-life features include sound notifications and
     verbosity options. Parallel processing is implemented using 'future'.

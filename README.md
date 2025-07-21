@@ -4,13 +4,13 @@
 
 chatalot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org).
 
-Easily setup sequential and parallel processing workflows with mixed content ([images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)), [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), save and resume, sound notifications, and more.
+Easily setup sequential and parallel chat processors with support for [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), uploaded content ([images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)), save and resume, sound notifications, and more.
 
 chatalot is similar to existing ellmer tools:
 
--   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously processes a lot of chats in parallel. This tool is simple and fast but has limited features with no option to save data and resume if interrupted.
+-   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously process a lot of chats in parallel. No option to save data to disk and resume if interrupted, which is essential for big jobs.
 
--   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously batch processes a lot of chats from select providers. This tool is about 50% cheaper if you wait up to 24 hours for a response.
+-   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously process a lot of chats from select providers. Cost savings is about 50% if you wait up to 24 hours for a response.
 
 ## Installation
 
@@ -95,34 +95,6 @@ If using `length(prompts)`, be aware that data will not be saved to the disk unt
 
 ## Features
 
-### Mixed Content
-
-Process prompts that combine text and content (e.g., [images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)) using ellmer content functions:
-
-``` r
-library(chatalot)
-
-chat <- chat_sequential(openai)
-
-base_prompt <- "What do you see in the image?"
-complex_prompts <- list(
-  c(base_prompt, content_image_url("https://www.r-project.org/Rlogo.png")),
-  c(base_prompt, content_image_file(system.file("httr2.png", package = "ellmer")))
-)
-
-response <- chat$process(complex_prompts)
-
-response$texts()
-#> [[1]]
-#> [1] "The image shows the logo for R, a programming language and software environment 
-#> used for statistical computing and graphics, featuring a stylized blue \"R\" 
-#> inside a gray oval or ring."
-
-#> [[2]]
-#> [1] "The image shows a logo for \"httr2\" featuring a stylized red baseball batter
-#> silhouette on a dark blue hexagonal background."
-```
-
 ### Tool Calling
 
 Register and use [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html) to let the LLM use R functions:
@@ -181,6 +153,34 @@ response$texts()
 #> 4 Fatima  35
 #> 5 Robert  51
 #> 6  Kwame  50
+```
+
+### Uploaded Content
+
+Process prompts that with text and uploaded content (e.g., [images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)):
+
+``` r
+library(chatalot)
+
+chat <- chat_sequential(openai)
+
+base_prompt <- "What do you see in the image?"
+img_prompts <- list(
+  c(base_prompt, content_image_url("https://www.r-project.org/Rlogo.png")),
+  c(base_prompt, content_image_file(system.file("httr2.png", package = "ellmer")))
+)
+
+response <- chat$process(img_prompts)
+
+response$texts()
+#> [[1]]
+#> [1] "The image shows the logo for R, a programming language and software environment 
+#> used for statistical computing and graphics, featuring a stylized blue \"R\" 
+#> inside a gray oval or ring."
+
+#> [[2]]
+#> [1] "The image shows a logo for \"httr2\" featuring a stylized red baseball batter
+#> silhouette on a dark blue hexagonal background."
 ```
 
 ### Save and Resume
