@@ -111,10 +111,26 @@ process <- S7::new_class(
           return("must not be NULL or empty")
         }
 
-        if (!all(purrr::map_lgl(value, function(x) {
-          is.character(x) && nchar(x) > 0
-        }))) {
-          return("must be a list of non-empty character strings")
+        all_simple <- all(purrr::map_lgl(value, function(x) {
+          is.character(x) && length(x) == 1 && nchar(x) > 0
+        }))
+
+        if (all_simple) {
+          return(NULL)
+        }
+        all_valid <- all(purrr::map_lgl(value, function(x) {
+          if (is.character(x)) {
+            # Character vectors should have at least one non-empty element
+            return(length(x) > 0 && any(nchar(x) > 0))
+          } else if (is.vector(x) || is.list(x)) {
+            return(length(x) > 0)
+          } else {
+            return(TRUE)
+          }
+        }))
+
+        if (!all_valid) {
+          return("must be a list of valid prompts (character strings for simple prompts, or mixed content with ellmer functions for complex prompts)")
         }
 
         NULL
@@ -251,7 +267,6 @@ process <- S7::new_class(
 #' @keywords internal
 #' @noRd
 list_to_df <- function(x) {
-  # check if list structure is suitable for dataframe conversion
   if (is.list(x) &&
     all(sapply(x, is.list)) &&
     length(unique(lapply(x, names))) == 1) {

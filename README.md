@@ -4,7 +4,7 @@
 
 chatalot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org).
 
-Easily setup sequential and parallel processing workflows with features including [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), save and resume, sound notifications, and more.
+Easily setup sequential and parallel processing workflows with features including mixed content ([images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)), [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), save and resume, sound notifications, and more.
 
 chatalot is similar to existing ellmer tools:
 
@@ -94,6 +94,34 @@ response <- chat$process(
 If using `length(prompts)`, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
 
 ## Features
+
+### Mixed Content
+
+Process prompts that combine text and content (e.g., [images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)) using ellmer content functions:
+
+``` r
+library(chatalot)
+
+chat <- chat_sequential(openai)
+
+base_prompt <- "What do you see in the image?"
+complex_prompts <- list(
+  c(base_prompt, content_image_url("https://www.r-project.org/Rlogo.png")),
+  c(base_prompt, content_image_file(system.file("httr2.png", package = "ellmer")))
+)
+
+response <- chat$process(complex_prompts)
+
+response$texts()
+#> [[1]]
+#> [1] "The image shows the logo for R, a programming language and software environment 
+#> used for statistical computing and graphics, featuring a stylized blue \"R\" 
+#> inside a gray oval or ring."
+
+#> [[2]]
+#> [1] "The image shows a logo for \"httr2\" featuring a stylized red baseball batter
+#> silhouette on a dark blue hexagonal background."
+```
 
 ### Tool Calling
 

@@ -1,5 +1,8 @@
 # chatalot 0.2.0
 
+## New Features
+* Added support for prompts with mixed content (text, images, files) using ellmer content functions
+
 ## Internal Improvements
 * `$texts()` returns a data frame for structured data when possible
 * Added single retry for failed structured data extractions

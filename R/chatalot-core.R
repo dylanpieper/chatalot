@@ -23,16 +23,30 @@ capture <- function(original_chat,
   structured_data <- NULL
   chat <- original_chat$clone()
 
+  if (is.character(prompt) && length(prompt) == 1) {
+    args <- list(prompt)
+  } else if (is.vector(prompt) && length(prompt) > 1) {
+    args <- as.list(prompt)
+  } else {
+    args <- list(prompt)
+  }
+
   chats_obj <- withCallingHandlers(
     {
       if (!is.null(type)) {
-        structured_data <- chat$chat_structured(prompt, type = type, ...)
+        structured_data <- do.call(
+          chat$chat_structured,
+          c(args, list(type = type), list(...))
+        )
 
         if (is.null(structured_data)) {
           stop("Received NULL structured data extraction")
         }
       } else {
-        chat_response <- chat$chat(prompt, echo = echo, ...)
+        chat_response <- do.call(
+          chat$chat,
+          c(args, list(echo = echo), list(...))
+        )
 
         if (is.null(chat_response)) {
           stop("Received NULL chat response")
