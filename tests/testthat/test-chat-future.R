@@ -1,8 +1,8 @@
-test_that("chat_future initialization and result class works", {
+test_that("future_chat initialization and result class works", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
   skip_if(is_new_ellmer(), "New version of ellmer does not callback API keys in future")
 
-  chat <- chat_future(ellmer::chat_openai)
+  chat <- future_chat(ellmer::chat_openai)
   expect_true(inherits(chat, "Chat"))
   expect_true(inherits(chat, "R6"))
 
@@ -10,11 +10,11 @@ test_that("chat_future initialization and result class works", {
   expect_true(inherits(result$chats()[[1]], c("Chat", "R6")))
 })
 
-test_that("chat_future processes chunks correctly", {
+test_that("future_chat processes chunks correctly", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
   skip_if(is_new_ellmer(), "New version of ellmer does not callback API keys in future")
 
-  chat <- chat_future(ellmer::chat_openai)
+  chat <- future_chat(ellmer::chat_openai)
   result <- chat$process(get_test_prompts(2), workers = 1, chunk_size = 1, beep = FALSE)
 
   expect_type(result, "list")
@@ -23,11 +23,11 @@ test_that("chat_future processes chunks correctly", {
   expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
 })
 
-test_that("chat_future handles structured data extraction", {
+test_that("future_chat handles structured data extraction", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
   skip_if(is_new_ellmer(), "New version of ellmer does not callback API keys in future")
 
-  chat <- chat_future(ellmer::chat_openai)
+  chat <- future_chat(ellmer::chat_openai)
   prompts <- list(
     "I love this!",
     "This is terrible."
@@ -42,11 +42,11 @@ test_that("chat_future handles structured data extraction", {
 })
 
 
-test_that("chat_future works with tools", {
+test_that("future_chat works with tools", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
   skip_if(is_new_ellmer(), "New version of ellmer does not callback API keys in future")
 
-  chat <- chat_future(ellmer::chat_openai)
+  chat <- future_chat(ellmer::chat_openai)
   chat$register_tool(get_square_tool())
 
   result <- chat$process(
@@ -62,21 +62,21 @@ test_that("chat_future works with tools", {
   expect_equal(length(result$texts()), 2)
 })
 
-test_that("chat_future handles state persistence", {
+test_that("future_chat handles state persistence", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
   skip_if(is_new_ellmer(), "New version of ellmer does not callback API keys in future")
 
   temp_file <- tempfile(fileext = ".rds")
   on.exit(unlink(temp_file))
 
-  chat <- chat_future(ellmer::chat_openai)
+  chat <- future_chat(ellmer::chat_openai)
   result <- chat$process(get_test_prompts(1), workers = 1, file = temp_file, chunk_size = 1, beep = FALSE)
 
   expect_true(file.exists(temp_file))
   expect_equal(length(result$texts()), 1)
 })
 
-test_that("chat_future handles worker failures", {
+test_that("future_chat handles worker failures", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
   skip_if(is_new_ellmer(), "New version of ellmer does not callback API keys in future")
 
@@ -84,7 +84,7 @@ test_that("chat_future handles worker failures", {
   Sys.unsetenv("OPENAI_API_KEY")
   Sys.setenv(OPENAI_API_KEY = "invalid_key")
 
-  chat <- chat_future(ellmer::chat_openai)
+  chat <- future_chat(ellmer::chat_openai)
 
   on.exit({
     if (!is.na(original_key)) {
@@ -100,26 +100,26 @@ test_that("chat_future handles worker failures", {
   )
 })
 
-test_that("chat_future supports progress parameter", {
+test_that("future_chat supports progress parameter", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
   skip_if(is_new_ellmer(), "New version of ellmer does not callback API keys in future")
 
   # Test with progress = TRUE
-  chat <- chat_future(ellmer::chat_openai)
+  chat <- future_chat(ellmer::chat_openai)
   result <- chat$process(get_test_prompts(1), workers = 1, chunk_size = 1, progress = TRUE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
 
   # Test with progress = FALSE
-  chat <- chat_future(ellmer::chat_openai)
+  chat <- future_chat(ellmer::chat_openai)
   result <- chat$process(get_test_prompts(1), workers = 1, chunk_size = 1, progress = FALSE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
 })
 
-test_that("chat_future supports echo parameter and passes extra args", {
+test_that("future_chat supports echo parameter and passes extra args", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
   skip_if(is_new_ellmer(), "New version of ellmer does not callback API keys in future")
 
-  chat <- chat_future(ellmer::chat_openai)
+  chat <- future_chat(ellmer::chat_openai)
 
   # Test with echo = TRUE
   result <- chat$process(get_test_prompts(1), workers = 1, chunk_size = 1, progress = FALSE, echo = TRUE, beep = FALSE)

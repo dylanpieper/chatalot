@@ -16,7 +16,7 @@ process.sequential_chat(
 )
 }
 \arguments{
-\item{chat_env}{The chat environment from chat_sequential}
+\item{chat_env}{The chat environment from seq_chat}
 
 \item{prompts}{List of prompts to process}
 

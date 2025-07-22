@@ -4,11 +4,17 @@
 
 chatalot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org).
 
-Easily setup sequential and parallel chat processors with support for [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), uploaded content ([images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)), save and resume, sound notifications, and more.
+Easily setup sequential and parallel chat processors with support for [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), uploaded content (e.g., [images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)), save and resume, sound notifications, and more.
 
-**Why not use ellmer functions?**
+**When to use chatalot or ellmer functions?**
 
-ellmer does not have a sequential processing function, which can be useful when wanted to process chats slowly and check on them periodically, as each chat is saved to the disk and operations can safely be interrupted and resumed. chatlot also handles parallel processing with chunks as checkpoints, instead of risking everything on one massive parallel job as is done in [ellmer::parallel_chat()](#0).
+-   [chatlot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html): Use for low performance and high safety, as each chat is saved to the disk in sequence and operations can be interrupted and resumed (e.g., to check responses).
+
+-   [chatlot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Use for high performance and medium safety, as chats are saved to the disk in chunks as parallel job checkpoints.
+
+-   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Use for high performance and low safety, as you must be willing to risk everything on one large parallel job.
+
+-   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html): Use for cost savings (\~50%) if you can wait up to 24 hours for a response.
 
 ## Installation
 
@@ -42,7 +48,7 @@ Sequential processing requests one chat at a time. Sequential processing is slow
 ``` r
 library(chatalot)
 
-chat <- chat_sequential(openai)
+chat <- seq_chat(openai)
 
 prompts <- c(
   "What roles do people have in a castle?",
@@ -77,7 +83,7 @@ response$texts()
 Parallel processing requests multiple chats at a time across multiple R processes using [future](https://future.futureverse.org):
 
 ``` r
-chat <- chat_future(openai)
+chat <- future_chat(openai)
 ```
 
 Chats are distributed across the processes in chunks (default: process 10 prompts at a time). The chunk is a checkpoint for capturing the responses from the multiple R processes. Once a chunk is finished, the responses are saved to the disk. For the fastest processing, set `chunk_size` to the number of prompts:
@@ -160,7 +166,7 @@ Process prompts that with text and uploaded content (e.g., [images](https://ellm
 ``` r
 library(chatalot)
 
-chat <- chat_sequential(openai)
+chat <- seq_chat(openai)
 
 base_prompt <- "What do you see in the image?"
 img_prompts <- list(

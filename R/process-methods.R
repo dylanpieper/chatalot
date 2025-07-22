@@ -1,6 +1,6 @@
 #' Process a lot of prompts with a sequential chat
 #'
-#' @param chat_env The chat environment from chat_sequential
+#' @param chat_env The chat environment from seq_chat
 #' @param prompts List of prompts to process
 #' @param type Type specification for structured data extraction
 #' @param file Path to save state file (.rds)
@@ -33,7 +33,7 @@ process.sequential_chat <- function(chat_env,
 
 #' Process a lot of prompts with a parallel chat
 #'
-#' @param chat_env The chat environment from chat_future
+#' @param chat_env The chat environment from future_chat
 #' @param prompts List of prompts to process
 #' @param type Type specification for structured data extraction
 #' @param file Path to save state file

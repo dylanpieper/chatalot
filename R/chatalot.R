@@ -2,7 +2,7 @@
 #' @description
 #' Processes a lot of chat prompts one at a time in sequential order.
 #' Maintains state between runs and can resume interrupted processing.
-#' For parallel processing, use `chat_future()`.
+#' For parallel processing, use `future_chat()`.
 #'
 #' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
@@ -24,7 +24,7 @@
 #'
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create chat processor
-#' chat <- chat_sequential(chat_openai(system_prompt = "Reply concisely"))
+#' chat <- seq_chat(chat_openai(system_prompt = "Reply concisely"))
 #'
 #' # Process prompts
 #' response <- chat$process(
@@ -45,7 +45,7 @@
 #' # Check progress if interrupted
 #' response$progress()
 #' @export
-chat_sequential <- function(
+seq_chat <- function(
     chat_model = NULL,
     ...) {
   validate_chat_model(chat_model)
@@ -81,7 +81,7 @@ chat_sequential <- function(
 #' @description
 #' Processes a lot of chat prompts using parallel workers.
 #' Splits prompts into chunks for processing while maintaining state.
-#' For sequential processing, use `chat_sequential()`.
+#' For sequential processing, use `seq_chat()`.
 #'
 #' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
@@ -103,7 +103,7 @@ chat_sequential <- function(
 #'
 #' @examplesIf interactive() && ellmer::has_credentials("openai")
 #' # Create chat processor
-#' chat <- chat_future(chat_openai(system_prompt = "Reply concisely"))
+#' chat <- future_chat(chat_openai(system_prompt = "Reply concisely"))
 #'
 #' # Process prompts
 #' response <- chat$process(
@@ -123,14 +123,14 @@ chat_sequential <- function(
 #' # Check progress if interrupted
 #' response$progress()
 #' @export
-chat_future <- function(
+future_chat <- function(
     chat_model = NULL,
     ...) {
   if (is_new_ellmer()) {
     cli::cli_abort(c(
-      "`chat_future()` currently does not work in ellmer {packageVersion('ellmer')}",
+      "`future_chat()` currently does not work in ellmer {packageVersion('ellmer')}",
       "!" = "This issue is temporary and will be fixed in a future ellmer release",
-      "v" = "`chat_future()` will work if you install {.code pak::pak('ellmer@0.2.0')}",
+      "v" = "`future_chat()` will work if you install {.code pak::pak('ellmer@0.2.0')}",
       "!" = "Be aware that ellmer 0.2.0 exposes API keys in chat objects"
     ))
   }

@@ -1,7 +1,7 @@
-test_that("chat_sequential initialization and result class works", {
+test_that("seq_chat initialization and result class works", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
-  chat <- chat_sequential(ellmer::chat_openai)
+  chat <- seq_chat(ellmer::chat_openai)
   expect_true(inherits(chat, "Chat"))
   expect_true(inherits(chat, "R6"))
 
@@ -9,10 +9,10 @@ test_that("chat_sequential initialization and result class works", {
   expect_true(inherits(result$chats()[[1]], c("Chat", "R6")))
 })
 
-test_that("chat_sequential processes prompts correctly", {
+test_that("seq_chat processes prompts correctly", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
-  chat <- chat_sequential(ellmer::chat_openai)
+  chat <- seq_chat(ellmer::chat_openai)
   result <- chat$process(get_test_prompts(2), beep = FALSE)
 
   expect_type(result, "list")
@@ -21,10 +21,10 @@ test_that("chat_sequential processes prompts correctly", {
   expect_true(all(sapply(result$chats(), function(x) inherits(x, c("Chat", "R6")))))
 })
 
-test_that("chat_sequential handles structured data extraction", {
+test_that("seq_chat handles structured data extraction", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
-  chat <- chat_sequential(ellmer::chat_openai)
+  chat <- seq_chat(ellmer::chat_openai)
   prompts <- list(
     "I love this!",
     "This is terrible."
@@ -39,10 +39,10 @@ test_that("chat_sequential handles structured data extraction", {
 })
 
 
-test_that("chat_sequential works with tools", {
+test_that("seq_chat works with tools", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
-  chat <- chat_sequential(ellmer::chat_openai)
+  chat <- seq_chat(ellmer::chat_openai)
   chat$register_tool(get_square_tool())
 
   result <- chat$process(list(
@@ -53,37 +53,37 @@ test_that("chat_sequential works with tools", {
   expect_equal(length(result$texts()), 2)
 })
 
-test_that("chat_sequential handles state persistence", {
+test_that("seq_chat handles state persistence", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   temp_file <- tempfile(fileext = ".rds")
   on.exit(unlink(temp_file))
 
-  chat <- chat_sequential(ellmer::chat_openai)
+  chat <- seq_chat(ellmer::chat_openai)
   result <- chat$process(get_test_prompts(1), file = temp_file, beep = FALSE)
 
   expect_true(file.exists(temp_file))
   expect_equal(length(result$texts()), 1)
 })
 
-test_that("chat_sequential supports progress parameter", {
+test_that("seq_chat supports progress parameter", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   # Test with progress = TRUE
-  chat <- chat_sequential(ellmer::chat_openai)
+  chat <- seq_chat(ellmer::chat_openai)
   result <- chat$process(get_test_prompts(1), progress = TRUE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
 
   # Test with progress = FALSE
-  chat <- chat_sequential(ellmer::chat_openai)
+  chat <- seq_chat(ellmer::chat_openai)
   result <- chat$process(get_test_prompts(1), progress = FALSE, beep = FALSE)
   expect_equal(length(result$texts()), 1)
 })
 
-test_that("chat_sequential supports echo parameter and passes extra args", {
+test_that("seq_chat supports echo parameter and passes extra args", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
-  chat <- chat_sequential(ellmer::chat_openai)
+  chat <- seq_chat(ellmer::chat_openai)
 
   # Test with echo = TRUE
   result <- chat$process(get_test_prompts(1), progress = FALSE, echo = TRUE, beep = FALSE)
@@ -98,14 +98,14 @@ test_that("chat_sequential supports echo parameter and passes extra args", {
   expect_equal(length(result$texts()), 1)
 })
 
-test_that("chat_sequential handles errors gracefully", {
+test_that("seq_chat handles errors gracefully", {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 
   original_key <- Sys.getenv("OPENAI_API_KEY", unset = NA)
   Sys.unsetenv("OPENAI_API_KEY")
   Sys.setenv(OPENAI_API_KEY = "invalid_key")
 
-  chat <- chat_sequential(ellmer::chat_openai)
+  chat <- seq_chat(ellmer::chat_openai)
 
   on.exit({
     if (!is.na(original_key)) {

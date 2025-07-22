@@ -19,7 +19,7 @@ process.future_chat(
 )
 }
 \arguments{
-\item{chat_env}{The chat environment from chat_future}
+\item{chat_env}{The chat environment from future_chat}
 
 \item{prompts}{List of prompts to process}
 

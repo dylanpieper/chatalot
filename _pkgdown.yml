@@ -11,8 +11,8 @@ reference:
   - title: "Chat Processing"
     desc: "Functions for creating chat processors"
     contents:
-      - chat_sequential
-      - chat_future
+      - seq_chat
+      - future_chat
       
   - title: "Lot Processing"
     desc: "Methods for chat processors"

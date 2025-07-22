@@ -20,7 +20,7 @@ Extract chat objects from a process response
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Create a chat processor
-chat <- chat_sequential(chat_openai())
+chat <- seq_chat(chat_openai())
 
 # Process a batch of prompts
 response <- chat$process(list(
