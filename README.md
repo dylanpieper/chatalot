@@ -10,9 +10,9 @@ Easily setup sequential and parallel chat processors with support for [tool call
 
 -   [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html): Use for low performance and high safety, as each chat is saved to the disk in sequence and operations can be interrupted and resumed (e.g., to check responses).
 
--   [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Use for high performance and medium safety, as chats are saved to the disk in chunks as parallel job checkpoints (using [future](https://www.futureverse.org)).
+-   [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Use for high performance and medium safety, as chats are saved to the disk in chunks as parallel job checkpoints.
 
--   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Use for high performance and low safety, as you must be willing to risk everything on one large parallel job (using [mirai](https://mirai.r-lib.org)).
+-   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Use for high performance and low safety, as you must be willing to risk everything on one large parallel job.
 
 -   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html): Use for cost savings (\~50%) if you can wait up to 24 hours for a response.
 
@@ -35,7 +35,7 @@ usethis::edit_r_environ(scope = c("user", "project"))
 
 ## Basic Usage
 
-For the following examples, define a chat object to reuse:
+For the following examples, define a chat object:
 
 ``` r
 openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
@@ -43,7 +43,7 @@ openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
 
 ### Sequential Processing
 
-Sequential processing requests one chat at a time. Sequential processing is slow but safe, because you can save each response, one at a time:
+Process chats in sequence, or one at a time. Save responses to disk for each chat and resume interrupted processing from the last saved chat.
 
 ``` r
 library(chatalot)
@@ -86,7 +86,7 @@ Parallel processing requests multiple chats at a time across multiple R processe
 chat <- future_chat(openai)
 ```
 
-Chats are distributed across the processes in chunks (default: process 10 prompts at a time). The chunk is a checkpoint for capturing the responses from the multiple R processes. Once a chunk is finished, the responses are saved to the disk. For the fastest processing, set `chunk_size` to the number of prompts:
+Splits prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Saves chat data to disk between chunks and can resume interrupted processing from the last saved chunk. For the fastest processing, set `chunk_size` to the number of prompts:
 
 ``` r
 response <- chat$process(
@@ -189,7 +189,7 @@ response$texts()
 
 ### Save and Resume
 
-Progress is tracked in `response$progress()` and saved to an `.rds` file on the disk, which allows you to easily resume interrupted operations:
+Progress is tracked in `response$progress()` and saved to an `.rds` file on the disk, which allows you to resume interrupted operations from the last saved checkpoint:
 
 ``` r
 response <- chat$process(prompts, file = "chat.rds")

@@ -26,8 +26,9 @@ A process object (S7 class) containing
 }
 }
 \description{
-Processes a lot of chat prompts one at a time in sequential order.
-Maintains state between runs and can resume interrupted processing.
+Process a lot of chat prompts in sequence, one at a time.
+Save responses to disk for each chat
+and resume interrupted processing from the last saved chat.
 For parallel processing, use \code{future_chat()}.
 }
 \section{Process Method}{

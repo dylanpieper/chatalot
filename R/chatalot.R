@@ -1,7 +1,8 @@
 #' Process a lot of prompts in sequence
 #' @description
-#' Processes a lot of chat prompts one at a time in sequential order.
-#' Maintains state between runs and can resume interrupted processing.
+#' Process a lot of chat prompts in sequence, one at a time.
+#' Save responses to disk for each chat
+#' and resume interrupted processing from the last saved chat.
 #' For parallel processing, use `future_chat()`.
 #'
 #' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)
@@ -49,7 +50,7 @@ seq_chat <- function(
     chat_model = NULL,
     ...) {
   validate_chat_model(chat_model)
-  
+
   chat_env <- create_chat_env(chat_model, ...)
 
   chat_env$process <- function(prompts,
@@ -79,8 +80,11 @@ seq_chat <- function(
 
 #' Process a lot of prompts in parallel
 #' @description
-#' Processes a lot of chat prompts using parallel workers.
-#' Splits prompts into chunks for processing while maintaining state.
+#' Process a lot of chat prompts in parallel using multisession
+#' \href{https://www.futureverse.org}{future} workers.
+#' Split prompts into chunks to distribute across workers to process chats.
+#' Save chat data to disk between chunks
+#' and resume interrupted processing from the last saved chunk.
 #' For sequential processing, use `seq_chat()`.
 #'
 #' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)
