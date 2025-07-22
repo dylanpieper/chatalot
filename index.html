@@ -62,9 +62,9 @@
 <p>Easily setup sequential and parallel chat processors with support for <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a>, <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>, uploaded content (e.g., <a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">images</a> and <a href="https://ellmer.tidyverse.org/reference/content_pdf_file.html" class="external-link">PDFs</a>), save and resume, sound notifications, and more.</p>
 <p><strong>When to use chatalot or ellmer functions?</strong></p>
 <ul>
-<li><p><a href="https://dylanpieper.github.io/chatalot/reference/seq_chat.html">chatlot::seq_chat()</a>: Use for low performance and high safety, as each chat is saved to the disk in sequence and operations can be interrupted and resumed (e.g., to check responses).</p></li>
-<li><p><a href="https://dylanpieper.github.io/chatalot/reference/future_chat.html">chatlot::future_chat()</a>: Use for high performance and medium safety, as chats are saved to the disk in chunks as parallel job checkpoints.</p></li>
-<li><p><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a>: Use for high performance and low safety, as you must be willing to risk everything on one large parallel job.</p></li>
+<li><p><a href="https://dylanpieper.github.io/chatalot/reference/seq_chat.html">chatalot::seq_chat()</a>: Use for low performance and high safety, as each chat is saved to the disk in sequence and operations can be interrupted and resumed (e.g., to check responses).</p></li>
+<li><p><a href="https://dylanpieper.github.io/chatalot/reference/future_chat.html">chatalot::future_chat()</a>: Use for high performance and medium safety, as chats are saved to the disk in chunks as parallel job checkpoints (using <a href="https://www.futureverse.org" class="external-link">future</a>).</p></li>
+<li><p><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a>: Use for high performance and low safety, as you must be willing to risk everything on one large parallel job (using <a href="https://mirai.r-lib.org" class="external-link">mirai</a>).</p></li>
 <li><p><a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a>: Use for cost savings (~50%) if you can wait up to 24 hours for a response.</p></li>
 </ul>
 <div class="section level2">
