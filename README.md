@@ -6,11 +6,9 @@ chatalot synchronously processes a lot of large language model chats in R using 
 
 Easily setup sequential and parallel chat processors with support for [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), uploaded content ([images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)), save and resume, sound notifications, and more.
 
-chatalot is similar to existing ellmer tools:
+**Why not use ellmer functions?**
 
--   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) - Synchronously process a lot of chats in parallel. No option to save data to disk and resume if interrupted, which is essential for big jobs.
-
--   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) - Asynchronously process a lot of chats from select providers. Cost savings is about 50% if you wait up to 24 hours for a response.
+ellmer does not have a sequential processing function, which can be useful when wanted to process chats slowly and check on them periodically, as each chat is saved to the disk and operations can safely be interrupted and resumed. chatlot also handles parallel processing with chunks as checkpoints, instead of risking everything on one massive parallel job as is done in [ellmer::parallel_chat()](#0).
 
 ## Installation
 
