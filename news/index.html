@@ -50,8 +50,8 @@
 <code>$texts()</code> returns a data frame for structured data when possible</li>
 <li>Added single retry for failed structured data extractions</li>
 <li>Replaced progress bar percentage indicator (<code><a href="https://cli.r-lib.org/reference/progress-variables.html" class="external-link">cli::pb_percent</a></code>) to estimated time until completion (<code><a href="https://cli.r-lib.org/reference/progress-variables.html" class="external-link">cli::pb_eta</a></code>)</li>
-<li>For <code><a href="../reference/chat_future.html">chat_future()</a></code>, updated the default <code>chunk_size</code> to a fixed value of 10 prompts</li>
-<li>For <code><a href="../reference/chat_future.html">chat_future()</a></code>, detect ellmer &gt; 0.2.0 and abort due to API key redaction (temporary until callback is added)</li>
+<li>For <code><a href="../reference/future_chat.html">future_chat()</a></code>, updated the default <code>chunk_size</code> to a fixed value of 10 prompts</li>
+<li>For <code><a href="../reference/future_chat.html">future_chat()</a></code>, detect ellmer &gt; 0.2.0 and abort due to API key redaction (temporary until callback is added)</li>
 </ul></div>
 <div class="section level3">
 <h3 id="lifecycle-changes-0-2-0">Lifecycle changes<a class="anchor" aria-label="anchor" href="#lifecycle-changes-0-2-0"></a></h3>
@@ -64,6 +64,10 @@
 <code>state_path</code> is renamed to <code>file</code> for consistency/simplicity</li>
 <li>
 <code>type_spec</code> is renamed to <code>type</code> following the latest update to ellmer (0.1.1)</li>
+<li>
+<code><a href="../reference/seq_chat.html">seq_chat()</a></code> is renamed to <code><a href="../reference/seq_chat.html">seq_chat()</a></code> for brevity</li>
+<li>
+<code><a href="../reference/future_chat.html">future_chat()</a></code> is renamed to <code><a href="../reference/future_chat.html">future_chat()</a></code> for consistency with naming conventions</li>
 <li>Removed evaluation functionality because of poor performance</li>
 <li>Removed retry functionality in anticipation of robust changes to ellmer (development)</li>
 </ul></div>

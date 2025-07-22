@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Process a Lot of LLM Chats">
-<meta name="description" content="Process a lot of large language model chats with ellmer. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow persistence by saving data to the disk. Additional quality-of-life features include sound notifications and verbosity options. Parallel processing is implemented using future. Includes methods for retrieving responses (texts and chats) and progress.">
-<meta property="og:description" content="Process a lot of large language model chats with ellmer. Provides both sequential and parallel processing of chat interactions with features including tool calling and structured data extraction. Enables workflow persistence by saving data to the disk. Additional quality-of-life features include sound notifications and verbosity options. Parallel processing is implemented using future. Includes methods for retrieving responses (texts and chats) and progress.">
+<meta name="description" content="Process a lot of large language model chats with ellmer. Provides both sequential and parallel chat processors with support for tool calling, structured data extraction, and uploaded content. Enables workflow persistence by saving data to the disk. Additional quality-of-life features include sound notifications and verbosity options. Parallel processing is implemented using future. Includes methods for retrieving responses (texts and chats) and progress.">
+<meta property="og:description" content="Process a lot of large language model chats with ellmer. Provides both sequential and parallel chat processors with support for tool calling, structured data extraction, and uploaded content. Enables workflow persistence by saving data to the disk. Additional quality-of-life features include sound notifications and verbosity options. Parallel processing is implemented using future. Includes methods for retrieving responses (texts and chats) and progress.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -59,11 +59,13 @@
 </h1></div>
 <p><a href="https://CRAN.R-project.org/package=hellmer" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
 <p>chatalot synchronously processes a lot of large language model chats in R using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>.</p>
-<p>Easily setup sequential and parallel processing workflows with mixed content (<a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">images</a> and <a href="https://ellmer.tidyverse.org/reference/content_pdf_file.html" class="external-link">PDFs</a>), <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a>, <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>, save and resume, sound notifications, and more.</p>
-<p>chatalot is similar to existing ellmer tools:</p>
+<p>Easily setup sequential and parallel chat processors with support for <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a>, <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>, uploaded content (e.g., <a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">images</a> and <a href="https://ellmer.tidyverse.org/reference/content_pdf_file.html" class="external-link">PDFs</a>), save and resume, sound notifications, and more.</p>
+<p><strong>When to use chatalot or ellmer functions?</strong></p>
 <ul>
-<li><p><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a> - Synchronously processes a lot of chats in parallel. This tool is simple and fast but has limited features with no option to save data and resume if interrupted.</p></li>
-<li><p><a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a> - Asynchronously batch processes a lot of chats from select providers. This tool is about 50% cheaper if you wait up to 24 hours for a response.</p></li>
+<li><p><a href="https://dylanpieper.github.io/chatalot/reference/seq_chat.html">chatlot::seq_chat()</a>: Use for low performance and high safety, as each chat is saved to the disk in sequence and operations can be interrupted and resumed (e.g., to check responses).</p></li>
+<li><p><a href="https://dylanpieper.github.io/chatalot/reference/future_chat.html">chatlot::future_chat()</a>: Use for high performance and medium safety, as chats are saved to the disk in chunks as parallel job checkpoints.</p></li>
+<li><p><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a>: Use for high performance and low safety, as you must be willing to risk everything on one large parallel job.</p></li>
+<li><p><a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a>: Use for cost savings (~50%) if you can wait up to 24 hours for a response.</p></li>
 </ul>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -93,7 +95,7 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatalot/">chatalot</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span>
+<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/seq_chat.html">seq_chat</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"What roles do people have in a castle?"</span>,</span>
@@ -124,7 +126,7 @@
 </h3>
 <p>Parallel processing requests multiple chats at a time across multiple R processes using <a href="https://future.futureverse.org" class="external-link">future</a>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_future.html">chat_future</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/future_chat.html">future_chat</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span></code></pre></div>
 <p>Chats are distributed across the processes in chunks (default: process 10 prompts at a time). The chunk is a checkpoint for capturing the responses from the multiple R processes. Once a chunk is finished, the responses are saved to the disk. For the fastest processing, set <code>chunk_size</code> to the number of prompts:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span></span>
@@ -138,37 +140,10 @@
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
 </h2>
 <div class="section level3">
-<h3 id="mixed-content">Mixed Content<a class="anchor" aria-label="anchor" href="#mixed-content"></a>
-</h3>
-<p>Process prompts that combine text and content (e.g., <a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">images</a> and <a href="https://ellmer.tidyverse.org/reference/content_pdf_file.html" class="external-link">PDFs</a>) using ellmer content functions:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatalot/">chatalot</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chat_sequential.html">chat_sequential</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">base_prompt</span> <span class="op">&lt;-</span> <span class="st">"What do you see in the image?"</span></span>
-<span><span class="va">complex_prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">base_prompt</span>, <span class="fu"><a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">content_image_url</a></span><span class="op">(</span><span class="st">"https://www.r-project.org/Rlogo.png"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">base_prompt</span>, <span class="fu"><a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">content_image_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"httr2.png"</span>, package <span class="op">=</span> <span class="st">"ellmer"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">complex_prompts</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">response</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; [1] "The image shows the logo for R, a programming language and software environment </span></span>
-<span><span class="co">#&gt; used for statistical computing and graphics, featuring a stylized blue \"R\" </span></span>
-<span><span class="co">#&gt; inside a gray oval or ring."</span></span>
-<span></span>
-<span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; [1] "The image shows a logo for \"httr2\" featuring a stylized red baseball batter</span></span>
-<span><span class="co">#&gt; silhouette on a dark blue hexagonal background."</span></span></code></pre></div>
-</div>
-<div class="section level3">
 <h3 id="tool-calling">Tool Calling<a class="anchor" aria-label="anchor" href="#tool-calling"></a>
 </h3>
 <p>Register and use <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a> to let the LLM use R functions:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">weather</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  city <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Chicago"</span>, <span class="st">"New York"</span>, <span class="st">"Lisbon"</span><span class="op">)</span>,</span>
 <span>  raining <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Heavy"</span>, <span class="st">"None"</span>, <span class="st">"Overcast"</span><span class="op">)</span>,</span>
@@ -195,7 +170,7 @@
 <h3 id="structured-data-extraction">Structured Data Extraction<a class="anchor" aria-label="anchor" href="#structured-data-extraction"></a>
 </h3>
 <p>Extract <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data</a> using type specifications:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"I go by Alex. 42 years on this planet and counting."</span>,</span>
 <span>  <span class="st">"Pleased to meet you! I'm Jamal, age 27."</span>,</span>
@@ -221,6 +196,33 @@
 <span><span class="co">#&gt; 4 Fatima  35</span></span>
 <span><span class="co">#&gt; 5 Robert  51</span></span>
 <span><span class="co">#&gt; 6  Kwame  50</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="uploaded-content">Uploaded Content<a class="anchor" aria-label="anchor" href="#uploaded-content"></a>
+</h3>
+<p>Process prompts that with text and uploaded content (e.g., <a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">images</a> and <a href="https://ellmer.tidyverse.org/reference/content_pdf_file.html" class="external-link">PDFs</a>):</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatalot/">chatalot</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/seq_chat.html">seq_chat</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">base_prompt</span> <span class="op">&lt;-</span> <span class="st">"What do you see in the image?"</span></span>
+<span><span class="va">img_prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">base_prompt</span>, <span class="fu"><a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">content_image_url</a></span><span class="op">(</span><span class="st">"https://www.r-project.org/Rlogo.png"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">base_prompt</span>, <span class="fu"><a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">content_image_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"httr2.png"</span>, package <span class="op">=</span> <span class="st">"ellmer"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">img_prompts</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">response</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; [1] "The image shows the logo for R, a programming language and software environment </span></span>
+<span><span class="co">#&gt; used for statistical computing and graphics, featuring a stylized blue \"R\" </span></span>
+<span><span class="co">#&gt; inside a gray oval or ring."</span></span>
+<span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt; [1] "The image shows a logo for \"httr2\" featuring a stylized red baseball batter</span></span>
+<span><span class="co">#&gt; silhouette on a dark blue hexagonal background."</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="save-and-resume">Save and Resume<a class="anchor" aria-label="anchor" href="#save-and-resume"></a>
