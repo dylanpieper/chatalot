@@ -10,9 +10,9 @@ Easily setup sequential and parallel chat processors with support for [tool call
 
 -   [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html): Use for low performance and high safety, as each chat is saved to the disk in sequence and operations can be interrupted and resumed (e.g., to check responses).
 
--   [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Use for high performance and medium safety, as chats are saved to the disk in chunks as parallel job checkpoints.
+-   [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Use for high performance and medium safety, as chats are saved to the disk in chunks of parallel jobs.
 
--   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Use for high performance and low safety, as you must be willing to risk everything on one large parallel job.
+-   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Use for high performance and low safety, as you must be willing to risk everything on one large parallel job. Unlike chatalot, the function directly handles rate limits.
 
 -   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html): Use for cost savings (\~50%) if you can wait up to 24 hours for a response.
 
@@ -95,7 +95,7 @@ response <- chat$process(
 )
 ```
 
-If using `length(prompts)`, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
+If using `length(prompts)`, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost. You may also hit API rate limits (requests per minute), which chatalot does not handle directly and is better handled by [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html).
 
 ## Features
 
