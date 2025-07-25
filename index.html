@@ -58,8 +58,8 @@
 <div class="page-header"><h1 id="chatalot-">chatalot <img src="reference/figures/chatalot-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#chatalot-"></a>
 </h1></div>
 <p><a href="https://CRAN.R-project.org/package=hellmer" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
-<p>chatalot synchronously processes a lot of large language model chats in R using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>.</p>
-<p>Easily setup sequential and parallel chat processors with support for <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a>, <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>, uploaded content (e.g., <a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">images</a> and <a href="https://ellmer.tidyverse.org/reference/content_pdf_file.html" class="external-link">PDFs</a>), save and resume, sound notifications, and more.</p>
+<p>chatalot synchronously processes a lot of large language model chats in R as an extension of <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>.</p>
+<p>Easily setup sequential and parallel chat processors with support for <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a>, <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>, uploaded content, save and resume, sound notifications, and more.</p>
 <div class="section level2">
 <h2 id="chatalot-or-ellmer">
 <strong>chatalot or ellmer?</strong><a class="anchor" aria-label="anchor" href="#chatalot-or-ellmer"></a>
@@ -128,7 +128,7 @@
 <div class="section level3">
 <h3 id="sequential-processing">Sequential Processing<a class="anchor" aria-label="anchor" href="#sequential-processing"></a>
 </h3>
-<p>Process chats in sequence, or one at a time. Save responses to disk for each chat and resume interrupted processing from the last saved chat.</p>
+<p>Process chats in sequence, or one at a time. Save responses to disk for each chat and resume processing from the last saved chat.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatalot/">chatalot</a></span><span class="op">)</span></span>
 <span></span>
@@ -164,7 +164,7 @@
 <p>Parallel processing requests multiple chats at a time across multiple R processes using <a href="https://future.futureverse.org" class="external-link">future</a>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/future_chat.html">future_chat</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span></code></pre></div>
-<p>Splits prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Saves chat data to disk between chunks and can resume interrupted processing from the last saved chunk. For the fastest processing, set <code>chunk_size</code> to the number of prompts:</p>
+<p>Splits prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Saves chat data to disk between chunks and can resume processing from the last saved chunk. For the fastest processing, set <code>chunk_size</code> to the number of prompts:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>, </span>
@@ -264,10 +264,10 @@
 <div class="section level3">
 <h3 id="save-and-resume">Save and Resume<a class="anchor" aria-label="anchor" href="#save-and-resume"></a>
 </h3>
-<p>Progress is tracked in <code>response$progress()</code> and data is saved to an <code>.rds</code> file on the disk. If you interrupt the process (e.g., to check responses) or it errors or fails, you can simply call <code><a href="reference/process.html">process()</a></code> again to resume from the last saved chat:</p>
+<p>If you interrupt chat processing (e.g., to check responses) or experience an error, you can call <code><a href="reference/process.html">process()</a></code> again to resume from the last saved chat or chunk:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, file <span class="op">=</span> <span class="st">"chat.rds"</span><span class="op">)</span></span></code></pre></div>
-<p>If <code>file</code> is not defined, a temporary file will be created by default.</p>
+<p>If <code>file</code> is not defined, a temporary file will be created by default (<code>.rds</code>). Progress is tracked in <code>response$progress()</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="sound-notifications">Sound Notifications<a class="anchor" aria-label="anchor" href="#sound-notifications"></a>
@@ -304,11 +304,11 @@
 </h3>
 <ul>
 <li>
-<code><a href="reference/progress.html">progress()</a></code>: Returns processing status</li>
-<li>
 <code><a href="reference/texts.html">texts()</a></code>: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a <code>type</code> is provided, a list with one element for each prompt. When <code>type</code> is an consistent object, returns a data frame with one row for each prompt, and one column for each property.</li>
 <li>
 <code><a href="reference/chats.html">chats()</a></code>: Returns a list of chat objects</li>
+<li>
+<code><a href="reference/progress.html">progress()</a></code>: Returns processing status</li>
 </ul>
 </div>
 </div>
