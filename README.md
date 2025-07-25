@@ -1,4 +1,4 @@
-# chatalot <img src="man/figures/chatalot-hex.png" align="right" width="140"/>
+# chatalot <img src="man/figures/chatalot-hex.png" align="right" width="160"/>
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://CRAN.R-project.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
@@ -8,14 +8,14 @@ Easily setup sequential and parallel chat processors with support for [tool call
 
 ## **chatalot or ellmer?**
 
-chatalot prioritizes safety and recovery with rate limits handled reactively by retries. ellmer prioritizes speed and cost savings with rate limits handled proactively by monitoring and throttling requests.
+chatalot prioritizes safety and recovery, while ellmer prioritizes speed and cost savings.
 
 | Priority | Function | Description |
 |----------------------|----------------------|----------------------------|
 | 🛡️ **Safety first** | [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) | Each chat saved individually |
-| ⚡ **Speed + safety** | [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html) | Parallel processing with chunk saves |
-| 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | All-or-nothing parallel processing |
-| 💰 **Cost savings** | [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) | \~50% cheaper, up to 24hr delays |
+| ⚖️ **Speed + safety** | [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html) | Parallel processing with chunks of chats saved |
+| 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | All-or-nothing parallel processing; optimized for speed |
+| 💰 **Cost savings** | [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) | \~50% cheaper; up to 24hr delays |
 
 ## Installation
 
@@ -28,7 +28,7 @@ pak::pak("chatalot")
 
 ## Setup API Keys
 
-API keys allow access to chat models and are stored as environmental variables. I recommend the `usethis` package to setup API keys in your `.Renviron` such as `OPENAI_API_KEY=your-key`:
+API keys allow access to chat models and are stored as environmental variables. I recommend `usethis` to setup API keys in your `.Renviron` such as `OPENAI_API_KEY=your-key`:
 
 ``` r
 usethis::edit_r_environ(scope = c("user", "project"))
@@ -232,10 +232,16 @@ response <- chat$process(
 
 ### Methods
 
--   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a `type` is provided, a list with one element for each prompt. When `type` is an consistent object, returns a data frame with one row for each prompt, and one column for each property.
+-   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a `type` is provided, a list with one element for each prompt. When `type` is consistent, returns a data frame with one row for each prompt, and one column for each property.
 -   `chats()`: Returns a list of chat objects
 -   `progress()`: Returns processing status
 
 ## Extras
 
 -   [Batch and Compare the Similarity of LLM Responses in R](https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html) (Blog Post)
+-   Different functions handle API rate limits differently:
+    -   [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) and [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Allow rate limits to be exceeded and fallback on ellmer's retry mechanism (reactive)
+
+    -   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Throttles requests to prevent rate limits (proactive)
+
+    -   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html): Managed by the API provider
