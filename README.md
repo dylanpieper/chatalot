@@ -6,15 +6,16 @@ chatalot synchronously processes a lot of large language model chats in R using 
 
 Easily setup sequential and parallel chat processors with support for [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), uploaded content (e.g., [images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)), save and resume, sound notifications, and more.
 
-**When to use chatalot or ellmer?**
+## **chatalot or ellmer?**
 
--   [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html): Use for low performance and high safety, as each chat is saved to the disk in sequence.
+chatalot prioritizes safety and recovery with rate limits handled reactively by retries. ellmer prioritizes speed and cost efficiency with rate limits handled proactively by monitoring and throttling usage.
 
--   [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Use for high performance and medium safety, as chats are saved to the disk in chunks after being processed in parallel.
-
--   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Use for high performance and low safety, as you must be willing to risk everything on one large parallel job.
-
--   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html): Use for cost savings (\~50%) if you can wait up to 24 hours for a response.
+| Priority | Function | Description |
+|----------------------|----------------------|----------------------------|
+| 🛡️ **Safety first** | [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) | Each chat saved individually |
+| ⚡ **Speed + safety** | [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html) | Parallel processing with chunk saves |
+| 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | All-or-nothing parallel processing |
+| 💰 **Cost savings** | [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) | \~50% cheaper, up to 24hr delays |
 
 ## Installation
 
@@ -95,7 +96,7 @@ response <- chat$process(
 )
 ```
 
-If using `length(prompts)`, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost. You may also hit API rate limits (requests per minute), which chatalot does not handle directly and is better handled by [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html).
+If using `length(prompts)`, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
 
 ## Features
 
