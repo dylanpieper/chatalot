@@ -55,7 +55,7 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="chatalot-">chatalot <img src="reference/figures/chatalot-hex.png" align="right" width="140"><a class="anchor" aria-label="anchor" href="#chatalot-"></a>
+<div class="page-header"><h1 id="chatalot-">chatalot <img src="reference/figures/chatalot-hex.png" align="right" width="160"><a class="anchor" aria-label="anchor" href="#chatalot-"></a>
 </h1></div>
 <p><a href="https://CRAN.R-project.org/package=hellmer" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
 <p>chatalot synchronously processes a lot of large language model chats in R as an extension of <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>.</p>
@@ -64,7 +64,7 @@
 <h2 id="chatalot-or-ellmer">
 <strong>chatalot or ellmer?</strong><a class="anchor" aria-label="anchor" href="#chatalot-or-ellmer"></a>
 </h2>
-<p>chatalot prioritizes safety and recovery with rate limits handled reactively by retries. ellmer prioritizes speed and cost savings with rate limits handled proactively by monitoring and throttling requests.</p>
+<p>chatalot prioritizes safety and recovery, while ellmer prioritizes speed and cost savings.</p>
 <table class="table">
 <colgroup>
 <col width="30%">
@@ -84,22 +84,22 @@
 <td>Each chat saved individually</td>
 </tr>
 <tr class="even">
-<td>⚡ <strong>Speed + safety</strong>
+<td>⚖️ <strong>Speed + safety</strong>
 </td>
 <td><a href="https://dylanpieper.github.io/chatalot/reference/future_chat.html">chatalot::future_chat()</a></td>
-<td>Parallel processing with chunk saves</td>
+<td>Parallel processing with chunks of chats saved</td>
 </tr>
 <tr class="odd">
 <td>🚀 <strong>Maximum speed</strong>
 </td>
 <td><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a></td>
-<td>All-or-nothing parallel processing</td>
+<td>All-or-nothing parallel processing; optimized for speed</td>
 </tr>
 <tr class="even">
 <td>💰 <strong>Cost savings</strong>
 </td>
 <td><a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a></td>
-<td>~50% cheaper, up to 24hr delays</td>
+<td>~50% cheaper; up to 24hr delays</td>
 </tr>
 </tbody>
 </table>
@@ -115,7 +115,7 @@
 <div class="section level2">
 <h2 id="setup-api-keys">Setup API Keys<a class="anchor" aria-label="anchor" href="#setup-api-keys"></a>
 </h2>
-<p>API keys allow access to chat models and are stored as environmental variables. I recommend the <code>usethis</code> package to setup API keys in your <code>.Renviron</code> such as <code>OPENAI_API_KEY=your-key</code>:</p>
+<p>API keys allow access to chat models and are stored as environmental variables. I recommend <code>usethis</code> to setup API keys in your <code>.Renviron</code> such as <code>OPENAI_API_KEY=your-key</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu">edit_r_environ</span><span class="op">(</span>scope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"user"</span>, <span class="st">"project"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -304,7 +304,7 @@
 </h3>
 <ul>
 <li>
-<code><a href="reference/texts.html">texts()</a></code>: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a <code>type</code> is provided, a list with one element for each prompt. When <code>type</code> is an consistent object, returns a data frame with one row for each prompt, and one column for each property.</li>
+<code><a href="reference/texts.html">texts()</a></code>: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a <code>type</code> is provided, a list with one element for each prompt. When <code>type</code> is consistent, returns a data frame with one row for each prompt, and one column for each property.</li>
 <li>
 <code><a href="reference/chats.html">chats()</a></code>: Returns a list of chat objects</li>
 <li>
@@ -318,6 +318,13 @@
 <ul>
 <li>
 <a href="https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html" class="external-link">Batch and Compare the Similarity of LLM Responses in R</a> (Blog Post)</li>
+<li>Different functions handle API rate limits differently:
+<ul>
+<li><p><a href="https://dylanpieper.github.io/chatalot/reference/seq_chat.html">chatalot::seq_chat()</a> and <a href="https://dylanpieper.github.io/chatalot/reference/future_chat.html">chatalot::future_chat()</a>: Allow rate limits to be exceeded and fallback on ellmer’s retry mechanism (reactive)</p></li>
+<li><p><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a>: Throttles requests to prevent rate limits (proactive)</p></li>
+<li><p><a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a>: Managed by the API provider</p></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
