@@ -8,7 +8,7 @@ Easily setup sequential and parallel chat processors with support for [tool call
 
 ## **chatalot or ellmer?**
 
-chatalot prioritizes safety and recovery with rate limits handled reactively by retries. ellmer prioritizes speed and cost efficiency with rate limits handled proactively by monitoring and throttling usage.
+chatalot prioritizes safety and recovery with rate limits handled reactively by retries. ellmer prioritizes speed and cost savings with rate limits handled proactively by monitoring and throttling requests.
 
 | Priority | Function | Description |
 |----------------------|----------------------|----------------------------|
