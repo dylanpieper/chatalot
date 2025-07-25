@@ -60,13 +60,50 @@
 <p><a href="https://CRAN.R-project.org/package=hellmer" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
 <p>chatalot synchronously processes a lot of large language model chats in R using <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>.</p>
 <p>Easily setup sequential and parallel chat processors with support for <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a>, <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>, uploaded content (e.g., <a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">images</a> and <a href="https://ellmer.tidyverse.org/reference/content_pdf_file.html" class="external-link">PDFs</a>), save and resume, sound notifications, and more.</p>
-<p><strong>When to use chatalot or ellmer functions?</strong></p>
-<ul>
-<li><p><a href="https://dylanpieper.github.io/chatalot/reference/seq_chat.html">chatalot::seq_chat()</a>: Use for low performance and high safety, as each chat is saved to the disk in sequence and operations can be interrupted and resumed (e.g., to check responses).</p></li>
-<li><p><a href="https://dylanpieper.github.io/chatalot/reference/future_chat.html">chatalot::future_chat()</a>: Use for high performance and medium safety, as chats are saved to the disk in chunks as parallel job checkpoints (using <a href="https://www.futureverse.org" class="external-link">future</a>).</p></li>
-<li><p><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a>: Use for high performance and low safety, as you must be willing to risk everything on one large parallel job (using <a href="https://mirai.r-lib.org" class="external-link">mirai</a>).</p></li>
-<li><p><a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a>: Use for cost savings (~50%) if you can wait up to 24 hours for a response.</p></li>
-</ul>
+<div class="section level2">
+<h2 id="chatalot-or-ellmer">
+<strong>chatalot or ellmer?</strong><a class="anchor" aria-label="anchor" href="#chatalot-or-ellmer"></a>
+</h2>
+<p>chatalot prioritizes safety and recovery with rate limits handled reactively by retries. ellmer prioritizes speed and cost savings with rate limits handled proactively by monitoring and throttling requests.</p>
+<table class="table">
+<colgroup>
+<col width="30%">
+<col width="30%">
+<col width="38%">
+</colgroup>
+<thead><tr class="header">
+<th>Priority</th>
+<th>Function</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>🛡️ <strong>Safety first</strong>
+</td>
+<td><a href="https://dylanpieper.github.io/chatalot/reference/seq_chat.html">chatalot::seq_chat()</a></td>
+<td>Each chat saved individually</td>
+</tr>
+<tr class="even">
+<td>⚡ <strong>Speed + safety</strong>
+</td>
+<td><a href="https://dylanpieper.github.io/chatalot/reference/future_chat.html">chatalot::future_chat()</a></td>
+<td>Parallel processing with chunk saves</td>
+</tr>
+<tr class="odd">
+<td>🚀 <strong>Maximum speed</strong>
+</td>
+<td><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a></td>
+<td>All-or-nothing parallel processing</td>
+</tr>
+<tr class="even">
+<td>💰 <strong>Cost savings</strong>
+</td>
+<td><a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a></td>
+<td>~50% cheaper, up to 24hr delays</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -85,13 +122,13 @@
 <div class="section level2">
 <h2 id="basic-usage">Basic Usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
 </h2>
-<p>For the following examples, define a chat object to reuse:</p>
+<p>For the following examples, define a chat object:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">openai</span> <span class="op">&lt;-</span> <span class="fu">chat_openai</span><span class="op">(</span>system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="sequential-processing">Sequential Processing<a class="anchor" aria-label="anchor" href="#sequential-processing"></a>
 </h3>
-<p>Sequential processing requests one chat at a time. Sequential processing is slow but safe, because you can save each response, one at a time:</p>
+<p>Process chats in sequence, or one at a time. Save responses to disk for each chat and resume interrupted processing from the last saved chat.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatalot/">chatalot</a></span><span class="op">)</span></span>
 <span></span>
@@ -127,7 +164,7 @@
 <p>Parallel processing requests multiple chats at a time across multiple R processes using <a href="https://future.futureverse.org" class="external-link">future</a>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/future_chat.html">future_chat</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span></code></pre></div>
-<p>Chats are distributed across the processes in chunks (default: process 10 prompts at a time). The chunk is a checkpoint for capturing the responses from the multiple R processes. Once a chunk is finished, the responses are saved to the disk. For the fastest processing, set <code>chunk_size</code> to the number of prompts:</p>
+<p>Splits prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Saves chat data to disk between chunks and can resume interrupted processing from the last saved chunk. For the fastest processing, set <code>chunk_size</code> to the number of prompts:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span></span>
 <span>  <span class="va">prompts</span>, </span>
@@ -227,7 +264,7 @@
 <div class="section level3">
 <h3 id="save-and-resume">Save and Resume<a class="anchor" aria-label="anchor" href="#save-and-resume"></a>
 </h3>
-<p>Progress is tracked in <code>response$progress()</code> and saved to an <code>.rds</code> file on the disk, which allows you to easily resume interrupted operations:</p>
+<p>Progress is tracked in <code>response$progress()</code> and data is saved to an <code>.rds</code> file on the disk. If you interrupt the process (e.g., to check responses) or it errors or fails, you can simply call <code><a href="reference/process.html">process()</a></code> again to resume from the last saved chat:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, file <span class="op">=</span> <span class="st">"chat.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>If <code>file</code> is not defined, a temporary file will be created by default.</p>
