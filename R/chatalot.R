@@ -1,8 +1,8 @@
 #' Process a lot of prompts in sequence
 #' @description
-#' Process a lot of chat prompts in sequence, one at a time.
+#' Process a lot of chat prompts in sequence, or one at a time.
 #' Save responses to disk for each chat
-#' and resume interrupted processing from the last saved chat.
+#' and resume processing from the last saved chat.
 #' For parallel processing, use `future_chat()`.
 #'
 #' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)
@@ -84,7 +84,7 @@ seq_chat <- function(
 #' \href{https://www.futureverse.org}{future} workers.
 #' Split prompts into chunks to distribute across workers to process chats.
 #' Save chat data to disk between chunks
-#' and resume interrupted processing from the last saved chunk.
+#' and resume processing from the last saved chunk.
 #' For sequential processing, use `seq_chat()`.
 #'
 #' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)

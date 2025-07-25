@@ -2,9 +2,9 @@
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://CRAN.R-project.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-chatalot synchronously processes a lot of large language model chats in R using [ellmer](https://ellmer.tidyverse.org).
+chatalot synchronously processes a lot of large language model chats in R as an extension of [ellmer](https://ellmer.tidyverse.org).
 
-Easily setup sequential and parallel chat processors with support for [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), uploaded content (e.g., [images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)), save and resume, sound notifications, and more.
+Easily setup sequential and parallel chat processors with support for [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), uploaded content, save and resume, sound notifications, and more.
 
 ## **chatalot or ellmer?**
 
@@ -44,7 +44,7 @@ openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
 
 ### Sequential Processing
 
-Process chats in sequence, or one at a time. Save responses to disk for each chat and resume interrupted processing from the last saved chat.
+Process chats in sequence, or one at a time. Save responses to disk for each chat and resume processing from the last saved chat.
 
 ``` r
 library(chatalot)
@@ -87,7 +87,7 @@ Parallel processing requests multiple chats at a time across multiple R processe
 chat <- future_chat(openai)
 ```
 
-Splits prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Saves chat data to disk between chunks and can resume interrupted processing from the last saved chunk. For the fastest processing, set `chunk_size` to the number of prompts:
+Splits prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Saves chat data to disk between chunks and can resume processing from the last saved chunk. For the fastest processing, set `chunk_size` to the number of prompts:
 
 ``` r
 response <- chat$process(
@@ -190,13 +190,13 @@ response$texts()
 
 ### Save and Resume
 
-Progress is tracked in `response$progress()` and data is saved to an `.rds` file on the disk. If you interrupt the process (e.g., to check responses) or it errors or fails, you can simply call `process()` again to resume from the last saved chat:
+If you interrupt chat processing (e.g., to check responses) or experience an error, you can call `process()` again to resume from the last saved chat or chunk:
 
 ``` r
 response <- chat$process(prompts, file = "chat.rds")
 ```
 
-If `file` is not defined, a temporary file will be created by default.
+If `file` is not defined, a temporary file will be created by default (`.rds`). Progress is tracked in `response$progress()`.
 
 ### Sound Notifications
 
@@ -232,9 +232,9 @@ response <- chat$process(
 
 ### Methods
 
--   `progress()`: Returns processing status
 -   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a `type` is provided, a list with one element for each prompt. When `type` is an consistent object, returns a data frame with one row for each prompt, and one column for each property.
 -   `chats()`: Returns a list of chat objects
+-   `progress()`: Returns processing status
 
 ## Extras
 

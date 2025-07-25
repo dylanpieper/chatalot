@@ -30,7 +30,7 @@ Process a lot of chat prompts in parallel using multisession
 \href{https://www.futureverse.org}{future} workers.
 Split prompts into chunks to distribute across workers to process chats.
 Save chat data to disk between chunks
-and resume interrupted processing from the last saved chunk.
+and resume processing from the last saved chunk.
 For sequential processing, use \code{seq_chat()}.
 }
 \section{Process Method}{
