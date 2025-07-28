@@ -74,7 +74,7 @@ process_sequential <- function(
   if (file.exists(file)) {
     chats_obj <- readRDS(file)
     if (!identical(as.list(prompts), chats_obj@prompts)) {
-      cli::cli_alert_warning("Prompts don't match saved state. Starting fresh.")
+      cli::cli_alert_warning("Prompts don't match file. Starting fresh.")
       unlink(file)
       chats_obj <- NULL
     }
@@ -231,7 +231,7 @@ process_future <- function(
   if (file.exists(file)) {
     chats_obj <- readRDS(file)
     if (!identical(prompts_list, chats_obj@prompts)) {
-      cli::cli_alert_warning("Prompts don't match saved state. Starting fresh.")
+      cli::cli_alert_warning("Prompts don't match file. Starting fresh.")
       unlink(file)
       chats_obj <- NULL
     }
@@ -291,7 +291,7 @@ process_future <- function(
 
       while (!success && retry_count < max_chunk_tries) {
         retry_count <- retry_count + 1
-        
+
         tool_globals <- list()
         if (is.environment(chat_obj) && exists("deferred_tools", envir = chat_obj) && length(chat_obj$deferred_tools) > 0) {
           for (tool_with_data in chat_obj$deferred_tools) {
@@ -300,18 +300,18 @@ process_future <- function(
             }
           }
         }
-        
+
         if (is.environment(chat_obj) && exists("chat_model_name", envir = chat_obj)) {
           worker_chat <- if (is.character(chat_obj$chat_model_name)) {
             constructed_chat <- do.call(ellmer::chat, c(list(chat_obj$chat_model_name), chat_obj$chat_model_args))
-            
+
             if (exists("deferred_tools", envir = chat_obj) && length(chat_obj$deferred_tools) > 0) {
               for (tool_with_data in chat_obj$deferred_tools) {
                 tool <- tool_with_data$tool
                 constructed_chat$register_tool(tool)
               }
             }
-            
+
             constructed_chat
           } else {
             stop("Invalid deferred chat construction")
@@ -333,14 +333,14 @@ process_future <- function(
                         if (is.environment(chat_obj) && exists("chat_model_name", envir = chat_obj)) {
                           worker_chat_inner <- if (is.character(chat_obj$chat_model_name)) {
                             constructed_chat <- do.call(ellmer::chat, c(list(chat_obj$chat_model_name), chat_obj$chat_model_args))
-                            
+
                             if (exists("deferred_tools", envir = chat_obj) && length(chat_obj$deferred_tools) > 0) {
                               for (tool_with_data in chat_obj$deferred_tools) {
                                 tool <- tool_with_data$tool
                                 constructed_chat$register_tool(tool)
                               }
                             }
-                            
+
                             constructed_chat
                           } else {
                             stop("Invalid deferred chat construction")
@@ -348,7 +348,7 @@ process_future <- function(
                         } else {
                           worker_chat_inner <- worker_chat
                         }
-                        
+
                         capture_future(
                           worker_chat_inner,
                           prompt,
@@ -513,7 +513,7 @@ process_chunks <- function(chunks,
             } else {
               worker_chat <- chat_obj$clone()
             }
-            
+
             capture_future(
               worker_chat,
               prompt,
