@@ -39,6 +39,7 @@ jobs:
             any::remotes
             any::devtools
             any::testthat
+            any::magick
           needs: check
       
       - name: Install package
