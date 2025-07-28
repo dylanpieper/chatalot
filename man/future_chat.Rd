@@ -7,7 +7,8 @@
 future_chat(chat_model = NULL, ...)
 }
 \arguments{
-\item{chat_model}{ellmer chat model object or function (e.g., \code{chat_openai()})}
+\item{chat_model}{Character string specifying the chat model to use (e.g., "openai/gpt-4.1", "anthropic/claude-3-5-sonnet-latest").
+This creates an ellmer chat object using \code{\link[ellmer:chat-any]{ellmer::chat()}}.}
 
 \item{...}{Additional arguments passed to the underlying chat model (e.g., \code{system_prompt})}
 }

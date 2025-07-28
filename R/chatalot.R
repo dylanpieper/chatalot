@@ -5,7 +5,8 @@
 #' and resume processing from the last saved chat.
 #' For parallel processing, use `future_chat()`.
 #'
-#' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)
+#' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1", "anthropic/claude-3-5-sonnet-latest").
+#'   This creates an ellmer chat object using [ellmer::chat()].
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
 #' @return A process object (S7 class) containing
 #'   \itemize{
@@ -93,7 +94,8 @@ seq_chat <- function(
 #' and resume processing from the last saved chunk.
 #' For sequential processing, use `seq_chat()`.
 #'
-#' @param chat_model ellmer chat model object or function (e.g., `chat_openai()`)
+#' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1", "anthropic/claude-3-5-sonnet-latest").
+#'   This creates an ellmer chat object using [ellmer::chat()].
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
 #' @return A process object (S7 class) containing:
 #'   \itemize{
