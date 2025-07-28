@@ -93,7 +93,7 @@
 <td>🚀 <strong>Maximum speed</strong>
 </td>
 <td><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a></td>
-<td>All-or-nothing parallel processing; optimized for speed</td>
+<td>All-or-nothing parallel processing</td>
 </tr>
 <tr class="even">
 <td>💰 <strong>Cost savings</strong>
@@ -122,17 +122,14 @@
 <div class="section level2">
 <h2 id="basic-usage">Basic Usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
 </h2>
-<p>For the following examples, define a chat object:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">openai</span> <span class="op">&lt;-</span> <span class="fu">chat_openai</span><span class="op">(</span>system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="sequential-processing">Sequential Processing<a class="anchor" aria-label="anchor" href="#sequential-processing"></a>
 </h3>
 <p>Process chats in sequence, or one at a time. Save responses to disk for each chat and resume processing from the last saved chat.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatalot/">chatalot</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/seq_chat.html">seq_chat</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span>
+<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/seq_chat.html">seq_chat</a></span><span class="op">(</span><span class="st">"openai/gpt-4.1"</span>, system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"What roles do people have in a castle?"</span>,</span>
@@ -143,7 +140,7 @@
 <span></span>
 <span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span></code></pre></div>
 <p>Access the responses:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "In a castle, people served as rulers, warriors, administrators, </span></span>
 <span><span class="co">#&gt; craftsmen, and servants who managed its defense, governance, and daily upkeep."</span></span>
@@ -162,14 +159,11 @@
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
 <p>Parallel processing requests multiple chats at a time across multiple R processes using <a href="https://future.futureverse.org" class="external-link">future</a>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/future_chat.html">future_chat</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/future_chat.html">future_chat</a></span><span class="op">(</span><span class="st">"openai/gpt-4.1"</span>, system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span></code></pre></div>
 <p>Splits prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Saves chat data to disk between chunks and can resume processing from the last saved chunk. For the fastest processing, set <code>chunk_size</code> to the number of prompts:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span></span>
-<span>  <span class="va">prompts</span>, </span>
-<span>  chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>If using <code>length(prompts)</code>, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.</p>
 </div>
 </div>
@@ -180,7 +174,7 @@
 <h3 id="tool-calling">Tool Calling<a class="anchor" aria-label="anchor" href="#tool-calling"></a>
 </h3>
 <p>Register and use <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a> to let the LLM use R functions:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">weather</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  city <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Chicago"</span>, <span class="st">"New York"</span>, <span class="st">"Lisbon"</span><span class="op">)</span>,</span>
 <span>  raining <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Heavy"</span>, <span class="st">"None"</span>, <span class="st">"Overcast"</span><span class="op">)</span>,</span>
@@ -188,13 +182,15 @@
 <span>  wind <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Strong"</span>, <span class="st">"Weak"</span>, <span class="st">"Strong"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">get_weather</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">cities</span><span class="op">)</span> <span class="va">weather</span><span class="op">[</span><span class="va">weather</span><span class="op">$</span><span class="va">city</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">cities</span>, <span class="op">]</span></span>
+<span><span class="va">get_weather</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/tool.html" class="external-link">tool</a></span><span class="op">(</span></span>
+<span>  <span class="kw">function</span><span class="op">(</span><span class="va">cities</span><span class="op">)</span> <span class="va">weather</span><span class="op">[</span><span class="va">weather</span><span class="op">$</span><span class="va">city</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">cities</span>, <span class="op">]</span>,</span>
+<span>  description <span class="op">=</span> <span class="st">"Report on weather conditions."</span>,</span>
+<span>  arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    cities <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_array</a></span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_string</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"City names"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">chat</span><span class="op">$</span><span class="fu">register_tool</span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/tool.html" class="external-link">tool</a></span><span class="op">(</span></span>
-<span>  <span class="va">get_weather</span>,</span>
-<span>  <span class="st">"Report on weather conditions."</span>,</span>
-<span>  cities <span class="op">=</span> <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_array</a></span><span class="op">(</span><span class="st">"City names"</span>, <span class="fu"><a href="https://ellmer.tidyverse.org/reference/type_boolean.html" class="external-link">type_string</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">chat</span><span class="op">$</span><span class="fu">register_tool</span><span class="op">(</span><span class="va">get_weather</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="fu"><a href="https://ellmer.tidyverse.org/reference/interpolate.html" class="external-link">interpolate</a></span><span class="op">(</span><span class="st">"Brief weather update for {{weather$city}}?"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -207,7 +203,7 @@
 <h3 id="structured-data-extraction">Structured Data Extraction<a class="anchor" aria-label="anchor" href="#structured-data-extraction"></a>
 </h3>
 <p>Extract <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data</a> using type specifications:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"I go by Alex. 42 years on this planet and counting."</span>,</span>
 <span>  <span class="st">"Pleased to meet you! I'm Jamal, age 27."</span>,</span>
@@ -238,12 +234,8 @@
 <h3 id="uploaded-content">Uploaded Content<a class="anchor" aria-label="anchor" href="#uploaded-content"></a>
 </h3>
 <p>Process prompts that with text and uploaded content (e.g., <a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">images</a> and <a href="https://ellmer.tidyverse.org/reference/content_pdf_file.html" class="external-link">PDFs</a>):</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatalot/">chatalot</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/seq_chat.html">seq_chat</a></span><span class="op">(</span><span class="va">openai</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">base_prompt</span> <span class="op">&lt;-</span> <span class="st">"What do you see in the image?"</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">base_prompt</span> <span class="op">&lt;-</span> <span class="st">"What do you see in the image?"</span></span>
 <span><span class="va">img_prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">base_prompt</span>, <span class="fu"><a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">content_image_url</a></span><span class="op">(</span><span class="st">"https://www.r-project.org/Rlogo.png"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">base_prompt</span>, <span class="fu"><a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">content_image_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"httr2.png"</span>, package <span class="op">=</span> <span class="st">"ellmer"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -265,32 +257,28 @@
 <h3 id="save-and-resume">Save and Resume<a class="anchor" aria-label="anchor" href="#save-and-resume"></a>
 </h3>
 <p>If you interrupt chat processing (e.g., to check responses) or experience an error, you can call <code><a href="reference/process.html">process()</a></code> again to resume from the last saved chat or chunk:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, file <span class="op">=</span> <span class="st">"chat.rds"</span><span class="op">)</span></span></code></pre></div>
-<p>If <code>file</code> is not defined, a temporary file will be created by default (<code>.rds</code>). Progress is tracked in <code>response$progress()</code>.</p>
+<p>If <code>file</code> is not defined, a temporary <code>.rds</code> file will be created by default.</p>
 </div>
 <div class="section level3">
 <h3 id="sound-notifications">Sound Notifications<a class="anchor" aria-label="anchor" href="#sound-notifications"></a>
 </h3>
 <p>Toggle sound notifications on completion, interruption, and error:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, beep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="verbosity-options">Verbosity Options<a class="anchor" aria-label="anchor" href="#verbosity-options"></a>
 </h3>
 <p>By default, the chat <code>echo</code> is set to <code>FALSE</code> to show a progress bar. However, you can still configure <code>echo</code> by first setting <code>progress</code> to <code>FALSE</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"What is R?"</span>,</span>
 <span>  <span class="st">"Explain base R versus tidyverse"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span></span>
-<span>  <span class="va">prompts</span>,</span>
-<span>  progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  echo <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
+<span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, progress <span class="op">=</span> <span class="cn">FALSE</span>, echo <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R is a programming language and software environment used for </span></span>
 <span><span class="co">#&gt; statistical computing and graphics.</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -313,18 +301,21 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="extras">Extras<a class="anchor" aria-label="anchor" href="#extras"></a>
+<h2 id="tidbits">Tidbits<a class="anchor" aria-label="anchor" href="#tidbits"></a>
 </h2>
 <ul>
-<li>
-<a href="https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html" class="external-link">Batch and Compare the Similarity of LLM Responses in R</a> (Blog Post)</li>
-<li>Different functions handle API rate limits differently:
+<li>Functions handle API rate limits differently:
 <ul>
-<li><p><a href="https://dylanpieper.github.io/chatalot/reference/seq_chat.html">chatalot::seq_chat()</a> and <a href="https://dylanpieper.github.io/chatalot/reference/future_chat.html">chatalot::future_chat()</a>: Allow rate limits to be exceeded and fallback on ellmer’s retry mechanism (reactive)</p></li>
-<li><p><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a>: Throttles requests to prevent rate limits (proactive)</p></li>
-<li><p><a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a>: Managed by the API provider</p></li>
+<li>
+<a href="https://dylanpieper.github.io/chatalot/reference/seq_chat.html">chatalot::seq_chat()</a> and <a href="https://dylanpieper.github.io/chatalot/reference/future_chat.html">chatalot::future_chat()</a>: Allow rate limits to be exceeded and fallback on ellmer’s retry mechanism (reactive)</li>
+<li>
+<a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a>: Throttles requests to prevent rate limits (proactive)</li>
+<li>
+<a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a>: Managed by the API provider</li>
 </ul>
 </li>
+<li>
+<a href="https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html" class="external-link">Batch and Compare the Similarity of LLM Responses in R</a> (Blog Post)</li>
 </ul>
 </div>
 </div>
