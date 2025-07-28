@@ -5,7 +5,7 @@
 #' @return A character vector or list of text responses. If a type specification is provided to the batch, return structured data.
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create a chat processor
-#' chat <- seq_chat(chat_openai())
+#' chat <- seq_chat("openai/gpt-4.1")
 #'
 #' # Process a batch of prompts
 #' response <- chat$process(list(
@@ -26,7 +26,7 @@ texts <- S7::new_generic("texts", "x")
 #' @return A list of chat objects
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create a chat processor
-#' chat <- seq_chat(chat_openai())
+#' chat <- seq_chat("openai/gpt-4.1")
 #'
 #' # Process a batch of prompts
 #' response <- chat$process(list(
@@ -47,7 +47,7 @@ chats <- S7::new_generic("chats", "x")
 #' @return A list containing progress details
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create a chat processor
-#' chat <- seq_chat(chat_openai())
+#' chat <- seq_chat("openai/gpt-4.1")
 #'
 #' # Process a batch of prompts
 #' response <- chat$process(list(
@@ -82,11 +82,8 @@ progress <- S7::new_generic("progress", "x")
 #' }
 #' The process object manages prompt processing and tracks completion status.
 #' @examplesIf ellmer::has_credentials("openai")
-#' # Create a sequential chat processor
+#' # Create a chat processor
 #' chat <- seq_chat("openai/gpt-4.1")
-#'
-#' # Or create a parallel chat processor
-#' chat <- future_chat("openai/gpt-4.1")
 #'
 #' # Process a batch of prompts
 #' response <- chat$process(list(

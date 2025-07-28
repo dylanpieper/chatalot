@@ -44,6 +44,45 @@ create_chat_env_deferred <- function(chat_model, ...) {
   chat_env$chat_model_name <- chat_model
   chat_env$chat_model_args <- list(...)
   chat_env$last_file <- NULL
+  
+  chat_env$deferred_tools <- list()
+  
+  chat_env$register_tool <- function(tool) {
+    tool_globals <- tryCatch({
+      tool_fun <- if (is.list(tool) && "fun" %in% names(tool)) {
+        tool$fun
+      } else if (is.function(tool)) {
+        tool
+      } else {
+        NULL
+      }
+      
+      if (!is.null(tool_fun)) {
+        globals_found <- globals::findGlobals(tool_fun, method = "ordered")
+        globals_list <- list()
+        
+        for (var_name in globals_found) {
+          if (exists(var_name, envir = parent.frame(2))) {
+            globals_list[[var_name]] <- get(var_name, envir = parent.frame(2))
+          }
+        }
+        
+        globals_list
+      } else {
+        list()
+      }
+    }, error = function(e) {
+      list()
+    })
+    
+    tool_with_data <- list(
+      tool = tool,
+      globals = tool_globals
+    )
+    
+    chat_env$deferred_tools <- append(chat_env$deferred_tools, list(tool_with_data))
+    invisible(chat_env)
+  }
 
   chat_env
 }

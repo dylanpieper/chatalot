@@ -59,7 +59,7 @@ Process response class for managing chat processing
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Create a chat processor
-chat <- seq_chat(chat_openai())
+chat <- seq_chat("openai/gpt-4.1")
 
 # Process a batch of prompts
 response <- chat$process(list(

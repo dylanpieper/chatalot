@@ -25,6 +25,7 @@ Imports:
     parallel,
     purrr,
     S7,
-    utils
+    utils,
+    globals
 Depends: ellmer (>= 0.3.0)
 URL: https://dylanpieper.github.io/chatalot/

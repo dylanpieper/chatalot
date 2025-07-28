@@ -58,12 +58,9 @@ process.future_chat <- function(chat_env,
                                 progress = TRUE,
                                 echo = FALSE,
                                 ...) {
-  # Handle both regular chat objects and deferred construction
   if (exists("chat_model", envir = chat_env)) {
-    # Regular (seq_chat) path - chat object already constructed
     chat_obj <- chat_env$chat_model
   } else {
-    # Deferred (future_chat) path - pass the environment for deferred construction
     chat_obj <- chat_env
   }
   

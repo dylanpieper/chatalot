@@ -40,7 +40,7 @@ See \code{?process.sequential_chat} for full details of the method and its param
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Create chat processor
-chat <- seq_chat(chat_openai(system_prompt = "Reply concisely"))
+chat <- seq_chat("openai/gpt-4.1")
 
 # Process prompts
 response <- chat$process(

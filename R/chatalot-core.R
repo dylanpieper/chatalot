@@ -292,9 +292,27 @@ process_future <- function(
       while (!success && retry_count < max_chunk_attempts) {
         retry_count <- retry_count + 1
         
+        tool_globals <- list()
+        if (is.environment(chat_obj) && exists("deferred_tools", envir = chat_obj) && length(chat_obj$deferred_tools) > 0) {
+          for (tool_with_data in chat_obj$deferred_tools) {
+            if ("globals" %in% names(tool_with_data) && length(tool_with_data$globals) > 0) {
+              tool_globals <- c(tool_globals, tool_with_data$globals)
+            }
+          }
+        }
+        
         if (is.environment(chat_obj) && exists("chat_model_name", envir = chat_obj)) {
           worker_chat <- if (is.character(chat_obj$chat_model_name)) {
-            do.call(ellmer::chat, c(list(chat_obj$chat_model_name), chat_obj$chat_model_args))
+            constructed_chat <- do.call(ellmer::chat, c(list(chat_obj$chat_model_name), chat_obj$chat_model_args))
+            
+            if (exists("deferred_tools", envir = chat_obj) && length(chat_obj$deferred_tools) > 0) {
+              for (tool_with_data in chat_obj$deferred_tools) {
+                tool <- tool_with_data$tool
+                constructed_chat$register_tool(tool)
+              }
+            }
+            
+            constructed_chat
           } else {
             stop("Invalid deferred chat construction")
           }
@@ -314,7 +332,16 @@ process_future <- function(
                       function(prompt) {
                         if (is.environment(chat_obj) && exists("chat_model_name", envir = chat_obj)) {
                           worker_chat_inner <- if (is.character(chat_obj$chat_model_name)) {
-                            do.call(ellmer::chat, c(list(chat_obj$chat_model_name), chat_obj$chat_model_args))
+                            constructed_chat <- do.call(ellmer::chat, c(list(chat_obj$chat_model_name), chat_obj$chat_model_args))
+                            
+                            if (exists("deferred_tools", envir = chat_obj) && length(chat_obj$deferred_tools) > 0) {
+                              for (tool_with_data in chat_obj$deferred_tools) {
+                                tool <- tool_with_data$tool
+                                constructed_chat$register_tool(tool)
+                              }
+                            }
+                            
+                            constructed_chat
                           } else {
                             stop("Invalid deferred chat construction")
                           }
@@ -332,7 +359,8 @@ process_future <- function(
                       },
                       .options = furrr::furrr_options(
                         scheduling = 1,
-                        seed = TRUE
+                        seed = TRUE,
+                        globals = c(list(chat_obj = chat_obj, type = type, echo = echo, capture_future = capture_future), tool_globals)
                       )
                     )
 

@@ -6,6 +6,7 @@
 #' @importFrom future plan multisession
 #' @importFrom purrr map_lgl pwalk map map_chr walk iwalk
 #' @importFrom utils str packageDescription
+#' @importFrom globals findGlobals
 #' @keywords internal
 #' @noRd
 "_PACKAGE"

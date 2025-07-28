@@ -2,12 +2,12 @@ skip_chat_test <- function() {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
 }
 
-create_test_chat <- function(chat_constructor, model = "anthropic", system_prompt = "Reply concisely, one sentence") {
+create_test_chat <- function(chat_constructor, model = "openai/gpt-4.1", system_prompt = "Reply concisely, one sentence") {
   chat_constructor(model, system_prompt = system_prompt)
 }
 
-get_test_prompts <- function(n = 2) {
-  prompts <- c(
+get_test_prompts <- function(n = 3) {
+  prompts <- list(
     "What is 2+2?",
     "What color is the sky?"
   )
@@ -16,15 +16,14 @@ get_test_prompts <- function(n = 2) {
 
 get_content_prompts <- function() {
   base_prompt <- "What do you see in the image?"
-  prompts <- list(
+  list(
     c(content_image_url("https://www.r-project.org/Rlogo.png"), base_prompt),
     c(content_image_file(system.file("httr2.png", package = "ellmer")), base_prompt)
   )
-  return(prompts)
 }
 
 get_tool_prompts <- function() {
-  c(
+  list(
     "What is the square of 3?",
     "Calculate the square of 5."
   )
@@ -40,9 +39,11 @@ get_sentiment_type_spec <- function() {
 get_square_tool <- function() {
   square_number <- function(num) num^2
   tool(
-    square_number,
-    "Calculates the square of a number",
-    num = type_integer("The number to square")
+    fun = square_number,
+    description = "Calculates the square of a number",
+    arguments = list(
+      num = type_integer("The number to square")
+    )
   )
 }
 
@@ -70,17 +71,17 @@ validate_structured_data <- function(data, expected_rows) {
 }
 
 test_api_key_failure <- function(chat_constructor, processor_args = list()) {
-  original_key <- Sys.getenv("ANTHROPIC_API_KEY", unset = NA)
-  Sys.unsetenv("ANTHROPIC_API_KEY")
-  Sys.setenv(ANTHROPIC_API_KEY = "invalid_key")
+  original_key <- Sys.getenv("OPENAI_API_KEY", unset = NA)
+  Sys.unsetenv("OPENAI_API_KEY")
+  Sys.setenv(OPENAI_API_KEY = "invalid_key")
 
   chat <- create_test_chat(chat_constructor)
 
   on.exit({
     if (!is.na(original_key)) {
-      Sys.setenv(ANTHROPIC_API_KEY = original_key)
+      Sys.setenv(OPENAI_API_KEY = original_key)
     } else {
-      Sys.unsetenv("ANTHROPIC_API_KEY")
+      Sys.unsetenv("OPENAI_API_KEY")
     }
   })
 

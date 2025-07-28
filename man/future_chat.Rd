@@ -42,7 +42,7 @@ See \code{?process.future_chat} for full details of the method and its parameter
 \examples{
 \dontshow{if (interactive() && ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Create chat processor
-chat <- future_chat(chat_openai(system_prompt = "Reply concisely"))
+chat <- future_chat("openai/gpt-4.1")
 
 # Process prompts
 response <- chat$process(
