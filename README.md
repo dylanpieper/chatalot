@@ -14,7 +14,7 @@ chatalot prioritizes safety and recovery, while ellmer prioritizes speed and cos
 |----------------------|----------------------|----------------------------|
 | 🛡️ **Safety first** | [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) | Each chat saved individually |
 | ⚖️ **Speed + safety** | [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html) | Parallel processing with chunks of chats saved |
-| 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | All-or-nothing parallel processing; optimized for speed |
+| 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | All-or-nothing parallel processing |
 | 💰 **Cost savings** | [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) | \~50% cheaper; up to 24hr delays |
 
 ## Installation
@@ -196,7 +196,7 @@ If you interrupt chat processing (e.g., to check responses) or experience an err
 response <- chat$process(prompts, file = "chat.rds")
 ```
 
-If `file` is not defined, a temporary file will be created by default (`.rds`). Progress is tracked in `response$progress()`.
+If `file` is not defined, a temporary `.rds` file will be created by default.
 
 ### Sound Notifications
 
@@ -236,12 +236,10 @@ response <- chat$process(
 -   `chats()`: Returns a list of chat objects
 -   `progress()`: Returns processing status
 
-## Extras
+## Tidbits
 
--   [Batch and Compare the Similarity of LLM Responses in R](https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html) (Blog Post)
--   Different functions handle API rate limits differently:
+-   Functions handle API rate limits differently:
     -   [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) and [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Allow rate limits to be exceeded and fallback on ellmer's retry mechanism (reactive)
-
     -   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Throttles requests to prevent rate limits (proactive)
-
     -   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html): Managed by the API provider
+-   [Batch and Compare the Similarity of LLM Responses in R](https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html) (Blog Post)

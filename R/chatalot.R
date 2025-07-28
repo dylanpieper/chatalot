@@ -49,6 +49,13 @@
 seq_chat <- function(
     chat_model = NULL,
     ...) {
+  if (is_old_ellmer()) {
+    cli::cli_abort(c(
+      "`future_chat()` does not work for ellmer {packageVersion('ellmer')}",
+      "v" = "Please install the latest version using {.code pak::pak('ellmer')}"
+    ))
+  }
+
   validate_chat_model(chat_model)
 
   chat_env <- create_chat_env(chat_model, ...)
@@ -130,12 +137,10 @@ seq_chat <- function(
 future_chat <- function(
     chat_model = NULL,
     ...) {
-  if (is_new_ellmer()) {
+  if (is_old_ellmer()) {
     cli::cli_abort(c(
-      "`future_chat()` currently does not work in ellmer {packageVersion('ellmer')}",
-      "!" = "This issue is temporary and will be fixed in a future ellmer release",
-      "v" = "`future_chat()` will work if you install {.code pak::pak('ellmer@0.2.0')}",
-      "!" = "Be aware that ellmer 0.2.0 exposes API keys in chat objects"
+      "`future_chat()` does not work for ellmer {packageVersion('ellmer')}",
+      "v" = "Please install the latest version using {.code pak::pak('ellmer')}"
     ))
   }
 

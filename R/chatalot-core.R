@@ -1,12 +1,3 @@
-#' Check if the installed version of ellmer is newer than 0.2.0
-#'
-#' @return Logical indicating whether the installed version is greater than 0.2.0
-#' @keywords internal
-#' @noRd
-is_new_ellmer <- function() {
-  utils::packageVersion("ellmer") > "0.2.0"
-}
-
 #' Capture chat model response with proper handling
 #' @param original_chat Original chat model object
 #' @param prompt Prompt text
