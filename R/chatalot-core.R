@@ -291,7 +291,16 @@ process_future <- function(
 
       while (!success && retry_count < max_chunk_attempts) {
         retry_count <- retry_count + 1
-        worker_chat <- chat_obj$clone()
+        
+        if (is.environment(chat_obj) && exists("chat_model_name", envir = chat_obj)) {
+          worker_chat <- if (is.character(chat_obj$chat_model_name)) {
+            do.call(ellmer::chat, c(list(chat_obj$chat_model_name), chat_obj$chat_model_args))
+          } else {
+            stop("Invalid deferred chat construction")
+          }
+        } else {
+          worker_chat <- chat_obj$clone()
+        }
 
         chunk_chats_obj <-
           withCallingHandlers(
@@ -303,8 +312,18 @@ process_future <- function(
                     responses <- furrr::future_map(
                       chunk,
                       function(prompt) {
+                        if (is.environment(chat_obj) && exists("chat_model_name", envir = chat_obj)) {
+                          worker_chat_inner <- if (is.character(chat_obj$chat_model_name)) {
+                            do.call(ellmer::chat, c(list(chat_obj$chat_model_name), chat_obj$chat_model_args))
+                          } else {
+                            stop("Invalid deferred chat construction")
+                          }
+                        } else {
+                          worker_chat_inner <- worker_chat
+                        }
+                        
                         capture_future(
-                          worker_chat,
+                          worker_chat_inner,
                           prompt,
                           type,
                           echo = echo,
@@ -457,7 +476,16 @@ process_chunks <- function(chunks,
         new_responses <- furrr::future_map(
           chunk,
           function(prompt) {
-            worker_chat <- chat_obj$clone()
+            if (is.environment(chat_obj) && exists("chat_model_name", envir = chat_obj)) {
+              worker_chat <- if (is.character(chat_obj$chat_model_name)) {
+                do.call(ellmer::chat, c(list(chat_obj$chat_model_name), chat_obj$chat_model_args))
+              } else {
+                stop("Invalid deferred chat construction")
+              }
+            } else {
+              worker_chat <- chat_obj$clone()
+            }
+            
             capture_future(
               worker_chat,
               prompt,

@@ -1,6 +1,6 @@
 test_that("seq_chat initialization and result class works", {
   skip_chat_test()
-  chat <- seq_chat(ellmer::chat_openai)
+  chat <- create_test_chat(seq_chat)
   expect_true(inherits(chat, "Chat"))
   expect_true(inherits(chat, "R6"))
   result <- chat$process(get_test_prompts(1), beep = FALSE)
@@ -9,21 +9,21 @@ test_that("seq_chat initialization and result class works", {
 
 test_that("seq_chat processes prompts correctly", {
   skip_chat_test()
-  chat <- seq_chat(ellmer::chat_openai)
+  chat <- create_test_chat(seq_chat)
   result <- chat$process(get_test_prompts(2), beep = FALSE)
   validate_process_result(result, 2)
 })
 
 test_that("seq_chat processes content prompts correctly", {
-  skip_chat_test(
-  chat <- seq_chat(ellmer::chat_openai)
+  skip_chat_test()
+  chat <- create_test_chat(seq_chat)
   result <- chat$process(get_content_prompts(), beep = FALSE)
   validate_process_result(result, 2)
 })
 
 test_that("seq_chat handles structured data extraction", {
   skip_chat_test()
-  chat <- seq_chat(ellmer::chat_openai)
+  chat <- create_test_chat(seq_chat)
   result <- chat$process(get_sentiment_prompts(), type = get_sentiment_type_spec(), beep = FALSE)
   data <- result$texts()
   validate_structured_data(data, 2)
@@ -32,18 +32,18 @@ test_that("seq_chat handles structured data extraction", {
 
 test_that("seq_chat works with tools", {
   skip_chat_test()
-  chat <- seq_chat(ellmer::chat_openai)
+  chat <- create_test_chat(seq_chat)
   chat$register_tool(get_square_tool())
-  result <- chat$process(list(
-    "What is the square of 3?",
-    "Calculate the square of 5."
-  ), beep = FALSE)
+  result <- chat$process(
+    get_tool_prompts(),
+    beep = FALSE
+  )
   validate_process_result(result, 2)
 })
 
 test_that("seq_chat handles state persistence", {
   skip_chat_test()
-  chat <- seq_chat(ellmer::chat_openai)
+  chat <- create_test_chat(seq_chat)
   create_temp_file_test(chat)
 })
 

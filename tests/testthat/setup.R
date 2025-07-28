@@ -1,14 +1,13 @@
-is_old_ellmer <- function() {
-  utils::packageVersion("ellmer") < "0.3.0"
-}
-
 skip_chat_test <- function() {
   skip_if_not(ellmer::has_credentials("openai"), "API key not available")
-  skip_if(is_old_ellmer(), "Old version of ellmer does not use new chat API")
+}
+
+create_test_chat <- function(chat_constructor, model = "anthropic", system_prompt = "Reply concisely, one sentence") {
+  chat_constructor(model, system_prompt = system_prompt)
 }
 
 get_test_prompts <- function(n = 2) {
-  prompts <- list(
+  prompts <- c(
     "What is 2+2?",
     "What color is the sky?"
   )
@@ -22,6 +21,13 @@ get_content_prompts <- function() {
     c(content_image_file(system.file("httr2.png", package = "ellmer")), base_prompt)
   )
   return(prompts)
+}
+
+get_tool_prompts <- function() {
+  c(
+    "What is the square of 3?",
+    "Calculate the square of 5."
+  )
 }
 
 get_sentiment_type_spec <- function() {
@@ -64,17 +70,17 @@ validate_structured_data <- function(data, expected_rows) {
 }
 
 test_api_key_failure <- function(chat_constructor, processor_args = list()) {
-  original_key <- Sys.getenv("OPENAI_API_KEY", unset = NA)
-  Sys.unsetenv("OPENAI_API_KEY")
-  Sys.setenv(OPENAI_API_KEY = "invalid_key")
+  original_key <- Sys.getenv("ANTHROPIC_API_KEY", unset = NA)
+  Sys.unsetenv("ANTHROPIC_API_KEY")
+  Sys.setenv(ANTHROPIC_API_KEY = "invalid_key")
 
-  chat <- chat_constructor(ellmer::chat_openai)
+  chat <- create_test_chat(chat_constructor)
 
   on.exit({
     if (!is.na(original_key)) {
-      Sys.setenv(OPENAI_API_KEY = original_key)
+      Sys.setenv(ANTHROPIC_API_KEY = original_key)
     } else {
-      Sys.unsetenv("OPENAI_API_KEY")
+      Sys.unsetenv("ANTHROPIC_API_KEY")
     }
   })
 
@@ -97,19 +103,19 @@ create_temp_file_test <- function(chat, processor_args = list()) {
 }
 
 test_progress_parameter <- function(chat_constructor, processor_args = list()) {
-  chat <- chat_constructor(ellmer::chat_openai)
+  chat <- create_test_chat(chat_constructor)
   args_true <- c(list(get_test_prompts(1), progress = TRUE, beep = FALSE), processor_args)
   result <- do.call(chat$process, args_true)
   validate_process_result(result, 1)
 
-  chat <- chat_constructor(ellmer::chat_openai)
+  chat <- create_test_chat(chat_constructor)
   args_false <- c(list(get_test_prompts(1), progress = FALSE, beep = FALSE), processor_args)
   result <- do.call(chat$process, args_false)
   validate_process_result(result, 1)
 }
 
 test_echo_parameter <- function(chat_constructor, processor_args = list()) {
-  chat <- chat_constructor(ellmer::chat_openai)
+  chat <- create_test_chat(chat_constructor)
   args <- c(list(get_test_prompts(1), progress = FALSE, echo = TRUE, beep = FALSE), processor_args)
   result <- do.call(chat$process, args)
   validate_process_result(result, 1)

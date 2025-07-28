@@ -1,6 +1,6 @@
 test_that("future_chat initialization and result class works", {
   skip_chat_test()
-  chat <- future_chat(ellmer::chat_openai)
+  chat <- create_test_chat(future_chat)
   expect_true(inherits(chat, "Chat"))
   expect_true(inherits(chat, "R6"))
   result <- chat$process(get_test_prompts(1), beep = FALSE)
@@ -9,21 +9,21 @@ test_that("future_chat initialization and result class works", {
 
 test_that("future_chat processes chunks correctly", {
   skip_chat_test()
-  chat <- future_chat(ellmer::chat_openai)
+  chat <- create_test_chat(future_chat)
   result <- chat$process(get_test_prompts(2), workers = 1, chunk_size = 1, beep = FALSE)
   validate_process_result(result, 2)
 })
 
 test_that("future_chat processes content chunks correctly", {
   skip_chat_test()
-  chat <- future_chat(ellmer::chat_openai)
+  chat <- create_test_chat(future_chat)
   result <- chat$process(get_content_prompts(), workers = 1, chunk_size = 1, beep = FALSE)
   validate_process_result(result, 2)
 })
 
 test_that("future_chat handles structured data extraction", {
   skip_chat_test()
-  chat <- future_chat(ellmer::chat_openai)
+  chat <- create_test_chat(future_chat)
   result <- chat$process(get_sentiment_prompts(), type = get_sentiment_type_spec(), workers = 1, chunk_size = 1, beep = FALSE)
   data <- result$texts()
   validate_structured_data(data, 2)
@@ -32,13 +32,10 @@ test_that("future_chat handles structured data extraction", {
 
 test_that("future_chat works with tools", {
   skip_chat_test()
-  chat <- future_chat(ellmer::chat_openai)
+  chat <- create_test_chat(future_chat)
   chat$register_tool(get_square_tool())
   result <- chat$process(
-    list(
-      "What is the square of 3?",
-      "Calculate the square of 5."
-    ),
+    get_tool_prompts(),
     workers = 1,
     chunk_size = 1,
     beep = FALSE
@@ -48,7 +45,7 @@ test_that("future_chat works with tools", {
 
 test_that("future_chat handles state persistence", {
   skip_chat_test()
-  chat <- future_chat(ellmer::chat_openai)
+  chat <- create_test_chat(future_chat)
   create_temp_file_test(chat, list(workers = 1, chunk_size = 1))
 })
 

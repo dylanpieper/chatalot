@@ -36,12 +36,6 @@ usethis::edit_r_environ(scope = c("user", "project"))
 
 ## Basic Usage
 
-For the following examples, define a chat object:
-
-``` r
-openai <- chat_openai(system_prompt = "Reply concisely, one sentence")
-```
-
 ### Sequential Processing
 
 Process chats in sequence, or one at a time. Save responses to disk for each chat and resume processing from the last saved chat.
@@ -49,7 +43,7 @@ Process chats in sequence, or one at a time. Save responses to disk for each cha
 ``` r
 library(chatalot)
 
-chat <- seq_chat(openai)
+chat <- seq_chat("openai/gpt-4.1", system_prompt = "Reply concisely, one sentence")
 
 prompts <- c(
   "What roles do people have in a castle?",
@@ -84,16 +78,13 @@ response$texts()
 Parallel processing requests multiple chats at a time across multiple R processes using [future](https://future.futureverse.org):
 
 ``` r
-chat <- future_chat(openai)
+chat <- future_chat("openai/gpt-4.1", system_prompt = "Reply concisely, one sentence")
 ```
 
 Splits prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Saves chat data to disk between chunks and can resume processing from the last saved chunk. For the fastest processing, set `chunk_size` to the number of prompts:
 
 ``` r
-response <- chat$process(
-  prompts, 
-  chunk_size = length(prompts)
-)
+response <- chat$process(prompts, chunk_size = length(prompts))
 ```
 
 If using `length(prompts)`, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
@@ -112,13 +103,15 @@ weather <- data.frame(
   wind = c("Strong", "Weak", "Strong")
 )
 
-get_weather <- function(cities) weather[weather$city %in% cities, ]
+get_weather <- tool(
+  function(cities) weather[weather$city %in% cities, ],
+  description = "Report on weather conditions.",
+  arguments = list(
+    cities = type_array(type_string(), "City names")
+  )
+)
 
-chat$register_tool(tool(
-  get_weather,
-  "Report on weather conditions.",
-  cities = type_array("City names", type_string())
-))
+chat$register_tool(get_weather)
 
 response <- chat$process(interpolate("Brief weather update for {{weather$city}}?"))
 
@@ -165,10 +158,6 @@ response$texts()
 Process prompts that with text and uploaded content (e.g., [images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)):
 
 ``` r
-library(chatalot)
-
-chat <- seq_chat(openai)
-
 base_prompt <- "What do you see in the image?"
 img_prompts <- list(
   c(base_prompt, content_image_url("https://www.r-project.org/Rlogo.png")),
@@ -216,11 +205,7 @@ prompts <- c(
   "Explain base R versus tidyverse"
 )
 
-response <- chat$process(
-  prompts,
-  progress = FALSE,
-  echo = TRUE
-)
+response <- chat$process(prompts, progress = FALSE, echo = TRUE)
 #> R is a programming language and software environment used for 
 #> statistical computing and graphics.
 #> 

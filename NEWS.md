@@ -1,14 +1,12 @@
 # chatalot 0.2.0
 
 ## New Features
+* Depends on ellmer > 0.3.0, and uses the the new API to specify a particular model (e.g., `chat("anthropic")`)
 * Added support for prompts with mixed content (text, images, files) using ellmer content functions
 
 ## Internal Improvements
 * `$texts()` returns a data frame for structured data when possible
-* Added single retry for failed structured data extractions
 * Replaced progress bar percentage indicator (`cli::pb_percent`) to estimated time until completion (`cli::pb_eta`)
-* For `future_chat()`, updated the default `chunk_size` to a fixed value of 10 prompts
-* For `future_chat()`, detect ellmer > 0.2.0 and abort due to API key redaction (temporary until callback is added)
 
 ## Lifecycle changes
 * Renamed package from hellmer to chatalot
@@ -16,10 +14,10 @@
 * `batch` is renamed to `lot` to match the new package name
 * `state_path` is renamed to `file` for consistency/simplicity
 * `type_spec` is renamed to `type` following the latest update to ellmer (0.1.1)
-* `seq_chat()` is renamed to `seq_chat()` for brevity
-* `future_chat()` is renamed to `future_chat()` for consistency with naming conventions
-* Removed evaluation functionality because of poor performance
-* Removed retry functionality in anticipation of robust changes to ellmer (development)
+* `chat_sequential()` is renamed to `seq_chat()`
+* `chat_future()` is renamed to `future_chat()`
+* Removed evaluation functionality due to poor performance
+* Removed retry functionality due to new robust retries in ellmer (0.3.0)
 
 # hellmer 0.1.2
 

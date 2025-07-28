@@ -25,7 +25,7 @@
 #'
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create chat processor
-#' chat <- seq_chat(chat_openai(system_prompt = "Reply concisely"))
+#' chat <- seq_chat("openai/gpt-4.1")
 #'
 #' # Process prompts
 #' response <- chat$process(
@@ -49,14 +49,13 @@
 seq_chat <- function(
     chat_model = NULL,
     ...) {
-  if (is_old_ellmer()) {
-    cli::cli_abort(c(
-      "`future_chat()` does not work for ellmer {packageVersion('ellmer')}",
-      "v" = "Please install the latest version using {.code pak::pak('ellmer')}"
-    ))
+  if (is.null(chat_model)) {
+    cli::cli_abort("Define a chat model (e.g., {.code seq_chat('anthropic')})")
   }
 
-  validate_chat_model(chat_model)
+  if (!is.character(chat_model) || length(chat_model) != 1) {
+    cli::cli_abort("chat_model must be a character string (e.g., 'anthropic')")
+  }
 
   chat_env <- create_chat_env(chat_model, ...)
 
@@ -114,7 +113,7 @@ seq_chat <- function(
 #'
 #' @examplesIf interactive() && ellmer::has_credentials("openai")
 #' # Create chat processor
-#' chat <- future_chat(chat_openai(system_prompt = "Reply concisely"))
+#' chat <- future_chat("openai/gpt-4.1")
 #'
 #' # Process prompts
 #' response <- chat$process(
@@ -137,18 +136,16 @@ seq_chat <- function(
 future_chat <- function(
     chat_model = NULL,
     ...) {
-  if (is_old_ellmer()) {
-    cli::cli_abort(c(
-      "`future_chat()` does not work for ellmer {packageVersion('ellmer')}",
-      "v" = "Please install the latest version using {.code pak::pak('ellmer')}"
-    ))
-  }
-
   if (is.null(chat_model)) {
-    cli::cli_abort("Define an ellmer chat_model (e.g., chat_openai)")
+    cli::cli_abort("Define a chat model (e.g., {.code future_chat('anthropic')})")
   }
 
-  chat_env <- create_chat_env(chat_model, ...)
+  if (!is.character(chat_model) || length(chat_model) != 1) {
+    cli::cli_abort("chat_model must be a character string (e.g., 'anthropic')")
+  }
+
+  # Use deferred construction for future_chat
+  chat_env <- create_chat_env_deferred(chat_model, ...)
 
   chat_env$process <- function(prompts,
                                type = NULL,

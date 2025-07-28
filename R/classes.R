@@ -82,8 +82,11 @@ progress <- S7::new_generic("progress", "x")
 #' }
 #' The process object manages prompt processing and tracks completion status.
 #' @examplesIf ellmer::has_credentials("openai")
-#' # Create a chat processor
-#' chat <- seq_chat(chat_openai())
+#' # Create a sequential chat processor
+#' chat <- seq_chat("openai/gpt-4.1")
+#'
+#' # Or create a parallel chat processor
+#' chat <- future_chat("openai/gpt-4.1")
 #'
 #' # Process a batch of prompts
 #' response <- chat$process(list(
