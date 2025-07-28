@@ -42,7 +42,7 @@
 <h2 class="pkg-version" data-toc-text="0.2.0" id="chatalot-020">chatalot 0.2.0<a class="anchor" aria-label="anchor" href="#chatalot-020"></a></h2>
 <div class="section level3">
 <h3 id="new-features-0-2-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-2-0"></a></h3>
-<ul><li>Depends on ellmer &gt; 0.3.0, and uses the the new API to specify a particular model (e.g., <code>chat("anthropic")</code>)</li>
+<ul><li>Depends on ellmer &gt; 0.3.0, and uses the the new API to specify a particular model (e.g., <code>chat("anthropic/claude-3-5-sonnet-latest")</code>)</li>
 <li>Added support for prompts with mixed content (text, images, files) using ellmer content functions</li>
 </ul></div>
 <div class="section level3">
@@ -59,7 +59,9 @@
 <li>
 <code>batch</code> is renamed to <code>lot</code> to match the new package name</li>
 <li>
-<code>state_path</code> is renamed to <code>file</code> for consistency/simplicity</li>
+<code>state_path</code> is renamed to <code>file</code> for simplicity</li>
+<li>
+<code>max_chunk_retries</code> is renamed to <code>max_chunk_tries</code> for simplicity (default: 2)</li>
 <li>
 <code>type_spec</code> is renamed to <code>type</code> following the latest update to ellmer (0.1.1)</li>
 <li>

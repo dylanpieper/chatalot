@@ -52,7 +52,7 @@
 <span>  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"chat_"</span>, fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span>,</span>
 <span>  workers <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  chunk_size <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  max_chunk_attempts <span class="op">=</span> <span class="fl">3L</span>,</span>
+<span>  max_chunk_tries <span class="op">=</span> <span class="fl">2L</span>,</span>
 <span>  beep <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  echo <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -88,8 +88,8 @@
 <dd><p>Number of prompts each worker processes at a time (default: 10)</p></dd>
 
 
-<dt id="arg-max-chunk-attempts">max_chunk_attempts<a class="anchor" aria-label="anchor" href="#arg-max-chunk-attempts"></a></dt>
-<dd><p>Maximum retries per failed chunk</p></dd>
+<dt id="arg-max-chunk-tries">max_chunk_tries<a class="anchor" aria-label="anchor" href="#arg-max-chunk-tries"></a></dt>
+<dd><p>Maximum tries per failed chunk</p></dd>
 
 
 <dt id="arg-beep">beep<a class="anchor" aria-label="anchor" href="#arg-beep"></a></dt>
