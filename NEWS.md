@@ -1,7 +1,7 @@
 # chatalot 0.2.0
 
 ## New Features
-* Depends on ellmer > 0.3.0, and uses the the new API to specify a particular model (e.g., `chat("anthropic")`)
+* Depends on ellmer > 0.3.0, and uses the the new API to specify a particular model (e.g., `chat("anthropic/claude-3-5-sonnet-latest")`)
 * Added support for prompts with mixed content (text, images, files) using ellmer content functions
 
 ## Internal Improvements
@@ -12,7 +12,8 @@
 * Renamed package from hellmer to chatalot
 * `lot` is renamed to `process` for consistent verb use
 * `batch` is renamed to `lot` to match the new package name
-* `state_path` is renamed to `file` for consistency/simplicity
+* `state_path` is renamed to `file` for simplicity
+* `max_chunk_retries` is renamed to `max_chunk_tries` for simplicity (default: 2)
 * `type_spec` is renamed to `type` following the latest update to ellmer (0.1.1)
 * `chat_sequential()` is renamed to `seq_chat()`
 * `chat_future()` is renamed to `future_chat()`

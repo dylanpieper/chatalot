@@ -5,7 +5,7 @@
 #' and resume processing from the last saved chat.
 #' For parallel processing, use `future_chat()`.
 #'
-#' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1", "anthropic/claude-3-5-sonnet-latest").
+#' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1" or "anthropic/claude-3-5-sonnet-latest").
 #'   This creates an ellmer chat object using [ellmer::chat()].
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
 #' @return A process object (S7 class) containing
@@ -87,14 +87,14 @@ seq_chat <- function(
 
 #' Process a lot of prompts in parallel
 #' @description
-#' Process a lot of chat prompts in parallel using multisession
-#' \href{https://www.futureverse.org}{future} workers.
+#' Process a lot of chat prompts in parallel using
+#' \href{https://www.futureverse.org}{future} workers (multisession).
 #' Split prompts into chunks to distribute across workers to process chats.
 #' Save chat data to disk between chunks
 #' and resume processing from the last saved chunk.
 #' For sequential processing, use `seq_chat()`.
 #'
-#' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1", "anthropic/claude-3-5-sonnet-latest").
+#' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1" or "anthropic/claude-3-5-sonnet-latest").
 #'   This creates an ellmer chat object using [ellmer::chat()].
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
 #' @return A process object (S7 class) containing:
@@ -146,7 +146,6 @@ future_chat <- function(
     cli::cli_abort("chat_model must be a character string (e.g., 'anthropic')")
   }
 
-  # Use deferred construction for future_chat
   chat_env <- create_chat_env_deferred(chat_model, ...)
 
   chat_env$process <- function(prompts,
@@ -155,7 +154,7 @@ future_chat <- function(
                                progress = TRUE,
                                workers = NULL,
                                chunk_size = 10,
-                               max_chunk_attempts = 3L,
+                               max_chunk_tries = 2L,
                                beep = TRUE,
                                echo = FALSE,
                                ...) {
@@ -176,7 +175,7 @@ future_chat <- function(
       file = file,
       workers = workers,
       chunk_size = chunk_size,
-      max_chunk_attempts = max_chunk_attempts,
+      max_chunk_tries = max_chunk_tries,
       beep = beep,
       progress = progress,
       echo = echo,

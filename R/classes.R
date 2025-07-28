@@ -120,7 +120,6 @@ process <- S7::new_class(
         }
         all_valid <- all(purrr::map_lgl(value, function(x) {
           if (is.character(x)) {
-            # Character vectors should have at least one non-empty element
             return(length(x) > 0 && any(nchar(x) > 0))
           } else if (is.vector(x) || is.list(x)) {
             return(length(x) > 0)

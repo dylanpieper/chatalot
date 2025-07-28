@@ -11,7 +11,7 @@ process.future_chat(
   file = tempfile("chat_", fileext = ".rds"),
   workers = NULL,
   chunk_size = 10,
-  max_chunk_attempts = 3L,
+  max_chunk_tries = 2L,
   beep = TRUE,
   progress = TRUE,
   echo = FALSE,
@@ -31,7 +31,7 @@ process.future_chat(
 
 \item{chunk_size}{Number of prompts each worker processes at a time (default: 10)}
 
-\item{max_chunk_attempts}{Maximum retries per failed chunk}
+\item{max_chunk_tries}{Maximum tries per failed chunk}
 
 \item{beep}{Whether to play a sound on completion}
 

@@ -7,7 +7,7 @@
 future_chat(chat_model = NULL, ...)
 }
 \arguments{
-\item{chat_model}{Character string specifying the chat model to use (e.g., "openai/gpt-4.1", "anthropic/claude-3-5-sonnet-latest").
+\item{chat_model}{Character string specifying the chat model to use (e.g., "openai/gpt-4.1" or "anthropic/claude-3-5-sonnet-latest").
 This creates an ellmer chat object using \code{\link[ellmer:chat-any]{ellmer::chat()}}.}
 
 \item{...}{Additional arguments passed to the underlying chat model (e.g., \code{system_prompt})}
@@ -27,8 +27,8 @@ A process object (S7 class) containing:
 }
 }
 \description{
-Process a lot of chat prompts in parallel using multisession
-\href{https://www.futureverse.org}{future} workers.
+Process a lot of chat prompts in parallel using
+\href{https://www.futureverse.org}{future} workers (multisession).
 Split prompts into chunks to distribute across workers to process chats.
 Save chat data to disk between chunks
 and resume processing from the last saved chunk.

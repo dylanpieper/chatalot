@@ -180,7 +180,7 @@ process_sequential <- function(
 #' @param workers Number of parallel workers
 #' @param chunk_size Number of prompts to process in parallel at a time
 #' @param beep Play sound on completion/error
-#' @param max_chunk_attempts Maximum retries per failed chunk
+#' @param max_chunk_tries Maximum tries per failed chunk
 #' @param progress Whether to show progress bars
 #' @return Process results object
 #' @keywords internal
@@ -192,7 +192,7 @@ process_future <- function(
     file,
     workers,
     chunk_size,
-    max_chunk_attempts,
+    max_chunk_tries,
     beep,
     progress,
     echo,
@@ -289,7 +289,7 @@ process_future <- function(
       success <- FALSE
       last_error <- NULL
 
-      while (!success && retry_count < max_chunk_attempts) {
+      while (!success && retry_count < max_chunk_tries) {
         retry_count <- retry_count + 1
         
         tool_globals <- list()
@@ -425,12 +425,12 @@ process_future <- function(
         error_msg <- if (!is.null(last_error)) {
           sprintf(
             "Chunk %d failed after %d attempts. Last error: %s",
-            chunk_idx, max_chunk_attempts, conditionMessage(last_error)
+            chunk_idx, max_chunk_tries, conditionMessage(last_error)
           )
         } else {
           sprintf(
             "Chunk %d failed after %d attempts: %s",
-            chunk_idx, max_chunk_attempts, validation$message
+            chunk_idx, max_chunk_tries, validation$message
           )
         }
         stop(error_msg)
