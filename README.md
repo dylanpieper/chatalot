@@ -23,7 +23,7 @@ You can install the development or CRAN version of the package with:
 
 ``` r
 # pak::pak("dylanpieper/chatalot")
-pak::pak("chatalot")
+install.packages("chatalot")
 ```
 
 ## Setup API Keys
