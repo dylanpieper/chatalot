@@ -83,7 +83,6 @@ process_sequential <- function(
   }
 
   if (is.null(chats_obj)) {
-    orig_type <- if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list"
     chats_obj <- process(
       prompts = as.list(prompts),
       responses = vector("list", length(prompts)),
@@ -91,7 +90,7 @@ process_sequential <- function(
       file = file,
       type = type,
       progress = progress,
-      input_type = orig_type,
+      input_type = if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list",
       chunk_size = NULL,
       workers = NULL,
       state = NULL
@@ -331,7 +330,7 @@ process_future <- function(
                       chunk,
                       function(prompt) {
                         if (is.environment(chat_obj) && exists("chat_model_name", envir = chat_obj)) {
-                          worker_chat_inner <- if (is.character(chat_obj$chat_model_name)) {
+                          inner_worker <- if (is.character(chat_obj$chat_model_name)) {
                             constructed_chat <- do.call(ellmer::chat, c(list(chat_obj$chat_model_name), chat_obj$chat_model_args))
 
                             if (exists("deferred_tools", envir = chat_obj) && length(chat_obj$deferred_tools) > 0) {
@@ -346,11 +345,11 @@ process_future <- function(
                             stop("Invalid deferred chat construction")
                           }
                         } else {
-                          worker_chat_inner <- worker_chat
+                          inner_worker <- worker_chat
                         }
 
                         capture_future(
-                          worker_chat_inner,
+                          inner_worker,
                           prompt,
                           type,
                           echo = echo,
@@ -493,11 +492,11 @@ process_chunks <- function(chunks,
                            beep,
                            echo,
                            ...) {
-  was_interrupted <- FALSE
+  interrupted <- FALSE
   capture_future <- capture
 
   for (chunk in chunks) {
-    if (was_interrupted) break
+    if (interrupted) break
 
     withCallingHandlers(
       {
@@ -535,14 +534,14 @@ process_chunks <- function(chunks,
         }
       },
       interrupt = function(e) {
-        was_interrupted <<- TRUE
+        interrupted <<- TRUE
         handle_interrupt(chats_obj, beep)
         invokeRestart("abort")
       }
     )
   }
 
-  if (!was_interrupted) {
+  if (!interrupted) {
     finish_process(pb, beep, progress)
   }
 }
