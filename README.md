@@ -75,21 +75,21 @@ response$texts()
 
 ### Parallel Processing
 
-Parallel processing requests multiple chats at a time across multiple R processes using [future](https://future.futureverse.org):
+Parallel processing requests multiple chats at a time across multiple R processes using [future](https://future.futureverse.org) workers:
 
 ``` r
 chat <- future_chat("openai/gpt-4.1", system_prompt = "Reply concisely, one sentence")
 ```
 
-Splits prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Saves chat data to disk between chunks and can resume processing from the last saved chunk.
+Split prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Save chat data to disk between chunks and resume processing from the last saved chunk.
 
-To increase processing speed (risking data loss), increase `chunk_size`:
+To speed up processing, increase the `chunk_size` (more risk of data loss if a chunk fails):
 
 ``` r
 response <- chat$process(prompts, chunk_size = 50)
 ```
 
-You may want to limit the number of simultaneous requests to meet a provider's rate limits using the `workers` argument (default is `parallel::detectCores()`):
+To meet a provider's rate limits, you may want to limit the number of simultaneous requests by decreasing the number of parallel `workers`:
 
 ``` r
 response <- chat$process(prompts, workers = 4)
