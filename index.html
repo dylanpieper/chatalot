@@ -59,7 +59,7 @@
 </h1></div>
 <p><a href="https://CRAN.R-project.org/package=hellmer" class="external-link"><img src="https://www.r-pkg.org/badges/version/hellmer" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
 <p>chatalot processes a lot of large language model chats in R and is an extension of <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>.</p>
-<p>Easily setup sequential and parallel chat processors with support for <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a>, <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>, uploaded content, save and resume, sound notifications, and more.</p>
+<p>Easily setup sequential and parallel chat processors with support for <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a>, <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>, uploaded content, save and resume, and sound notifications.</p>
 <div class="section level2">
 <h2 id="chatalot-or-ellmer">
 <strong>chatalot or ellmer?</strong><a class="anchor" aria-label="anchor" href="#chatalot-or-ellmer"></a>
@@ -110,7 +110,7 @@
 <p>You can install the development or CRAN version of the package with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># pak::pak("dylanpieper/chatalot")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"chatalot"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"chatalot"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="setup-api-keys">Setup API Keys<a class="anchor" aria-label="anchor" href="#setup-api-keys"></a>
@@ -158,14 +158,14 @@
 <div class="section level3">
 <h3 id="parallel-processing">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h3>
-<p>Parallel processing requests multiple chats at a time across multiple R processes using <a href="https://future.futureverse.org" class="external-link">future</a>:</p>
+<p>Parallel processing requests multiple chats at a time across multiple R processes using <a href="https://future.futureverse.org" class="external-link">future</a> workers:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/future_chat.html">future_chat</a></span><span class="op">(</span><span class="st">"openai/gpt-4.1"</span>, system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span></code></pre></div>
-<p>Splits prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Saves chat data to disk between chunks and can resume processing from the last saved chunk. For the fastest processing, set <code>chunk_size</code> to the number of prompts:</p>
+<p>Split prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Save chat data to disk between chunks and resume processing from the last saved chunk.</p>
+<p>To speed up processing, increase the <code>chunk_size</code> (more risk of data loss if a chunk fails):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">prompts</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>When setting <code>chunk_size</code> to <code>length(prompts)</code>, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.</p>
-<p>You may want to limit the number of simultaneous requests to meet a provider’s rate limits using the <code>workers</code> argument (default is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>):</p>
+<code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, chunk_size <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></code></pre></div>
+<p>To meet a provider’s rate limits, you may want to limit the number of simultaneous requests by decreasing the number of parallel <code>workers</code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, workers <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
 </div>
