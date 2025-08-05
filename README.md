@@ -4,7 +4,7 @@
 
 chatalot processes a lot of large language model chats in R and is an extension of [ellmer](https://ellmer.tidyverse.org).
 
-Easily setup sequential and parallel chat processors with support for [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), uploaded content, save and resume, sound notifications, and more.
+Easily setup sequential and parallel chat processors with support for [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), uploaded content, save and resume, and sound notifications.
 
 ## **chatalot or ellmer?**
 
@@ -81,13 +81,13 @@ Parallel processing requests multiple chats at a time across multiple R processe
 chat <- future_chat("openai/gpt-4.1", system_prompt = "Reply concisely, one sentence")
 ```
 
-Splits prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Saves chat data to disk between chunks and can resume processing from the last saved chunk. For the fastest processing, set `chunk_size` to the number of prompts:
+Splits prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Saves chat data to disk between chunks and can resume processing from the last saved chunk.
+
+To increase processing speed (risking data loss), increase `chunk_size`:
 
 ``` r
-response <- chat$process(prompts, chunk_size = length(prompts))
+response <- chat$process(prompts, chunk_size = 50)
 ```
-
-When setting `chunk_size` to `length(prompts)`, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
 
 You may want to limit the number of simultaneous requests to meet a provider's rate limits using the `workers` argument (default is `parallel::detectCores()`):
 
