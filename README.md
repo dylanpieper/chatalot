@@ -2,7 +2,7 @@
 
 [![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://CRAN.R-project.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-chatalot synchronously processes a lot of large language model chats in R as an extension of [ellmer](https://ellmer.tidyverse.org).
+chatalot processes a lot of large language model chats in R and is an extension of [ellmer](https://ellmer.tidyverse.org).
 
 Easily setup sequential and parallel chat processors with support for [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), uploaded content, save and resume, sound notifications, and more.
 
@@ -87,7 +87,13 @@ Splits prompts into chunks to distribute across workers to process chats (defaul
 response <- chat$process(prompts, chunk_size = length(prompts))
 ```
 
-If using `length(prompts)`, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
+When setting `chunk_size` to `length(prompts)`, be aware that data will not be saved to the disk until all chats are processed, risking data loss and additional cost.
+
+You may want to limit the number of simultaneous requests to meet a provider's rate limits using the `workers` argument (default is `parallel::detectCores()`):
+
+``` r
+response <- chat$process(prompts, workers = 4)
+```
 
 ## Features
 
@@ -217,7 +223,7 @@ response <- chat$process(prompts, progress = FALSE, echo = TRUE)
 
 ### Methods
 
--   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a `type` is provided, a list with one element for each prompt. When `type` is consistent, returns a data frame with one row for each prompt, and one column for each property.
+-   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a `type` is provided, returns a list with one element for each prompt. When `type` is consistent, returns a data frame with one row for each prompt, and one column for each property.
 -   `chats()`: Returns a list of chat objects
 -   `progress()`: Returns processing status
 
