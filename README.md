@@ -1,6 +1,6 @@
 # chatalot <img src="man/figures/chatalot-hex.png" align="right" width="160"/>
 
-[![CRAN status](https://www.r-pkg.org/badges/version/hellmer)](https://CRAN.R-project.org/package=hellmer) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
+[![CRAN status](https://www.r-pkg.org/badges/version/chatalot)](https://CRAN.R-project.org/package=chatalot) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
 chatalot processes a lot of large language model chats in R and is an extension of [ellmer](https://ellmer.tidyverse.org).
 
