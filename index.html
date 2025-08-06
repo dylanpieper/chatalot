@@ -67,9 +67,9 @@
 <p>chatalot prioritizes safety and recovery, while ellmer prioritizes speed and cost savings.</p>
 <table class="table">
 <colgroup>
-<col width="30%">
-<col width="30%">
-<col width="38%">
+<col width="33%">
+<col width="33%">
+<col width="33%">
 </colgroup>
 <thead><tr class="header">
 <th>Priority</th>
@@ -81,13 +81,13 @@
 <td>🛡️ <strong>Safety first</strong>
 </td>
 <td><a href="https://dylanpieper.github.io/chatalot/reference/seq_chat.html">chatalot::seq_chat()</a></td>
-<td>Each chat saved individually in sequence</td>
+<td>Process chats in sequence and save each chat</td>
 </tr>
 <tr class="even">
 <td>⚖️ <strong>Speed + safety</strong>
 </td>
 <td><a href="https://dylanpieper.github.io/chatalot/reference/future_chat.html">chatalot::future_chat()</a></td>
-<td>Parallel processing with chunks of chats saved</td>
+<td>Process chats in parallel and save each chat</td>
 </tr>
 <tr class="odd">
 <td>🚀 <strong>Maximum speed</strong>
@@ -125,7 +125,7 @@
 <div class="section level3">
 <h3 id="sequential-processing">Sequential Processing<a class="anchor" aria-label="anchor" href="#sequential-processing"></a>
 </h3>
-<p>Process chats in sequence, or one at a time. Save responses to disk for each chat and resume processing from the last saved chat.</p>
+<p>Process chats in sequence, or one at a time.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatalot/">chatalot</a></span><span class="op">)</span></span>
 <span></span>
@@ -161,12 +161,8 @@
 <p>Parallel processing requests multiple chats at a time across multiple R processes using <a href="https://future.futureverse.org" class="external-link">future</a> workers:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/future_chat.html">future_chat</a></span><span class="op">(</span><span class="st">"openai/gpt-4.1"</span>, system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span></code></pre></div>
-<p>Split prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Save chat data to disk between chunks and resume processing from the last saved chunk.</p>
-<p>To speed up processing, increase the <code>chunk_size</code> (more risk of data loss if a chunk fails):</p>
+<p>You may want to limit the number of simultaneous requests to meet a provider’s rate limits by decreasing the number of parallel <code>workers</code> (default is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, chunk_size <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></code></pre></div>
-<p>To meet a provider’s rate limits, you may want to limit the number of simultaneous requests by decreasing the number of parallel <code>workers</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, workers <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -177,7 +173,7 @@
 <h3 id="tool-calling">Tool Calling<a class="anchor" aria-label="anchor" href="#tool-calling"></a>
 </h3>
 <p>Register and use <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a> to let the LLM use R functions:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">weather</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  city <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Chicago"</span>, <span class="st">"New York"</span>, <span class="st">"Lisbon"</span><span class="op">)</span>,</span>
 <span>  raining <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Heavy"</span>, <span class="st">"None"</span>, <span class="st">"Overcast"</span><span class="op">)</span>,</span>
@@ -206,7 +202,7 @@
 <h3 id="structured-data-extraction">Structured Data Extraction<a class="anchor" aria-label="anchor" href="#structured-data-extraction"></a>
 </h3>
 <p>Extract <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data</a> using type specifications:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"I go by Alex. 42 years on this planet and counting."</span>,</span>
 <span>  <span class="st">"Pleased to meet you! I'm Jamal, age 27."</span>,</span>
@@ -237,7 +233,7 @@
 <h3 id="uploaded-content">Uploaded Content<a class="anchor" aria-label="anchor" href="#uploaded-content"></a>
 </h3>
 <p>Process prompts that with text and uploaded content (e.g., <a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">images</a> and <a href="https://ellmer.tidyverse.org/reference/content_pdf_file.html" class="external-link">PDFs</a>):</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">base_prompt</span> <span class="op">&lt;-</span> <span class="st">"What do you see in the image?"</span></span>
 <span><span class="va">img_prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">base_prompt</span>, <span class="fu"><a href="https://ellmer.tidyverse.org/reference/content_image_url.html" class="external-link">content_image_url</a></span><span class="op">(</span><span class="st">"https://www.r-project.org/Rlogo.png"</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -260,7 +256,7 @@
 <h3 id="save-and-resume">Save and Resume<a class="anchor" aria-label="anchor" href="#save-and-resume"></a>
 </h3>
 <p>If you interrupt chat processing (e.g., to check responses) or experience an error, you can call <code><a href="reference/process.html">process()</a></code> again to resume from the last saved chat or chunk:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, file <span class="op">=</span> <span class="st">"chat.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>If <code>file</code> is not defined, a temporary <code>.rds</code> file will be created by default.</p>
 </div>
@@ -268,14 +264,14 @@
 <h3 id="sound-notifications">Sound Notifications<a class="anchor" aria-label="anchor" href="#sound-notifications"></a>
 </h3>
 <p>Toggle sound notifications on completion, interruption, and error:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, beep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="verbosity-options">Verbosity Options<a class="anchor" aria-label="anchor" href="#verbosity-options"></a>
 </h3>
 <p>By default, the chat <code>echo</code> is set to <code>FALSE</code> to show a progress bar. However, you can still configure <code>echo</code> by first setting <code>progress</code> to <code>FALSE</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prompts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"What is R?"</span>,</span>
 <span>  <span class="st">"Explain base R versus tidyverse"</span></span>
@@ -317,8 +313,8 @@
 <a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a>: Managed by the API provider</li>
 </ul>
 </li>
-<li>
-<a href="https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html" class="external-link">Batch and Compare the Similarity of LLM Responses in R</a> (Blog Post)</li>
+<li>Blog Post: <a href="https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html" class="external-link">Batch and Compare the Similarity of LLM Responses in R</a>
+</li>
 </ul>
 </div>
 </div>
