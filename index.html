@@ -93,7 +93,7 @@
 <td>🚀 <strong>Maximum speed</strong>
 </td>
 <td><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a></td>
-<td>All-or-nothing parallel processing (no caching)</td>
+<td>Process chats in parallel very quickly without caching</td>
 </tr>
 <tr class="even">
 <td>💰 <strong>Cost savings</strong>
@@ -255,7 +255,7 @@
 <div class="section level3">
 <h3 id="save-and-resume">Save and Resume<a class="anchor" aria-label="anchor" href="#save-and-resume"></a>
 </h3>
-<p>If you interrupt chat processing (e.g., to check responses) or experience an error, you can call <code><a href="reference/process.html">process()</a></code> again to resume from the last saved chat or chunk:</p>
+<p>If you interrupt chat processing or experience an error, you can call <code><a href="reference/process.html">process()</a></code> again to resume from the last saved chat, which is cached in an <code>.rds</code> file:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, file <span class="op">=</span> <span class="st">"chat.rds"</span><span class="op">)</span></span></code></pre></div>
 <p>If <code>file</code> is not defined, a temporary <code>.rds</code> file will be created by default.</p>
