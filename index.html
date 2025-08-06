@@ -78,13 +78,13 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>🛡️ <strong>Safety first</strong>
+<td>🛡️ <strong>Slow and safe</strong>
 </td>
 <td><a href="https://dylanpieper.github.io/chatalot/reference/seq_chat.html">chatalot::seq_chat()</a></td>
 <td>Process chats in sequence and save each chat</td>
 </tr>
 <tr class="even">
-<td>⚖️ <strong>Speed + safety</strong>
+<td>⚖️ <strong>Fast and safe</strong>
 </td>
 <td><a href="https://dylanpieper.github.io/chatalot/reference/future_chat.html">chatalot::future_chat()</a></td>
 <td>Process chats in parallel and save each chat</td>
@@ -93,7 +93,7 @@
 <td>🚀 <strong>Maximum speed</strong>
 </td>
 <td><a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a></td>
-<td>All-or-nothing parallel processing</td>
+<td>All-or-nothing parallel processing (no caching)</td>
 </tr>
 <tr class="even">
 <td>💰 <strong>Cost savings</strong>
@@ -125,7 +125,7 @@
 <div class="section level3">
 <h3 id="sequential-processing">Sequential Processing<a class="anchor" aria-label="anchor" href="#sequential-processing"></a>
 </h3>
-<p>Process chats in sequence, or one at a time.</p>
+<p>Process chats in sequence, or one at a time. Use this function to process prompts slowly, such as when you have strict rate limits or want to periodically check on responses.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatalot/">chatalot</a></span><span class="op">)</span></span>
 <span></span>
@@ -161,7 +161,7 @@
 <p>Parallel processing requests multiple chats at a time across multiple R processes using <a href="https://future.futureverse.org" class="external-link">future</a> workers:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/future_chat.html">future_chat</a></span><span class="op">(</span><span class="st">"openai/gpt-4.1"</span>, system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span></code></pre></div>
-<p>You may want to limit the number of simultaneous requests to meet a provider’s rate limits by decreasing the number of parallel <code>workers</code> (default is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>):</p>
+<p>Use this function to process a lot of chat prompts very quickly. You may want to limit the number of simultaneous requests to meet a provider’s rate limits by decreasing the number of parallel <code>workers</code> (default is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, workers <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
 </div>
