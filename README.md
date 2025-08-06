@@ -14,7 +14,7 @@ chatalot prioritizes safety and recovery, while ellmer prioritizes speed and cos
 |------------------------|------------------------|------------------------|
 | 🛡️ **Slow and safe** | [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) | Process chats in sequence and save each chat |
 | ⚖️ **Fast and safe** | [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html) | Process chats in parallel and save each chat |
-| 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | All-or-nothing parallel processing (no caching) |
+| 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | Process chats in parallel very quickly without caching |
 | 💰 **Cost savings** | [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) | Batch APIs; \~50% cheaper with up to 24hr delays |
 
 ## Installation
@@ -177,7 +177,7 @@ response$texts()
 
 ### Save and Resume
 
-If you interrupt chat processing (e.g., to check responses) or experience an error, you can call `process()` again to resume from the last saved chat or chunk:
+If you interrupt chat processing or experience an error, you can call `process()` again to resume from the last saved chat, which is cached in an `.rds` file:
 
 ``` r
 response <- chat$process(prompts, file = "chat.rds")
