@@ -31,6 +31,7 @@ Process a lot of chat prompts in parallel using
 \href{https://www.futureverse.org}{future} workers (multisession).
 Save chats and responses to disk for each chat and
 resume processing from the last saved chat.
+Use this function to process a lot of chat prompts very quickly.
 For sequential processing, use \code{seq_chat()}.
 }
 \section{Process Method}{

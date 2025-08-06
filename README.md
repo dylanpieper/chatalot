@@ -12,9 +12,9 @@ chatalot prioritizes safety and recovery, while ellmer prioritizes speed and cos
 
 | Priority | Function | Description |
 |------------------------|------------------------|------------------------|
-| 🛡️ **Safety first** | [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) | Process chats in sequence and save each chat |
-| ⚖️ **Speed + safety** | [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html) | Process chats in parallel and save each chat |
-| 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | All-or-nothing parallel processing |
+| 🛡️ **Slow and safe** | [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) | Process chats in sequence and save each chat |
+| ⚖️ **Fast and safe** | [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html) | Process chats in parallel and save each chat |
+| 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | All-or-nothing parallel processing (no caching) |
 | 💰 **Cost savings** | [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) | Batch APIs; \~50% cheaper with up to 24hr delays |
 
 ## Installation
@@ -38,7 +38,7 @@ usethis::edit_r_environ(scope = c("user", "project"))
 
 ### Sequential Processing
 
-Process chats in sequence, or one at a time.
+Process chats in sequence, or one at a time. Use this function to process prompts slowly, such as when you have strict rate limits or want to periodically check on responses.
 
 ``` r
 library(chatalot)
@@ -81,7 +81,7 @@ Parallel processing requests multiple chats at a time across multiple R processe
 chat <- future_chat("openai/gpt-4.1", system_prompt = "Reply concisely, one sentence")
 ```
 
-You may want to limit the number of simultaneous requests to meet a provider's rate limits by decreasing the number of parallel `workers` (default is `parallel::detectCores()`):
+Use this function to process a lot of chat prompts very quickly. You may want to limit the number of simultaneous requests to meet a provider's rate limits by decreasing the number of parallel `workers` (default is `parallel::detectCores()`):
 
 ``` r
 response <- chat$process(prompts, workers = 4)

@@ -30,6 +30,9 @@ A process object (S7 class) containing
 Process a lot of chat prompts in sequence, or one at a time.
 Save chats and responses to disk for each chat and
 resume processing from the last saved chat.
+Use this function to process prompts slowly, such as when you
+have strict rate limits or want to periodically check on responses.
+which processes one request at a time anyway.
 For parallel processing, use \code{future_chat()}.
 }
 \section{Process Method}{
