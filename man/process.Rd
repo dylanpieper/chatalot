@@ -12,11 +12,11 @@ process(
   type = NULL,
   progress = logical(0),
   input_type = character(0),
-  chunk_size = integer(0),
   workers = integer(0),
   beep = logical(0),
   echo = logical(0),
-  state = list()
+  state = list(),
+  chat_status = character(0)
 )
 }
 \arguments{
@@ -33,8 +33,6 @@ process(
 \item{progress}{Whether to show progress bars (default: TRUE)}
 
 \item{input_type}{Type of input ("vector" or "list")}
-
-\item{chunk_size}{Size of chunks for parallel processing}
 
 \item{workers}{Number of parallel workers}
 

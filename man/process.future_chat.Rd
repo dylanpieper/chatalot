@@ -10,8 +10,6 @@ process.future_chat(
   type = NULL,
   file = tempfile("chat_", fileext = ".rds"),
   workers = NULL,
-  chunk_size = 10,
-  max_chunk_tries = 2L,
   beep = TRUE,
   progress = TRUE,
   echo = FALSE,
@@ -27,11 +25,7 @@ process.future_chat(
 
 \item{file}{Path to save state file}
 
-\item{workers}{Number of parallel workers (default upper limit is \code{parallel::detectCores()})}
-
-\item{chunk_size}{Number of prompts each worker processes at a time (default: 10)}
-
-\item{max_chunk_tries}{Maximum tries per failed chunk}
+\item{workers}{Number of parallel workers (default is \code{parallel::detectCores()})}
 
 \item{beep}{Whether to play a sound on completion}
 

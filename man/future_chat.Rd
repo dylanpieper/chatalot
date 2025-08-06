@@ -29,9 +29,8 @@ A process object (S7 class) containing:
 \description{
 Process a lot of chat prompts in parallel using
 \href{https://www.futureverse.org}{future} workers (multisession).
-Split prompts into chunks to distribute across workers to process chats.
-Save chat data to disk between chunks
-and resume processing from the last saved chunk.
+Save chats and responses to disk for each chat and
+resume processing from the last saved chat.
 For sequential processing, use \code{seq_chat()}.
 }
 \section{Process Method}{

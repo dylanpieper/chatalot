@@ -69,7 +69,6 @@ progress <- S7::new_generic("progress", "x")
 #' @param type Type specification for structured data extraction
 #' @param progress Whether to show progress bars (default: TRUE)
 #' @param input_type Type of input ("vector" or "list")
-#' @param chunk_size Size of chunks for parallel processing
 #' @param workers Number of parallel workers
 #' @param state Internal state tracking
 #' @param beep Play sound on completion (default: TRUE)
@@ -182,20 +181,6 @@ process <- S7::new_class(
         }
       }
     ),
-    chunk_size = S7::new_property(
-      class = S7::class_integer | NULL,
-      validator = function(value) {
-        if (!is.null(value)) {
-          if (length(value) != 1) {
-            "must be a single integer"
-          }
-          if (value <= 0) {
-            "must be positive"
-          }
-        }
-        NULL
-      }
-    ),
     workers = S7::new_property(
       class = S7::class_integer | NULL,
       validator = function(value) {
@@ -244,13 +229,17 @@ process <- S7::new_class(
         }
         NULL
       }
+    ),
+    chat_status = S7::new_property(
+      class = S7::class_character,
+      default = character(0)
     )
   ),
   validator = function(self) {
     if (self@completed > length(self@prompts)) {
       "cannot be larger than number of prompts"
     }
-    if (!is.null(self@state)) {
+    if (!is.null(self@state) && !is.null(self@workers)) {
       if (self@state$active_workers > self@workers) {
         "active workers cannot exceed total workers"
       }

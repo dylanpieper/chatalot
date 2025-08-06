@@ -11,9 +11,9 @@ Easily setup sequential and parallel chat processors with support for [tool call
 chatalot prioritizes safety and recovery, while ellmer prioritizes speed and cost savings.
 
 | Priority | Function | Description |
-|----------------------|----------------------|----------------------------|
+|------------------------|------------------------|------------------------|
 | 🛡️ **Safety first** | [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) | Each chat saved individually in sequence |
-| ⚖️ **Speed + safety** | [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html) | Parallel processing with chunks of chats saved |
+| ⚖️ **Speed + safety** | [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html) | Each chat saved individually in parallel |
 | 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | All-or-nothing parallel processing |
 | 💰 **Cost savings** | [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) | Batch APIs; \~50% cheaper with up to 24hr delays |
 
@@ -38,7 +38,7 @@ usethis::edit_r_environ(scope = c("user", "project"))
 
 ### Sequential Processing
 
-Process chats in sequence, or one at a time. Save responses to disk for each chat and resume processing from the last saved chat.
+Process chats in sequence, or one at a time.
 
 ``` r
 library(chatalot)
@@ -81,15 +81,7 @@ Parallel processing requests multiple chats at a time across multiple R processe
 chat <- future_chat("openai/gpt-4.1", system_prompt = "Reply concisely, one sentence")
 ```
 
-Split prompts into chunks to distribute across workers to process chats (default: process 10 prompts at a time). Save chat data to disk between chunks and resume processing from the last saved chunk.
-
-To speed up processing, increase the `chunk_size` (more risk of data loss if a chunk fails):
-
-``` r
-response <- chat$process(prompts, chunk_size = 50)
-```
-
-To meet a provider's rate limits, you may want to limit the number of simultaneous requests by decreasing the number of parallel `workers`:
+You may want to limit the number of simultaneous requests to meet a provider's rate limits by decreasing the number of parallel `workers` (default is `parallel::detectCores()`):
 
 ``` r
 response <- chat$process(prompts, workers = 4)

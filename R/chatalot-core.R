@@ -91,7 +91,6 @@ process_sequential <- function(
       type = type,
       progress = progress,
       input_type = if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list",
-      chunk_size = NULL,
       workers = NULL,
       state = NULL
     )
@@ -171,15 +170,42 @@ process_sequential <- function(
   finish_chats_obj(chats_obj)
 }
 
+#' Synchronize completed integer with chat_status vector
+#' @param process_obj Process object to synchronize
+#' @return Updated process object with synchronized fields
+#' @keywords internal
+#' @noRd
+sync_status_fields <- function(process_obj) {
+  n_prompts <- length(process_obj@prompts)
+  
+  if(length(process_obj@chat_status) == 0) {
+    process_obj@chat_status <- rep("pending", n_prompts)
+    if(process_obj@completed > 0) {
+      completed_indices <- seq_len(min(process_obj@completed, n_prompts))
+      process_obj@chat_status[completed_indices] <- "completed"
+    }
+  }
+  process_obj@completed <- sum(process_obj@chat_status == "completed", na.rm = TRUE)
+  
+  process_obj
+}
+
+#' Check if there are remaining tasks
+#' @param process_obj Process object to check
+#' @return TRUE if there are pending or failed chats, FALSE otherwise
+#' @keywords internal
+#' @noRd
+has_remaining_work <- function(process_obj) {
+  any(process_obj@chat_status %in% c("pending", "failed"))
+}
+
 #' Process prompts in parallel chunks with error handling and state management
 #' @param chat_obj Chat model object for API calls
 #' @param prompts Vector or list of prompts to process
 #' @param type Optional type specification for structured data extraction
 #' @param file Path to save intermediate state
 #' @param workers Number of parallel workers
-#' @param chunk_size Number of prompts to process in parallel at a time
 #' @param beep Play sound on completion/error
-#' @param max_chunk_tries Maximum tries per failed chunk
 #' @param progress Whether to show progress bars
 #' @return Process results object
 #' @keywords internal
@@ -190,8 +216,6 @@ process_future <- function(
     type,
     file,
     workers,
-    chunk_size,
-    max_chunk_tries,
     beep,
     progress,
     echo,
@@ -247,13 +271,13 @@ process_future <- function(
       type = type,
       progress = progress,
       input_type = original_type,
-      chunk_size = as.integer(chunk_size),
       workers = as.integer(workers),
       state = list(
         active_workers = 0L,
         failed_chunks = list(),
         retry_count = 0L
-      )
+      ),
+      chat_status = rep("pending", total_prompts)
     )
     saveRDS(chats_obj, file)
   }
@@ -265,10 +289,9 @@ process_future <- function(
     return(finish_chats_obj(chats_obj))
   }
 
-  future::plan(future::multisession, workers = workers)
+  chats_obj <- sync_status_fields(chats_obj)
 
-  remaining_prompts <- prompts[(chats_obj@completed + 1L):total_prompts]
-  chunks <- split(remaining_prompts, ceiling(seq_along(remaining_prompts) / chunk_size))
+  future::plan(future::multisession, workers = workers)
 
   pb <- NULL
   if (progress) {
@@ -282,24 +305,20 @@ process_future <- function(
   capture_future <- capture
 
   tryCatch({
-    for (chunk_idx in seq_along(chunks)) {
-      chunk <- chunks[[chunk_idx]]
-      retry_count <- 0
-      success <- FALSE
-      last_error <- NULL
-
-      while (!success && retry_count < max_chunk_tries) {
-        retry_count <- retry_count + 1
-
-        tool_globals <- list()
-        if (is.environment(chat_obj) && exists("deferred_tools", envir = chat_obj) && length(chat_obj$deferred_tools) > 0) {
-          for (tool_with_data in chat_obj$deferred_tools) {
-            if ("globals" %in% names(tool_with_data) && length(tool_with_data$globals) > 0) {
-              tool_globals <- c(tool_globals, tool_with_data$globals)
-            }
+    while(has_remaining_work(chats_obj)) {
+      remaining_indices <- which(chats_obj@chat_status %in% c("pending", "failed"))
+      current_batch <- head(remaining_indices, workers)
+      
+      tool_globals <- list()
+      if (is.environment(chat_obj) && exists("deferred_tools", envir = chat_obj) && length(chat_obj$deferred_tools) > 0) {
+        for (tool_with_data in chat_obj$deferred_tools) {
+          if ("globals" %in% names(tool_with_data) && length(tool_with_data$globals) > 0) {
+            tool_globals <- c(tool_globals, tool_with_data$globals)
           }
         }
-
+      }
+      
+      batch_results <- furrr::future_map(current_batch, function(i) {
         if (is.environment(chat_obj) && exists("chat_model_name", envir = chat_obj)) {
           worker_chat <- if (is.character(chat_obj$chat_model_name)) {
             constructed_chat <- do.call(ellmer::chat, c(list(chat_obj$chat_model_name), chat_obj$chat_model_args))
@@ -318,121 +337,30 @@ process_future <- function(
         } else {
           worker_chat <- chat_obj$clone()
         }
-
-        chunk_chats_obj <-
-          withCallingHandlers(
-            tryCatch(
-              {
-                responses <- NULL
-                tryCatch(
-                  {
-                    responses <- furrr::future_map(
-                      chunk,
-                      function(prompt) {
-                        if (is.environment(chat_obj) && exists("chat_model_name", envir = chat_obj)) {
-                          inner_worker <- if (is.character(chat_obj$chat_model_name)) {
-                            constructed_chat <- do.call(ellmer::chat, c(list(chat_obj$chat_model_name), chat_obj$chat_model_args))
-
-                            if (exists("deferred_tools", envir = chat_obj) && length(chat_obj$deferred_tools) > 0) {
-                              for (tool_with_data in chat_obj$deferred_tools) {
-                                tool <- tool_with_data$tool
-                                constructed_chat$register_tool(tool)
-                              }
-                            }
-
-                            constructed_chat
-                          } else {
-                            stop("Invalid deferred chat construction")
-                          }
-                        } else {
-                          inner_worker <- worker_chat
-                        }
-
-                        capture_future(
-                          inner_worker,
-                          prompt,
-                          type,
-                          echo = echo,
-                          ...
-                        )
-                      },
-                      .options = furrr::furrr_options(
-                        scheduling = 1,
-                        seed = TRUE,
-                        globals = c(list(chat_obj = chat_obj, type = type, echo = echo, capture_future = capture_future), tool_globals)
-                      )
-                    )
-
-                    list(
-                      success = TRUE,
-                      responses = responses
-                    )
-                  },
-                  error = function(e) {
-                    error_msg <- conditionMessage(e)
-                    if (grepl("Caused by error", error_msg)) {
-                      error_msg <- gsub(".*\\!\\s*", "", error_msg)
-                    }
-
-                    stop(error_msg, call. = FALSE)
-                  }
-                )
-              },
-              error = function(e) {
-                last_error <- e
-                stop(conditionMessage(e),
-                  call. = FALSE, domain = "process_future"
-                )
-                e_class <- class(e)[1]
-                cli::cli_alert_warning(sprintf(
-                  "Error in chunk processing (%s): %s",
-                  e_class, conditionMessage(e)
-                ))
-                structure(
-                  list(
-                    success = FALSE,
-                    error = "other",
-                    message = conditionMessage(e)
-                  ),
-                  class = c("worker_error", "error")
-                )
-              }
-            )
-          )
-
-        validation <- validate_chunk(chunk_chats_obj, chunk_idx)
-        success <- validation$valid
-
-        if (success) {
-          start_idx <- chats_obj@completed + 1
-          end_idx <- chats_obj@completed + length(chunk)
-
-          chats_obj@responses[start_idx:end_idx] <- chunk_chats_obj$responses
-
-          chats_obj@completed <- end_idx
+        
+        capture_future(worker_chat, chats_obj@prompts[[i]], type, echo = echo, ...)
+      }, .options = furrr::furrr_options(
+        scheduling = 1,
+        seed = TRUE,
+        globals = c(list(chat_obj = chat_obj, type = type, echo = echo, capture_future = capture_future), tool_globals)
+      ))
+      
+      for(j in seq_along(current_batch)) {
+        idx <- current_batch[j]
+        if(!inherits(batch_results[[j]], "error")) {
+          chats_obj@responses[[idx]] <- batch_results[[j]]
+          chats_obj@chat_status[idx] <- "completed"
+          chats_obj@completed <- sum(chats_obj@chat_status == "completed")
+          
           saveRDS(chats_obj, file)
-          if (!is.null(pb)) {
+          
+          if(!is.null(pb)) {
             cli::cli_progress_update(id = pb, set = chats_obj@completed)
           }
         } else {
-          success <- FALSE
-          break
+          chats_obj@chat_status[idx] <- "failed"
+          saveRDS(chats_obj, file)
         }
-      }
-
-      if (!success) {
-        error_msg <- if (!is.null(last_error)) {
-          sprintf(
-            "Chunk %d failed after %d attempts. Last error: %s",
-            chunk_idx, max_chunk_tries, conditionMessage(last_error)
-          )
-        } else {
-          sprintf(
-            "Chunk %d failed after %d attempts: %s",
-            chunk_idx, max_chunk_tries, validation$message
-          )
-        }
-        stop(error_msg)
       }
     }
 

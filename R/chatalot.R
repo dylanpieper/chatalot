@@ -1,8 +1,8 @@
 #' Process a lot of prompts in sequence
 #' @description
 #' Process a lot of chat prompts in sequence, or one at a time.
-#' Save responses to disk for each chat
-#' and resume processing from the last saved chat.
+#' Save chats and responses to disk for each chat and
+#' resume processing from the last saved chat.
 #' For parallel processing, use `future_chat()`.
 #'
 #' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1" or "anthropic/claude-3-5-sonnet-latest").
@@ -89,9 +89,8 @@ seq_chat <- function(
 #' @description
 #' Process a lot of chat prompts in parallel using
 #' \href{https://www.futureverse.org}{future} workers (multisession).
-#' Split prompts into chunks to distribute across workers to process chats.
-#' Save chat data to disk between chunks
-#' and resume processing from the last saved chunk.
+#' Save chats and responses to disk for each chat and
+#' resume processing from the last saved chat.
 #' For sequential processing, use `seq_chat()`.
 #'
 #' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1" or "anthropic/claude-3-5-sonnet-latest").
@@ -153,8 +152,6 @@ future_chat <- function(
                                file = tempfile("chat_", fileext = ".rds"),
                                progress = TRUE,
                                workers = NULL,
-                               chunk_size = 10,
-                               max_chunk_tries = 2L,
                                beep = TRUE,
                                echo = FALSE,
                                ...) {
@@ -174,8 +171,6 @@ future_chat <- function(
       type = type,
       file = file,
       workers = workers,
-      chunk_size = chunk_size,
-      max_chunk_tries = max_chunk_tries,
       beep = beep,
       progress = progress,
       echo = echo,

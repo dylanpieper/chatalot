@@ -1,3 +1,18 @@
+# chatalot (development)
+
+## New Features
+* `future_chat()` now uses individual chat-based persistence instead of chunk-based processing to prevent data loss
+* Added fine-grained status tracking with `chat_status` field to track individual chat completion states
+
+## Internal Improvements
+* Replaced chunk-based parallel processing with individual batch processing that preserves completed work on failures
+* Added dual-status system maintaining backward compatibility while enabling individual chat recovery
+* Improved error isolation - individual chat failures no longer affect completed chats in the same batch
+
+## Lifecycle changes
+* Removed `chunk_size` parameter from `future_chat()` as it now processes individual chats in worker-sized batches
+* Removed `max_chunk_tries` parameter as individual chat retry logic is handled by ellmer
+
 # chatalot 0.2.0
 
 ## New Features
