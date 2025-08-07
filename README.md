@@ -157,7 +157,7 @@ response$texts()
 
 ### Uploaded Content
 
-Process prompts that with text and uploaded content (e.g., [images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)):
+Process prompts with uploaded content (e.g., [images](https://ellmer.tidyverse.org/reference/content_image_url.html) and [PDFs](https://ellmer.tidyverse.org/reference/content_pdf_file.html)):
 
 ``` r
 base_prompt <- "What do you see in the image?"
