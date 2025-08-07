@@ -15,18 +15,18 @@ This creates an ellmer chat object using \code{\link[ellmer:chat-any]{ellmer::ch
 \value{
 An R6 object with the following methods attached:
 \itemize{
-\item \strong{$process()}: Method to process multiple prompts in parallel.
+\item \verb{$process()}: Method to process multiple prompts in parallel.
 Takes a vector or list of prompts and processes them simultaneously
 using multiple workers with persistent caching. Returns a process object
 containing results and helper functions. See \code{?process.future_chat} for full details
 of the method and its parameters.
-\item \strong{$register_tool()}: Function to register tools that call functions to be used
+\item \verb{$register_tool()}: Function to register tools that call functions to be used
 during chat interactions. Works the same as ellmer's \href{https://ellmer.tidyverse.org/articles/tool-calling.html}{\verb{$register_tool()}}.
 }
 }
 \description{
-Process a lot of chat prompts in parallel using
-\href{https://www.futureverse.org}{future} workers (multisession).
+Process a lot of chat prompts in parallel using multisession
+\href{https://www.futureverse.org}{future} workers.
 Use this function to process a lot of chat prompts very quickly.
 For sequential processing, use \code{seq_chat()}.
 }
