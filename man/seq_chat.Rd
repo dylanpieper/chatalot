@@ -13,12 +13,12 @@ This creates an ellmer chat object using \code{\link[ellmer:chat-any]{ellmer::ch
 \item{...}{Additional arguments passed to the underlying chat model (e.g., \code{system_prompt})}
 }
 \value{
-An R6 object with the following methods attached:
+An R6 object with functions:
 \itemize{
 \item \verb{$process()}: Function to process multiple prompts sequentially.
 Takes a vector or list of prompts and processes them one by one with persistent caching.
 Returns a process object containing results and helper functions.
-See \code{?process.sequential_chat} for full details of the method and its parameters.
+See \code{?process.seq_chat} for full details of the method and its parameters.
 \item \verb{$register_tool()}: Function to register tools that call functions to be used
 during chat interactions. Works the same as ellmer's \href{https://ellmer.tidyverse.org/articles/tool-calling.html}{\verb{$register_tool()}}.
 }

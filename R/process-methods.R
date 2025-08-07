@@ -9,16 +9,16 @@
 #' @param echo Whether to display chat outputs (when `progress` is `FALSE`)
 #' @param ... Additional arguments passed to the chat method
 #'
-#' @return A process object with the processed results
+#' @return A process object with the attached functions (`$texts()`, `$chats()`, and `$progress()`)
 #' @export
-process.sequential_chat <- function(chat_env,
-                                    prompts,
-                                    type = NULL,
-                                    file = tempfile("chat_", fileext = ".rds"),
-                                    progress = TRUE,
-                                    beep = TRUE,
-                                    echo = FALSE,
-                                    ...) {
+process.seq_chat <- function(chat_env,
+                             prompts,
+                             type = NULL,
+                             file = tempfile("chat_", fileext = ".rds"),
+                             progress = TRUE,
+                             beep = TRUE,
+                             echo = FALSE,
+                             ...) {
   process_sequential(
     chat_obj = chat_env$chat_model,
     prompts = prompts,
@@ -45,7 +45,7 @@ process.sequential_chat <- function(chat_env,
 #' @param echo Whether to display chat outputs (when `progress` is `FALSE`)
 #' @param ... Additional arguments passed to the chat method
 #'
-#' @return A process object with the processed results
+#' @return A process object with the attached functions (`$texts()`, `$chats()`, and `$progress()`)
 #' @export
 process.future_chat <- function(chat_env,
                                 prompts,

@@ -8,12 +8,12 @@
 #' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1" or "anthropic/claude-3-5-sonnet-latest").
 #'   This creates an ellmer chat object using [ellmer::chat()].
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
-#' @return An R6 object with the following methods attached:
+#' @return An R6 object with functions:
 #'   \itemize{
 #'     \item `$process()`: Function to process multiple prompts sequentially.
 #'       Takes a vector or list of prompts and processes them one by one with persistent caching.
 #'       Returns a process object containing results and helper functions.
-#'       See `?process.sequential_chat` for full details of the method and its parameters.
+#'       See `?process.seq_chat` for full details of the method and its parameters.
 #'     \item `$register_tool()`: Function to register tools that call functions to be used
 #'       during chat interactions. Works the same as ellmer's [`$register_tool()`](https://ellmer.tidyverse.org/articles/tool-calling.html).
 #'   }
@@ -63,7 +63,7 @@ seq_chat <- function(
                                ...) {
     file <- handle_file_persistence(chat_env, file)
 
-    process.sequential_chat(
+    process.seq_chat(
       chat_env = chat_env,
       prompts = prompts,
       type = type,
@@ -89,9 +89,9 @@ seq_chat <- function(
 #' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1" or "anthropic/claude-3-5-sonnet-latest").
 #'   This creates an ellmer chat object using [ellmer::chat()].
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
-#' @return An R6 object with the following methods attached:
+#' @return An R6 object with functions:
 #'   \itemize{
-#'     \item `$process()`: Method to process multiple prompts in parallel.
+#'     \item `$process()`: Function to process multiple prompts in parallel.
 #'       Takes a vector or list of prompts and processes them simultaneously
 #'       using multiple workers with persistent caching. Returns a process object
 #'       containing results and helper functions. See `?process.future_chat` for full details

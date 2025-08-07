@@ -38,7 +38,7 @@ rate limits by decreasing this value.}
 \item{...}{Additional arguments passed to the chat method}
 }
 \value{
-A process object with the processed results
+A process object with the attached functions (\verb{$texts()}, \verb{$chats()}, and \verb{$progress()})
 }
 \description{
 Process lots of chat prompts in parallel

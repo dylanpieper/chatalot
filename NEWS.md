@@ -17,6 +17,7 @@
 * `type_spec` is renamed to `type` following ellmer (0.1.1)
 * `chat_sequential()` is renamed to `seq_chat()` to match ellmer naming conventions
 * `chat_future()` is renamed to `future_chat()` to match ellmer naming conventions
+* `process.sequential_chat()` is renamed to `process.seq_chat()` for consistency
 * Removed chunking parameters `chunk_size` and `max_chunk_tries` from `future_chat()`
 * Removed retry functionality to use new robust retries in ellmer (0.3.0) using `options(ellmer_max_tries)`
 * Removed evaluation functionality due to poor performance

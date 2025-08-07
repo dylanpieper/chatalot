@@ -13,9 +13,9 @@ This creates an ellmer chat object using \code{\link[ellmer:chat-any]{ellmer::ch
 \item{...}{Additional arguments passed to the underlying chat model (e.g., \code{system_prompt})}
 }
 \value{
-An R6 object with the following methods attached:
+An R6 object with functions:
 \itemize{
-\item \verb{$process()}: Method to process multiple prompts in parallel.
+\item \verb{$process()}: Function to process multiple prompts in parallel.
 Takes a vector or list of prompts and processes them simultaneously
 using multiple workers with persistent caching. Returns a process object
 containing results and helper functions. See \code{?process.future_chat} for full details
