@@ -73,6 +73,7 @@ progress <- S7::new_generic("progress", "x")
 #' @param state Internal state tracking
 #' @param beep Play sound on completion (default: TRUE)
 #' @param echo Whether to echo messages during processing (default: FALSE)
+#' @param chat_status Character vector tracking individual chat completion status ("pending", "completed", or "failed")
 #' @return Returns an S7 class object of class "process" that represents a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides methods for:
 #' \itemize{
 #'   \item Extracting text responses via \code{texts()} (includes structured data when a type specification is provided)

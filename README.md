@@ -8,22 +8,26 @@ Easily setup sequential and parallel chat processors with support for [tool call
 
 ## **chatalot or ellmer?**
 
-chatalot prioritizes safety and recovery, while ellmer prioritizes speed and cost savings.
-
 | Priority | Function | Description |
 |------------------------|------------------------|------------------------|
 | 🛡️ **Slow and safe** | [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) | Process chats in sequence with persistent caching |
 | ⚖️ **Fast and safe** | [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html) | Process chats in parallel with persistent caching |
-| 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | Process chats in parallel very quickly without caching |
+| 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | Process chats in parallel very quickly with no caching |
 | 💰 **Cost savings** | [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) | Batch APIs; \~50% cheaper with up to 24hr delays |
 
 ## Installation
 
-You can install the development or CRAN version of the package with:
+From CRAN:
 
 ``` r
-# pak::pak("dylanpieper/chatalot")
-install.packages("chatalot")
+# install.packages("pak")
+pak::pak("chatalot")
+```
+
+Development version:
+
+``` r
+pak::pak("dylanpieper/chatalot")
 ```
 
 ## Setup API Keys
@@ -81,7 +85,7 @@ Parallel processing requests multiple chats at a time across multiple R processe
 chat <- future_chat("openai/gpt-4.1", system_prompt = "Reply concisely, one sentence")
 ```
 
-Use this function to process a lot of chat prompts very quickly. You may want to limit the number of simultaneous requests to meet a provider's rate limits by decreasing the number of parallel `workers` (default is `parallel::detectCores()` which is 10 on my Mac Mini M4):
+Use this function to process a lot of chat prompts very quickly. You may want to limit the number of simultaneous requests to meet a provider's rate limits by decreasing the number of parallel `workers` (default is `parallel::detectCores()`; for example, this is 10 on my Mac Mini M4):
 
 ``` r
 response <- chat$process(prompts, workers = 5)
@@ -221,8 +225,10 @@ response <- chat$process(prompts, progress = FALSE, echo = TRUE)
 
 ## Compare Retry Methods
 
-Functions handle API rate limits differently:
+The following functions handle API rate limits differently:
 
--   [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) and [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Allow rate limits to be exceeded and fallback on ellmer's retry mechanism (reactive)
--   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Throttles requests to prevent exceeding rate limits (proactive)
--   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html): Managed by the API provider
+-   [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) and [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Allow rate limits to be exceeded and fallback on ellmer's retry mechanism with the following options:
+    -   `options(ellmer_max_tries)`: Retries requests up to 3 times by default and will retry if the connection fails, not just if the request returns a transient error
+    -   `options(ellmer_timeout_s)`: Sets the default timeout time in seconds, which also applies to the initial connection phase
+-   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Throttles requests to prevent exceeding rate limits
+-   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html): Managed by the provider
