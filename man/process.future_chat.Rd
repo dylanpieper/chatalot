@@ -2,7 +2,7 @@
 % Please edit documentation in R/process-methods.R
 \name{process.future_chat}
 \alias{process.future_chat}
-\title{Process lots of prompts with a parallel chat}
+\title{Process lots of chat prompts in parallel}
 \usage{
 process.future_chat(
   chat_env,
@@ -25,7 +25,9 @@ process.future_chat(
 
 \item{file}{Path to save state file}
 
-\item{workers}{Number of parallel workers (default is \code{parallel::detectCores()})}
+\item{workers}{Number of parallel workers (default is \code{parallel::detectCores()}).
+You may want to limit the number of simultaneous requests to meet a provider's
+rate limits by decreasing this value.}
 
 \item{beep}{Whether to play a sound on completion}
 
@@ -39,5 +41,5 @@ process.future_chat(
 A process object with the processed results
 }
 \description{
-Process lots of prompts with a parallel chat
+Process lots of chat prompts in parallel
 }

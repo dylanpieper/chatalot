@@ -42,7 +42,7 @@ usethis::edit_r_environ(scope = c("user", "project"))
 
 ### Sequential Processing
 
-Process chats in sequence, or one at a time. Use this function to process prompts slowly, such as when you have strict rate limits or want to periodically check the responses.
+Process chats in sequence, or one at a time. Use this function to process prompts slowly, such as when providers don't allow parallel processing or have strict rate limits, or when you want to periodically check the responses.
 
 ``` r
 library(chatalot)
@@ -85,7 +85,7 @@ Parallel processing requests multiple chats at a time across multiple R processe
 chat <- future_chat("openai/gpt-4.1", system_prompt = "Reply concisely, one sentence")
 ```
 
-Use this function to process lots of chat prompts very quickly. You may want to limit the number of simultaneous requests to meet a provider's rate limits by decreasing the number of parallel `workers` (default is `parallel::detectCores()`; for example, this is 10 on my Mac Mini M4):
+Use this function to process lots of chat prompts simultaneously and quickly. You may want to limit the number of simultaneous requests to meet a provider's rate limits by decreasing the number of `workers` (default is `parallel::detectCores()`, which is 10 on my Mac Mini M4):
 
 ``` r
 response <- chat$process(prompts, workers = 5)

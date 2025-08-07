@@ -1,4 +1,4 @@
-#' Process lots of prompts with a sequential chat
+#' Process lots of chat prompts in sequence
 #'
 #' @param chat_env The chat environment from seq_chat
 #' @param prompts List of prompts to process
@@ -31,13 +31,15 @@ process.sequential_chat <- function(chat_env,
   )
 }
 
-#' Process lots of prompts with a parallel chat
+#' Process lots of chat prompts in parallel
 #'
 #' @param chat_env The chat environment from future_chat
 #' @param prompts List of prompts to process
 #' @param type Type specification for structured data extraction
 #' @param file Path to save state file
-#' @param workers Number of parallel workers (default is `parallel::detectCores()`)
+#' @param workers Number of parallel workers (default is `parallel::detectCores()`).
+#'   You may want to limit the number of simultaneous requests to meet a provider's
+#'   rate limits by decreasing this value.
 #' @param progress Whether to show progress bars
 #' @param beep Whether to play a sound on completion
 #' @param echo Whether to display chat outputs (when `progress` is `FALSE`)

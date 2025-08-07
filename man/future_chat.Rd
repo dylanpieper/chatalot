@@ -2,7 +2,7 @@
 % Please edit documentation in R/chatalot.R
 \name{future_chat}
 \alias{future_chat}
-\title{Process lots of prompts in parallel}
+\title{Create a parallel chat processor}
 \usage{
 future_chat(chat_model = NULL, ...)
 }
@@ -25,9 +25,9 @@ during chat interactions. Works the same as ellmer's \href{https://ellmer.tidyve
 }
 }
 \description{
-Process lots of chat prompts in parallel using multisession
+Access methods to process lots of chat prompts in parallel using multisession
 \href{https://www.futureverse.org}{future} workers.
-Use this function to process lots of chat prompts very quickly.
+Use this function to process lots of chat prompts simultaneously and quickly.
 For sequential processing, use \code{seq_chat()}.
 }
 \examples{
