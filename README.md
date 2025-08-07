@@ -4,7 +4,7 @@
 
 chatalot processes a lot of large language model chats in R and is an extension of [ellmer](https://ellmer.tidyverse.org).
 
-Easily setup sequential and parallel chat processors with support for [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), uploaded content, save and resume, and sound notifications.
+Easily setup sequential and parallel chat processors with support for [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), uploaded content, persistent caching, and sound notifications.
 
 ## **chatalot or ellmer?**
 
@@ -12,8 +12,8 @@ chatalot prioritizes safety and recovery, while ellmer prioritizes speed and cos
 
 | Priority | Function | Description |
 |------------------------|------------------------|------------------------|
-| 🛡️ **Slow and safe** | [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) | Process chats in sequence and save each chat |
-| ⚖️ **Fast and safe** | [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html) | Process chats in parallel and save each chat |
+| 🛡️ **Slow and safe** | [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) | Process chats in sequence with persistent caching |
+| ⚖️ **Fast and safe** | [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html) | Process chats in parallel with persistent caching |
 | 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | Process chats in parallel very quickly without caching |
 | 💰 **Cost savings** | [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html) | Batch APIs; \~50% cheaper with up to 24hr delays |
 
@@ -38,7 +38,7 @@ usethis::edit_r_environ(scope = c("user", "project"))
 
 ### Sequential Processing
 
-Process chats in sequence, or one at a time. Use this function to process prompts slowly, such as when you have strict rate limits or want to periodically check on responses.
+Process chats in sequence, or one at a time. Use this function to process prompts slowly, such as when you have strict rate limits or want to periodically check the responses.
 
 ``` r
 library(chatalot)
@@ -81,10 +81,10 @@ Parallel processing requests multiple chats at a time across multiple R processe
 chat <- future_chat("openai/gpt-4.1", system_prompt = "Reply concisely, one sentence")
 ```
 
-Use this function to process a lot of chat prompts very quickly. You may want to limit the number of simultaneous requests to meet a provider's rate limits by decreasing the number of parallel `workers` (default is `parallel::detectCores()`):
+Use this function to process a lot of chat prompts very quickly. You may want to limit the number of simultaneous requests to meet a provider's rate limits by decreasing the number of parallel `workers` (default is `parallel::detectCores()` which is 10 on my Mac Mini M4):
 
 ``` r
-response <- chat$process(prompts, workers = 4)
+response <- chat$process(prompts, workers = 5)
 ```
 
 ## Features
@@ -175,7 +175,7 @@ response$texts()
 #> silhouette on a dark blue hexagonal background."
 ```
 
-### Save and Resume
+### Persistent Caching
 
 If you interrupt chat processing or experience an error, you can call `process()` again to resume from the last saved chat, which is cached in an `.rds` file:
 
@@ -219,10 +219,10 @@ response <- chat$process(prompts, progress = FALSE, echo = TRUE)
 -   `chats()`: Returns a list of chat objects
 -   `progress()`: Returns processing status
 
-## Tidbits
+## Compare Retry Methods
 
--   Functions handle API rate limits differently:
-    -   [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) and [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Allow rate limits to be exceeded and fallback on ellmer's retry mechanism (reactive)
-    -   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Throttles requests to prevent rate limits (proactive)
-    -   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html): Managed by the API provider
--   Blog Post: [Batch and Compare the Similarity of LLM Responses in R](https://dylanpieper.github.io/blog/posts/batch-and-compare-LLM-responses.html)
+Functions handle API rate limits differently:
+
+-   [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) and [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Allow rate limits to be exceeded and fallback on ellmer's retry mechanism (reactive)
+-   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Throttles requests to prevent exceeding rate limits (proactive)
+-   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html): Managed by the API provider

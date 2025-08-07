@@ -1,10 +1,10 @@
 #' Process a lot of prompts in sequence
 #' @description
 #' Process a lot of chat prompts in sequence, or one at a time.
-#' Save chats and responses to disk for each chat and
+#' For persistent caching, save each chat to the disk and
 #' resume processing from the last saved chat.
 #' Use this function to process prompts slowly, such as when you
-#' have strict rate limits or want to periodically check on responses.
+#' have strict rate limits or want to periodically check the responses.
 #' which processes one request at a time anyway.
 #' For parallel processing, use `future_chat()`.
 #'
@@ -92,7 +92,7 @@ seq_chat <- function(
 #' @description
 #' Process a lot of chat prompts in parallel using
 #' \href{https://www.futureverse.org}{future} workers (multisession).
-#' Save chats and responses to disk for each chat and
+#' For persistent caching, save each chat to the disk and
 #' resume processing from the last saved chat.
 #' Use this function to process a lot of chat prompts very quickly.
 #' For sequential processing, use `seq_chat()`.

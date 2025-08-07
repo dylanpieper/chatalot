@@ -29,7 +29,7 @@ A process object (S7 class) containing:
 \description{
 Process a lot of chat prompts in parallel using
 \href{https://www.futureverse.org}{future} workers (multisession).
-Save chats and responses to disk for each chat and
+For persistent caching, save each chat to the disk and
 resume processing from the last saved chat.
 Use this function to process a lot of chat prompts very quickly.
 For sequential processing, use \code{seq_chat()}.
