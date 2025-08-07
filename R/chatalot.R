@@ -1,27 +1,21 @@
 #' Process a lot of prompts in sequence
 #' @description
 #' Process a lot of chat prompts in sequence, or one at a time.
-#' For persistent caching, save each chat to the disk and
-#' resume processing from the last saved chat.
 #' Use this function to process prompts slowly, such as when you
 #' have strict rate limits or want to periodically check the responses.
-#' which processes one request at a time anyway.
 #' For parallel processing, use `future_chat()`.
 #'
 #' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1" or "anthropic/claude-3-5-sonnet-latest").
 #'   This creates an ellmer chat object using [ellmer::chat()].
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
-#' @return A process object (S7 class) containing
+#' @return An R6 object with the following methods:
 #'   \itemize{
-#'     \item **prompts**: Original input prompts
-#'     \item **responses**: Raw response data for completed prompts
-#'     \item **completed**: Number of successfully processed prompts
-#'     \item **file**: Path where batch state is saved
-#'     \item **type**: Type specification used for structured data
-#'     \item **texts**: Function to extract text responses or structured data
-#'     \item **chats**: Function to extract chat objects
-#'     \item **progress**: Function to get processing status
-#'     \item **process**: Function to process a lot of prompts
+#'     \item **process**: Primary method for processing multiple prompts sequentially.
+#'       Takes a list/vector of prompts and processes them one by one with persistent caching,
+#'       progress tracking, and interruption handling. Returns a process object containing
+#'       results and helper functions.
+#'     \item **register_tool**: Method to register custom tools/functions that can be used
+#'       during chat interactions. Tools are stored and applied to chat models during processing.
 #'   }
 #' @section Process Method:
 #' This function provides access to the `process()` method for sequential processing of prompts.
@@ -92,25 +86,20 @@ seq_chat <- function(
 #' @description
 #' Process a lot of chat prompts in parallel using
 #' \href{https://www.futureverse.org}{future} workers (multisession).
-#' For persistent caching, save each chat to the disk and
-#' resume processing from the last saved chat.
 #' Use this function to process a lot of chat prompts very quickly.
 #' For sequential processing, use `seq_chat()`.
 #'
 #' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1" or "anthropic/claude-3-5-sonnet-latest").
 #'   This creates an ellmer chat object using [ellmer::chat()].
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
-#' @return A process object (S7 class) containing:
+#' @return An R6 object with the following methods:
 #'   \itemize{
-#'     \item **prompts**: Original input prompts
-#'     \item **responses**: Raw response data for completed prompts
-#'     \item **completed**: Number of successfully processed prompts
-#'     \item **file**: Path where batch state is saved
-#'     \item **type**: Type specification used for structured data
-#'     \item **texts**: Function to extract text responses or structured data
-#'     \item **chats**: Function to extract chat objects
-#'     \item **progress**: Function to get processing status
-#'     \item **process**: Function to process a lot of prompts
+#'     \item **process**: Primary method for processing multiple prompts in parallel.
+#'       Takes a list/vector of prompts and processes them simultaneously using multiple workers
+#'       with persistent caching, progress tracking, and error handling. Returns a process object
+#'       containing results and helper functions.
+#'     \item **register_tool**: Method to register custom tools/functions that can be used
+#'       during chat interactions. Tools are stored and applied to chat models during processing.
 #'   }
 #' @section Process Method:
 #' This function provides access to the `process()` method for parallel processing of prompts.

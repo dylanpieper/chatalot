@@ -13,26 +13,20 @@ This creates an ellmer chat object using \code{\link[ellmer:chat-any]{ellmer::ch
 \item{...}{Additional arguments passed to the underlying chat model (e.g., \code{system_prompt})}
 }
 \value{
-A process object (S7 class) containing
+An R6 object with the following methods:
 \itemize{
-\item \strong{prompts}: Original input prompts
-\item \strong{responses}: Raw response data for completed prompts
-\item \strong{completed}: Number of successfully processed prompts
-\item \strong{file}: Path where batch state is saved
-\item \strong{type}: Type specification used for structured data
-\item \strong{texts}: Function to extract text responses or structured data
-\item \strong{chats}: Function to extract chat objects
-\item \strong{progress}: Function to get processing status
-\item \strong{process}: Function to process a lot of prompts
+\item \strong{process}: Primary method for processing multiple prompts sequentially.
+Takes a list/vector of prompts and processes them one by one with persistent caching,
+progress tracking, and interruption handling. Returns a process object containing
+results and helper functions.
+\item \strong{register_tool}: Method to register custom tools/functions that can be used
+during chat interactions. Tools are stored and applied to chat models during processing.
 }
 }
 \description{
 Process a lot of chat prompts in sequence, or one at a time.
-For persistent caching, save each chat to the disk and
-resume processing from the last saved chat.
 Use this function to process prompts slowly, such as when you
 have strict rate limits or want to periodically check the responses.
-which processes one request at a time anyway.
 For parallel processing, use \code{future_chat()}.
 }
 \section{Process Method}{
