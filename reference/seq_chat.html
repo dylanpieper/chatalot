@@ -72,13 +72,12 @@ This creates an ellmer chat object using <code><a href="https://ellmer.tidyverse
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An R6 object with the following methods:</p><ul><li><p><strong>process</strong>: Method to process multiple prompts sequentially.
-Takes a list/vector of prompts and processes them one by one with persistent caching
-and progress tracking. Returns a process object containing
-results and helper functions. See <code><a href="process.sequential_chat.html">?process.sequential_chat</a></code> for full details
-of the method and its parameters.</p></li>
-<li><p><strong>register_tool</strong>: Method to register custom tools/functions that can be used
-during chat interactions. Tools are stored and applied to chat models during processing.</p></li>
+    <p>An R6 object with the following methods attached:</p><ul><li><p><strong>$process()</strong>: Function to process multiple prompts sequentially.
+Takes a vector or list of prompts and processes them one by one with persistent caching.
+Returns a process object containing results and helper functions.
+See <code><a href="process.sequential_chat.html">?process.sequential_chat</a></code> for full details of the method and its parameters.</p></li>
+<li><p><strong>$register_tool()</strong>: Function to register tools that call functions to be used
+during chat interactions. Works the same as ellmer's <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link"><code>$register_tool()</code></a>.</p></li>
 </ul></div>
 
     <div class="section level2">
