@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Process a Lot of LLM Chats • chatalot</title>
+<title>Process Lots of LLM Chats • chatalot</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Process a Lot of LLM Chats">
-<meta name="description" content="Process a lot of large language model chats with ellmer. Provides both sequential and parallel chat processors with support for tool calling, structured data extraction, and uploaded content. Includes persistent caching by saving chat data to the disk. Additional quality-of-life features include sound notifications and verbosity options. Parallel processing is implemented using future. Includes methods for retrieving responses (texts and chats) and progress.">
-<meta property="og:description" content="Process a lot of large language model chats with ellmer. Provides both sequential and parallel chat processors with support for tool calling, structured data extraction, and uploaded content. Includes persistent caching by saving chat data to the disk. Additional quality-of-life features include sound notifications and verbosity options. Parallel processing is implemented using future. Includes methods for retrieving responses (texts and chats) and progress.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Process Lots of LLM Chats">
+<meta name="description" content="Process lots of large language model chats with ellmer. Provides both sequential and parallel chat processors with support for tool calling, structured data extraction, and uploaded content. Includes persistent caching by saving chat data to the disk. Additional quality-of-life features include sound notifications and verbosity options. Parallel processing is implemented using future. Includes methods for retrieving responses (texts and chats) and progress.">
+<meta property="og:description" content="Process lots of large language model chats with ellmer. Provides both sequential and parallel chat processors with support for tool calling, structured data extraction, and uploaded content. Includes persistent caching by saving chat data to the disk. Additional quality-of-life features include sound notifications and verbosity options. Parallel processing is implemented using future. Includes methods for retrieving responses (texts and chats) and progress.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -58,7 +58,7 @@
 <div class="page-header"><h1 id="chatalot-">chatalot <img src="reference/figures/chatalot-hex.png" align="right" width="160"><a class="anchor" aria-label="anchor" href="#chatalot-"></a>
 </h1></div>
 <p><a href="https://CRAN.R-project.org/package=chatalot" class="external-link"><img src="https://www.r-pkg.org/badges/version/chatalot" alt="CRAN status"></a> <a href="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml" class="external-link"><img src="https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg" alt="R-CMD-check"></a></p>
-<p>chatalot processes a lot of large language model chats in R and is an extension of <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>.</p>
+<p>chatalot processes lots of large language model chats in R and is an extension of <a href="https://ellmer.tidyverse.org" class="external-link">ellmer</a>.</p>
 <p>Easily setup sequential and parallel chat processors with support for <a href="https://ellmer.tidyverse.org/articles/tool-calling.html" class="external-link">tool calling</a>, <a href="https://ellmer.tidyverse.org/articles/structured-data.html" class="external-link">structured data extraction</a>, uploaded content, persistent caching, and sound notifications.</p>
 <div class="section level2">
 <h2 id="chatalot-or-ellmer">
@@ -163,7 +163,7 @@
 <p>Parallel processing requests multiple chats at a time across multiple R processes using <a href="https://future.futureverse.org" class="external-link">future</a> workers:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/future_chat.html">future_chat</a></span><span class="op">(</span><span class="st">"openai/gpt-4.1"</span>, system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span></code></pre></div>
-<p>Use this function to process a lot of chat prompts very quickly. You may want to limit the number of simultaneous requests to meet a provider’s rate limits by decreasing the number of parallel <code>workers</code> (default is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>; for example, this is 10 on my Mac Mini M4):</p>
+<p>Use this function to process lots of chat prompts very quickly. You may want to limit the number of simultaneous requests to meet a provider’s rate limits by decreasing the number of parallel <code>workers</code> (default is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>; for example, this is 10 on my Mac Mini M4):</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, workers <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 </div>
