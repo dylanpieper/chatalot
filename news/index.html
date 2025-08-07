@@ -43,35 +43,35 @@
 <div class="section level3">
 <h3 id="new-features-0-2-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-2-0"></a></h3>
 <ul><li>Depends on ellmer &gt; 0.3.0, and uses the the new API to specify a particular model (e.g., <code>chat("anthropic/claude-3-5-sonnet-latest")</code>)</li>
-<li>Added support for prompts with mixed content (text, images, files) using ellmer content functions</li>
+<li>Added support for prompts with mixed content (text, images, and PDFs) using ellmer content functions</li>
 </ul></div>
 <div class="section level3">
 <h3 id="internal-improvements-0-2-0">Internal Improvements<a class="anchor" aria-label="anchor" href="#internal-improvements-0-2-0"></a></h3>
 <ul><li>
-<code>$texts()</code> returns a data frame for structured data when possible</li>
+<code><a href="../reference/future_chat.html">future_chat()</a></code> now uses persistent caching of individual chats instead of chunks to prevent data loss</li>
+<li>Added enhanced status tracking with <code>chat_status</code> to track individual chat completion states</li>
+<li>
+<code>$texts()</code> returns a data frame for structured data when type properties are consistent</li>
 <li>Replaced progress bar percentage indicator (<code><a href="https://cli.r-lib.org/reference/progress-variables.html" class="external-link">cli::pb_percent</a></code>) to estimated time until completion (<code><a href="https://cli.r-lib.org/reference/progress-variables.html" class="external-link">cli::pb_eta</a></code>)</li>
 </ul></div>
 <div class="section level3">
 <h3 id="lifecycle-changes-0-2-0">Lifecycle changes<a class="anchor" aria-label="anchor" href="#lifecycle-changes-0-2-0"></a></h3>
 <ul><li>Renamed package from hellmer to chatalot</li>
 <li>
-<code>lot</code> is renamed to <code>process</code> for consistent verb use</li>
-<li>
-<code>batch</code> is renamed to <code>lot</code> to match the new package name</li>
+<code>batch</code> is renamed to <code>process</code> for consistent verb use</li>
 <li>
 <code>state_path</code> is renamed to <code>file</code> for simplicity</li>
 <li>
-<code>max_chunk_retries</code> is renamed to <code>max_chunk_tries</code> for simplicity (default: 2)</li>
+<code>type_spec</code> is renamed to <code>type</code> following ellmer (0.1.1)</li>
 <li>
-<code>type_spec</code> is renamed to <code>type</code> following the latest update to ellmer (0.1.1)</li>
+<code>chat_sequential()</code> is renamed to <code><a href="../reference/seq_chat.html">seq_chat()</a></code> to match ellmer naming conventions</li>
 <li>
-<code>chat_sequential()</code> is renamed to <code><a href="../reference/seq_chat.html">seq_chat()</a></code>
+<code>chat_future()</code> is renamed to <code><a href="../reference/future_chat.html">future_chat()</a></code> to match ellmer naming conventions</li>
+<li>Removed chunking parameters <code>chunk_size</code> and <code>max_chunk_tries</code> from <code><a href="../reference/future_chat.html">future_chat()</a></code>
 </li>
-<li>
-<code>chat_future()</code> is renamed to <code><a href="../reference/future_chat.html">future_chat()</a></code>
+<li>Removed retry functionality to use new robust retries in ellmer (0.3.0) using <code>options(ellmer_max_tries)</code>
 </li>
 <li>Removed evaluation functionality due to poor performance</li>
-<li>Removed retry functionality due to new robust retries in ellmer (0.3.0)</li>
 </ul></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
