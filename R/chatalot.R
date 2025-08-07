@@ -8,15 +8,14 @@
 #' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1" or "anthropic/claude-3-5-sonnet-latest").
 #'   This creates an ellmer chat object using [ellmer::chat()].
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
-#' @return An R6 object with the following methods:
+#' @return An R6 object with the following methods attached:
 #'   \itemize{
-#'     \item **process**: Method to process multiple prompts sequentially.
-#'       Takes a list/vector of prompts and processes them one by one with persistent caching
-#'       and progress tracking. Returns a process object containing
-#'       results and helper functions. See `?process.sequential_chat` for full details
-#'       of the method and its parameters.
-#'     \item **register_tool**: Method to register custom tools/functions that can be used
-#'       during chat interactions. Tools are stored and applied to chat models during processing.
+#'     \item **$process()**: Function to process multiple prompts sequentially.
+#'       Takes a vector or list of prompts and processes them one by one with persistent caching.
+#'       Returns a process object containing results and helper functions.
+#'       See `?process.sequential_chat` for full details of the method and its parameters.
+#'     \item **$register_tool()**: Function to register tools that call functions to be used
+#'       during chat interactions. Works the same as ellmer's [`$register_tool()`](https://ellmer.tidyverse.org/articles/tool-calling.html).
 #'   }
 #'
 #' @examplesIf ellmer::has_credentials("openai")
@@ -90,15 +89,15 @@ seq_chat <- function(
 #' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1" or "anthropic/claude-3-5-sonnet-latest").
 #'   This creates an ellmer chat object using [ellmer::chat()].
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
-#' @return An R6 object with the following methods:
+#' @return An R6 object with the following methods attached:
 #'   \itemize{
-#'     \item **process**: Method to process multiple prompts in parallel.
-#'       Takes a list/vector of prompts and processes them simultaneously using multiple workers
-#'       with persistent caching and progress tracking. Returns a process object
+#'     \item **$process()**: Method to process multiple prompts in parallel.
+#'       Takes a vector or list of prompts and processes them simultaneously
+#'       using multiple workers with persistent caching. Returns a process object
 #'       containing results and helper functions. See `?process.future_chat` for full details
 #'       of the method and its parameters.
-#'     \item **register_tool**: Method to register custom tools/functions that can be used
-#'       during chat interactions. Tools are stored and applied to chat models during processing.
+#'     \item **$register_tool()**: Function to register tools that call functions to be used
+#'       during chat interactions. Works the same as ellmer's [`$register_tool()`](https://ellmer.tidyverse.org/articles/tool-calling.html).
 #'   }
 #'
 #' @examplesIf interactive() && ellmer::has_credentials("openai")
