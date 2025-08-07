@@ -2,7 +2,7 @@
 % Please edit documentation in R/process-methods.R
 \name{process.sequential_chat}
 \alias{process.sequential_chat}
-\title{Process a lot of prompts with a sequential chat}
+\title{Process lots of prompts with a sequential chat}
 \usage{
 process.sequential_chat(
   chat_env,
@@ -36,5 +36,5 @@ process.sequential_chat(
 A process object with the processed results
 }
 \description{
-Process a lot of prompts with a sequential chat
+Process lots of prompts with a sequential chat
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/process-methods.R
 \name{process.future_chat}
 \alias{process.future_chat}
-\title{Process a lot of prompts with a parallel chat}
+\title{Process lots of prompts with a parallel chat}
 \usage{
 process.future_chat(
   chat_env,
@@ -39,5 +39,5 @@ process.future_chat(
 A process object with the processed results
 }
 \description{
-Process a lot of prompts with a parallel chat
+Process lots of prompts with a parallel chat
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/chatalot.R
 \name{seq_chat}
 \alias{seq_chat}
-\title{Process a lot of prompts in sequence}
+\title{Process lots of prompts in sequence}
 \usage{
 seq_chat(chat_model = NULL, ...)
 }
@@ -24,7 +24,7 @@ during chat interactions. Works the same as ellmer's \href{https://ellmer.tidyve
 }
 }
 \description{
-Process a lot of chat prompts in sequence, or one at a time.
+Process lots of chat prompts in sequence, or one at a time.
 Use this function to process prompts slowly, such as when you
 have strict rate limits or want to periodically check the responses.
 For parallel processing, use \code{future_chat()}.

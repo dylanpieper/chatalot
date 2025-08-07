@@ -2,7 +2,7 @@
 
 [![CRAN status](https://www.r-pkg.org/badges/version/chatalot)](https://CRAN.R-project.org/package=chatalot) [![R-CMD-check](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml/badge.svg)](https://github.com/dylanpieper/hellmer/actions/workflows/testthat.yml)
 
-chatalot processes a lot of large language model chats in R and is an extension of [ellmer](https://ellmer.tidyverse.org).
+chatalot processes lots of large language model chats in R and is an extension of [ellmer](https://ellmer.tidyverse.org).
 
 Easily setup sequential and parallel chat processors with support for [tool calling](https://ellmer.tidyverse.org/articles/tool-calling.html), [structured data extraction](https://ellmer.tidyverse.org/articles/structured-data.html), uploaded content, persistent caching, and sound notifications.
 
@@ -85,7 +85,7 @@ Parallel processing requests multiple chats at a time across multiple R processe
 chat <- future_chat("openai/gpt-4.1", system_prompt = "Reply concisely, one sentence")
 ```
 
-Use this function to process a lot of chat prompts very quickly. You may want to limit the number of simultaneous requests to meet a provider's rate limits by decreasing the number of parallel `workers` (default is `parallel::detectCores()`; for example, this is 10 on my Mac Mini M4):
+Use this function to process lots of chat prompts very quickly. You may want to limit the number of simultaneous requests to meet a provider's rate limits by decreasing the number of parallel `workers` (default is `parallel::detectCores()`; for example, this is 10 on my Mac Mini M4):
 
 ``` r
 response <- chat$process(prompts, workers = 5)

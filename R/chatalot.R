@@ -1,6 +1,6 @@
-#' Process a lot of prompts in sequence
+#' Process lots of prompts in sequence
 #' @description
-#' Process a lot of chat prompts in sequence, or one at a time.
+#' Process lots of chat prompts in sequence, or one at a time.
 #' Use this function to process prompts slowly, such as when you
 #' have strict rate limits or want to periodically check the responses.
 #' For parallel processing, use `future_chat()`.
@@ -79,11 +79,11 @@ seq_chat <- function(
   chat_env
 }
 
-#' Process a lot of prompts in parallel
+#' Process lots of prompts in parallel
 #' @description
-#' Process a lot of chat prompts in parallel using multisession
+#' Process lots of chat prompts in parallel using multisession
 #' \href{https://www.futureverse.org}{future} workers.
-#' Use this function to process a lot of chat prompts very quickly.
+#' Use this function to process lots of chat prompts very quickly.
 #' For sequential processing, use `seq_chat()`.
 #'
 #' @param chat_model Character string specifying the chat model to use (e.g., "openai/gpt-4.1" or "anthropic/claude-3-5-sonnet-latest").

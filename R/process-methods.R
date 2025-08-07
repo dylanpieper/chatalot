@@ -1,4 +1,4 @@
-#' Process a lot of prompts with a sequential chat
+#' Process lots of prompts with a sequential chat
 #'
 #' @param chat_env The chat environment from seq_chat
 #' @param prompts List of prompts to process
@@ -31,7 +31,7 @@ process.sequential_chat <- function(chat_env,
   )
 }
 
-#' Process a lot of prompts with a parallel chat
+#' Process lots of prompts with a parallel chat
 #'
 #' @param chat_env The chat environment from future_chat
 #' @param prompts List of prompts to process
