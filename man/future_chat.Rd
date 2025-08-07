@@ -15,10 +15,11 @@ This creates an ellmer chat object using \code{\link[ellmer:chat-any]{ellmer::ch
 \value{
 An R6 object with the following methods:
 \itemize{
-\item \strong{process}: Primary method for processing multiple prompts in parallel.
+\item \strong{process}: Method to process multiple prompts in parallel.
 Takes a list/vector of prompts and processes them simultaneously using multiple workers
-with persistent caching, progress tracking, and error handling. Returns a process object
-containing results and helper functions.
+with persistent caching and progress tracking. Returns a process object
+containing results and helper functions. See \code{?process.future_chat} for full details
+of the method and its parameters.
 \item \strong{register_tool}: Method to register custom tools/functions that can be used
 during chat interactions. Tools are stored and applied to chat models during processing.
 }
@@ -29,12 +30,6 @@ Process a lot of chat prompts in parallel using
 Use this function to process a lot of chat prompts very quickly.
 For sequential processing, use \code{seq_chat()}.
 }
-\section{Process Method}{
-
-This function provides access to the \code{process()} method for parallel processing of prompts.
-See \code{?process.future_chat} for full details of the method and its parameters.
-}
-
 \examples{
 \dontshow{if (interactive() && ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Create chat processor
@@ -42,7 +37,7 @@ chat <- future_chat("openai/gpt-4.1")
 
 # Process prompts
 response <- chat$process(
-  list(
+  c(
     "What is R?",
     "Explain base R versus tidyverse",
     "Explain vectors, lists, and data frames"

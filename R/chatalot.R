@@ -10,16 +10,14 @@
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
 #' @return An R6 object with the following methods:
 #'   \itemize{
-#'     \item **process**: Primary method for processing multiple prompts sequentially.
-#'       Takes a list/vector of prompts and processes them one by one with persistent caching,
-#'       progress tracking, and interruption handling. Returns a process object containing
-#'       results and helper functions.
+#'     \item **process**: Method to process multiple prompts sequentially.
+#'       Takes a list/vector of prompts and processes them one by one with persistent caching
+#'       and progress tracking. Returns a process object containing
+#'       results and helper functions. See `?process.sequential_chat` for full details
+#'       of the method and its parameters.
 #'     \item **register_tool**: Method to register custom tools/functions that can be used
 #'       during chat interactions. Tools are stored and applied to chat models during processing.
 #'   }
-#' @section Process Method:
-#' This function provides access to the `process()` method for sequential processing of prompts.
-#' See `?process.sequential_chat` for full details of the method and its parameters.
 #'
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create chat processor
@@ -27,7 +25,7 @@
 #'
 #' # Process prompts
 #' response <- chat$process(
-#'   list(
+#'   c(
 #'     "What is R?",
 #'     "Explain base R versus tidyverse",
 #'     "Explain vectors, lists, and data frames"
@@ -94,16 +92,14 @@ seq_chat <- function(
 #' @param ... Additional arguments passed to the underlying chat model (e.g., `system_prompt`)
 #' @return An R6 object with the following methods:
 #'   \itemize{
-#'     \item **process**: Primary method for processing multiple prompts in parallel.
+#'     \item **process**: Method to process multiple prompts in parallel.
 #'       Takes a list/vector of prompts and processes them simultaneously using multiple workers
-#'       with persistent caching, progress tracking, and error handling. Returns a process object
-#'       containing results and helper functions.
+#'       with persistent caching and progress tracking. Returns a process object
+#'       containing results and helper functions. See `?process.future_chat` for full details
+#'       of the method and its parameters.
 #'     \item **register_tool**: Method to register custom tools/functions that can be used
 #'       during chat interactions. Tools are stored and applied to chat models during processing.
 #'   }
-#' @section Process Method:
-#' This function provides access to the `process()` method for parallel processing of prompts.
-#' See `?process.future_chat` for full details of the method and its parameters.
 #'
 #' @examplesIf interactive() && ellmer::has_credentials("openai")
 #' # Create chat processor
@@ -111,7 +107,7 @@ seq_chat <- function(
 #'
 #' # Process prompts
 #' response <- chat$process(
-#'   list(
+#'   c(
 #'     "What is R?",
 #'     "Explain base R versus tidyverse",
 #'     "Explain vectors, lists, and data frames"

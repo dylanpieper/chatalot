@@ -15,10 +15,11 @@ This creates an ellmer chat object using \code{\link[ellmer:chat-any]{ellmer::ch
 \value{
 An R6 object with the following methods:
 \itemize{
-\item \strong{process}: Primary method for processing multiple prompts sequentially.
-Takes a list/vector of prompts and processes them one by one with persistent caching,
-progress tracking, and interruption handling. Returns a process object containing
-results and helper functions.
+\item \strong{process}: Method to process multiple prompts sequentially.
+Takes a list/vector of prompts and processes them one by one with persistent caching
+and progress tracking. Returns a process object containing
+results and helper functions. See \code{?process.sequential_chat} for full details
+of the method and its parameters.
 \item \strong{register_tool}: Method to register custom tools/functions that can be used
 during chat interactions. Tools are stored and applied to chat models during processing.
 }
@@ -29,12 +30,6 @@ Use this function to process prompts slowly, such as when you
 have strict rate limits or want to periodically check the responses.
 For parallel processing, use \code{future_chat()}.
 }
-\section{Process Method}{
-
-This function provides access to the \code{process()} method for sequential processing of prompts.
-See \code{?process.sequential_chat} for full details of the method and its parameters.
-}
-
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Create chat processor
@@ -42,7 +37,7 @@ chat <- seq_chat("openai/gpt-4.1")
 
 # Process prompts
 response <- chat$process(
-  list(
+  c(
     "What is R?",
     "Explain base R versus tidyverse",
     "Explain vectors, lists, and data frames"

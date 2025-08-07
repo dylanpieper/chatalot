@@ -219,7 +219,7 @@ response <- chat$process(prompts, progress = FALSE, echo = TRUE)
 
 ### Methods
 
--   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a character vector if prompts were provided as a vector). When a `type` is provided, returns a list with one element for each prompt. When `type` is consistent, returns a data frame with one row for each prompt, and one column for each property.
+-   `texts()`: Returns response texts in the same format as the input prompts (i.e., a list if prompts were provided as a list, or a vector if prompts were provided as a vector). When a `type` is provided, returns a list with one element for each prompt. When `type` is consistent, returns a data frame with one row for each prompt, and one column for each property.
 -   `chats()`: Returns a list of chat objects
 -   `progress()`: Returns processing status
 
