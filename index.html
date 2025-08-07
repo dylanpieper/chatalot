@@ -127,7 +127,7 @@
 <div class="section level3">
 <h3 id="sequential-processing">Sequential Processing<a class="anchor" aria-label="anchor" href="#sequential-processing"></a>
 </h3>
-<p>Process chats in sequence, or one at a time. Use this function to process prompts slowly, such as when you have strict rate limits or want to periodically check the responses.</p>
+<p>Process chats in sequence, or one at a time. Use this function to process prompts slowly, such as when providers don’t allow parallel processing or have strict rate limits, or when you want to periodically check the responses.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dylanpieper.github.io/chatalot/">chatalot</a></span><span class="op">)</span></span>
 <span></span>
@@ -163,7 +163,7 @@
 <p>Parallel processing requests multiple chats at a time across multiple R processes using <a href="https://future.futureverse.org" class="external-link">future</a> workers:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/future_chat.html">future_chat</a></span><span class="op">(</span><span class="st">"openai/gpt-4.1"</span>, system_prompt <span class="op">=</span> <span class="st">"Reply concisely, one sentence"</span><span class="op">)</span></span></code></pre></div>
-<p>Use this function to process lots of chat prompts very quickly. You may want to limit the number of simultaneous requests to meet a provider’s rate limits by decreasing the number of parallel <code>workers</code> (default is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>; for example, this is 10 on my Mac Mini M4):</p>
+<p>Use this function to process lots of chat prompts simultaneously and quickly. You may want to limit the number of simultaneous requests to meet a provider’s rate limits by decreasing the number of <code>workers</code> (default is <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>, which is 10 on my Mac Mini M4):</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="va">prompts</span>, workers <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 </div>
