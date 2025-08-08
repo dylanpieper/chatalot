@@ -302,24 +302,25 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="compare-retry-methods">Compare Retry Methods<a class="anchor" aria-label="anchor" href="#compare-retry-methods"></a>
+<h2 id="rate-limits-and-retry-methods">Rate Limits and Retry Methods<a class="anchor" aria-label="anchor" href="#rate-limits-and-retry-methods"></a>
 </h2>
 <p>The following functions handle API rate limits differently:</p>
 <ul>
 <li>
-<a href="https://dylanpieper.github.io/chatalot/reference/seq_chat.html">chatalot::seq_chat()</a> and <a href="https://dylanpieper.github.io/chatalot/reference/future_chat.html">chatalot::future_chat()</a>: Allow rate limits to be exceeded and fallback on ellmer’s retry mechanism with the following options:
+<a href="https://dylanpieper.github.io/chatalot/reference/seq_chat.html">chatalot::seq_chat()</a> and <a href="https://dylanpieper.github.io/chatalot/reference/future_chat.html">chatalot::future_chat()</a>: Rate limits are are not actively managed and are governed by choosing sequential processing or the number of parallel connections (<code>workers</code>), exceeding rate limits will fall back on ellmer’s retry strategy</li>
+<li>
+<a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a>: Rate limits are managed by throttling the requests per minute (<code>rpm</code>) and configuring the number of parallel connections (<code>max_active</code>), exceeding rate limits will fall back on ellmer’s retry strategy</li>
+<li>
+<a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a>: Rate limits are managed by the provider</li>
+</ul>
+<p>ellmer’s retry mechanism includes the following options:</p>
 <ul>
 <li>
 <code>options(ellmer_max_tries)</code>: Retries requests up to 3 times by default and will retry if the connection fails, not just if the request returns a transient error</li>
 <li>
 <code>options(ellmer_timeout_s)</code>: Sets the default timeout time in seconds, which also applies to the initial connection phase</li>
 </ul>
-</li>
-<li>
-<a href="https://ellmer.tidyverse.org/reference/parallel_chat.html" class="external-link">ellmer::parallel_chat()</a>: Throttles requests to prevent exceeding rate limits</li>
-<li>
-<a href="https://ellmer.tidyverse.org/reference/batch_chat.html" class="external-link">ellmer::batch_chat()</a>: Managed by the provider</li>
-</ul>
+<p>You can also manage rate limits, specifically token usage limits, by limiting the number of maximum tokens per chat. The <a href="https://ellmer.tidyverse.org/reference/chat-any.html" class="external-link"><code>chat()</code></a> interface includes a <a href="https://ellmer.tidyverse.org/reference/params.html?q=max_tokens#ref-usage" class="external-link"><code>params</code></a> parameter to configure <code>max_tokens</code>, which also works in chatalot’s chat functions.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
