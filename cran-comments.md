@@ -3,7 +3,7 @@
 
 ## Submission notes
 
-Resubmission notes (no response from original submission on 07/28/2025):
+Resubmission notes (no response from submission on 07/28/2025 due to CRAN break):
 * Fixed CRAN badge link from hellmer to chatalot
 * Provided better guidance for package installation using pak
 * Improved internal functionality related to persistent caching

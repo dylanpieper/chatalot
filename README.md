@@ -65,14 +65,11 @@ Access the responses:
 response$texts()
 #> [1] "In a castle, people served as rulers, warriors, administrators, 
 #> craftsmen, and servants who managed its defense, governance, and daily upkeep."
-#> 
 #> [2] "Castles have historically been built for defense and power consolidation,
 #> and today they serve as cultural landmarks that preserve our heritage 
 #> and attract tourism."
-#> 
 #> [3] "There isn’t a definitive \"first castle,\" but the earliest structures
 #> resembling castles emerged in medieval Europe around the 9th century."
-#> 
 #> [4] "Most castles are located in Europe, particularly in historically
 #> turbulent regions like the United Kingdom, France, and Germany."     
 ```
@@ -173,7 +170,6 @@ response$texts()
 #> [1] "The image shows the logo for R, a programming language and software environment 
 #> used for statistical computing and graphics, featuring a stylized blue \"R\" 
 #> inside a gray oval or ring."
-
 #> [[2]]
 #> [1] "The image shows a logo for \"httr2\" featuring a stylized red baseball batter
 #> silhouette on a dark blue hexagonal background."
@@ -210,7 +206,6 @@ prompts <- c(
 response <- chat$process(prompts, progress = FALSE, echo = TRUE)
 #> R is a programming language and software environment used for 
 #> statistical computing and graphics.
-#> 
 #> Base R consists of the core functionalities built into R, 
 #> while tidyverse is a collection of packages that offer a more
 #> consistent, readable, and streamlined approach to data manipulation, 
