@@ -223,12 +223,17 @@ response <- chat$process(prompts, progress = FALSE, echo = TRUE)
 -   `chats()`: Returns a list of chat objects
 -   `progress()`: Returns processing status
 
-## Compare Retry Methods
+## Rate Limits and Retry Methods
 
 The following functions handle API rate limits differently:
 
--   [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) and [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Allow rate limits to be exceeded and fallback on ellmer's retry mechanism with the following options:
-    -   `options(ellmer_max_tries)`: Retries requests up to 3 times by default and will retry if the connection fails, not just if the request returns a transient error
-    -   `options(ellmer_timeout_s)`: Sets the default timeout time in seconds, which also applies to the initial connection phase
--   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Throttles requests to prevent exceeding rate limits
--   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html): Managed by the provider
+-   [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) and [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html): Rate limits are are not actively managed and are governed by choosing sequential processing or the number of parallel connections (`workers`), exceeding rate limits will fall back on ellmer's retry strategy
+-   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Rate limits are managed by throttling the requests per minute (`rpm`) and configuring the number of parallel connections (`max_active`), exceeding rate limits will fall back on ellmer's retry strategy
+-   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html): Rate limits are managed by the provider
+
+ellmer's retry mechanism includes the following options:
+
+-   `options(ellmer_max_tries)`: Retries requests up to 3 times by default and will retry if the connection fails, not just if the request returns a transient error
+-   `options(ellmer_timeout_s)`: Sets the default timeout time in seconds, which also applies to the initial connection phase
+
+You can also manage rate limits, specifically token usage limits, by limiting the number of maximum tokens per chat. The [`chat()`](https://ellmer.tidyverse.org/reference/chat-any.html) interface includes a [`params`](https://ellmer.tidyverse.org/reference/params.html?q=max_tokens#ref-usage) parameter to configure `max_tokens`, which also works in chatalot's chat functions.
