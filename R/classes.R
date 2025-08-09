@@ -2,19 +2,21 @@
 #' @name texts
 #' @param x A process object
 #' @param ... Additional arguments passed to methods
-#' @return A character vector or list of text responses. If a type specification is provided to the batch, return structured data.
+#' @return A character vector or list of text responses. If a type specification is provided, return structured data, typically a data frame.
 #' @examplesIf ellmer::has_credentials("openai")
-#' # Create a chat processor
+#' # Create chat processor
 #' chat <- seq_chat("openai/gpt-4.1")
 #'
-#' # Process a batch of prompts
-#' response <- chat$process(list(
-#'   "What is R?",
-#'   "Explain base R versus tidyverse",
-#'   "Explain vectors, lists, and data frames"
-#' ))
+#' # Process prompts
+#' response <- chat$process(
+#'   c(
+#'     "What is R?",
+#'     "Explain base R versus tidyverse",
+#'     "Explain vectors, lists, and data frames"
+#'   )
+#' )
 #'
-#' # Extract text responses
+#' # Return responses
 #' response$texts()
 #' @export
 texts <- S7::new_generic("texts", "x")
@@ -23,19 +25,21 @@ texts <- S7::new_generic("texts", "x")
 #' @name chats
 #' @param x A process object
 #' @param ... Additional arguments
-#' @return A list of chat objects
+#' @return A list of ellmer chat objects
 #' @examplesIf ellmer::has_credentials("openai")
-#' # Create a chat processor
+#' # Create chat processor
 #' chat <- seq_chat("openai/gpt-4.1")
 #'
-#' # Process a batch of prompts
-#' response <- chat$process(list(
-#'   "What is R?",
-#'   "Explain base R versus tidyverse",
-#'   "Explain vectors, lists, and data frames"
-#' ))
+#' # Process prompts
+#' response <- chat$process(
+#'   c(
+#'     "What is R?",
+#'     "Explain base R versus tidyverse",
+#'     "Explain vectors, lists, and data frames"
+#'   )
+#' )
 #'
-#' # Return the chat objects
+#' # Return chat objects
 #' response$chats()
 #' @export
 chats <- S7::new_generic("chats", "x")
@@ -44,19 +48,21 @@ chats <- S7::new_generic("chats", "x")
 #' @name progress
 #' @param x A process object
 #' @param ... Additional arguments passed to methods
-#' @return A list containing progress details
+#' @return A list with progress information (total, completed, remaining prompts, and completion rate), status breakdown (pending, completed, and failed), and file path
 #' @examplesIf ellmer::has_credentials("openai")
-#' # Create a chat processor
+#' # Create chat processor
 #' chat <- seq_chat("openai/gpt-4.1")
 #'
-#' # Process a batch of prompts
-#' response <- chat$process(list(
-#'   "What is R?",
-#'   "Explain base R versus tidyverse",
-#'   "Explain vectors, lists, and data frames"
-#' ))
+#' # Process prompts
+#' response <- chat$process(
+#'   c(
+#'     "What is R?",
+#'     "Explain base R versus tidyverse",
+#'     "Explain vectors, lists, and data frames"
+#'   )
+#' )
 #'
-#' # Check the progress
+#' # Check progress
 #' response$progress()
 #' @export
 progress <- S7::new_generic("progress", "x")
@@ -70,36 +76,37 @@ progress <- S7::new_generic("progress", "x")
 #' @param progress Whether to show progress bars (default: TRUE)
 #' @param input_type Type of input ("vector" or "list")
 #' @param workers Number of parallel workers
-#' @param state Internal state tracking
 #' @param beep Play sound on completion (default: TRUE)
 #' @param echo Whether to echo messages during processing (default: FALSE)
 #' @param chat_status Character vector tracking individual chat completion status ("pending", "completed", or "failed")
-#' @return Returns an S7 class object of class "process" that represents a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides methods for:
+#' @return Returns a "process" object with a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides access to functions for:
 #' \itemize{
-#'   \item Extracting text responses via \code{texts()} (includes structured data when a type specification is provided)
-#'   \item Accessing full chat objects via \code{chats()}
-#'   \item Tracking processing progress via \code{progress()}
+#'   \item Extracting responses via \code{texts()}
+#'   \item Accessing chat objects via \code{chats()}
+#'   \item Tracking progress via \code{progress()}
 #' }
 #' The process object manages prompt processing and tracks completion status.
 #' @examplesIf ellmer::has_credentials("openai")
-#' # Create a chat processor
+#' # Create chat processor
 #' chat <- seq_chat("openai/gpt-4.1")
 #'
-#' # Process a batch of prompts
-#' response <- chat$process(list(
-#'   "What is R?",
-#'   "Explain base R versus tidyverse",
-#'   "Explain vectors, lists, and data frames"
-#' ))
+#' # Process prompts
+#' response <- chat$process(
+#'   c(
+#'     "What is R?",
+#'     "Explain base R versus tidyverse",
+#'     "Explain vectors, lists, and data frames"
+#'   )
+#' )
 #'
-#' # Check the progress if interrupted
-#' response$progress()
-#'
-#' # Return the responses as a vector or list
+#' # Return responses
 #' response$texts()
 #'
-#' # Return the chat objects
+#' # Return chat objects
 #' response$chats()
+#'
+#' # Check progress if interrupted
+#' response$progress()
 #' @export
 process <- S7::new_class(
   "process",
@@ -219,18 +226,6 @@ process <- S7::new_class(
         NULL
       }
     ),
-    state = S7::new_property(
-      class = S7::class_list | NULL,
-      validator = function(value) {
-        if (!is.null(value)) {
-          required_fields <- c("active_workers", "failed_chunks", "retry_count")
-          if (!all(required_fields %in% names(value))) {
-            "must contain active_workers, failed_chunks, and retry_count"
-          }
-        }
-        NULL
-      }
-    ),
     chat_status = S7::new_property(
       class = S7::class_character,
       default = character(0)
@@ -239,11 +234,6 @@ process <- S7::new_class(
   validator = function(self) {
     if (self@completed > length(self@prompts)) {
       "cannot be larger than number of prompts"
-    }
-    if (!is.null(self@state) && !is.null(self@workers)) {
-      if (self@state$active_workers > self@workers) {
-        "active workers cannot exceed total workers"
-      }
     }
     NULL
   }
@@ -268,7 +258,13 @@ list_to_df <- function(x) {
 #' @keywords internal
 #' @noRd
 S7::method(texts, process) <- function(x, flatten = TRUE) {
-  responses <- x@responses[seq_len(x@completed)]
+  non_null_indices <- which(!vapply(x@responses, is.null, logical(1)))
+  if (length(non_null_indices) == 0) {
+    responses <- list()
+  } else {
+    last_completed <- max(non_null_indices)
+    responses <- x@responses[seq_len(last_completed)]
+  }
 
   extract_text <- function(response) {
     if (is.null(response)) {
@@ -298,18 +294,37 @@ S7::method(texts, process) <- function(x, flatten = TRUE) {
 #' @keywords internal
 #' @noRd
 S7::method(chats, process) <- function(x) {
-  responses <- x@responses[seq_len(x@completed)]
+  non_null_indices <- which(!vapply(x@responses, is.null, logical(1)))
+  if (length(non_null_indices) == 0) {
+    responses <- list()
+  } else {
+    last_completed <- max(non_null_indices)
+    responses <- x@responses[seq_len(last_completed)]
+  }
   purrr::map(responses, "chat")
 }
 
 #' @keywords internal
 #' @noRd
 S7::method(progress, process) <- function(x) {
-  list(
+  status_summary <- if (length(x@chat_status) > 0) {
+    table(factor(x@chat_status, levels = c("pending", "completed", "failed")))
+  } else {
+    c(pending = 0, completed = x@completed, failed = 0)
+  }
+
+  progress_info <- list(
     total_prompts = length(x@prompts),
     completed_prompts = x@completed,
-    completion_percentage = (x@completed / length(x@prompts)) * 100,
     remaining_prompts = length(x@prompts) - x@completed,
+    completion_rate = round(x@completed / length(x@prompts) * 100, 0),
+    status_breakdown = list(
+      pending = as.integer(status_summary["pending"]),
+      completed = as.integer(status_summary["completed"]),
+      failed = as.integer(status_summary["failed"])
+    ),
     file = x@file
   )
+
+  progress_info
 }

@@ -12,24 +12,26 @@ texts(x, ...)
 \item{...}{Additional arguments passed to methods}
 }
 \value{
-A character vector or list of text responses. If a type specification is provided to the batch, return structured data.
+A character vector or list of text responses. If a type specification is provided, return structured data, typically a data frame.
 }
 \description{
 Extract texts or structured data from a process response
 }
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# Create a chat processor
+# Create chat processor
 chat <- seq_chat("openai/gpt-4.1")
 
-# Process a batch of prompts
-response <- chat$process(list(
-  "What is R?",
-  "Explain base R versus tidyverse",
-  "Explain vectors, lists, and data frames"
-))
+# Process prompts
+response <- chat$process(
+  c(
+    "What is R?",
+    "Explain base R versus tidyverse",
+    "Explain vectors, lists, and data frames"
+  )
+)
 
-# Extract text responses
+# Return responses
 response$texts()
 \dontshow{\}) # examplesIf}
 }

@@ -12,24 +12,26 @@ progress(x, ...)
 \item{...}{Additional arguments passed to methods}
 }
 \value{
-A list containing progress details
+A list with progress information (total, completed, remaining prompts, and completion rate), status breakdown (pending, completed, and failed), and file path
 }
 \description{
 Get progress information from a process response
 }
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# Create a chat processor
+# Create chat processor
 chat <- seq_chat("openai/gpt-4.1")
 
-# Process a batch of prompts
-response <- chat$process(list(
-  "What is R?",
-  "Explain base R versus tidyverse",
-  "Explain vectors, lists, and data frames"
-))
+# Process prompts
+response <- chat$process(
+  c(
+    "What is R?",
+    "Explain base R versus tidyverse",
+    "Explain vectors, lists, and data frames"
+  )
+)
 
-# Check the progress
+# Check progress
 response$progress()
 \dontshow{\}) # examplesIf}
 }
