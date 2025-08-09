@@ -48,7 +48,7 @@ chats <- S7::new_generic("chats", "x")
 #' @name progress
 #' @param x A process object
 #' @param ... Additional arguments passed to methods
-#' @return A list containing detailed progress information (total, completed, and remaining prompts), completion rate, status breakdown by prompt (pending, completed, and failed), file path, and worker count when using `future_chat()`
+#' @return A list containing detailed progress information (total, completed, and remaining prompts), completion rate, status breakdown by prompt (pending, completed, and failed), and file path
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create chat processor
 #' chat <- seq_chat("openai/gpt-4.1")
@@ -332,10 +332,6 @@ S7::method(progress, process) <- function(x) {
     ),
     file = x@file
   )
-
-  if (!is.null(x@workers)) {
-    progress_info$workers <- x@workers
-  }
 
   progress_info
 }
