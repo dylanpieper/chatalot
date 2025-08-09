@@ -308,7 +308,6 @@ S7::method(progress, process) <- function(x) {
   list(
     total_prompts = length(x@prompts),
     completed_prompts = x@completed,
-    completion_percentage = (x@completed / length(x@prompts)) * 100,
     remaining_prompts = length(x@prompts) - x@completed,
     file = x@file
   )
