@@ -9,7 +9,7 @@ Easily setup sequential and parallel chat processors with support for [tool call
 ## **chatalot or ellmer?**
 
 | Priority | Function | Description |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | 🛡️ **Slow and safe** | [chatalot::seq_chat()](https://dylanpieper.github.io/chatalot/reference/seq_chat.html) | Process chats in sequence with persistent caching |
 | ⚖️ **Fast and safe** | [chatalot::future_chat()](https://dylanpieper.github.io/chatalot/reference/future_chat.html) | Process chats in parallel with persistent caching |
 | 🚀 **Maximum speed** | [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html) | Process chats in parallel very quickly with no caching |

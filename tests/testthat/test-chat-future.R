@@ -42,7 +42,7 @@ test_that("future_chat works with tools", {
   validate_process_result(result, 2)
 })
 
-test_that("future_chat handles state persistence", {
+test_that("future_chat creates a cache file", {
   skip_chat_test()
   chat <- create_test_chat(future_chat)
   create_temp_file_test(chat, list(workers = 1))

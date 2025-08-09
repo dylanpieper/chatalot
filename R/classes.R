@@ -2,19 +2,21 @@
 #' @name texts
 #' @param x A process object
 #' @param ... Additional arguments passed to methods
-#' @return A character vector or list of text responses. If a type specification is provided to the batch, return structured data.
+#' @return A character vector or list of text responses. If a type specification is provided, return structured data, typically a data frame.
 #' @examplesIf ellmer::has_credentials("openai")
-#' # Create a chat processor
+#' # Create chat processor
 #' chat <- seq_chat("openai/gpt-4.1")
 #'
-#' # Process a batch of prompts
-#' response <- chat$process(list(
-#'   "What is R?",
-#'   "Explain base R versus tidyverse",
-#'   "Explain vectors, lists, and data frames"
-#' ))
+#' # Process prompts
+#' response <- chat$process(
+#'   c(
+#'     "What is R?",
+#'     "Explain base R versus tidyverse",
+#'     "Explain vectors, lists, and data frames"
+#'   )
+#' )
 #'
-#' # Extract text responses
+#' # Return responses
 #' response$texts()
 #' @export
 texts <- S7::new_generic("texts", "x")
@@ -23,19 +25,21 @@ texts <- S7::new_generic("texts", "x")
 #' @name chats
 #' @param x A process object
 #' @param ... Additional arguments
-#' @return A list of chat objects
+#' @return A list of ellmer chat objects
 #' @examplesIf ellmer::has_credentials("openai")
-#' # Create a chat processor
+#' # Create chat processor
 #' chat <- seq_chat("openai/gpt-4.1")
 #'
-#' # Process a batch of prompts
-#' response <- chat$process(list(
-#'   "What is R?",
-#'   "Explain base R versus tidyverse",
-#'   "Explain vectors, lists, and data frames"
-#' ))
+#' # Process prompts
+#' response <- chat$process(
+#'   c(
+#'     "What is R?",
+#'     "Explain base R versus tidyverse",
+#'     "Explain vectors, lists, and data frames"
+#'   )
+#' )
 #'
-#' # Return the chat objects
+#' # Return chat objects
 #' response$chats()
 #' @export
 chats <- S7::new_generic("chats", "x")
@@ -46,17 +50,19 @@ chats <- S7::new_generic("chats", "x")
 #' @param ... Additional arguments passed to methods
 #' @return A list containing progress details
 #' @examplesIf ellmer::has_credentials("openai")
-#' # Create a chat processor
+#' # Create chat processor
 #' chat <- seq_chat("openai/gpt-4.1")
 #'
-#' # Process a batch of prompts
-#' response <- chat$process(list(
-#'   "What is R?",
-#'   "Explain base R versus tidyverse",
-#'   "Explain vectors, lists, and data frames"
-#' ))
+#' # Process prompts
+#' response <- chat$process(
+#'   c(
+#'     "What is R?",
+#'     "Explain base R versus tidyverse",
+#'     "Explain vectors, lists, and data frames"
+#'   )
+#' )
 #'
-#' # Check the progress
+#' # Check progress
 #' response$progress()
 #' @export
 progress <- S7::new_generic("progress", "x")
@@ -268,7 +274,13 @@ list_to_df <- function(x) {
 #' @keywords internal
 #' @noRd
 S7::method(texts, process) <- function(x, flatten = TRUE) {
-  responses <- x@responses[seq_len(x@completed)]
+  non_null_indices <- which(!vapply(x@responses, is.null, logical(1)))
+  if (length(non_null_indices) == 0) {
+    responses <- list()
+  } else {
+    last_completed <- max(non_null_indices)
+    responses <- x@responses[seq_len(last_completed)]
+  }
 
   extract_text <- function(response) {
     if (is.null(response)) {
@@ -298,7 +310,13 @@ S7::method(texts, process) <- function(x, flatten = TRUE) {
 #' @keywords internal
 #' @noRd
 S7::method(chats, process) <- function(x) {
-  responses <- x@responses[seq_len(x@completed)]
+  non_null_indices <- which(!vapply(x@responses, is.null, logical(1)))
+  if (length(non_null_indices) == 0) {
+    responses <- list()
+  } else {
+    last_completed <- max(non_null_indices)
+    responses <- x@responses[seq_len(last_completed)]
+  }
   purrr::map(responses, "chat")
 }
 

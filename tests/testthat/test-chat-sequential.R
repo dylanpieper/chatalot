@@ -41,7 +41,7 @@ test_that("seq_chat works with tools", {
   validate_process_result(result, 2)
 })
 
-test_that("seq_chat handles state persistence", {
+test_that("seq_chat creates a cache file", {
   skip_chat_test()
   chat <- create_test_chat(seq_chat)
   create_temp_file_test(chat)

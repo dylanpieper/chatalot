@@ -12,24 +12,26 @@ chats(x, ...)
 \item{...}{Additional arguments}
 }
 \value{
-A list of chat objects
+A list of ellmer chat objects
 }
 \description{
 Extract chat objects from a process response
 }
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# Create a chat processor
+# Create chat processor
 chat <- seq_chat("openai/gpt-4.1")
 
-# Process a batch of prompts
-response <- chat$process(list(
-  "What is R?",
-  "Explain base R versus tidyverse",
-  "Explain vectors, lists, and data frames"
-))
+# Process prompts
+response <- chat$process(
+  c(
+    "What is R?",
+    "Explain base R versus tidyverse",
+    "Explain vectors, lists, and data frames"
+  )
+)
 
-# Return the chat objects
+# Return chat objects
 response$chats()
 \dontshow{\}) # examplesIf}
 }

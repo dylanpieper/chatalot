@@ -52,6 +52,39 @@ capture <- function(original_chat,
   return(chats_obj)
 }
 
+#' Match new prompts against old prompts and preserve completed responses
+#' @param new_prompts New list of prompts
+#' @param old_prompts Old list of prompts from saved state
+#' @param old_responses Old responses from saved state
+#' @return List containing responses, completed count, and restart flag
+#' @keywords internal
+#' @noRd
+match_prompts <- function(new_prompts, old_prompts, old_responses) {
+  n_new <- length(new_prompts)
+  n_old <- length(old_prompts)
+  min_len <- min(n_new, n_old)
+
+  matches <- if (min_len > 0) {
+    vapply(seq_len(min_len), function(i) identical(new_prompts[[i]], old_prompts[[i]]), logical(1))
+  } else {
+    logical(0)
+  }
+
+  new_responses <- vector("list", n_new)
+  if (any(matches)) {
+    match_indices <- which(matches)
+    new_responses[match_indices] <- old_responses[match_indices]
+  }
+
+  n_completed <- sum(matches & !vapply(old_responses[seq_len(min_len)], is.null, logical(1)))
+
+  list(
+    responses = new_responses,
+    completed = n_completed,
+    should_restart = n_completed == 0 && !any(matches)
+  )
+}
+
 #' Process lot of prompts with progress tracking
 #' @param chat_obj Chat model object
 #' @param prompts List of prompts
@@ -73,10 +106,18 @@ process_sequential <- function(
     ...) {
   if (file.exists(file)) {
     chats_obj <- readRDS(file)
-    if (!identical(as.list(prompts), chats_obj@prompts)) {
-      cli::cli_alert_warning("Prompts don't match file. Starting fresh.")
+    result <- match_prompts(as.list(prompts), chats_obj@prompts, chats_obj@responses)
+
+    if (result$should_restart) {
+      cli::cli_alert_warning("No matching prompts found, starting fresh")
       unlink(file)
       chats_obj <- NULL
+    } else {
+      cli::cli_alert_info("Preserving {result$completed} completed response{?s}")
+      chats_obj@prompts <- as.list(prompts)
+      chats_obj@responses <- result$responses
+      chats_obj@completed <- result$completed
+      chats_obj@chat_status <- ifelse(vapply(result$responses, is.null, logical(1)), "pending", "completed")
     }
   } else {
     chats_obj <- NULL
@@ -177,16 +218,16 @@ process_sequential <- function(
 #' @noRd
 sync_status_fields <- function(process_obj) {
   n_prompts <- length(process_obj@prompts)
-  
-  if(length(process_obj@chat_status) == 0) {
+
+  if (length(process_obj@chat_status) == 0) {
     process_obj@chat_status <- rep("pending", n_prompts)
-    if(process_obj@completed > 0) {
+    if (process_obj@completed > 0) {
       completed_indices <- seq_len(min(process_obj@completed, n_prompts))
       process_obj@chat_status[completed_indices] <- "completed"
     }
   }
   process_obj@completed <- sum(process_obj@chat_status == "completed", na.rm = TRUE)
-  
+
   process_obj
 }
 
@@ -253,10 +294,18 @@ process_future <- function(
 
   if (file.exists(file)) {
     chats_obj <- readRDS(file)
-    if (!identical(prompts_list, chats_obj@prompts)) {
-      cli::cli_alert_warning("Prompts don't match file. Starting fresh.")
+    result <- match_prompts(prompts_list, chats_obj@prompts, chats_obj@responses)
+
+    if (result$should_restart) {
+      cli::cli_alert_warning("No matching prompts found, starting fresh")
       unlink(file)
       chats_obj <- NULL
+    } else {
+      cli::cli_alert_info("Preserving {result$completed} completed response{?s}")
+      chats_obj@prompts <- prompts_list
+      chats_obj@responses <- result$responses
+      chats_obj@completed <- result$completed
+      chats_obj@chat_status <- ifelse(vapply(result$responses, is.null, logical(1)), "pending", "completed")
     }
   } else {
     chats_obj <- NULL
@@ -305,10 +354,10 @@ process_future <- function(
   capture_future <- capture
 
   tryCatch({
-    while(has_remaining_work(chats_obj)) {
+    while (has_remaining_work(chats_obj)) {
       remaining_indices <- which(chats_obj@chat_status %in% c("pending", "failed"))
       current_batch <- head(remaining_indices, workers)
-      
+
       tool_globals <- list()
       if (is.environment(chat_obj) && exists("deferred_tools", envir = chat_obj) && length(chat_obj$deferred_tools) > 0) {
         for (tool_with_data in chat_obj$deferred_tools) {
@@ -317,7 +366,7 @@ process_future <- function(
           }
         }
       }
-      
+
       batch_results <- furrr::future_map(current_batch, function(i) {
         if (is.environment(chat_obj) && exists("chat_model_name", envir = chat_obj)) {
           worker_chat <- if (is.character(chat_obj$chat_model_name)) {
@@ -337,24 +386,24 @@ process_future <- function(
         } else {
           worker_chat <- chat_obj$clone()
         }
-        
+
         capture_future(worker_chat, chats_obj@prompts[[i]], type, echo = echo, ...)
       }, .options = furrr::furrr_options(
         scheduling = 1,
         seed = TRUE,
         globals = c(list(chat_obj = chat_obj, type = type, echo = echo, capture_future = capture_future), tool_globals)
       ))
-      
-      for(j in seq_along(current_batch)) {
+
+      for (j in seq_along(current_batch)) {
         idx <- current_batch[j]
-        if(!inherits(batch_results[[j]], "error")) {
+        if (!inherits(batch_results[[j]], "error")) {
           chats_obj@responses[[idx]] <- batch_results[[j]]
           chats_obj@chat_status[idx] <- "completed"
           chats_obj@completed <- sum(chats_obj@chat_status == "completed")
-          
+
           saveRDS(chats_obj, file)
-          
-          if(!is.null(pb)) {
+
+          if (!is.null(pb)) {
             cli::cli_progress_update(id = pb, set = chats_obj@completed)
           }
         } else {
