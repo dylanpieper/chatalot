@@ -40,8 +40,6 @@ process(
 \item{echo}{Whether to echo messages during processing (default: FALSE)}
 
 \item{chat_status}{Character vector tracking individual chat completion status ("pending", "completed", or "failed")}
-
-\item{state}{Internal state tracking}
 }
 \value{
 Returns a "process" object with a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides access to functions for:

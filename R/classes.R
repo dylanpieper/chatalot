@@ -48,7 +48,7 @@ chats <- S7::new_generic("chats", "x")
 #' @name progress
 #' @param x A process object
 #' @param ... Additional arguments passed to methods
-#' @return A list containing detailed progress information (total, completed, and remaining prompts), completion rate, status breakdown by prompt (pending, completed, and failed), and file path
+#' @return A list with progress information (total, completed, remaining prompts, and completion rate), status breakdown (pending, completed, and failed), and file path
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create chat processor
 #' chat <- seq_chat("openai/gpt-4.1")
@@ -76,7 +76,6 @@ progress <- S7::new_generic("progress", "x")
 #' @param progress Whether to show progress bars (default: TRUE)
 #' @param input_type Type of input ("vector" or "list")
 #' @param workers Number of parallel workers
-#' @param state Internal state tracking
 #' @param beep Play sound on completion (default: TRUE)
 #' @param echo Whether to echo messages during processing (default: FALSE)
 #' @param chat_status Character vector tracking individual chat completion status ("pending", "completed", or "failed")
@@ -314,17 +313,11 @@ S7::method(progress, process) <- function(x) {
     c(pending = 0, completed = x@completed, failed = 0)
   }
 
-  completion_rate <- if (length(x@prompts) > 0) {
-    round(x@completed / length(x@prompts) * 100, 1)
-  } else {
-    0
-  }
-
   progress_info <- list(
     total_prompts = length(x@prompts),
     completed_prompts = x@completed,
     remaining_prompts = length(x@prompts) - x@completed,
-    completion_rate = completion_rate,
+    completion_rate = round(x@completed / length(x@prompts) * 100, 0),
     status_breakdown = list(
       pending = as.integer(status_summary["pending"]),
       completed = as.integer(status_summary["completed"]),

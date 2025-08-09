@@ -12,7 +12,7 @@ progress(x, ...)
 \item{...}{Additional arguments passed to methods}
 }
 \value{
-A list containing detailed progress information (total, completed, and remaining prompts), completion rate, status breakdown by prompt (pending, completed, and failed), and file path
+A list with progress information (total, completed, remaining prompts, and completion rate), status breakdown (pending, completed, and failed), and file path
 }
 \description{
 Get progress information from a process response

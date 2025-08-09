@@ -132,8 +132,7 @@ process_sequential <- function(
       type = type,
       progress = progress,
       input_type = if (is.atomic(prompts) && !is.list(prompts)) "vector" else "list",
-      workers = NULL,
-      state = NULL
+      workers = NULL
     )
     saveRDS(chats_obj, file)
   }
