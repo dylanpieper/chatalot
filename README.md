@@ -226,7 +226,7 @@ The following functions handle API rate limits differently:
 -   [ellmer::parallel_chat()](https://ellmer.tidyverse.org/reference/parallel_chat.html): Rate limits are managed by throttling the requests per minute (`rpm`) and configuring the number of parallel connections (`max_active`), exceeding rate limits will fall back on ellmer's retry strategy
 -   [ellmer::batch_chat()](https://ellmer.tidyverse.org/reference/batch_chat.html): Rate limits are managed by the provider
 
-ellmer's retry mechanism includes the following options:
+ellmer's retry strategy includes the following options:
 
 -   `options(ellmer_max_tries)`: Retries requests up to 3 times by default and will retry if the connection fails, not just if the request returns a transient error
 -   `options(ellmer_timeout_s)`: Sets the default timeout time in seconds, which also applies to the initial connection phase
