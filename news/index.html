@@ -50,8 +50,11 @@
 <ul><li>
 <code><a href="../reference/future_chat.html">future_chat()</a></code> now uses persistent caching of individual chats instead of chunks to prevent data loss</li>
 <li>Added enhanced status tracking with <code>chat_status</code> to track individual chat completion states</li>
+<li>Resume processing from an interruption or failure when you recall <code><a href="../reference/process.html">process()</a></code> and preserve completed prompts if you add, remove, or modify the remaining prompts</li>
 <li>
-<code>$texts()</code> returns a data frame for structured data when type properties are consistent</li>
+<code><a href="../reference/progress.html">progress()</a></code> now includes progress information (total, completed, remaining prompts, and completion rate), status breakdown (pending, completed, and failed), and file path</li>
+<li>
+<code><a href="../reference/texts.html">texts()</a></code> returns a data frame for structured data when type properties are consistent</li>
 <li>Replaced progress bar percentage indicator (<code><a href="https://cli.r-lib.org/reference/progress-variables.html" class="external-link">cli::pb_percent</a></code>) to estimated time until completion (<code><a href="https://cli.r-lib.org/reference/progress-variables.html" class="external-link">cli::pb_eta</a></code>)</li>
 </ul></div>
 <div class="section level3">

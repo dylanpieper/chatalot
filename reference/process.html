@@ -56,7 +56,6 @@
 <span>  workers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  beep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  echo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
-<span>  state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  chat_status <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -105,43 +104,41 @@
 <dd><p>Whether to echo messages during processing (default: FALSE)</p></dd>
 
 
-<dt id="arg-state">state<a class="anchor" aria-label="anchor" href="#arg-state"></a></dt>
-<dd><p>Internal state tracking</p></dd>
-
-
 <dt id="arg-chat-status">chat_status<a class="anchor" aria-label="anchor" href="#arg-chat-status"></a></dt>
 <dd><p>Character vector tracking individual chat completion status ("pending", "completed", or "failed")</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns an S7 class object of class "process" that represents a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides methods for:</p><ul><li><p>Extracting text responses via <code><a href="texts.html">texts()</a></code> (includes structured data when a type specification is provided)</p></li>
-<li><p>Accessing full chat objects via <code><a href="chats.html">chats()</a></code></p></li>
-<li><p>Tracking processing progress via <code><a href="progress.html">progress()</a></code></p></li>
+    <p>Returns a "process" object with a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides access to functions for:</p><ul><li><p>Extracting responses via <code><a href="texts.html">texts()</a></code></p></li>
+<li><p>Accessing chat objects via <code><a href="chats.html">chats()</a></code></p></li>
+<li><p>Tracking progress via <code><a href="progress.html">progress()</a></code></p></li>
 </ul><p>The process object manages prompt processing and tracks completion status.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># ellmer::has_credentials("openai")</span></span></span>
-<span class="r-in"><span><span class="co"># Create a chat processor</span></span></span>
+<span class="r-in"><span><span class="co"># Create chat processor</span></span></span>
 <span class="r-in"><span><span class="va">chat</span> <span class="op">&lt;-</span> <span class="fu"><a href="seq_chat.html">seq_chat</a></span><span class="op">(</span><span class="st">"openai/gpt-4.1"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Process a batch of prompts</span></span></span>
-<span class="r-in"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="st">"What is R?"</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"Explain base R versus tidyverse"</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"Explain vectors, lists, and data frames"</span></span></span>
-<span class="r-in"><span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Process prompts</span></span></span>
+<span class="r-in"><span><span class="va">response</span> <span class="op">&lt;-</span> <span class="va">chat</span><span class="op">$</span><span class="fu">process</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"What is R?"</span>,</span></span>
+<span class="r-in"><span>    <span class="st">"Explain base R versus tidyverse"</span>,</span></span>
+<span class="r-in"><span>    <span class="st">"Explain vectors, lists, and data frames"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Check the progress if interrupted</span></span></span>
-<span class="r-in"><span><span class="va">response</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Return the responses as a vector or list</span></span></span>
+<span class="r-in"><span><span class="co"># Return responses</span></span></span>
 <span class="r-in"><span><span class="va">response</span><span class="op">$</span><span class="fu">texts</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Return the chat objects</span></span></span>
+<span class="r-in"><span><span class="co"># Return chat objects</span></span></span>
 <span class="r-in"><span><span class="va">response</span><span class="op">$</span><span class="fu">chats</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Check progress if interrupted</span></span></span>
+<span class="r-in"><span><span class="va">response</span><span class="op">$</span><span class="fu">progress</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
