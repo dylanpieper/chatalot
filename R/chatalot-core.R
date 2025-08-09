@@ -321,11 +321,6 @@ process_future <- function(
       progress = progress,
       input_type = original_type,
       workers = as.integer(workers),
-      state = list(
-        active_workers = 0L,
-        failed_chunks = list(),
-        retry_count = 0L
-      ),
       chat_status = rep("pending", total_prompts)
     )
     saveRDS(chats_obj, file)

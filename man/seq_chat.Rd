@@ -43,7 +43,6 @@ response <- chat$process(
   )
 )
 
-
 # Return responses
 response$texts()
 

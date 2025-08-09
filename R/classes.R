@@ -48,7 +48,7 @@ chats <- S7::new_generic("chats", "x")
 #' @name progress
 #' @param x A process object
 #' @param ... Additional arguments passed to methods
-#' @return A list containing progress details
+#' @return A list containing detailed progress information (total, completed, and remaining prompts), completion rate, status breakdown by prompt (pending, completed, and failed), file path, and worker count when using `future_chat()`
 #' @examplesIf ellmer::has_credentials("openai")
 #' # Create chat processor
 #' chat <- seq_chat("openai/gpt-4.1")
@@ -80,32 +80,34 @@ progress <- S7::new_generic("progress", "x")
 #' @param beep Play sound on completion (default: TRUE)
 #' @param echo Whether to echo messages during processing (default: FALSE)
 #' @param chat_status Character vector tracking individual chat completion status ("pending", "completed", or "failed")
-#' @return Returns an S7 class object of class "process" that represents a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides methods for:
+#' @return Returns a "process" object with a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides access to functions for:
 #' \itemize{
-#'   \item Extracting text responses via \code{texts()} (includes structured data when a type specification is provided)
-#'   \item Accessing full chat objects via \code{chats()}
-#'   \item Tracking processing progress via \code{progress()}
+#'   \item Extracting responses via \code{texts()}
+#'   \item Accessing chat objects via \code{chats()}
+#'   \item Tracking progress via \code{progress()}
 #' }
 #' The process object manages prompt processing and tracks completion status.
 #' @examplesIf ellmer::has_credentials("openai")
-#' # Create a chat processor
+#' # Create chat processor
 #' chat <- seq_chat("openai/gpt-4.1")
 #'
-#' # Process a batch of prompts
-#' response <- chat$process(list(
-#'   "What is R?",
-#'   "Explain base R versus tidyverse",
-#'   "Explain vectors, lists, and data frames"
-#' ))
+#' # Process prompts
+#' response <- chat$process(
+#'   c(
+#'     "What is R?",
+#'     "Explain base R versus tidyverse",
+#'     "Explain vectors, lists, and data frames"
+#'   )
+#' )
 #'
-#' # Check the progress if interrupted
-#' response$progress()
-#'
-#' # Return the responses as a vector or list
+#' # Return responses
 #' response$texts()
 #'
-#' # Return the chat objects
+#' # Return chat objects
 #' response$chats()
+#'
+#' # Check progress if interrupted
+#' response$progress()
 #' @export
 process <- S7::new_class(
   "process",
@@ -225,18 +227,6 @@ process <- S7::new_class(
         NULL
       }
     ),
-    state = S7::new_property(
-      class = S7::class_list | NULL,
-      validator = function(value) {
-        if (!is.null(value)) {
-          required_fields <- c("active_workers", "failed_chunks", "retry_count")
-          if (!all(required_fields %in% names(value))) {
-            "must contain active_workers, failed_chunks, and retry_count"
-          }
-        }
-        NULL
-      }
-    ),
     chat_status = S7::new_property(
       class = S7::class_character,
       default = character(0)
@@ -245,11 +235,6 @@ process <- S7::new_class(
   validator = function(self) {
     if (self@completed > length(self@prompts)) {
       "cannot be larger than number of prompts"
-    }
-    if (!is.null(self@state) && !is.null(self@workers)) {
-      if (self@state$active_workers > self@workers) {
-        "active workers cannot exceed total workers"
-      }
     }
     NULL
   }
@@ -323,10 +308,34 @@ S7::method(chats, process) <- function(x) {
 #' @keywords internal
 #' @noRd
 S7::method(progress, process) <- function(x) {
-  list(
+  status_summary <- if (length(x@chat_status) > 0) {
+    table(factor(x@chat_status, levels = c("pending", "completed", "failed")))
+  } else {
+    c(pending = 0, completed = x@completed, failed = 0)
+  }
+
+  completion_rate <- if (length(x@prompts) > 0) {
+    round(x@completed / length(x@prompts) * 100, 1)
+  } else {
+    0
+  }
+
+  progress_info <- list(
     total_prompts = length(x@prompts),
     completed_prompts = x@completed,
     remaining_prompts = length(x@prompts) - x@completed,
+    completion_rate = completion_rate,
+    status_breakdown = list(
+      pending = as.integer(status_summary["pending"]),
+      completed = as.integer(status_summary["completed"]),
+      failed = as.integer(status_summary["failed"])
+    ),
     file = x@file
   )
+
+  if (!is.null(x@workers)) {
+    progress_info$workers <- x@workers
+  }
+
+  progress_info
 }

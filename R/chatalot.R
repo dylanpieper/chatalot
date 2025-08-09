@@ -31,7 +31,6 @@
 #'   )
 #' )
 #'
-#'
 #' # Return responses
 #' response$texts()
 #'

@@ -15,7 +15,6 @@ process(
   workers = integer(0),
   beep = logical(0),
   echo = logical(0),
-  state = list(),
   chat_status = character(0)
 )
 }
@@ -40,16 +39,16 @@ process(
 
 \item{echo}{Whether to echo messages during processing (default: FALSE)}
 
-\item{state}{Internal state tracking}
-
 \item{chat_status}{Character vector tracking individual chat completion status ("pending", "completed", or "failed")}
+
+\item{state}{Internal state tracking}
 }
 \value{
-Returns an S7 class object of class "process" that represents a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides methods for:
+Returns a "process" object with a collection of prompts and their responses from chat models. The object contains all input parameters as properties and provides access to functions for:
 \itemize{
-\item Extracting text responses via \code{texts()} (includes structured data when a type specification is provided)
-\item Accessing full chat objects via \code{chats()}
-\item Tracking processing progress via \code{progress()}
+\item Extracting responses via \code{texts()}
+\item Accessing chat objects via \code{chats()}
+\item Tracking progress via \code{progress()}
 }
 The process object manages prompt processing and tracks completion status.
 }
@@ -58,23 +57,25 @@ Process response class for managing chat processing
 }
 \examples{
 \dontshow{if (ellmer::has_credentials("openai")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# Create a chat processor
+# Create chat processor
 chat <- seq_chat("openai/gpt-4.1")
 
-# Process a batch of prompts
-response <- chat$process(list(
-  "What is R?",
-  "Explain base R versus tidyverse",
-  "Explain vectors, lists, and data frames"
-))
+# Process prompts
+response <- chat$process(
+  c(
+    "What is R?",
+    "Explain base R versus tidyverse",
+    "Explain vectors, lists, and data frames"
+  )
+)
 
-# Check the progress if interrupted
-response$progress()
-
-# Return the responses as a vector or list
+# Return responses
 response$texts()
 
-# Return the chat objects
+# Return chat objects
 response$chats()
+
+# Check progress if interrupted
+response$progress()
 \dontshow{\}) # examplesIf}
 }
