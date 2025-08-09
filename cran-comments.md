@@ -6,7 +6,7 @@
 Resubmission notes (no response from submission on 07/28/2025 due to CRAN break):
 * Fixed CRAN badge link from hellmer to chatalot
 * Provided better guidance for package installation using pak
-* Improved internal functionality related to persistent caching
+* Improved internal functionality related to persistent caching and resuming operations
 
 Original submission notes:
 * This submission renames the package from hellmer to chatalot with prior approval from CRAN maintainers (Kurt Hornik, 07/09/2025). The new name better reflects the package's functionality for processing LLM chat conversations.

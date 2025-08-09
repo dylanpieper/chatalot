@@ -7,7 +7,9 @@
 ## Internal Improvements
 * `future_chat()` now uses persistent caching of individual chats instead of chunks to prevent data loss
 * Added enhanced status tracking with `chat_status` to track individual chat completion states
-* `$texts()` returns a data frame for structured data when type properties are consistent
+* Resume processing from an interruption or failure when you recall `process()` and preserve completed prompts if you add, remove, or modify the remaining prompts
+* `progress()` now includes progress information (total, completed, remaining prompts, and completion rate), status breakdown (pending, completed, and failed), and file path
+* `texts()` returns a data frame for structured data when type properties are consistent
 * Replaced progress bar percentage indicator (`cli::pb_percent`) to estimated time until completion (`cli::pb_eta`)
 
 ## Lifecycle changes
@@ -26,13 +28,13 @@
 
 ## New Features
 * `future_chat()` now uses uses CPU cores * 5 as the default chunk size
-* `$batch()` gains `progress` in addition to  `echo` and `...` which are passed to the chat call
+* `batch()` gains `progress` in addition to  `echo` and `...` which are passed to the chat call
 
 ## Internal Improvements
 
 ## Lifecycle changes
 * Removed the timeout feature as it's better handled by `option(ellmer_timeout_s = 120)` following ellmer 0.1.1
-* Moved parameters from `chat_sequential()` and `chat_future()` to `$batch()` except for `chat_model` and `...`
+* Moved parameters from `chat_sequential()` and `chat_future()` to `batch()` except for `chat_model` and `...`
 
 # hellmer 0.1.1
 
